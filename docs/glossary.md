@@ -98,7 +98,7 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **Thói quen (quirk)** — A coworker's scheduled line or action around a set time (`quirks`). Fires once per day.
 
-**Mời nước (treat)** — Thạnh's drinks event at 11:05 and snacks event at 14:10. Gives the player energy and mood, plus a diary moment. *(Extended in v1.1.0: milk-tea days add treats at 09:55 and 16:00.)* *(Name note, v1.2.0: Thạnh is shown in game as Chủ tịt.)*
+**Mời nước (treat)** — Thạnh's drinks event at 11:05 and snacks event at 14:10. Gives the player energy and mood, plus a diary moment. *(Extended in v1.1.0: milk-tea days add treats at 09:55 and 16:00.)* *(Note v1.12.0: the 11:05 drink is random, and up to 8 coworkers gather at the pantry for 30 game-minutes. Others get a cup on their desk. See `docs/spec/noi-dung-bat-ngo.md` §3.1.)* *(Name note, v1.2.0: Thạnh is shown in game as Chủ tịt.)*
 
 **Góc nhìn (camera preset)** — One of three camera views: Gần, Vừa (default), Xa (nhìn từ trên). Defined by `CAM_PRESETS`, saved in `settings.cam`.
 
@@ -246,7 +246,7 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **Cửa ra vào (front door)** — *(needs definition)*
 
-**PANTRY_SPOTS** — *(needs definition)*
+**PANTRY_SPOTS** — *(needs definition)* *(Note v1.12.0: 8 spots on an ellipse around `PANTRY_TABLE`, each facing the table. The old two hand-placed rows are gone.)*
 
 **SOFA_SEATS / Ghế sofa** — *(needs definition)*
 
@@ -486,3 +486,27 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 **look.collarStyle** — *(needs definition)* Used with `look.neck: 'collar'`. Value `'polo'` draws a polo collar: a neck band in `look.collar`, two V flaps, and a back band. Used by Anh Bảo, with `collar: 0x1a1a1c` (black). Added v1.10.0. See `docs/spec/dong-nghiep.md` §8.
 
 **pattern `redwhite`** — *(needs definition)* A `look.pattern` value drawn by `patternMat()`: full-width horizontal red bands on off-white, which override `look.shirt`. Used by Anh Bảo, intentionally (the user's request for v1.10.0). Added v1.10.0. See `docs/spec/dong-nghiep.md` §8.
+
+**Cốc mang đi (takeaway cup)** — *(needs definition)* The street-style cup built by `makeTakeawayCup()`, used for pantry treats and Anh Bảo's desk. Added v1.12.0.
+
+**setCupDrink()** — *(needs definition)* Sets a takeaway cup's liquid and straw colours and shows boba or ice from `TREAT_DRINKS`. Added v1.12.0.
+
+**TREAT_DRINKS** — *(needs definition)* Drink table in `index.html` section 6: `trasua`, `rauma`, `nuocmia`, `coffee`, `cafeden`. Added v1.12.0.
+
+**cafeden** — *(needs definition)* Iced black coffee kind in `TREAT_DRINKS`. Anh Bảo's desk always has one (`DESKS[2].icedCoffee`). Added v1.12.0.
+
+**startTreat()** — *(needs definition)* Starts Chủ tịt's treat: sets `EVENT.treat` and picks up to 8 coworkers to gather at the pantry (`joinsTreat`). Added v1.12.0.
+
+**EVENT.treat** — *(needs definition)* The current treat: `{kind, start, end}` with `end` = start + 30 game-minutes. Saved in the mid-day session. Added v1.12.0. *(Note v1.12.0: `food` was added, the dish id for the snack treat, or `null`.)*
+
+**joinsTreat** — *(needs definition)* Per-coworker flag: this coworker goes to the pantry for the treat. Added v1.12.0.
+
+**dk.treatCup** — *(needs definition)* The desk cup beside a seat's lunchbox, shown after a treat until 110 game-minutes after it starts. Added v1.12.0.
+
+**PANTRY_TABLE** — *(needs definition)* The round pantry table at (−8.5, −5.6), radius 0.45 m. Built in `buildOffice()` (`index.html` section 5). Holds the treat cups and the snack dish during a treat. Added v1.12.0.
+
+**nonav (obstacle flag)** — *(needs definition)* A flag on an obstacle in `OBST`. The obstacle still blocks movement, but `buildNav()` skips it, so the nav grid stays open. Used by `PANTRY_TABLE` so NPCs can stand around it. Added v1.12.0.
+
+**FOODS** — *(needs definition)* The dish table for Chủ tịt's 14:10 snack treat: `pizza`, `vitquay`, `takoyaki`, and `cavien`, each with a name and an emoji. `index.html` variety block, between sections 2 and 3. Added v1.12.0.
+
+**makeFood(kind)** — *(needs definition)* Builds the low-poly model of a dish from `FOODS` (`index.html` section 6). Added v1.12.0.

@@ -1,12 +1,19 @@
 # Tasks
 
-Last updated: 2026-11-04
+Last updated: 2026-11-04 (v1.12.0, pantry table pass)
 
 Legend: `[x]` done, `[ ]` todo, `[~]` in progress, `[!]` blocked.
 
 ## Done
 
 Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`. Done entries v1.8.2 to v1.8.6 were moved there in the v1.9.3 pass. Done entries v1.9.1 to v1.9.4 were moved there in the v1.10.0 pass. Done entries v1.9.0 and v1.9.5 were moved there in the v1.11.0 pass.
+
+- [x] v1.12.0 (2026-11-04): takeaway cups and pantry treats. Chủ tịt's 11:05 treat picks at random among trà sữa, rau má, and nước mía (14:10 stays snack). Up to 8 coworkers gather at the pantry for 30 game-minutes; everyone else gets a cup on their desk. Anh Bảo's desk has an iced black coffee cup (`cafeden`). The hand cup is now a street-style takeaway cup. Details: `docs/changelog.md` v1.12.0, `docs/spec/noi-dung-bat-ngo.md` §3.1, `docs/spec/van-phong-layout.md` §3 and AC-91, AC-92, `docs/spec/mot-ngay-o-cong-ty.md` AC-87 to AC-90
+  - [x] `makeTakeawayCup()`, `setCupDrink()`, `TREAT_DRINKS` (section 6). `startTreat()` and the treat branch of `processTimeEvents()` (section 14). `goalPantry(n, 'treat')` and `decideGoal()` (section 9). `dk.treatCup` and `DESKS[2].icedCoffee`
+  - [x] Headless Chrome: all random kinds appear, 8 join, 14 get cups, 7 at the pantry in one test, 14 desk cups later, the mid-day session saves `treat`. Cup close-ups rendered and viewed
+  - [ ] Cups not verified in the in-game camera at the default distance (cups are small and hidden behind bodies). Not on a real device. See Follow-ups, v1.12.0
+  - [x] Docs: changelog, `docs/spec/noi-dung-bat-ngo.md`, `docs/spec/dong-nghiep.md`, `docs/spec/van-phong-layout.md`, `docs/spec/mot-ngay-o-cong-ty.md`, `docs/spec/the-gioi-lien-tuc.md`, `docs/product-guide.md`, `docs/glossary.md`
+  - [x] Pantry table pass: `PANTRY_TABLE` (section 5) with a `nonav` obstacle, 8 `PANTRY_SPOTS` on a ring around it (AC-93, AC-94), cups and the 14:10 dish on the table (`updatePantryTable()`, `FOODS`, `makeFood()`), hand cups only after arrival. Headless Chrome checks in `docs/changelog.md` v1.12.0
 
 - [x] v1.11.0 (2026-11-04): office layout change. New private desk 13 in the lower row, next to Thông's (`addOwnAt(-4.4)`, x −4.4). Tùng moves from desk 8 to desk 13. Nguyên, who had no desk, takes desk 8 (Tùng's old seat, right table, south, next to Chú 7). He naps on the daybed after lunch and otherwise works at his desk. Trung's visits to Nguyên now go to his desk (same 40% gate, excluded from the normal candidate list). Nguyên's lines updated; arrival toast reads "Nguyên hiếm hoi lên công ty hôm nay!". Details: `docs/changelog.md` v1.11.0, `docs/spec/van-phong-layout.md` §3 and AC-85, `docs/spec/dong-nghiep.md` §3 and AC-46, AC-49, AC-86
   - [x] `DESKS` has 14 entries (section 5, `addOwnAt(-4.4)`). `NPC_PROFILES`: `tung` `desk: 13`, `nguyen` `desk: 8` (section 2). Nguyên's nap and desk branch in `decideGoal()` (section 9)
@@ -81,6 +88,18 @@ Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`.
 - [ ] (v1.4.3) Confirm the younger-coworker list used for Chủ tịt's address style. Hiện is stated as the youngest. Chú 7, Trung, and Nguyên are assumed younger. Nam (same age as Chủ tịt) gets the humble style. Confirm or correct (`docs/spec/dong-nghiep.md` §2)
 
 ## Follow-ups
+
+v1.12.0 (takeaway cups, pantry gathering):
+
+- [ ] (v1.12.0) Cup visibility at the default camera distance (Vừa). Cups are small and hidden behind bodies from the default angle. Check at Vừa and the other presets. Decide whether to enlarge the cups or change the desk cup position
+- [ ] (v1.12.0) More than 8 people gathering. `startTreat()` caps the group at 8, the number of `PANTRY_SPOTS`. Decide what the rest do (wait at their desk, a second spot, or stand near the pantry). Today the 9th and later people get a desk cup instead
+- [ ] (v1.12.0) Cup for the player. The player holds no cup during a treat. Decide whether they get one, and whether a cup on the player's own desk is wanted
+- [ ] (v1.12.0) Ice cubes on the iced coffee and `cafeden` cups are barely visible. Check by eye, and enlarge or add contrast if needed
+- [ ] (v1.12.0) Real device check (phone, Safari, Firefox): the cup in hand, the sip animation, and the desk cups
+- [ ] (v1.12.0) Full-day playtest: how often the pantry gathering fills all 8 spots at 11:05, and whether the walks to the pantry jam the walkway (z 1.3 to 3.3)
+- [ ] (v1.12.0) Crowding around the pantry table at peak. The 8-spot ring (rx 1.05, rz 0.85) sits between the table and the counter and fridge. Check for NPC jams at 11:05 and 14:10
+- [ ] (v1.12.0) Table vs the player's pantry spot. The table is a collision obstacle. Check that the player can reach all 8 spots and walk around the table
+- [ ] (v1.12.0) Dish look on a real device. Dish sizes are exaggerated for readability. Check the four dishes and the table cups at the default camera distance, on a desktop and a phone
 
 v1.11.0 (office layout: desk 13, Tùng, Nguyên at desk 8):
 

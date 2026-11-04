@@ -1,6 +1,6 @@
 # Spec: Đồng nghiệp (coworkers, address terms, remote worker)
 
-Status: v1.11.0 (2026-11-04). Nguyên sits at desk 8 (Tùng's old seat) and works there, with one daybed nap after lunch (§3, AC-49). Tùng moved to desk 13. Trung may visit Nguyên at his desk (§3, AC-86). Looks: §8. Earlier history: `docs/changelog.md`.
+Status: v1.12.0 (2026-11-04). Chủ tịt's treats name a random drink and come with cups (§7.4). Anh Bảo's desk has an iced black coffee cup (§1). Earlier: v1.11.0 (2026-11-04). Nguyên sits at desk 8 (Tùng's old seat) and works there, with one daybed nap after lunch (§3, AC-49). Tùng moved to desk 13. Trung may visit Nguyên at his desk (§3, AC-86). Looks: §8. Earlier history: `docs/changelog.md`.
 
 ## 1. Roster
 
@@ -10,7 +10,7 @@ Status: v1.11.0 (2026-11-04). Nguyên sits at desk 8 (Tùng's old seat) and work
 
 | # | In-game name | Real name / nickname | Team | Desk | Notes |
 |---|---|---|---|---|---|
-| 1 | Chủ tịt | real: Thạnh | Leadership (chủ tịt) | 1 | Hosts the 10:00 meeting. Arrives 09:20. Humble speech since v1.4.3 (§2). Nam calls him "bé Hạnh" when teasing (v1.8.1) and "Thạnh" in serious work talk (v1.8.2). Treat events (see `noi-dung-bat-ngo.md` §3.1). Cat lover: his cat is called Nhân Quả (v1.4.2; cat canon with Chị Ba in §2). Quirk 12:50 (looks at cat photos). Cat plush on his desk. Surprises `cat` and `thanhmeo` (see `noi-dung-bat-ngo.md` §1.1) |
+| 1 | Chủ tịt | real: Thạnh | Leadership (chủ tịt) | 1 | Hosts the 10:00 meeting. Arrives 09:20. Humble speech since v1.4.3 (§2). Nam calls him "bé Hạnh" when teasing (v1.8.1) and "Thạnh" in serious work talk (v1.8.2). Treat events (see `noi-dung-bat-ngo.md` §3.1). 11:05 treat picks trà sữa, rau má, or nước mía (v1.12.0). Cat lover: his cat is called Nhân Quả (v1.4.2; cat canon with Chị Ba in §2). Quirk 12:50 (looks at cat photos). Cat plush on his desk. Surprises `cat` and `thanhmeo` (see `noi-dung-bat-ngo.md` §1.1) |
 | 2 | Phú | nick: Siêu nhân may mắn | Backend Dev | 0 | Unlucky; loves investing and massages. Left table, north |
 | 3 | Trung | — | Backend Dev | 4 | Catchphrase "Em nói thiệt". Custom look (v1.1.2). Right table, north. Visits Nguyên (v1.10.0, §3) |
 | 4 | Toàn | — | Backend Dev | 3 | Quiet, says little. Left table, south |
@@ -21,7 +21,7 @@ Status: v1.11.0 (2026-11-04). Nguyên sits at desk 8 (Tùng's old seat) and work
 | 9 | Yến | nick: Én Pink | QC | 12 | "Là sao?". Lower row, right end |
 | 10 | Chú 7 | real: An (male) | QC | 7 | Young ("Chú" is a nickname). Loves tea (trà ô long, trà sen). Often teases Chị Ba, who answers with playful punches. Tea duo with Thông (v1.4.3). Custom look (v1.1.2). Right table, south. Chị Ba's teasing nickname for him is "bánh tét" (chat line, v1.7.1). When Chị Ba stands up and calls for "thằng bánh tét", he answers from behind his tea (`say.standReply`, §7.5) |
 | 11 | Chị Ba | real: An (female) | Business Support | 10 | Supports product research: runs user surveys, builds reports, analyses the numbers. Strict in a fun way, and playfully "punches" colleagues (`visitAnim: 'punch'`, quirk 09:12). Quirk 09:48 re-checks charts before the meeting. Desk request: a survey report with only 40 respondents, and the options are to state the small sample, write it honestly, or overstate it as a joke. Afternoon quest: fetch "Báo cáo khảo sát người dùng" (`DOC_QUESTS`). Duo with Nam about survey data he forgot to send (`noi-dung-bat-ngo.md` §2). Golden cat Nghệ, not allergic (§2, v1.9.5). Same age as Chủ tịt and Nam. Stand-up catchphrase (v1.7.1): "Bực bội quá… thằng bánh tét đâu rồi!" (§7.5). Lower row |
-| 12 | Anh Bảo | real: Bảo | Product | 2 | Oldest in the office. Asks "vì sao". Red-and-white striped shirt with black polo collar and white cuffs, swept hair (§8, v1.10.0). Left table, south |
+| 12 | Anh Bảo | real: Bảo | Product | 2 | Oldest in the office. Asks "vì sao". Red-and-white striped shirt with black polo collar and white cuffs, swept hair (§8, v1.10.0). Desk has an iced black coffee cup (`cafeden`, v1.12.0). Left table, south |
 | 13 | Thông | nick: Bamboo | R&D | 9 | Lower row, left end (bottom-left of the office) |
 | 14 | Nguyên | — | Designer | 8 (v1.11.0) | Works remotely. In the office on about half of the days. Naps once for 30–50 min after lunch on the daybed, otherwise works at desk 8 (right table, south, next to Chú 7). Visits Chị Thảo (§3) |
 
@@ -137,11 +137,11 @@ Source of truth in `index.html`: `pickSay()` and `fill()` (section 1), `Bubbles`
 
 | Goal | Line |
 |---|---|
-| `pantry…` | "Nước em pha sẵn rồi nè, mọi người ra lấy nhé!" |
-| `desk…` | "Em vừa đặt đồ uống cho cả nhà, lát giao tới nha!" |
-| Other (walking, meeting, and so on) | "Em mời cả nhà nè, đừng ngại!" |
+| `pantry…` | "{drink} tới rồi nè, mọi người ra lấy nhé!" |
+| `desk…` | "Em mời cả nhà {drink} nè, ra pantry lấy nha!" |
+| Other (walking, meeting, and so on) | "Em mời cả nhà nè, ra pantry lấy {drink} nha!" |
 
-Applies to the 11:05 and 14:10 treats and the milk-tea day treats (`docs/spec/the-gioi-lien-tuc.md`, `docs/spec/noi-dung-bat-ngo.md`). The effects are unchanged (`mot-ngay-o-cong-ty.md` §4.2).
+`{drink}` is the drink name (trà sữa, rau má, nước mía) or đồ ăn vặt (14:10). Applies to the 11:05 and 14:10 treats and the milk-tea day treats (`docs/spec/the-gioi-lien-tuc.md`, `docs/spec/noi-dung-bat-ngo.md`). The effects are unchanged (`mot-ngay-o-cong-ty.md` §4.2).
 
 ### 7.5 Stand-up lines and absent-coworker lines (v1.7.1)
 

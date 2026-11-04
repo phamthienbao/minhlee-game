@@ -1,6 +1,6 @@
 # Spec: Thế giới liên tục (endless world)
 
-Status: v1.10.0 (2026-11-04). Mid-day save and resume added (§11). Welcome-back popup on boot (§11.5, AC-84). Earlier: v1.3.1 (2026-11-04). v1.3.0 changed the birthday offsets (`× 4`, unique for all 14 coworkers), excluded remote coworkers from birthday and cake picks, and moved the notice board to the east wall. v1.2.0 changed the birthday roster (14 coworkers) and the notice-board name pool. Parent spec: `docs/spec/mot-ngay-o-cong-ty.md`. Source of truth: `index.html` (section 14 and the calendar block above section 3).
+Status: v1.12.0 (2026-11-04). Session saves the treat state (`EVENT.treat`, `joinsTreat`, `treat`; §11.1). Earlier: v1.10.0 (2026-11-04). Mid-day save and resume added (§11). Welcome-back popup on boot (§11.5, AC-84). Earlier: v1.3.1 (2026-11-04). v1.3.0 changed the birthday offsets (`× 4`, unique for all 14 coworkers), excluded remote coworkers from birthday and cake picks, and moved the notice board to the east wall. v1.2.0 changed the birthday roster (14 coworkers) and the notice-board name pool. Parent spec: `docs/spec/mot-ngay-o-cong-ty.md`. Source of truth: `index.html` (section 14 and the calendar block above section 3).
 
 ## 1. Purpose
 
@@ -103,9 +103,9 @@ Before v1.10.0 only the end-of-day summary was saved, so closing the tab during 
 | When | Every 5 s of play, on `visibilitychange` (tab hidden), and on `pagehide` | `saveSession()` |
 | Day state | `minute`, `tasks`, `energy`, `mood`, `sets`, `moments`, `flags`, `quest`, `stats`, `work` (desk task), `meetTopic`, theme id, `noteLeft`, `aff` | `D` |
 | Surprises | `surprises` as `t`, `id`, `fired` | `D.surprises` |
-| Events | `EVENT` (cake, printer) | `EVENT` |
+| Events | `EVENT` (cake, printer, treat) | `EVENT`. `EVENT.treat` = `{kind, start, end}` since v1.12.0 (`startTreat()`) |
 | Player | Position and yaw | player object |
-| Coworkers | Per NPC: `times`, `attends`, `meetSeat`, `joinsCake` | `NPCS` |
+| Coworkers | Per NPC: `times`, `attends`, `meetSeat`, `joinsCake`, `joinsTreat`, `treat` (v1.12.0: `{kind, start, until, deskUntil}`, the cup state) | `NPCS` |
 
 Not saved: open cards and modals, a conversation in progress, speech bubbles, active visits, and spot occupancy. `snapNpcsToSchedule` rebuilds the schedule and frees the spots on restore. The last 5 s of play can be lost.
 

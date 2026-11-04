@@ -568,6 +568,21 @@ const DOC_NAMES = ['Báo cáo khảo sát người dùng', 'Hợp đồng đối
    SURPRISES: mỗi ngày game bốc ngẫu nhiên 3–4 sự kiện. Mỗi lựa chọn: [nội dung, kết quả, hiệu ứng].
    hiệu ứng: mood, energy, aff {idNPC: điểm}, moment (ghi vào nhật ký). npc = người liên quan (phải đã đến công ty). */
 // Đồ mở khóa cho bàn làm việc: need = tổng số đầu việc đã hoàn thành (cộng dồn qua các ngày), slot = vị trí trên bàn (x, z so với tâm bàn)
+// Đồ uống mời cả phòng (ly mang đi): màu nước, màu ống hút, trân châu
+const TREAT_DRINKS = {
+  trasua: { name: 'trà sữa', emoji: '🧋', liq: 0xc8a07a, straw: 0xf06aa0, boba: true },
+  rauma: { name: 'rau má', emoji: '🥤', liq: 0x7fb856, straw: 0xffffff },
+  nuocmia: { name: 'nước mía', emoji: '🥤', liq: 0xd9e07c, straw: 0xf2c14e },
+  coffee: { name: 'cà phê', emoji: '☕', liq: 0x6b4a35, straw: 0xffffff },
+  cafeden: { name: 'cà phê đen đá', emoji: '☕', liq: 0x1c120e, straw: 0x2a2a2a, ice: true },     // ly luôn có trên bàn anh Bảo
+};
+// Đồ ăn Chủ tịt mua mời cả phòng (đặt lên bàn tròn ở pantry), chọn ngẫu nhiên
+const FOODS = {
+  pizza: { name: 'pizza', emoji: '🍕' },
+  vitquay: { name: 'vịt quay', emoji: '🦆' },
+  takoyaki: { name: 'bánh takoyaki', emoji: '🐙' },
+  cavien: { name: 'cá viên chiên', emoji: '🍢' },
+};
 const UNLOCKS = [
   { id: 'mug', need: 1, emoji: '☕', name: 'Cốc cà phê MinhLee', desc: 'Cốc đầu tiên của nhân viên chính thức.', slot: [0.38, 0.28] },
   { id: 'cactus', need: 2, emoji: '🌵', name: 'Chậu xương rồng mini', desc: 'Dễ sống, giống bạn ở công ty mới.', slot: [0.88, -0.38] },
@@ -893,10 +908,9 @@ const MEET_TABLE = { x: 0, z: -5.2, w: 3.0, d: 1.5 };
 const MEET_SEATS = [];
 [-1.1, -0.37, 0.37, 1.1].forEach((x) => MEET_SEATS.push({ cx: x, cz: -6.5, yaw: 0, ax: x, az: -7.3 }));
 [-1.1, -0.37, 0.37, 1.1].forEach((x) => MEET_SEATS.push({ cx: x, cz: -3.9, yaw: Math.PI, ax: x, az: -3.1 }));
-const PANTRY_SPOTS = [
-  { x: -10.6, z: -6.3, yaw: Math.PI }, { x: -9.6, z: -6.3, yaw: Math.PI }, { x: -8.6, z: -6.3, yaw: Math.PI }, { x: -7.6, z: -6.3, yaw: Math.PI },
-  { x: -10.2, z: -5.0, yaw: Math.PI }, { x: -9.0, z: -5.0, yaw: Math.PI }, { x: -7.8, z: -5.0, yaw: Math.PI }, { x: -6.6, z: -5.4, yaw: Math.PI },
-];
+const PANTRY_TABLE = { x: -8.5, z: -5.6, r: 0.45, items: null };                 // bàn tròn ở pantry: đặt ly nước và đồ ăn khi có người mời
+const PANTRY_SPOTS = [];                                                          // 8 chỗ đứng quanh bàn tròn, quay mặt vào bàn
+for (let i = 0; i < 8; i++) { const a = -Math.PI / 2 + i * Math.PI / 4, x = PANTRY_TABLE.x + Math.cos(a) * 1.05, z = PANTRY_TABLE.z + Math.sin(a) * 0.85; PANTRY_SPOTS.push({ x, z, yaw: Math.atan2(PANTRY_TABLE.x - x, PANTRY_TABLE.z - z) }); }
 const SOFA_SEATS = [{ cx: 7.3, cz: -7.2, yaw: 0, ax: 7.3, az: -5.9 }, { cx: 8.7, cz: -7.2, yaw: 0, ax: 8.7, az: -5.9 }];       // sofa góc đông bắc
 const LOUNGE_SEAT = { cx: -4.0, cz: -6.9, yaw: Math.PI / 2, ax: -4.6, az: -5.4, lie: true };                                   // giường nằm ở pantry (Nguyên hay nằm đây)
 const PRINTER_SPOT = { x: -10.2, z: 0.3, yaw: -Math.PI / 2 };
@@ -917,6 +931,8 @@ function blob(parent, r, color, x, y, z, detail = 1) {
 let DESK_ITEMS = null;                                       // đồ đã mở khóa đặt trên bàn người chơi
 function buildDeskItems() {
   if (LITE || !scene) return;
+  const bao = DESKS[2];                                          // bàn anh Bảo luôn có một ly cà phê đen đá
+  if (bao && bao.lunchbox && !bao.icedCoffee) { const lb = bao.lunchbox; bao.icedCoffee = makeTakeawayCup(); setCupDrink(bao.icedCoffee, 'cafeden'); bao.icedCoffee.position.set(lb.position.x + 0.95, 0.815, lb.position.z - 0.12); lb.parent.add(bao.icedCoffee); }
   if (DESK_ITEMS) { scene.remove(DESK_ITEMS); DESK_ITEMS = null; }
   const have = Store.get().unlocked || [], g = new THREE.Group(); g.position.set(PLAYER_DESK.x, 0.75, PLAYER_DESK.z); scene.add(g); DESK_ITEMS = g;
   const Y = 0.0, at = (id) => UNLOCKS.find((u) => u.id === id).slot;
@@ -1067,6 +1083,13 @@ function buildOffice() {
   box(R, 0.9, 1.9, 0.9, 0xeef2f2, -11.45, 0.95, -5.9); addObst(-11.45, -5.9, 0.9, 0.9); box(R, 0.04, 0.5, 0.04, 0x999999, -10.97, 1.3, -5.6);
   cyl(R, 0.22, 0.22, 1.0, 0xeaf6fb, -6.4, 0.5, -7.5, 10); cyl(R, 0.16, 0.16, 0.35, 0x9fd4f2, -6.4, 1.2, -7.5, 8); addObst(-6.4, -7.5, 0.5, 0.5);   // bình nước
   plant(R, -11.4, -3.4, 1.0);
+  { const g = new THREE.Group(); g.position.set(PANTRY_TABLE.x, 0, PANTRY_TABLE.z); R.add(g);                    // bàn tròn pantry
+    cyl(g, 0.46, 0.46, 0.04, 0xd8b078, 0, 0.74, 0, 18); cyl(g, 0.06, 0.07, 0.7, 0x8a6a4a, 0, 0.36, 0, 8); cyl(g, 0.24, 0.26, 0.03, 0x8a6a4a, 0, 0.015, 0, 14);
+    addObst(PANTRY_TABLE.x, PANTRY_TABLE.z, 0.9, 0.9); OBST[OBST.length - 1].nonav = true;                       // chặn va chạm nhưng không chặn lưới đường đi (NPC đứng quanh bàn)
+    const cups = [], foods = {};
+    for (let i = 0; i < 8; i++) { const c = makeTakeawayCup(); const a = i * Math.PI / 4; c.position.set(Math.cos(a) * 0.3, 0.845, Math.sin(a) * 0.3); c.visible = false; g.add(c); cups.push(c); }
+    Object.keys(FOODS).forEach((k) => { const f = makeFood(k); f.position.set(0, 0.76, 0); f.visible = false; g.add(f); foods[k] = f; });
+    PANTRY_TABLE.items = { cups, foods, kind: null }; }
   box(R, 1.8, 0.3, 1.0, 0x7aa6a0, -4.6, 0.15, -6.9); box(R, 1.72, 0.12, 0.94, 0xf0e6d6, -4.6, 0.36, -6.9); box(R, 0.3, 0.1, 0.6, 0xe07a5f, -5.35, 0.47, -6.9); addObst(-4.6, -6.9, 1.8, 1.0);   // giường nằm / daybed
 
   // ----- góc sofa (đông bắc), cây, giá áo gần cửa -----
@@ -1151,6 +1174,50 @@ const CH_GEO = {
   glass: new THREE.TorusGeometry(0.075, 0.013, 5, 12), arm: new THREE.BoxGeometry(0.11, 0.36, 0.11), leg: new THREE.BoxGeometry(0.14, 0.3, 0.14),
   shoe: new THREE.BoxGeometry(0.16, 0.06, 0.22), cup: new THREE.CylinderGeometry(0.045, 0.035, 0.08, 8), ring: new THREE.RingGeometry(0.42, 0.52, 20),
 };
+// Ly nước mang đi (take away) giống ngoài tiệm: ly nhựa trong, nước màu, nắp vòm, ống hút, trân châu
+function makeTakeawayCup() {
+  const g = new THREE.Group(), glass = new THREE.MeshLambertMaterial({ color: 0xeaf6ff, transparent: true, opacity: 0.4 }), white = new THREE.MeshLambertMaterial({ color: 0xffffff });
+  const add = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); g.add(m); return m; };
+  add(new THREE.CylinderGeometry(0.05, 0.036, 0.13, 10), glass, 0, 0, 0);
+  const liq = add(new THREE.CylinderGeometry(0.046, 0.034, 0.1, 10), new THREE.MeshLambertMaterial({ color: 0xc8a07a }), 0, -0.012, 0);
+  add(new THREE.CylinderGeometry(0.055, 0.052, 0.012, 10), white, 0, 0.071, 0);
+  add(new THREE.SphereGeometry(0.04, 8, 4, 0, Math.PI * 2, 0, Math.PI / 2), glass, 0, 0.077, 0);
+  const straw = add(new THREE.CylinderGeometry(0.006, 0.006, 0.17, 5), new THREE.MeshLambertMaterial({ color: 0xf06aa0 }), 0.012, 0.06, 0); straw.rotation.z = -0.12;
+  const boba = new THREE.Group(); g.add(boba); const bm = new THREE.MeshLambertMaterial({ color: 0x2a1a14 });
+  [[-0.016, -0.05, 0.01], [0.012, -0.052, -0.012], [0.02, -0.05, 0.016], [-0.01, -0.052, -0.02], [0.0, -0.047, 0.0]].forEach(([x, y, z]) => { const b = new THREE.Mesh(new THREE.SphereGeometry(0.01, 5, 4), bm); b.position.set(x, y, z); boba.add(b); });
+  const ice = new THREE.Group(); g.add(ice); const im = new THREE.MeshLambertMaterial({ color: 0xf2fbff, transparent: true, opacity: 0.75 });
+  [[-0.018, 0.034, 0.008, 0.4], [0.012, 0.037, -0.012, 0.9], [0.02, 0.033, 0.02, 0.2], [-0.008, 0.04, -0.018, 1.2]].forEach(([x, y, z, r]) => { const b = new THREE.Mesh(new THREE.BoxGeometry(0.026, 0.026, 0.026), im); b.position.set(x, y, z); b.rotation.set(r, r * 1.3, r * 0.6); ice.add(b); });
+  ice.visible = false;
+  g.userData = { liq, straw, boba, ice }; return g;
+}
+function makeFood(kind) {                                          // đồ ăn đặt giữa bàn tròn (đơn giản, low-poly)
+  const g = new THREE.Group(), L = (c) => new THREE.MeshLambertMaterial({ color: c });
+  const add = (geo, c, x, y, z, parent = g) => { const m = new THREE.Mesh(geo, L(c)); m.position.set(x, y, z); m.castShadow = true; parent.add(m); return m; };
+  if (kind === 'pizza') {
+    add(new THREE.CylinderGeometry(0.26, 0.26, 0.012, 16), 0xffffff, 0, 0.006, 0);
+    add(new THREE.CylinderGeometry(0.22, 0.22, 0.026, 16), 0xe9b04a, 0, 0.024, 0);
+    [[0.08, 0.06], [-0.09, 0.07], [0.02, -0.1], [-0.12, -0.05], [0.12, -0.06]].forEach(([x, z]) => add(new THREE.CylinderGeometry(0.035, 0.035, 0.012, 8), 0xb3342b, x, 0.044, z));
+    [0, 1, 2, 3].forEach((i) => { const l = add(new THREE.BoxGeometry(0.44, 0.004, 0.006), 0x9a6a2a, 0, 0.039, 0); l.rotation.y = i * Math.PI / 4; });
+  } else if (kind === 'vitquay') {
+    const pl = add(new THREE.CylinderGeometry(0.28, 0.28, 0.012, 16), 0xffffff, 0, 0.006, 0); pl.scale.set(1, 1, 0.75);
+    const body = add(new THREE.SphereGeometry(0.13, 10, 8), 0xa4491a, 0, 0.1, 0); body.scale.set(1.5, 0.85, 1.0);
+    add(new THREE.SphereGeometry(0.1, 8, 6), 0xc86a22, -0.02, 0.15, 0).scale.set(1.3, 0.5, 0.8);
+    add(new THREE.CylinderGeometry(0.025, 0.035, 0.12, 6), 0x8f3d14, 0.17, 0.17, 0).rotation.z = -0.8;
+    add(new THREE.SphereGeometry(0.04, 6, 5), 0x8f3d14, 0.23, 0.23, 0);
+    add(new THREE.CylinderGeometry(0.02, 0.025, 0.1, 6), 0xd98a3a, -0.1, 0.03, 0.1).rotation.z = 1.2; add(new THREE.CylinderGeometry(0.02, 0.025, 0.1, 6), 0xd98a3a, -0.1, 0.03, -0.1).rotation.z = 1.2;
+  } else if (kind === 'takoyaki') {
+    add(new THREE.BoxGeometry(0.36, 0.035, 0.22), 0xf3e6c4, 0, 0.018, 0);
+    for (let r = 0; r < 2; r++) for (let c = 0; c < 4; c++) { add(new THREE.SphereGeometry(0.045, 8, 6), 0xc98a3c, -0.12 + c * 0.08, 0.075, -0.045 + r * 0.09); add(new THREE.BoxGeometry(0.075, 0.006, 0.014), 0x3a1f10, -0.12 + c * 0.08, 0.118, -0.045 + r * 0.09); add(new THREE.BoxGeometry(0.014, 0.006, 0.075), 0xfff6dc, -0.12 + c * 0.08, 0.121, -0.045 + r * 0.09); }
+    add(new THREE.BoxGeometry(0.01, 0.01, 0.1), 0xd9b48a, 0.18, 0.1, 0);
+  } else {                                                           // cá viên chiên: xiên que trong ly giấy + chén tương ớt
+    add(new THREE.CylinderGeometry(0.09, 0.065, 0.12, 10), 0xf1d79a, 0, 0.06, 0);
+    [[-0.04, 0.02, 0.2], [0.04, -0.02, -0.15], [0.0, 0.05, 0.05]].forEach(([x, z, r]) => { const st = add(new THREE.CylinderGeometry(0.005, 0.005, 0.24, 4), 0xd9b48a, x, 0.2, z); st.rotation.z = r;
+      [0.15, 0.2, 0.25].forEach((y, i) => add(new THREE.SphereGeometry(0.034, 7, 5), 0xd9a441, x + Math.sin(r) * (y - 0.2) * -1, y + 0.02, z)); });
+    add(new THREE.CylinderGeometry(0.06, 0.05, 0.03, 8), 0xffffff, 0.24, 0.015, 0.02); add(new THREE.CylinderGeometry(0.048, 0.048, 0.01, 8), 0xc0392b, 0.24, 0.032, 0.02);
+  }
+  return g;
+}
+function setCupDrink(g, kind) { const d = TREAT_DRINKS[kind] || TREAT_DRINKS.coffee; g.userData.liq.material.color.setHex(d.liq); g.userData.straw.material.color.setHex(d.straw); g.userData.boba.visible = !!d.boba; g.userData.ice.visible = !!d.ice; }
 const _patMats = {};
 function patternMat(kind) {                              // họa tiết áo vẽ bằng code: caro (gingham), sọc ngang (stripe)
   if (_patMats[kind]) return _patMats[kind];
@@ -1246,7 +1313,7 @@ function buildCharacter(look, isPlayer = false) {
   if (look.shortSleeve) [armL, armR].forEach((a) => { const f = new THREE.Mesh(boxGeo(0.112, 0.17, 0.112), lam(look.skin)); f.position.y = -0.26; f.castShadow = true; a.add(f); });
   if (look.cuff) [armL, armR].forEach((a) => { const f = new THREE.Mesh(boxGeo(0.116, 0.03, 0.116), lam(look.cuff)); f.position.y = -0.175; a.add(f); });
   [armL, armR].forEach((a) => { const s = new THREE.Mesh(new THREE.SphereGeometry(0.06, 6, 5), lam(look.skin)); s.position.y = -0.36; a.add(s); });
-  const cup = new THREE.Mesh(CH_GEO.cup, lam(0xffffff)); cup.position.set(0, -0.4, 0.07); cup.visible = false; armR.add(cup);
+  const cup = makeTakeawayCup(); setCupDrink(cup, 'coffee'); cup.position.set(0, -0.38, 0.08); cup.visible = false; armR.add(cup);
   if (isPlayer) { const r = new THREE.Mesh(CH_GEO.ring, new THREE.MeshBasicMaterial({ color: 0xffd166, side: THREE.DoubleSide })); r.rotation.x = -Math.PI / 2; r.position.y = 0.03; root.add(r); }
   return { root, body, head, armL, armR, legL, legR, cup, phase: Math.random() * 6 };
 }
@@ -1273,7 +1340,7 @@ function poseCharacter(c, anim, seated, t, dt, speedK = 1) {
     case 'idle': hx = Math.sin(t * 0.8 + ph) * 0.03; break;
   }
   set(c.legL, 'x', lL); set(c.legR, 'x', lR); set(c.armL, 'x', aL); set(c.armR, 'x', aR); set(c.armL, 'z', aLz); set(c.armR, 'z', aRz);
-  set(c.head, 'x', hx); set(c.head, 'z', hz); set(c.body, 'x', bx); c.body.position.y = lerp(c.body.position.y, by, k); c.cup.visible = cup;
+  set(c.head, 'x', hx); set(c.head, 'z', hz); set(c.body, 'x', bx); c.body.position.y = lerp(c.body.position.y, by, k); c.cup.visible = cup || !!c.holdCup;
 }
 
 /* ============ 7. DẪN ĐƯỜNG, VA CHẠM, BONG BÓNG THOẠI ============ */
@@ -1283,7 +1350,7 @@ function buildNav() {
   for (let j = 0; j < NAV.h; j++) for (let i = 0; i < NAV.w; i++) {
     const x = NAV.ox + (i + 0.5) * NAV.cell, z = NAV.oz + (j + 0.5) * NAV.cell;
     let b = x < BOUNDS.x0 || x > BOUNDS.x1 || z < BOUNDS.z0 || z > BOUNDS.z1;
-    for (let k = 0; k < OBST.length && !b; k++) { const o = OBST[k]; if (x > o.x0 - NAV.inflate && x < o.x1 + NAV.inflate && z > o.z0 - NAV.inflate && z < o.z1 + NAV.inflate) b = true; }
+    for (let k = 0; k < OBST.length && !b; k++) { const o = OBST[k]; if (o.nonav) continue; if (x > o.x0 - NAV.inflate && x < o.x1 + NAV.inflate && z > o.z0 - NAV.inflate && z < o.z1 + NAV.inflate) b = true; }
     NAV.blocked[j * NAV.w + i] = b ? 1 : 0;
   }
 }
@@ -1487,7 +1554,7 @@ const G = { mode: 'title', fast: false, talking: null, started: false };
 let D = null;                        // trạng thái của ngày hiện tại
 const AFF = {};                      // mức thân thiết 0..100 theo id đồng nghiệp
 const NPCS = [];
-const EVENT = { cake: null, printer: null, printerNpc: null };
+const EVENT = { cake: null, printer: null, printerNpc: null, treat: null };
 const spotOwner = new Array(PANTRY_SPOTS.length).fill(null), sofaOwner = [null, null];
 
 function createNpcs() {
@@ -1527,7 +1594,7 @@ function resetNpcDay(n) {
   const remote = hb.attendance != null && Math.random() > hb.attendance;      // làm từ xa: hôm nay không lên công ty
   n.times = { arrive: remote ? 99999 : T(hb.arrive), leave: T(hb.leave) + rand(-3, 5), lunchStart: ls, lunchEnd: ls + 55, coffee: cof };
   if (hb.lounge) { const ns = ls + 55 + rand(0, 25); n.times.nap = [ns, ns + rand(30, 50)]; }          // chỉ nằm ngủ một lúc sau bữa trưa, còn lại ngồi ghế sofa làm việc
-  Object.assign(n, { state: 'hidden', goal: null, path: [], override: null, visit: null, frozen: false, mood: 45 + Math.random() * 25, greetedPlayer: false, attends: false, meetSeat: -1, visitCool: rand(30, 90),
+  Object.assign(n, { state: 'hidden', goal: null, path: [], override: null, visit: null, frozen: false, mood: 45 + Math.random() * 25, greetedPlayer: false, attends: false, meetSeat: -1, visitCool: rand(30, 90), joinsTreat: false, treat: null,
     inviteReady: false, animOverride: null, joinsCake: false, curSeat: null, hostUntil: 0, idleCool: rand(20, 50), standCool: 0, absentCool: rand(5, 12) });
   n.quirkDone.clear(); n.ch.root.visible = false;
   if (AFF[n.id] == null) AFF[n.id] = n.p.relation;
@@ -1539,7 +1606,7 @@ function goalLounge(n) { return { id: 'lounge', x: LOUNGE_SEAT.cx, z: LOUNGE_SEA
 function goalDesk(n, mode) { if (n.p.desk == null) return goalLounge(n); const d = DESKS[n.p.desk]; return { id: 'desk:' + mode, x: d.seat.cx, z: d.seat.cz, yaw: d.seat.yaw, anim: mode === 'eat' ? 'eat' : 'type', seat: d.seat, lunchbox: mode === 'eat' }; }
 function goalPantry(n, kind) {
   const i = claimSpot(n); if (i < 0) return goalDesk(n, kind === 'lunch' ? 'eat' : 'work');
-  const s = PANTRY_SPOTS[i]; return { id: `pantry:${i}:${kind}`, x: s.x, z: s.z, yaw: s.yaw, anim: kind === 'lunch' ? 'eat' : kind === 'event' ? 'wave' : 'pantry' };
+  const s = PANTRY_SPOTS[i]; return { id: `pantry:${i}:${kind}`, x: s.x, z: s.z, yaw: s.yaw, anim: kind === 'lunch' ? 'eat' : kind === 'event' ? 'wave' : kind === 'treat' ? (EVENT.treat && EVENT.treat.kind === 'snack' ? 'eat' : 'pantry') : 'pantry' };
 }
 function goalSofa(n) {
   let i = n.sofa >= 0 && sofaOwner[n.sofa] === n.id ? n.sofa : sofaOwner.findIndex((o) => o === null);
@@ -1554,6 +1621,7 @@ function decideGoal(n, m) {
   if (o && m >= o.until) { n.override = null; n.inviteReady = false; }
   if (n.attends && m >= CFG.MEETING.gather && m < CFG.MEETING.end) { const s = MEET_SEATS[n.meetSeat]; return { id: 'meet', x: s.cx, z: s.cz, yaw: s.yaw, anim: 'listen', seat: s }; }
   if (EVENT.cake && n.joinsCake && m >= EVENT.cake.start && m < EVENT.cake.end) return goalPantry(n, 'event');
+  if (EVENT.treat && n.joinsTreat && m >= EVENT.treat.start && m < EVENT.treat.end) return goalPantry(n, 'treat');        // Chủ tịt mời nước/đồ ăn: cả nhóm tụ lại pantry
   if (EVENT.printerNpc === n.id && EVENT.printer && !EVENT.printer.solved && m >= EVENT.printer.start) return { id: 'printer', x: PRINTER_SPOT.x, z: PRINTER_SPOT.z, yaw: PRINTER_SPOT.yaw, anim: 'shrug' };
   if (m >= T_.lunchStart && m < T_.lunchEnd) { const l = n.p.habits.lunch; return l === 'pantry' ? goalPantry(n, 'lunch') : l === 'sofa' ? goalSofa(n) : goalDesk(n, 'eat'); }
   if (T_.coffee.some(([a, b]) => m >= a && m < b)) return goalPantry(n, 'coffee');
@@ -1691,6 +1759,16 @@ function updateNpc(n, dt, m) {
   syncChar(c, n.pos, n.yaw, y);
   // hộp cơm trên bàn khi ăn trưa tại chỗ
   const dk = n.p.desk != null ? DESKS[n.p.desk] : null; if (dk && dk.lunchbox) dk.lunchbox.visible = !!(n.goal && n.goal.lunchbox && n.state === 'seated');
+  // ly nước mang đi: cầm trên tay khi đang đi/đứng ở pantry, đặt lên bàn khi ngồi lại
+  const tr = n.treat, atDesk = n.state === 'seated' && n.goal && n.goal.id.startsWith('desk'), drinkTreat = tr && tr.kind !== 'snack';
+  const arrivedP = n.goal && n.goal.id.startsWith('pantry') && n.state !== 'moving';                // chỉ cầm ly khi đã tới pantry lấy (hoặc đang mang về bàn)
+  c.holdCup = !!(drinkTreat && n.joinsTreat && m >= tr.start && m < tr.until + 12 && !atDesk && (m >= tr.until || arrivedP));
+  const ck = drinkTreat && m < tr.until + 12 ? tr.kind : 'coffee'; if (c.cupKind !== ck) { setCupDrink(c.cup, ck); c.cupKind = ck; }
+  if (dk && dk.lunchbox && !LITE) {
+    if (!dk.treatCup) { const lb = dk.lunchbox; dk.treatCup = makeTakeawayCup(); dk.treatCup.position.set(lb.position.x + 0.3, 0.815, lb.position.z); dk.treatCup.visible = false; lb.parent.add(dk.treatCup); }
+    const show = !!(drinkTreat && atDesk && m >= tr.until && m < tr.deskUntil);
+    dk.treatCup.visible = show; if (show && dk.treatCupKind !== tr.kind) { setCupDrink(dk.treatCup, tr.kind); dk.treatCupKind = tr.kind; }
+  }
   // chỉ hiện bảng tên nhân vật ở gần người chơi
   n.tag.on = n.state !== 'hidden' && dP < 4.6 && G.mode === 'play'; n.tag.alpha = clamp(1.2 - dP / 4.6, 0.25, 1);
   if (G.mode === 'play' && !n.frozen) npcAmbient(n, dt, m, dP, now);
@@ -1761,6 +1839,16 @@ function separateCharacters() {
 }
 const moodFace = (v) => (v >= 70 ? '😄' : v >= 50 ? '🙂' : v >= 32 ? '😐' : '😟');
 const hearts = (v) => '❤'.repeat(Math.round(v / 20)) + '♡'.repeat(5 - Math.round(v / 20));
+// Bàn tròn pantry: khi có người mời, ly nước (chưa ai lấy) hoặc món ăn được đặt lên bàn
+function updatePantryTable(m) {
+  const it = PANTRY_TABLE.items; if (!it) return;
+  const ev = EVENT.treat, active = !!ev && m >= ev.start && m < ev.end;
+  let nCups = 0, food = null;
+  if (active) { if (ev.kind === 'snack') food = ev.food; else nCups = Math.min(8, NPCS.filter((x) => x.joinsTreat && !x.ch.holdCup).length); }
+  Object.keys(it.foods).forEach((k) => { it.foods[k].visible = k === food; });
+  if (active && ev.kind !== 'snack' && it.kind !== ev.kind) { it.cups.forEach((c) => setCupDrink(c, ev.kind)); it.kind = ev.kind; }
+  it.cups.forEach((c, i) => { c.visible = i < nCups; });
+}
 
 /* ============ 10. GIAO DIỆN: THẺ HỘI THOẠI, HUD, HƯỚNG DẪN ============ */
 const toastEl = $('#toast'); let toastT = 0;
@@ -2309,8 +2397,8 @@ function saveSession() {
       sets: Object.fromEntries(SESSION_SETS.map((k) => [k, [...D[k]]])), moments: D.moments, flags: D.flags, quest: D.quest, stats: D.stats, work: D.work, meetTopic: D.meetTopic, theme: D.theme.id,
       surprises: D.surprises.map((x) => ({ t: x.t, id: x.ev.id, fired: x.fired })), noteLeft: D.noteLeft, noticeIdx: D.noticeIdx, aff0: D.aff0, lastMs: D.lastMs, meetMissed: D.meetMissed, warned: D.warned,
       pos: { x: P.pos.x, z: P.pos.z, yaw: P.yaw }, aff: { ...AFF },
-      ev: { cake: EVENT.cake ? { ...EVENT.cake, who: EVENT.cake.who.id } : null, printer: EVENT.printer, printerNpc: EVENT.printerNpc },
-      npcs: NPCS.map((n) => ({ id: n.id, times: n.times, attends: n.attends, meetSeat: n.meetSeat, joinsCake: n.joinsCake })) };
+      ev: { cake: EVENT.cake ? { ...EVENT.cake, who: EVENT.cake.who.id } : null, printer: EVENT.printer, printerNpc: EVENT.printerNpc, treat: EVENT.treat },
+      npcs: NPCS.map((n) => ({ id: n.id, times: n.times, attends: n.attends, meetSeat: n.meetSeat, joinsCake: n.joinsCake, joinsTreat: n.joinsTreat, treat: n.treat })) };
     Store.patch({ session: S });
   } catch (e) { dlog('[saveSession] Không lưu được ngày đang dở (game vẫn chạy bình thường):', e, e && e.stack); }
 }
@@ -2325,8 +2413,8 @@ function resumeSession() {
     SESSION_SETS.forEach((k) => { D[k] = new Set((S.sets && S.sets[k]) || []); });
     D.surprises = (S.surprises || []).map((x) => ({ t: x.t, ev: pool.find((e) => e.id === x.id), fired: x.fired })).filter((x) => x.ev);
     Object.entries(S.aff || {}).forEach(([k, v]) => { AFF[k] = v; });
-    EVENT.cake = S.ev && S.ev.cake ? { ...S.ev.cake, who: npcById(S.ev.cake.who) } : null; EVENT.printer = S.ev ? S.ev.printer : null; EVENT.printerNpc = S.ev ? S.ev.printerNpc : null;
-    NPCS.forEach((n) => { const o = (S.npcs || []).find((x) => x.id === n.id); if (o) Object.assign(n, { times: o.times, attends: o.attends, meetSeat: o.meetSeat, joinsCake: o.joinsCake }); });
+    EVENT.cake = S.ev && S.ev.cake ? { ...S.ev.cake, who: npcById(S.ev.cake.who) } : null; EVENT.printer = S.ev ? S.ev.printer : null; EVENT.printerNpc = S.ev ? S.ev.printerNpc : null; EVENT.treat = S.ev ? S.ev.treat || null : null;
+    NPCS.forEach((n) => { const o = (S.npcs || []).find((x) => x.id === n.id); if (o) Object.assign(n, { times: o.times, attends: o.attends, meetSeat: o.meetSeat, joinsCake: o.joinsCake, joinsTreat: !!o.joinsTreat, treat: o.treat || null }); });
     spotOwner.fill(null); sofaOwner.fill(null); NPCS.forEach((n) => releaseSpots(n));
     snapNpcsToSchedule(D.minute);
     if (S.pos) { P.pos = { x: S.pos.x, z: S.pos.z }; P.yaw = S.pos.yaw || 0; P.lock = null; P.forced = null; CAM.tx = P.pos.x; CAM.tz = P.pos.z; }
@@ -2365,7 +2453,7 @@ function startDay() {
   NPCS.forEach((n) => { resetNpcDay(n); n.tag.on = false; });
   spotOwner.fill(null); sofaOwner.fill(null);
   const host = npcById(HOST_ID); [host, ...shuffle(NPCS.filter((n) => n !== host && n.p.habits.joinsMeeting))].slice(0, 8).forEach((n, i) => { n.attends = true; n.meetSeat = i; });
-  EVENT.cake = null; EVENT.printer = null; EVENT.printerNpc = null;
+  EVENT.cake = null; EVENT.printer = null; EVENT.printerNpc = null; EVENT.treat = null;
   const dnNow = Store.get().days + 1, bday = NPCS.find((n) => dnNow % 65 === (n.idx * 4 + 3) % 65 && n.times.arrive < 99999);     // sinh nhật mỗi người lặp lại theo chu kỳ
   if (!bday && Math.random() < 0.5) { EVENT.printer = { start: T('14:30'), solved: false }; EVENT.printerNpc = 'nam'; }
   else {
@@ -2390,13 +2478,25 @@ function exitToTitle() {
 function skipTo(target) {
   const prev = D.minute; D.minute = Math.max(prev, target); snapNpcsToSchedule(D.minute); processTimeEvents(prev, D.minute); applyTimeOfDay(D.minute); toast(`⏭ Đã chuyển tới ${fmtTime(D.minute)}`);
 }
+function startTreat(kind, now, food) {                                  // Chủ tịt mời: tối đa 8 người tụ lại pantry, mọi người còn lại được đặt ly lên bàn
+  const host = npcById('thanh'), present = NPCS.filter((x) => x !== host && x.state !== 'hidden' && x.times.arrive < 99999 && now < x.times.leave - 20 && !x.frozen);
+  const picks = [host, ...shuffle(present)].slice(0, 8);
+  EVENT.treat = { kind, food: food || null, start: now, end: now + 30 };
+  NPCS.forEach((x) => { x.joinsTreat = picks.includes(x); x.treat = x.state === 'hidden' && now < x.times.arrive ? null : { kind, start: now, until: x.joinsTreat ? now + 30 : now, deskUntil: now + 110 }; });
+}
 function processTimeEvents(prev, now) {
   const cross = (t) => prev < t && now >= t;
   if (!D.meetMissed && cross(CFG.MEETING.end) && !D.flags.meeting) { D.meetMissed = true; addMoment('Bỏ lỡ buổi họp nhưng vẫn nhận biên bản ngắn từ Chủ tịt.'); toast('📋 Họp xong rồi. Chủ tịt gửi bạn biên bản ngắn, đừng lo!'); }
   if (cross(T('13:45'))) { D.quest.stage = Math.max(D.quest.stage, 1); const n = npcById(D.quest.def.npc); tryNpcSay(n, 'Ai rảnh giúp mình một việc nhỏ với…', 1); toast(`📎 ${n.p.name} đang cần nhờ giúp một việc`); }
   if (EVENT.printer && cross(EVENT.printer.start)) toast('🖨 Máy in ở tường trái có vẻ đang gặp chuyện…');
   if (EVENT.cake && cross(EVENT.cake.start)) toast('🎂 Thảo mang bánh kem ra pantry!');
-  const treat = (t, msg, en) => { if (!cross(t)) return; const n = npcById('thanh'); if (!n || n.state === 'hidden') return; addEnergy(en); addMood(3); changeAff('thanh', 2); addMoment(msg); toast('🧋 ' + msg); { const g = n.goal ? n.goal.id : ''; tryNpcSay(n, g.startsWith('pantry') ? 'Nước em pha sẵn rồi nè, mọi người ra lấy nhé!' : g.startsWith('desk') ? 'Em vừa đặt đồ uống cho cả nhà, lát giao tới nha!' : 'Em mời cả nhà nè, đừng ngại!', 1); } Sfx.chime(); };
+  const treat = (t, msg, en) => {
+    if (!cross(t)) return; const n = npcById('thanh'); if (!n || n.state === 'hidden') return;
+    const food = /đồ ăn/.test(msg) ? pick(Object.keys(FOODS)) : null, kind = food ? 'snack' : /trà sữa/.test(msg) ? 'trasua' : pick(['trasua', 'rauma', 'nuocmia']), dr = TREAT_DRINKS[kind], label = food ? FOODS[food].name : dr.name;
+    const text = food ? `Chủ tịt mua ${label} mời cả phòng.` : /trà sữa/.test(msg) ? msg : `Chủ tịt mời cả phòng ${label}.`;
+    startTreat(kind, now, food); addEnergy(en); addMood(3); changeAff('thanh', 2); addMoment(text); toast((food ? FOODS[food].emoji : dr.emoji) + ' ' + text + ' Ra pantry nhé!');
+    const g = n.goal ? n.goal.id : ''; tryNpcSay(n, g.startsWith('pantry') ? `${label} tới rồi nè, mọi người ra lấy nhé!` : g.startsWith('desk') ? `Em mời cả nhà ${label} nè, ra pantry lấy nha!` : `Em mời cả nhà nè, ra pantry lấy ${label} nha!`, 1); Sfx.chime();
+  };
   treat(T('11:05'), 'Chủ tịt mua nước mời cả phòng.', 8); treat(T('14:10'), 'Chủ tịt mua đồ ăn vặt cho mọi người.', 8);
   D.theme.treats.forEach(([t, msg]) => treat(T(t), msg, 8));
   if (cross(T('17:00'))) toast('🌇 Hết giờ làm rồi. Ra cửa chính để về nhé!');
@@ -2479,6 +2579,7 @@ let rafId = 0, lastTs = 0, hudT = 0, liteT = 0, tickCount = 0;
 function update(dt) {
   if (!D || !G.started || G.mode === 'title' || G.mode === 'paused') return;
   if (G.mode === 'play') tickClock(dt);
+  updatePantryTable(D.minute);
   G.saveT = (G.saveT || 0) + dt; if (G.saveT > 5) { G.saveT = 0; saveSession(); }
   updatePlayer(dt);
   for (const n of NPCS) {

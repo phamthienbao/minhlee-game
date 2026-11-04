@@ -1,6 +1,6 @@
 # Spec: Bố cục văn phòng (office layout)
 
-Status: v1.11.0 (2026-11-04). Lower-row desk 13 added (next to Thông) and Tùng moved there. Nguyên now sits at desk 8 (§3, AC-85). Wall clock (north wall) updated in v1.8.8 (AC-74). Unlocked desk items on the player's desk added in v1.9.0 (`docs/spec/bang-nhiem-vu.md` §9, AC-79). Source of truth: `index.html`, the layout constants block that starts at the comment "Bố cục theo sơ đồ" (section 5, about line 755), `buildOffice()` (section 5), and `buildSpots()` (section 11). Parent spec: `docs/spec/mot-ngay-o-cong-ty.md`. Coworker seats are listed by name in `docs/spec/dong-nghiep.md`.
+Status: v1.12.0 (2026-11-04). Round pantry table `PANTRY_TABLE` with 8 spots on a ring around it (§2, §7, AC-93, AC-94 in `docs/spec/mot-ngay-o-cong-ty.md`). Takeaway cups on desks (Anh Bảo's iced coffee, §3 notes) and the pantry gathering for Chủ tịt's treats (§7, AC-91, AC-92). Earlier: v1.11.0 (2026-11-04). Lower-row desk 13 added (next to Thông) and Tùng moved there. Nguyên now sits at desk 8 (§3, AC-85). Wall clock (north wall) updated in v1.8.8 (AC-74). Unlocked desk items on the player's desk added in v1.9.0 (`docs/spec/bang-nhiem-vu.md` §9, AC-79). Source of truth: `index.html`, the layout constants block that starts at the comment "Bố cục theo sơ đồ" (section 5, about line 755), `buildOffice()` (section 5), and `buildSpots()` (section 11). Parent spec: `docs/spec/mot-ngay-o-cong-ty.md`. Coworker seats are listed by name in `docs/spec/dong-nghiep.md`.
 
 The layout follows a user-supplied floor plan, `so-do-van-phong-2.svg` (1200 × 900 px, top-down). The file is not in the repo. Before v1.3.0 the office had a different layout (desks in two rows, meeting table top right, door on the south wall). That layout is not recorded here.
 
@@ -27,6 +27,7 @@ All values in metres. Walls: north z −8.1, west x −12.1, east x 12.1 (with t
 | Column 2 | centre (−1.77, 4.49), 0.94 × 1.0, 3.2 m tall | `COLUMNS[1]` | Lower middle, at the level of the lower row, between Tùng's (desk 13) and Chị Ba's desks |
 | Meeting room | x −3.0 to 3.0, z −8.0 to −2.9 | `MEET_ROOM` | Top centre, between the long tables. Not in the plan (see §6) |
 | Pantry | Counter x −11.5 to −7.3, z −7.85 to −7.05. Fridge at (−11.45, −5.9). Pantry area about x −11.9 to −6.4, z −8.0 to −4.6 | `PANTRY_SPOTS`, `buildOffice()` | Top left (north west) |
+| Pantry round table | Centre (−8.5, −5.6), radius 0.45 m (wooden top on a pedestal). Obstacle 0.9 × 0.9 with `nonav`: blocks movement, not the nav grid (v1.12.0) | `PANTRY_TABLE`, `buildOffice()` | Inside the pantry area. NPCs stand around it. Shows cups and dishes during treats (§7) |
 | Daybed | Obstacle centre (−4.6, −6.9), 1.8 × 1.0 | `LOUNGE_SEAT` | North wall, east of the pantry. Used by Nguyên |
 | Sofa | Obstacle centre (8.0, −7.3), 3.0 × 1.0 | `SOFA_SEATS` | North east corner |
 | Printer | Obstacle centre (−11.3, 0.3), 1.2 × 0.8 | `PRINTER_SPOT` | West wall |
@@ -51,7 +52,7 @@ The index is the value of `desk` in `NPC_PROFILES` (`index.html`, section 2). Lo
 | 5 | Hiện | Right table, north | 6.17 | −3.39 | south |
 | 6 | Nam | Right table, north | 8.52 | −3.39 | south |
 | 7 | Chú 7 (An) | Right table, south | 4.93 | −0.79 | north |
-| 8 | Nguyên (Tùng's seat until v1.10.1) | Right table, south, next to Chú 7 | 8.07 | −0.79 | north |
+| 8 | Nguyên (Tùng's seat until v1.11.0) | Right table, south, next to Chú 7 | 8.07 | −0.79 | north |
 | 9 | Thông | Lower row | −6.84 | 5.85 | north |
 | 10 | Chị Ba (An) | Lower row | 3.41 | 5.85 | north |
 | 11 | Thảo | Lower row | 6.44 | 5.85 | north |
@@ -63,6 +64,7 @@ Notes:
 - Long-table seat z is the table z ± 1.3 (north −1.3, south +1.3). Each seat has a visit point 1.2 m to its east (`visit`).
 - Lower-row desks sit at z 4.73, and the seat is 1.12 m south of the desk. Own-desk visit point: desk x + 1.5, z + 1.1. Approach point: seat z + 2.15.
 - Desk 13 (v1.11.0): desk centre (−4.4, 4.73), visit point (−2.9, 5.83), approach (−4.4, 6.88). Desks are 2.0 m wide, so the gap to Thông's desk edge is about 0.44 m. The gap to `COLUMNS[1]` is about 1.2 m. Spacing and pathing not playtested.
+- Cups (v1.12.0): Anh Bảo's desk (2) has `DESKS[2].icedCoffee`, a `cafeden` cup beside the lunchbox (x + 0.95, y 0.815, z − 0.12). Other desks get a takeaway cup `dk.treatCup` beside the lunchbox (x + 0.3, y 0.815) only during a treat (`docs/spec/noi-dung-bat-ngo.md` §3.1). Cups are small and not checked at the default camera distance.
 - Seat x values come from the plan x of each mark. Desk 8 is a plan seat: only the coworker changed in v1.11.0.
 
 ## 4. Fixed interaction points (`buildSpots()`)
@@ -103,10 +105,12 @@ The user can change each of these. The value to change is shown. The daybed, sof
 
 ## 7. Pantry spots and sitting spots
 
-- `PANTRY_SPOTS` has 8 standing spots, all facing north (yaw π): (−10.6, −6.3), (−9.6, −6.3), (−8.6, −6.3), (−7.6, −6.3), (−10.2, −5.0), (−9.0, −5.0), (−7.8, −5.0), (−6.6, −5.4).
+- `PANTRY_SPOTS` (v1.12.0) has 8 standing spots on an ellipse around `PANTRY_TABLE` (rx 1.05, rz 0.85). Spot `i` is at angle `−π/2 + i·π/4`: x = −8.5 + cos·1.05, z = −5.6 + sin·0.85. Each spot faces the table (yaw = `atan2` toward the table centre). Positions: (−8.50, −6.45), (−7.76, −6.20), (−7.45, −5.60), (−7.76, −5.00), (−8.50, −4.75), (−9.24, −5.00), (−9.55, −5.60), (−9.24, −6.20). Coffee, lunch, cake, and treat standing all use them. Spot 0 was first inside the counter's inflated nav cell; moving the table z from −5.85 to −5.6 fixed it. All 8 spots are in free nav cells. The 8 spots replace the old two hand-placed rows.
+- Table during treats (v1.12.0): the table holds up to 8 takeaway cups (drink treat, one per joiner who has not yet picked theirs up) and one dish from `FOODS` for the 14:10 snack treat. Pizza, vịt quay, bánh takoyaki, and cá viên chiên are built by `makeFood()`. Details and AC-93: `docs/spec/noi-dung-bat-ngo.md` §3.1, `docs/spec/mot-ngay-o-cong-ty.md`.
 - `SOFA_SEATS`: (7.3, −7.2) and (8.7, −7.2), facing south.
 - `LOUNGE_SEAT`: centre (−4.0, −6.9), access point (−4.6, −5.4), yaw π/2, pose `lie`. Only one coworker uses it (Nguyên).
 - `PRINTER_SPOT`: (−10.2, 0.3), facing west (yaw −π/2). The printer jam event sends Nam here.
+- Treat gathering (v1.12.0): when Chủ tịt's treat starts, up to 8 coworkers (the 8 `PANTRY_SPOTS`, Chủ tịt first) walk to these spots for 30 game-minutes. A coworker who has a meeting or cake event goes there instead. More than 8 are not supported (`docs/tasks.md`).
 - Meeting seats (`MEET_SEATS`, 8): north row z −6.5 at x −1.1, −0.37, 0.37, 1.1 (yaw 0); south row z −3.9 at the same x values (yaw π). Table `MEET_TABLE` at (0, −5.2), 3.0 × 1.5.
 
 ## 8. Verification
@@ -114,6 +118,8 @@ The user can change each of these. The value to change is shown. The daybed, sof
 | Check | Result |
 |---|---|
 | Headless Chrome run, throwaway harness (not in the repo), 2026-11-04 | No JS errors. No collision violations, except one transient NPC overlap sample |
+| Headless Chrome, v1.12.0 (2026-11-04) | 8 coworkers joined the treat at the pantry spots, 14 got a cup (desk or hand), 7 were at the pantry in one test. Cup close-ups rendered. Default camera not checked |
+| Headless Chrome, v1.12.0 pantry table pass (2026-11-04) | All 8 spots walkable. Table cups: 8 at the start, 1 later (7 holding theirs), 0 after the end. Each of the 4 dishes shown alone. Top-down shot viewed. Full day and real device not run. Dish sizes exaggerated for readability |
 | Headless Chrome, v1.11.0 (2026-11-04) | `DESKS.length` is 14. Tùng seats at (−4.4, 5.8) on desk 13. Nguyên is at desk 8 (8.1, −0.8) at 10:00. Screenshots show Nguyên at desk 8 and the new desk in the lower row |
 | Full simulated day | Completes |
 | NPCs reach the pantry | Confirmed with a 75-second lunch simulation |
@@ -137,6 +143,8 @@ Status legend as in `docs/spec/mot-ngay-o-cong-ty.md` section 3.
 | AC-60 | Layout works on phones and touch devices | Not verified (headless Chrome only) |
 | AC-74 | Wall clock on the north wall shows the in-game time and its hands move with the game clock. Redrawn when the in-game minute changes, and after a time skip | Partly verified (headless Chrome: face exported at 08:30, 10:10, 14:20; three different images; 14:20 hands correct). Not viewed on a real device |
 | AC-85 | (v1.11.0) Desk 13 in the lower row next to Thông, seat at (−4.4, 5.85), is used by Tùng. Desk 8 (right table, south) is used by Nguyên. Lower-row spacing and pathing at peak times are not checked | Partly verified (headless Chrome: seat positions, screenshot). Full-day run and real device not done |
+| AC-91 | (v1.12.0) `DESKS[2].icedCoffee` (Anh Bảo's iced black coffee, `cafeden`) is built beside his lunchbox in `buildDeskItems()`. Other desks get a `dk.treatCup` only during a treat | Partly verified (headless Chrome: cups on desks counted; close-up render. Visibility at the default camera not checked) |
+| AC-92 | (v1.12.0) During Chủ tịt's treat, up to 8 present coworkers use `PANTRY_SPOTS` (`goalPantry(n, 'treat')`). Those with a meeting or cake event do not | Partly verified (headless Chrome: 8 joined, 7 at the pantry in one run. Spot use with a meeting or cake at the same time not recorded) |
 
 ## 10. Related docs
 

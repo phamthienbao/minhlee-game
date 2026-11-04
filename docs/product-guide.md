@@ -46,7 +46,7 @@ Time runs from **08:30** to **17:30**. One full day takes about 7 minutes at nor
 | 08:30 | **Đến công ty** (Arrive) | Greet at least 2 coworkers. Walk up to someone and press the action button. |
 | 09:00 | **Buổi sáng** (Morning) | Go to your desk (the yellow spot at the bottom left, next to Thông's desk). A label "💻 Bàn của bạn" (My desk) floats above it. If the desk is off-screen to one side, the label sticks to that edge of the screen to show the way. A coworker asks you for a small job, which takes about 30–60 seconds. There is no score and no penalty. There are two kinds of job: sort notes into projects (for example App Dating, Game mới, or App tiện ích), or put work items in deadline order. Up to 3 jobs a day. Each finished job also counts toward new items for your desk (see "Your desk and its items" below). Press "▶ Bắt đầu làm" (Start) to begin. |
 | 10:00 | **Họp ngắn** (Short meeting) | Go to the meeting room (top middle, between the two long tables) and sit at the meeting table to join in. The meeting runs until 10:55. Chủ tịt (Thạnh) hosts it. The topic changes from day to day. On Mondays it is about the next App Dating version. One possible topic is a partner asking to push back the App Dating feature deadline by 2 days. If you miss it, Chủ tịt sends you a short summary. |
-| 11:00 | **Giải lao** (Break) | Visit the pantry (top left). Pick a drink and chat with someone. You can invite a coworker to join you. Around 11:05, Chủ tịt buys drinks for everyone, which gives you a little energy and mood. On milk-tea days he also treats the team around 09:55 and 16:00. |
+| 11:00 | **Giải lao** (Break) | Visit the pantry (top left). Pick a drink and chat with someone. You can invite a coworker to join you. Around 11:05, Chủ tịt buys drinks for everyone, which gives you a little energy and mood. The drink is chosen at random: milk tea, rau má (a green herbal drink), or sugarcane juice. Chủ tịt asks people to come to the pantry. Up to eight coworkers gather there with him, and everyone else finds a takeaway cup on their desk. Around 14:10 he buys snacks instead. On milk-tea days he also treats the team around 09:55 and 16:00. |
 | 12:00 | **Ăn trưa** (Lunch) | Eat at the pantry. Lunch is available until about 13:40. |
 | 13:30 | **Buổi chiều** (Afternoon) | Help out. A coworker may ask you to fetch a file from the filing cabinet (bottom right), such as the "Báo cáo khảo sát người dùng" (user survey report) or the "Hợp đồng đối tác game" (game partner contract). Other events can happen: a printer jam, or a small birthday cake party in the pantry. Around 14:10, Chủ tịt brings snacks for everyone. |
 | 17:00 | **Kết thúc ngày** (Wrap-up) | Leave through the front door (on the right-hand wall, in the middle). You can leave a sticky note for a coworker first. |
@@ -56,6 +56,7 @@ You can also leave early from the front door after 16:00. If you leave before 17
 
 ### Other places in the office
 
+- **Pantry** (top left corner): the drinks and lunch corner. A round table stands in the middle, with room for up to eight people around it. When Chủ tịt treats the team, the table fills up: takeaway cups for a drink, or one dish (pizza, roast duck, takoyaki, or fried fish balls) for the afternoon snack. It is cleared once the treat is over.
 - **Sofa** (top right corner): rest to restore energy. Available while your energy is not nearly full.
 - **Notice board** (right-hand wall, next to the front door): read the notes posted there. They may be office gossip, or news about App Dating.
 - **Filing cabinet** (bottom right): where the document favor is fetched.
@@ -319,6 +320,9 @@ The coworker who asked you for help thanks you, and you grow a little closer to 
 
 **Who is "bé Hạnh"?**
 It is a playful nickname. Nam uses it to tease Chủ tịt (Thạnh). When he talks about work, he calls him "Thạnh".
+
+**Why is there a cup on a coworker's desk?**
+That is the drink Chủ tịt bought for the team. Coworkers who did not come to the pantry get theirs at their desk, and it stays there for a while. Coworkers who came to the pantry carry their cup back to their desk. Anh Bảo's desk always has an iced black coffee.
 
 **Why do some coworkers have titles, like Anh Bảo or Chủ tịt?**
 Most coworkers use first names. The titles are part of how the team talks to each other. Chủ tịt is the name everyone uses for the leader who hosts the meeting.

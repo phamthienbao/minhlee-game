@@ -2,6 +2,50 @@
 
 All notable changes to "Một Ngày Ở MinhLee" (formerly "Một Ngày Ở Công Ty", renamed in v1.0.3). Newest first. Entries are appended, never rewritten.
 
+## v1.12.0 — 2026-11-04
+
+Takeaway cups and pantry treats. The drinks Chủ tịt buys are now shown as street-style takeaway cups. The 11:05 treat picks a random drink, the coworkers who join him gather at the pantry, and everyone else finds a cup on their desk. Anh Bảo's desk has an iced black coffee.
+
+### Added
+
+- `makeTakeawayCup()` in `index.html` section 6: a clear, tapered plastic cup (transparent cylinder), a coloured liquid cylinder, a flat white lid with a dome, a straw, optional tapioca (boba, five dark spheres), and optional ice (four small translucent cubes, hidden by default).
+- `setCupDrink(g, kind)` (section 6) sets the liquid and straw colours and shows or hides boba and ice from `TREAT_DRINKS`: `trasua` (milk tea, brown, pink straw, boba), `rauma` (green, white straw), `nuocmia` (pale yellow-green, yellow straw), `coffee` (default hand cup, brown, white straw), `cafeden` (iced black coffee, near-black, dark straw, ice).
+- `startTreat(kind, now)` (section 14). It sets `EVENT.treat = {kind, start, end: start + 30}`, picks up to 8 coworkers who are present (Chủ tịt first, the rest shuffled; 8 matches the 8 `PANTRY_SPOTS`), sets `joinsTreat`, and sets each coworker's `treat = {kind, start, until, deskUntil: now + 110}`. Joiners have `until = now + 30`. Everyone else has `until = now`.
+- Anh Bảo's desk cup: `DESKS[2].icedCoffee`, built in `buildDeskItems()` with the `cafeden` cup beside his lunchbox (x + 0.95).
+- Desk cup `dk.treatCup`, created on first use beside the seat's lunchbox (x + 0.3) in the NPC update loop, shown from `until` to `deskUntil`.
+- Round pantry table `PANTRY_TABLE` (`{ x: -8.5, z: -5.6, r: 0.45, items }`, `index.html` section 5, built in `buildOffice()`): a wooden top, a pedestal, and a base. Its collision obstacle is `addObst(..., 0.9, 0.9)` with `nonav = true`, so it blocks movement but not the nav grid. NPCs stand around it.
+- `nonav` obstacle flag: `buildNav()` skips obstacles with `nonav` set when it marks blocked cells.
+- `PANTRY_TABLE.items` holds 8 takeaway cups (on the table, radius 0.3, hidden by default) and one hidden dish per `FOODS` key.
+- `updatePantryTable(m)` (section 9, after `goalPantry()`), called every frame from `update(dt)` (section 14). During a treat it shows cups for drink treats and one dish for the snack treat. It hides everything when the event ends.
+- `FOODS` (variety block between sections 2 and 3): `pizza` (🍕), `vitquay` (🦆), `takoyaki` (🐙), `cavien` (🍢). `makeFood(kind)` (section 6) builds each as a low-poly model placed at the centre of the table (y 0.76).
+- `EVENT.treat.food`: the dish id for the 14:10 snack treat, or `null`. Saved with `EVENT.treat` in the mid-day session.
+- Mid-day save fields: `EVENT.treat` and per-NPC `joinsTreat` and `treat`, written by `saveSession()` and read by `resumeSession()` (section 14). See `docs/spec/the-gioi-lien-tuc.md` §11.1.
+
+### Changed
+
+- 11:05 treat (`processTimeEvents()`): the kind is picked at random from `trasua`, `rauma`, and `nuocmia`. Milk-tea theme treats (09:55 and 16:00) stay `trasua`. The 14:10 treat stays `snack` (no cups, `eat` animation).
+- Treat toast: the drink or snack is named, then "Ra pantry nhé!". Example: "🧋 Chủ tịt mời cả phòng trà sữa. Ra pantry nhé!". Chủ tịt's bubble names the item too (`tryNpcSay()`, see `docs/spec/dong-nghiep.md` §7.4).
+- Pantry gathering: `decideGoal()` sends joiners to `goalPantry(n, 'treat')`. A meeting or cake event still comes first. Drink treats use the `pantry` animation (sip and talk). The snack uses `eat`.
+- Hand cup: `c.cup` is now a `makeTakeawayCup()`, replacing the old small white cup. `poseCharacter()` shows it when the character sips or when `c.holdCup` is set.
+- `c.holdCup` is set from the start of the treat until 12 minutes after its `until` (joiners: 42 minutes after the start). The cup then goes to the desk. Coworkers who did not join get their desk cup at once. If such a coworker is away from the desk in the first 12 minutes, they also hold a cup.
+- Hand cups appear only once a joiner has arrived at the pantry (`arrivedP`: goal `pantry*` and not moving), or while carrying the cup back after the treat. A joiner who is still walking to the pantry does not hold one. Non-joiners never hold a cup; theirs is delivered to their desk.
+- Pantry spots (`PANTRY_SPOTS`, section 5): the two hand-placed rows are replaced by 8 spots on an ellipse around `PANTRY_TABLE` (rx 1.05, rz 0.85). Each spot faces the table (yaw = `atan2` to the table centre). Coffee, lunch, cake, and treat standing all use them. The first version put spot 0 inside the counter's inflated nav cell. Moving the table z from −5.85 to −5.6 fixed it. All 8 spots are now in free nav cells.
+- Table during a treat (`updatePantryTable(m)`): for a drink treat, one takeaway cup per joiner who has not yet picked theirs up (up to 8). The cups on the table are the joiners without `holdCup`. Each cup disappears when its owner arrives and holds it. The liquid colour follows the drink (`setCupDrink`). For the 14:10 snack treat, one random dish from `FOODS` is shown in the middle of the table for the 30-minute event. Nothing is shown after the event ends.
+- 14:10 treat (`processTimeEvents()`): picks one dish at random from `FOODS` and passes it to `startTreat(kind, now, food)`. The toast and Chủ tịt's line name the dish: "Chủ tịt mua pizza mời cả phòng. Ra pantry nhé!" (the toast adds the dish emoji).
+
+### Verification
+
+- Headless Chrome, throwaway harness (not in the repo): all random drink kinds appeared across runs; 8 coworkers joined; 14 got a cup; 7 were at the pantry in one test run; the 14 desk cups were there later; the mid-day session saved `treat`.
+- Rendered a cup lineup and a character holding a cup, in isolated screenshots. The cups read as takeaway cups.
+- Pantry table, headless Chrome, throwaway harness (not in the repo): 8 cups on the table at the start of a drink treat; 1 cup later, while 7 joiners hold theirs; 0 cups after the end. Each of the 4 dishes shows alone. All 8 spots are walkable. Dish and table views checked with a top-down shot.
+- Not verified: cup visibility at the default camera distance (cups are small and hidden behind bodies from the default angle), ice cubes (barely visible), a real device. Not tested over a full day. Dish sizes are exaggerated for readability. See `docs/tasks.md` (v1.12.0).
+
+### Internal
+
+- `index-offline.html` contains the v1.12.0 code (grep check; `tools/build-offline.py` not run in this docs pass). `CLAUDE.md` not edited (user's instruction).
+- Docs: `docs/spec/noi-dung-bat-ngo.md` §3.1, `docs/spec/dong-nghiep.md` §1 and §7.4, `docs/spec/van-phong-layout.md` §2, §3, §7, §8 and §9 (AC-91, AC-92), `docs/spec/mot-ngay-o-cong-ty.md` §3 (AC-87 to AC-90) and §4.2, `docs/spec/the-gioi-lien-tuc.md` §11.1, `docs/product-guide.md`, `docs/glossary.md`, `docs/tasks.md`.
+- Docs (pantry table pass): `docs/spec/van-phong-layout.md` §3 seat table row 8 corrected (`Tùng's seat until v1.11.0`, was `v1.10.1`). `docs/spec/noi-dung-bat-ngo.md` §3.1 (table, food, spots), `docs/spec/mot-ngay-o-cong-ty.md` AC-93 and AC-94, `docs/product-guide.md` (pantry), `docs/glossary.md` (new terms), `docs/tasks.md` (follow-ups).
+
 ## v1.11.0 — 2026-11-04
 
 Office layout change. A new private desk is added in the lower row, Tùng moves to it, and Nguyên (who had no desk) takes Tùng's old seat. Nguyên now works at that desk instead of on a pantry sofa. His single nap on the daybed after lunch is unchanged.
