@@ -2,6 +2,117 @@
 
 All notable changes to "Một Ngày Ở MinhLee" (formerly "Một Ngày Ở Công Ty", renamed in v1.0.3). Newest first. Entries are appended, never rewritten.
 
+## v2.1.0-alpha — 2026-11-04
+
+Multiplayer stage 1, password sign-in. Members sign in with a company email and a password that the administrator creates in the Supabase dashboard and gives them in private. The email sign-in link is gone. There are no sign-in emails and no SMTP setup. The sign-in screen is hidden from regular visitors behind the `loginEnabled` flag. Spec: `docs/spec/dang-nhap-cong-ty.md` (login, flag, accounts); summary in `docs/spec/nhieu-nguoi-choi.md` §10.
+
+### Added
+
+- Password sign-in in `showLogin(msg)` (`index.html`, sign-in block after section 14): email and password fields, "Đăng nhập" button (`auth.signInWithPassword`). Enter in the password field submits. An empty password shows "Hãy nhập mật khẩu."
+- `cloudEnter(sess)`: shared by boot and sign-in. Claims the character (`claim_character()`), applies it, then shows the welcome popup. On failure it signs out and returns to the sign-in screen with a message.
+- `loginEnabled` constant (`index.html`, p6, before `guestPref`). The sign-in feature is on only in a browser that opened the game with `?login` in the address. It stores `localStorage['mot-ngay.dev'] = '1'` and stays on for later visits. `?login=off` removes the key. When off, `cloudBoot()` hides `#btn-login`, never loads supabase-js, and goes straight to the Guest flow (welcome popup, or the name form on a first start). The sign-in button and screen are not shown to other players.
+- `friendlyAuthError(e)`: maps Supabase errors to Vietnamese messages (table in `docs/spec/dang-nhap-cong-ty.md` §1). Used by the sign-in form.
+- `AUTH_INPUT_STYLE` constant for the sign-in inputs.
+- Spec: `docs/spec/dang-nhap-cong-ty.md` (flow, admin account setup, flag, acceptance rows AC-M22 to AC-M32). Product guide: sign-in steps, FAQ, and a short admin/tester note on the flag. Glossary: `loginEnabled`, `mot-ngay.dev`, `Auto Confirm`.
+
+### Changed
+
+- The sign-in screen no longer sends a magic link. The `signInWithOtp` call is removed from the UI. Accounts are created by the administrator, with a password chosen by the administrator.
+- Wrong credentials now show "Email hoặc mật khẩu chưa đúng. Hãy hỏi quản trị viên nếu bạn chưa có mật khẩu." An unconfirmed account shows "Tài khoản chưa được kích hoạt. Hãy nhờ quản trị viên kiểm tra."
+- `cloudBoot()` toggles `#btn-login` from `loginEnabled` and returns early to `showWelcomeBack()` when the flag is off.
+- Account setup (dashboard only, no code): Authentication → Users → Add user → Create new user, with Auto Confirm. A forgotten password is reset by the administrator in the dashboard. No SMTP, no email templates, and no emails are needed.
+- Glossary: "Đăng nhập công ty", "Link đăng nhập", and `cloudEnter(sess)` are flagged as outdated. Their original text is kept.
+
+### Removed
+
+Removed later on the same day, before any player used the alpha. Listed so that anyone who read an earlier draft of this entry is not misled. The earlier checks of these flows (mocked recovery and create-password steps, the `/recover` probe) no longer apply.
+
+- The "✉️ Lần đầu hoặc quên mật khẩu?" button and its call to `auth.resetPasswordForEmail`.
+- The `PASSWORD_RECOVERY` listener in `cloudInit()` and the `CLOUD.recovery` flag.
+- `showSetPassword(forced)` with its "🔒 Tạo mật khẩu" and "🔒 Đặt lại mật khẩu" screens, and the `auth.updateUser({password})` call.
+- The create-password step in `cloudEnter()`. Sign-in now goes claim, then apply, then welcome popup.
+- The `pwSet` flag. `cloudFlush()` no longer writes it into `progress.data`. An old `pwSet` value in a saved row is not read by the game.
+- The email-template, SMTP, and Site URL / Redirect URL steps for sign-in emails (`docs/spec/dang-nhap-cong-ty.md` §3 keeps only the account steps).
+
+### Internal
+
+- Spec split: the login detail moved from `docs/spec/nhieu-nguoi-choi.md` §10 to `docs/spec/dang-nhap-cong-ty.md`, and §10 is now a summary. This keeps both files under 200 lines.
+- `docs/tasks.md`: follow-ups for email templates, SMTP, and the recovery test removed. Added: flag removal after the realtime tests, and the optional in-game password change.
+- No secrets, keys, project URLs, emails, or passwords were written to the docs.
+
+### Verification
+
+Verified (2026-11-04):
+
+- `index.html` syntax check (AC-M22).
+- Headless Chrome with a mocked Supabase client, flag on: wrong password shows the wrong-credentials message; correct password opens the welcome popup with the right character; the Guest button is present (AC-M23).
+- Real server probe: a wrong password returns 400 `invalid_credentials` (AC-M25).
+- Headless Chrome, flag off (no `?login`): `loginEnabled` is false, `#btn-login` is hidden, the title screen with the name form is visible, and no cloud client is created (AC-M30).
+- Headless Chrome, `?login`: `loginEnabled` is true, `#btn-login` is visible, and the cloud client is created (AC-M31).
+
+Not verified:
+
+- A real password sign-in against the server, and the next sign-in going straight to the welcome popup (AC-M28).
+- `?login=off` turning the flag off again in a real browser (AC-M32).
+- The friendly messages for real network and rate-limit errors (AC-M29, code read only).
+
+### Known limits
+
+- Password change from inside the game is not available. The administrator resets passwords in the dashboard.
+- The `loginEnabled` flag is obscurity, not security. The code is public. The real protection is Supabase RLS and the administrator-created accounts.
+- The other 13 accounts are not yet created or tested (`docs/tasks.md`).
+- The "same password" and "weak password" branches of `friendlyAuthError` cannot be reached from the sign-in screen.
+- The Mac app and the offline build still have no sign-in or cloud save, as in v2.0.0-alpha.
+
+## v2.0.1-alpha — 2026-11-04
+
+Fixes after the first real sign-in test by the project owner. Sign-in by email link works. Saving to the server worked after the table grants below were added. A signed-in member now sits at their own character's desk, and coworkers call the member by the character's name. Spec: `docs/spec/nhieu-nguoi-choi.md` §6.1 and §9.
+
+### Added
+
+- `applyPlayerDesk(profile)` in `index.html` section 5. It copies the character's `DESKS[profile.desk]` into the shared `PLAYER_DESK` object (`kind`, `x`, `z`, `seat`, `north`), and adds two fields: `sx` and `sz`, the centre of the desk surface. For a long table, `sx` is the seat x and `sz` is the table z plus or minus 0.5. The "💻 Bàn của bạn" tag, the tag's distance check, and the unlock items use `sx` and `sz`.
+- `MEMBER_CALL` in section 1, set from `MEMBER_CALLS` (the sign-in block after section 14): `bao` → "anh Bảo", `an3` → "chị Ba", `an7` → "chú 7", `thanh` → "Chủ tịt". Other characters use their own name. `fill()` uses it for `{ten}`. `Store.name` stays the real name for the HUD and the diary.
+- `cloudFlush()` shows "⚠ Máy chủ chưa cấp quyền lưu tiến độ. Hãy báo quản trị viên kiểm tra." when the error code is 42501 or the message contains "permission denied". Other errors keep the generic "Chưa lưu được…" toast. The throttle is unchanged: one toast per 60 s, retry every 15 s.
+- Spec: `docs/spec/nhieu-nguoi-choi.md` §6.1 (server grants) and acceptance rows AC-M15 to AC-M21.
+
+### Changed
+
+- `cloudApply(row)` calls `applyPlayerDesk(p)` and sets `MEMBER_CALL`. The member's work spot `SPOTS[0]` moves to the seat's approach point, 0.4 m toward the seat.
+- `buildDeskItems()` places the item group at (`sx`, 0.75, `sz`). On a long table with the chair on the north side (`north`), the group is rotated by π so the items face the chair.
+- `memberLogout()` calls `applyPlayerDesk(null)` and clears `MEMBER_CALL`. The guest desk at the lower left, beside Thông's desk, comes back. Nguyên (`desk: null`) also uses the guest desk while signed in.
+- The 09:00 morning hint for members no longer names the location ("góc dưới bên trái, cạnh bàn Thông"). The "💻 Bàn của bạn" label text is unchanged. See `docs/spec/bang-nhiem-vu.md` §3.4.
+- Docs: `docs/spec/bang-nhiem-vu.md` (desk group position, morning hint), `docs/product-guide.md` (signing in, save warning, name FAQ), `docs/glossary.md` (new terms), `docs/tasks.md`.
+
+### Fixed
+
+- Every save failed with "Chưa lưu được lên máy chủ" because the new tables had no grants for the `authenticated` role. The fix is server-side and not in the repo: `grant usage on schema public to authenticated`, `grant select on public.progress to authenticated`, `grant select on public.roster to authenticated`. Applied by the project owner, who confirmed that saving works. The `update` column grants were already in place. The client now shows a specific message for this error (see Added), so the cause is clear to the owner.
+
+### Verification
+
+Verified (2026-11-04):
+
+- Project owner, real sign-in: the email link works and the character is right (AC-M9, AC-M10 in part). Saving works after the grants (AC-M11, save part, and AC-M21, save part).
+- Headless Chrome, member desks: Bảo (long table, south side), Toàn, Phú (north side), Thảo (own desk). For each: seat, work spot, surface centre, and items are correct. Sitting at the desk through the work card lands exactly on the seat. Logout restores the guest desk. A screenshot of Bảo at his desk showed 8 unlock items and the tag.
+
+Not verified:
+
+- Every character's desk visually (only Bảo, Toàn, Phú, Thảo were checked). Item rotation on north-side desks in a screenshot (AC-M18, AC-M19).
+- `{ten}` names in play: code read only (AC-M20).
+- The new permission toast text: code only (AC-M21).
+- Reload after closing the browser (AC-M11, reload part). Popup visuals (AC-M12). CDN fallback (AC-M8, AC-M13).
+
+### Known limits
+
+- A line that starts with `{ten}` reads in lowercase, for example "anh Bảo ơi…". Cosmetic. Native review pending.
+- `{anh}` and `{Anh}` still follow the member's gender, not the `MEMBER_CALL` term. Female members: `thao`, `yen`, `an3`. Not checked in play.
+- Stage 1 is still single-player for members. Offline builds and the Mac app do not have sign-in or cloud save (see the v2.0.0-alpha limits).
+
+### Internal
+
+- Changed in `index.html`, not by this docs pass: `applyPlayerDesk`, `buildDeskItems`, `cloudApply`, `memberLogout`, `cloudFlush`, `fill`, and the morning hint text. `CLAUDE.md` and `index.html` were not edited in this docs pass.
+- Still open from v2.0.0-alpha: `CLAUDE.md` Status line (v1.8.5) and its docs list.
+- No secrets, project URLs, emails, or keys were written to the docs. The grant statements are the only server SQL in the docs (spec §6.1). They contain no project values.
+
 ## v2.0.0-alpha — 2026-11-04
 
 Stage 1 of multiplayer: company sign-in by email link (Supabase), a character claimed by email, and server save for signed-in members. Guest play is unchanged and still runs in the browser. Not yet tested with a real sign-in. Spec: `docs/spec/nhieu-nguoi-choi.md` §9.

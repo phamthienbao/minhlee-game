@@ -90,6 +90,8 @@ Notes:
 
 The user can change each of these. The value to change is shown. The daybed, sofa, printer, and notice board positions follow the brief for v1.3.0. They are not positions read from the SVG.
 
+Note (v2.0.1-alpha): `PLAYER_DESK` above is the guest desk. A signed-in member sits at their character's own desk instead, through `applyPlayerDesk()` (`docs/spec/nhieu-nguoi-choi.md` §9).
+
 | Item | Current value | Where to change | Reason |
 |---|---|---|---|
 | Player desk | (−10.2, z 4.73), bottom left, left of Thông | `PLAYER_DESK` | The plan has no desk for the player. The position was chosen by the maintainer |

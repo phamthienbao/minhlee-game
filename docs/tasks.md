@@ -1,18 +1,15 @@
 # Tasks
 
-Last updated: 2026-11-04 (v2.0.0-alpha, multiplayer stage 1: sign-in and cloud save, not yet tested with a real login)
+Last updated: 2026-11-04 (v2.1.0-alpha, password sign-in for admin-created accounts behind the `loginEnabled` flag, multiplayer stage 1)
 
 Legend: `[x]` done, `[ ]` todo, `[~]` in progress, `[!]` blocked.
 
 ## Done
 
-Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`. Done entries v1.8.2 to v1.8.6 were moved there in the v1.9.3 pass. Done entries v1.9.1 to v1.9.4 were moved there in the v1.10.0 pass. Done entries v1.9.0 and v1.9.5 were moved there in the v1.11.0 pass. Done entries v1.11.0 and v1.12.0 were moved there in the v1.14.0 pass. Done entries v1.10.0 and v1.10.1 were moved there in the v1.13.0 pass. Done entries v1.13.0 and v1.14.0 were moved there in the v1.15.0 pass. The v1.15.0 Done entry and the closed `[x]` items of the other sections were moved there in the v1.16.0 pass. The v1.16.0 Done entry was moved there in the v2.0.0-alpha pass.
+Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`. Done entries v1.8.2 to v1.8.6 were moved there in the v1.9.3 pass. Done entries v1.9.1 to v1.9.4 were moved there in the v1.10.0 pass. Done entries v1.9.0 and v1.9.5 were moved there in the v1.11.0 pass. Done entries v1.11.0 and v1.12.0 were moved there in the v1.14.0 pass. Done entries v1.10.0 and v1.10.1 were moved there in the v1.13.0 pass. Done entries v1.13.0 and v1.14.0 were moved there in the v1.15.0 pass. The v1.15.0 Done entry and the closed `[x]` items of the other sections were moved there in the v1.16.0 pass. The v1.16.0 Done entry was moved there in the v2.0.0-alpha pass. The v2.0.0-alpha Done entry and the closed member-reset defect were moved there in the v2.0.1-alpha pass. The v2.0.1-alpha Done entry, a closed follow-up, and a closed known defect were moved there in the v2.1.0-alpha pass.
 
-- [x] v2.0.0-alpha (2026-11-04): multiplayer stage 1, sign-in and cloud save. Guest play unchanged. Spec: `docs/spec/nhieu-nguoi-choi.md` §9. Details: `docs/changelog.md` v2.0.0-alpha
-  - [x] Code (`index.html`): Supabase constants, lazy import of `@supabase/supabase-js@2.45.4`, cloud block (`cloudBoot`, `cloudClaim`, `cloudApply`, `cloudPush`, `cloudFlush`, `showLogin`, `memberLogout`), `Store` backend switch, member NPC hidden, login and welcome popups
-  - [x] Server (owner, Supabase dashboard, not in repo): tables, `claim_character()`, RLS, signups off, 14 invited emails, custom SMTP, Site URL and Redirect URL. Reported by the owner, not re-checked
-  - [x] Checks: syntax; project probes; supabase-js calls from Node; headless Chrome with a mocked member. Not verified: see Follow-ups, v2.0.0-alpha
-  - [x] Docs: changelog, `docs/spec/nhieu-nguoi-choi.md`, `docs/spec/mot-ngay-o-cong-ty.md`, `docs/spec/phan-phoi-offline.md`, `docs/product-guide.md`, `docs/glossary.md`
+- [x] v2.1.0-alpha (2026-11-04): password sign-in for admin-created accounts, hidden behind the `loginEnabled` flag (`?login`). Email link, recovery and create-password flows added and removed the same day. Details: `docs/changelog.md` v2.1.0-alpha. Spec: `docs/spec/dang-nhap-cong-ty.md`
+  - [x] Code (`index.html`): `showLogin`, `cloudEnter`, `cloudBoot`, `friendlyAuthError`, `loginEnabled`. Docs: changelog, both spec files, product guide, glossary. Checks and open items: Follow-ups, v2.1.0-alpha
 
 ## In progress
 
@@ -20,7 +17,6 @@ Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`.
 
 ## Known defects
 
-- [x] (v2.0.0-alpha, fixed 2026-11-04) Member reset: `Store.clear()` now returns without doing anything while a cloud backend is set (a signed-in member cannot wipe their data from inside the game; `dlog` records the skipped call), so the next `cloudFlush()` can no longer overwrite the server row with defaults. Guest reset is unchanged. Verified in headless Chrome (member: days 5 / tasks 7 kept, nothing pushed; guest: cleared). Not done: a deliberate "reset my progress" for members, if ever wanted.
 - [ ] (v1.8.4) Not tested on a real phone. Check the lying coworker's name tag and speech bubble (Nguyên on the daybed) in portrait and landscape, under the top bar and in the notch or safe-area zone
 - [ ] (v1.7.0) Root cause of the "no graphics" reports after sharing is not identified. v1.7.0 adds detection and fallbacks but does not fix a known cause. Ask the reporters for browser, version, device, and whether the page was opened inside an app. Check whether `index.html` or `index-offline.html` was used
 - [ ] (v1.7.0) Players said they could open the game in Safari afterwards. The cause is not identified. Record which browser, file, and app they used
@@ -47,12 +43,22 @@ Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`.
 
 ## Follow-ups
 
-v2.0.0-alpha (multiplayer stage 1, sign-in and cloud save). Spec §9.3 lists the acceptance criteria:
+v2.1.0-alpha (password sign-in, login flag). Acceptance rows are in `docs/spec/dang-nhap-cong-ty.md` §5:
 
-- [ ] (v2.0.0-alpha) Real login test (AC-M9): request a link with a real invited email, open it, return to the game, and confirm the member welcome popup and the character (name, gender, look). Check the popups visually on desktop and phone (AC-M12)
-- [ ] (v2.0.0-alpha) Confirm the server setup by query (AC-M10), since the earlier probe found no `progress` table or `claim_character` yet. Check column names (the code writes `days`, `tasks_total`, `unlocked`, `affinity`, `diary`, `session`, `data`, `updated_at`), the `roster` columns, the body of `claim_character()`, and that RLS lets a member read and update only their own row
-- [ ] (v2.0.0-alpha) Save to the real server (AC-M11): play, reload, and confirm the restore. Test a dropped connection mid-day for the retry toast and the 15 s retry
-- [ ] (v2.0.0-alpha) Dynamic import over the CDN in a real browser (AC-M13), and the Guest fallback when the Supabase script cannot load (AC-M8)
+- [ ] (v2.1.0-alpha) Real-server test (AC-M28, AC-M32): sign in with a password on an admin-created test account (use one the owner can access). The next sign-in goes straight to the welcome popup. Then `?login=off` hides the button in the same browser
+- [ ] (v2.1.0-alpha) Create the 14 accounts in the dashboard (Auto Confirm, password chosen by the administrator, given in private), each with its `roster` row. Keep passwords out of the repo, the docs, and shared chats
+- [ ] (v2.1.0-alpha) Optional: password change from inside the game. Not planned for the alpha. Decide whether it is needed before launch
+- [ ] (v2.1.0-alpha) When the realtime tests are done: remove the flag (set `loginEnabled` to true, so the sign-in button shows for everyone) and announce it to the players. Then update the admin/tester note in `docs/product-guide.md`
+
+v2.0.1-alpha (multiplayer stage 1 fixes). Acceptance rows are in spec §9.3:
+
+- [ ] (v2.0.1-alpha) Desk checks (AC-M18, AC-M19): screenshot the item rotation on a north-side long-table desk, and check the other 10 characters' desks (only Bảo, Toàn, Phú, Thảo were checked)
+- [ ] (v2.0.1-alpha) Address check in play (AC-M20): `{ten}` as "anh Bảo", "chị Ba", "chú 7", "Chủ tịt". Native review of the lowercase start ("anh Bảo ơi…") and of `{anh}`/`{Anh}` for female members (`thao`, `yen`, `an3`)
+- [ ] (v2.0.1-alpha) Add a `?debug` hint for testers: save errors are logged with `dlog` (localhost or `?debug` only). Decide where the hint goes (`docs/deploy.md` or the tester message) and write it
+- [ ] (v2.0.1-alpha) Create and test the other 13 accounts: each invited email needs its `roster` row and a `progress` row from `claim_character()`. Only the owner's account has signed in. Any new public table needs the grants in spec §6.1. The account step for each login is in `docs/spec/dang-nhap-cong-ty.md` §3
+- [ ] (v2.0.0-alpha) Confirm the server by query (AC-M10). The owner's login gave the right character, but the `progress` columns, the `roster` columns, the body of `claim_character()`, and RLS (own row only) are not re-checked
+- [~] (v2.0.0-alpha) Save and restore (AC-M11): saving works (owner, 2026-11-04). Open: reload after closing the browser, a dropped connection mid-day for the retry toast and the 15 s retry, and the new 42501 toast text
+- [ ] (v2.0.0-alpha) Popup visuals on desktop and phone (AC-M12). Dynamic import over the CDN in a real browser (AC-M13), and the Guest fallback when the Supabase script cannot load (AC-M8)
 - [ ] (v2.0.0-alpha) Offline builds are out of date (AC-M14). Decide when to rebuild `index-offline.html` and `dist/`. Check whether `tools/build-offline.py` fails on the two-entry importmap. `CLAUDE.md` asks for a rebuild after every edit, which this release does not follow
 - [ ] (v2.0.0-alpha) Stage 2 (see the spec §5). Before it starts, settle the open questions in `docs/spec/nhieu-nguoi-choi.md` §8, especially whether Guest plays alone (§8 Q1)
 
@@ -124,7 +130,6 @@ v1.10.0 (mid-day save, Nguyên, Anh Bảo):
 - [ ] (v1.10.0) Confirm the four copies are identical apart from the importmap and comment lines (`diff index.html index-offline.html`; `dist/netlify/index.html` and `dist/MinhLee.app/Contents/Resources/index.html` by diff). Only the grep check was run in the doc pass
 - [ ] (v1.10.0) `tools/macapp/Info.plist` `CFBundleShortVersionString` is still 1.8.5. Set it to 1.10.0 and rebuild `dist/MinhLee-mac.zip` with `tools/build-mac-app.sh`
 - [ ] (v1.10.0) Tune the 40% chance that Trung visits Nguyên (`npcAmbient()`, `index.html` line ~1734). Headless only: 1 of 6 short runs. Playtest a full day and check how often the visit happens
-- [x] (v1.10.0, resolved v1.11.0) `npcAmbient()` pushed Nguyên into `duoC` twice (once by the `filter`, once explicitly), so he has double weight among the duo partners. Resolved in v1.11.0: `cands` excludes Nguyên for Trung, and the 40% gate adds him once
 
 Diary intro (v1.7.2):
 

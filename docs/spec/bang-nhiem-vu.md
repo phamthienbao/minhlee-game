@@ -75,6 +75,8 @@ The printer-jam line takes priority while that event is open. Rules: `docs/spec/
 
 The "Buổi sáng" (09:00) milestone's `hint()` reads: "Đến bàn của bạn (có nhãn “💻 Bàn của bạn”, góc dưới bên trái, cạnh bàn Thông) rồi bấm nút “Làm việc”." Its `done()` is `D.tasks >= 1`, unchanged. The same text appears on the goal card and on the board (§3.1, §3.2), because both read `MS`.
 
+For a signed-in member (v2.0.1-alpha), the location phrase "góc dưới bên trái, cạnh bàn Thông" is left out, because the member's desk is their character's own desk (`docs/spec/nhieu-nguoi-choi.md` §9). The label "💻 Bàn của bạn" stays.
+
 ## 4. Tap to open
 
 - `init()`: `$('#hud-obj')` click calls `Sfx.click()`, then `pauseGame()` if `G.mode === 'play'`.
@@ -151,7 +153,7 @@ Source of truth: `index.html`, `UNLOCKS` (variety block, between sections 2 and 
 | 18 | `phones` | 🎧 Tai nghe chống ồn | Dark headband and two earcups |
 | 25 | `trophy` | 🏆 Cúp “Người đồng hành” | Wooden base, gold stem and cup |
 
-Each item has a `slot` (x, z offset from the desk centre). The group sits at `PLAYER_DESK` with y 0.75.
+Each item has a `slot` (x, z offset from the desk centre). The group sits at (`PLAYER_DESK.sx`, 0.75, `PLAYER_DESK.sz`) with y 0.75. For a signed-in member the desk is the character's own desk, and the group is rotated by π when the chair is on the north side of a long table (v2.0.1-alpha, `applyPlayerDesk()`, `docs/spec/nhieu-nguoi-choi.md` §9).
 
 ### 9.3 Unlock flow
 

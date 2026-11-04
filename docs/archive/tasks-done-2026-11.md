@@ -474,3 +474,22 @@ Moved verbatim from `docs/tasks.md` to keep that file under 300 lines. The v1.15
   - [x] Headless Chrome (reported by requester): scene entered; 13 coworkers left in order (Chủ tịt last); Toàn still seated; end card at about 18:32. Not re-run in the doc pass
   - [ ] Not verified: the scene in a screenshot or video, the camera distance after the restore, touch and real devices, native review of the goodbye lines. See Follow-ups, v1.16.0
   - [x] Docs: changelog, `docs/spec/tan-ca-18-gio.md` (new), `docs/spec/mot-ngay-o-cong-ty.md`, `docs/spec/ngoi-lam-viec.md`, `docs/spec/dong-nghiep.md`, `docs/spec/bang-nhiem-vu.md`, `docs/spec/the-gioi-lien-tuc.md`, `docs/spec/noi-dung-bat-ngo.md`, `docs/product-guide.md`, `docs/glossary.md`
+
+## Moved from docs/tasks.md in the v2.0.1-alpha pass (v2.0.0-alpha done entry and a closed known defect)
+
+- [x] v2.0.0-alpha (2026-11-04): multiplayer stage 1, sign-in and cloud save. Guest play unchanged. Spec: `docs/spec/nhieu-nguoi-choi.md` §9. Details: `docs/changelog.md` v2.0.0-alpha
+  - [x] Code (`index.html`): Supabase constants, lazy import of `@supabase/supabase-js@2.45.4`, cloud block (`cloudBoot`, `cloudClaim`, `cloudApply`, `cloudPush`, `cloudFlush`, `showLogin`, `memberLogout`), `Store` backend switch, member NPC hidden, login and welcome popups
+  - [x] Server (owner, Supabase dashboard, not in repo): tables, `claim_character()`, RLS, signups off, 14 invited emails, custom SMTP, Site URL and Redirect URL. Reported by the owner, not re-checked
+  - [x] Checks: syntax; project probes; supabase-js calls from Node; headless Chrome with a mocked member. Not verified: see Follow-ups, v2.0.0-alpha
+  - [x] Docs: changelog, `docs/spec/nhieu-nguoi-choi.md`, `docs/spec/mot-ngay-o-cong-ty.md`, `docs/spec/phan-phoi-offline.md`, `docs/product-guide.md`, `docs/glossary.md`
+- [x] (v2.0.0-alpha, fixed 2026-11-04) Member reset: `Store.clear()` now returns without doing anything while a cloud backend is set (a signed-in member cannot wipe their data from inside the game; `dlog` records the skipped call), so the next `cloudFlush()` can no longer overwrite the server row with defaults. Guest reset is unchanged. Verified in headless Chrome (member: days 5 / tasks 7 kept, nothing pushed; guest: cleared). Not done: a deliberate "reset my progress" for members, if ever wanted.
+
+## Moved from docs/tasks.md in the v2.1.0-alpha pass (v2.0.1-alpha done entry, a closed follow-up, a closed known defect)
+
+- [x] v2.0.1-alpha (2026-11-04): fixes after the owner's first real sign-in test. Login and cloud save work. Members sit at their own desk and are called by character name. Details: `docs/changelog.md` v2.0.1-alpha. Spec: `docs/spec/nhieu-nguoi-choi.md` §6.1, §9
+  - [x] Server (owner, Supabase SQL, not in repo): grants for `authenticated` on `progress` and `roster`, schema usage. Confirmed: saving works
+  - [x] Code (`index.html`): `applyPlayerDesk()`, `PLAYER_DESK.sx`/`sz`, `MEMBER_CALL`, 42501 toast in `cloudFlush()`
+  - [x] Checks: headless Chrome for Bảo, Toàn, Phú, Thảo (seat, spot, items, logout). Not verified: see Follow-ups, v2.0.1-alpha
+  - [x] Docs: changelog, `docs/spec/nhieu-nguoi-choi.md`, `docs/spec/bang-nhiem-vu.md`, `docs/product-guide.md`, `docs/glossary.md`
+- [x] (v2.0.1-alpha, closed 2026-11-04 in v2.1.0-alpha) Decide password or magic link. Decided: email and password, with a create-password step and a recovery email (`docs/spec/nhieu-nguoi-choi.md` §10)
+- [x] (v1.10.0, resolved v1.11.0) `npcAmbient()` pushed Nguyên into `duoC` twice (once by the `filter`, once explicitly), so he has double weight among the duo partners. Resolved in v1.11.0: `cands` excludes Nguyên for Trung, and the 40% gate adds him once

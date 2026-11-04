@@ -551,13 +551,13 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **Toàn ở lại (Toàn stays late)** — *(needs definition)* Toàn's `habits.leave` is 19:00, so he is still seated when the farewell scene ends. The end card then says he stays until 7 pm. Added v1.16.0.
 
-**Đăng nhập công ty (company sign-in)** — *(needs definition)* Sign-in with a company email from the title screen button "🔑 Đăng nhập công ty". Sends a one-time link. Added v2.0.0-alpha. See `docs/spec/nhieu-nguoi-choi.md` §9.
+**Đăng nhập công ty (company sign-in)** — *(needs definition)* Sign-in with a company email from the title screen button "🔑 Đăng nhập công ty". Sends a one-time link. Added v2.0.0-alpha. See `docs/spec/nhieu-nguoi-choi.md` §9. *(Outdated as of v2.1.0-alpha: sign-in is now email and password. See `docs/spec/nhieu-nguoi-choi.md` §10.)* *(Hidden for everyone unless `loginEnabled` is on, from v2.1.0-alpha. See `docs/spec/dang-nhap-cong-ty.md` §4.)*
 
 **Guest (chế độ khách)** — *(needs definition)* Playing without signing in. The save stays in the browser on this device (`localStorage`). Chosen with "🎮 Chơi Guest (nhân viên mới)". Added v2.0.0-alpha.
 
 **Thành viên (member)** — *(needs definition)* A player signed in with a company email. Plays as one coworker, and the save is kept on the server. `MEMBER` in `index.html`. Added v2.0.0-alpha.
 
-**Link đăng nhập (sign-in link)** — *(needs definition)* The email link sent by `signInWithOtp` (`shouldCreateUser: false`). Opening it returns to the game's web address and starts the session. Added v2.0.0-alpha.
+**Link đăng nhập (sign-in link)** — *(needs definition)* The email link sent by `signInWithOtp` (`shouldCreateUser: false`). Opening it returns to the game's web address and starts the session. Added v2.0.0-alpha. *(Outdated as of v2.1.0-alpha: `signInWithOtp` was removed from the sign-in screen. Links now come from "Lần đầu hoặc quên mật khẩu?" or an invitation, see the recovery link entry below.)* *(Removed as of v2.1.0-alpha, same day: no sign-in emails are sent. The recovery link entry below is also removed.)*
 
 **`roster`** — *(needs definition)* Server table that maps each company email to one character (`char_id`) and department. Read by `claim_character()`. Added v2.0.0-alpha.
 
@@ -574,3 +574,35 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 **Lưu lên máy chủ (cloud save)** — *(needs definition)* Saving a member's progress to `progress`. Debounced 3 seconds after a change, retried every 15 seconds on failure, and flushed on sign-out and when the page is hidden (`cloudPush()`, `cloudFlush()`). Added v2.0.0-alpha.
 
 **`Store.useCloud()` / `Store.useLocal()`** — *(needs definition)* Switch the save backend in `Store`. `useCloud` sends writes to the server (member). `useLocal` restores the guest save from `localStorage` (after sign-out). Added v2.0.0-alpha.
+
+**`applyPlayerDesk(profile)`** — *(needs definition)* Function in section 5 of `index.html`. Puts the member on their character's desk: copies `DESKS[profile.desk]` into `PLAYER_DESK`, moves `SPOTS[0]` to the seat's approach point, and rebuilds the desk items. Called with `null` on sign-out to restore the guest desk. Added v2.0.1-alpha. See `docs/spec/nhieu-nguoi-choi.md` §9.
+
+**`MEMBER_CALL` / `MEMBER_CALLS`** — *(needs definition)* `MEMBER_CALL` (section 1 of `index.html`) is the name other coworkers use for a signed-in member, filled into `{ten}` by `fill()`. `MEMBER_CALLS` (the sign-in block after section 14) maps character ids to it: `bao` → "anh Bảo", `an3` → "chị Ba", `an7` → "chú 7", `thanh` → "Chủ tịt". Other characters use their own name. Cleared on sign-out. Added v2.0.1-alpha.
+
+**`PLAYER_DESK.sx` / `PLAYER_DESK.sz`** — *(needs definition)* The centre of the player's desk surface, used for the "💻 Bàn của bạn" tag, the tag's distance check, and the position of the unlocked desk items. For a long table, `sx` is the seat's x and `sz` is the table's z, offset by 0.5 m toward the seat side. Added v2.0.1-alpha.
+
+**Cấp quyền bảng (table grants)** — *(needs definition)* Supabase setting: new public tables are not granted to the `authenticated` role by default. The project needs `grant usage on schema public` and `grant select` on `progress` and `roster`, besides the RLS policies. Without them, saves fail with error 42501 "permission denied". Added v2.0.1-alpha. See `docs/spec/nhieu-nguoi-choi.md` §6.1.
+
+**Máy chủ chưa cấp quyền (permission warning)** — *(needs definition)* The toast "⚠ Máy chủ chưa cấp quyền lưu tiến độ…", shown by `cloudFlush()` for error 42501 or a "permission denied" message, instead of the generic save warning. Shown at most once a minute. Added v2.0.1-alpha.
+
+**Bàn của thành viên (member desk)** — *(needs definition)* The desk a signed-in member sits at, which is their character's own desk in `DESKS`. Guests use the desk at the bottom left, beside Thông. Added v2.0.1-alpha.
+
+**`pwSet`** — *(needs definition)* Flag in `Store` (`pwSet`, `!!d.pwSet` in `cloudFlush()`) saved in `progress.data`. `true` once the member has set a password. While it is `false`, `cloudEnter()` shows "🔒 Tạo mật khẩu" at every sign-in. Added v2.1.0-alpha. See `docs/spec/nhieu-nguoi-choi.md` §10. *(Removed as of v2.1.0-alpha, same day. `cloudFlush()` no longer writes it. A value saved earlier is not read.)*
+
+**`cloudEnter(sess)`** — *(needs definition)* Function in the sign-in block of `index.html`. Claims the character, applies it, then picks the screen: forced reset (`CLOUD.recovery`), create-password (`pwSet` false), or the welcome window. Used at boot and after password sign-in. Added v2.1.0-alpha. See `docs/spec/nhieu-nguoi-choi.md` §10. *(Outdated as of v2.1.0-alpha, same day: the forced-reset and create-password branches were removed. It now claims the character, applies it, and shows the welcome window.)*
+
+**`showSetPassword(forced)`** — *(needs definition)* Function that shows "🔒 Tạo mật khẩu" (`forced` false, with "Để sau") or "🔒 Đặt lại mật khẩu" (`forced` true, no skip). Requires at least 8 characters and two matching entries, then calls `auth.updateUser({password})` and sets `pwSet`. Added v2.1.0-alpha. See `docs/spec/nhieu-nguoi-choi.md` §10. *(Removed as of v2.1.0-alpha, same day. Not in the code.)*
+
+**Liên kết khôi phục (recovery link)** — *(needs definition)* The email link from "✉️ Lần đầu hoặc quên mật khẩu?" (`resetPasswordForEmail`). Opening it fires the `PASSWORD_RECOVERY` event, which sets `CLOUD.recovery` and forces a password reset. An invitation link does not fire it; it signs the person in, and the create-password screen comes from `pwSet` instead. The server answers 200 for any email, so the UI never shows whether an address exists. Added v2.1.0-alpha. See `docs/spec/nhieu-nguoi-choi.md` §10. *(Removed as of v2.1.0-alpha, same day. `resetPasswordForEmail`, the `PASSWORD_RECOVERY` listener, and `CLOUD.recovery` were removed. Passwords are reset by the administrator in the dashboard.)*
+
+**`loginEnabled`** — *(needs definition)* Constant in `index.html` (p6, before `guestPref`). `true` in a browser where `localStorage['mot-ngay.dev'] = '1'`. When `false`, `#btn-login` stays hidden and supabase-js is never loaded. Added v2.1.0-alpha. See `docs/spec/dang-nhap-cong-ty.md` §4.
+
+**`mot-ngay.dev`** — *(needs definition)* `localStorage` key that turns the sign-in feature on in one browser (value `'1'`). Set by opening the game with `?login`, removed by `?login=off`. Obscurity, not security. Added v2.1.0-alpha. See `docs/spec/dang-nhap-cong-ty.md` §4.
+
+**`?login` / `?login=off`** — *(needs definition)* URL parameters that turn the sign-in feature on or off in the current browser. For administrators and testers. Added v2.1.0-alpha. See `docs/spec/dang-nhap-cong-ty.md` §4.
+
+**Auto Confirm** — *(needs definition)* Supabase dashboard option used when the administrator creates a user with a password (Authentication → Users → Add user → Create new user). The account can sign in at once, with no confirmation email. Added v2.1.0-alpha. See `docs/spec/dang-nhap-cong-ty.md` §3.
+
+**`cloudBoot()`** — *(needs definition)* Boot function in the sign-in block of `index.html`. Shows or hides `#btn-login` from `loginEnabled`. With the flag off it shows the Guest welcome and never loads supabase-js. Added v2.0.0-alpha; the flag check added v2.1.0-alpha. See `docs/spec/dang-nhap-cong-ty.md` §4.
+
+**`friendlyAuthError(e)`** — *(needs definition)* Function in the sign-in block of `index.html` that maps Supabase auth errors to Vietnamese messages for the sign-in form. Added v2.1.0-alpha. See `docs/spec/dang-nhap-cong-ty.md` §1.

@@ -22,25 +22,36 @@ If you play as a guest, your progress is saved only on this device, and no accou
 
 ## Signing in
 
-Company members can sign in with their company email. This is a preview (alpha) and has not yet been tested with real sign-ins.
+Company members can sign in with their company email and a password. Your administrator creates your account and gives you your password in person. There is no sign-in email. This is a preview (alpha). Sign-in and saving on the server were tested by the project owner in November 2026, but the game is still in preview. The sign-in button is not shown in the normal game. See the note for administrators and testers at the end of this section.
+
+**To sign in:**
 
 1. On the title screen, press **🔑 Đăng nhập công ty** (Company sign-in).
-2. Type your company email and press **✉️ Gửi link đăng nhập** (Send sign-in link).
-3. Open the email from the game and press the link. The link works only when the game is opened from its web address. It does not work when the game file is opened directly from your computer.
-4. The game opens with your coworker's character. A welcome window says **"Chào <tên>!"** (Hello, <name>!). Press **▶ Tiếp tục** (Continue).
+2. Type your company email and your password, then press **Đăng nhập** (Sign in). You can also press Enter in the password box.
+3. The game opens with your coworker's character. A welcome window says **"Chào <tên>!"** (Hello, <name>!). Press **▶ Tiếp tục** (Continue).
 
 What changes when you are signed in:
 
 - **You are one of the coworkers.** Your name, gender, and look come from that coworker. That coworker is not in the office in your game, because you take their place. Your character never gives you a job, and does not ask you about the missing document.
 - **Your progress is kept on the server.** Your days, finished jobs, unlocked desk items, how close you are with each coworker, your diary, and the day in progress are saved there. Changes are sent about 3 seconds after you make them. If the connection drops, the game tries again. A short message appears if the save is delayed.
+- **You sit at your own character's desk** in the office, and the items you unlock appear on that desk. After you log out, your guest desk at the bottom left of the office is shown again.
+- **Coworkers call you by your character's name.** For example, Anh Bảo is "anh Bảo", Chị Ba is "chị Ba", Chú 7 is "chú 7", and Chủ tịt is "Chủ tịt". Everyone else uses the character's name. Your own name on the screen stays the real name.
 - **Your guest save on this device is not changed** by the days you play while signed in.
 - The title screen's name and gender form is not shown. The welcome window replaces it.
 
 **Log out:** in the welcome window, press **🚪 Đăng xuất** (Log out). The game saves your last changes first. Then it goes back to the sign-in screen, and your guest save on this device is shown again, exactly as you left it.
 
-**Playing as a guest:** on the sign-in screen, press **🎮 Chơi Guest (nhân viên mới)** (Play as a guest, new employee). The game then keeps you as a guest. The next time you open the game, it opens your guest save directly. To sign in later, press **🔑 Đăng nhập công ty** on the title screen.
+**Playing as a guest:** on the sign-in screen, press **🎮 Chơi Guest (nhân viên mới)** (Play as a guest, new employee). The game then keeps you as a guest. The next time you open the game, it opens your guest save directly. To sign in later, press **🔑 Đăng nhập công ty** on the title screen (shown only when the sign-in button is turned on, see the note below).
 
 **Reset for signed-in players:** please do not use **🗑 Xóa dữ liệu** (Delete data) while signed in. What it does to your saved progress on the server is still being checked. See the FAQ.
+
+**Note for administrators and testers (not for players):** the sign-in button is hidden in every browser until it is turned on there.
+
+- To show the button in your browser, open the game with `?login` added to its web address, for example `index.html?login`. The button stays on in that browser for later visits.
+- To hide it again, open the game with `?login=off` added to the address.
+- The setting is kept per browser, so it does not change the game for anyone else.
+- Sign-in works only when the game is opened from its web address, not from the file on your computer.
+- Hiding the button is not a security measure. Access to company data is protected by the server, not by the hidden button.
 
 ## Controls
 
@@ -309,14 +320,32 @@ Not as an app. On Windows, open `index-offline.html` in a web browser, as descri
 **Is my data sent anywhere?**
 Guest play: no. Your progress is saved only in your browser on this device, and nothing is uploaded. Signed-in play: your progress is saved on the game's server, linked to your company account. See **Signing in**.
 
-**I did not get the sign-in email. What do I do?**
-Check your spam or junk folder, and check that you typed the company email correctly. Only invited company emails can sign in. If it still does not arrive, ask the person who runs the game to check your invitation.
+**Do I get an email to sign in?**
+No. Your administrator creates your account and gives you your password in person. The game does not send any sign-in emails.
+
+**I forgot my password. What do I do?**
+Ask the person who runs the game (the administrator). They set a new password and tell you privately. The game has no reset link.
+
+**The game says the email or password is not right.**
+Check both, including capital letters. If you are not sure of your password, ask the administrator. The game also says this if your account does not have a password yet.
+
+**The game says my account is not yet activated.**
+Ask the administrator to check your account.
+
+**Can I change my password inside the game?**
+Not yet. Ask the administrator to set a new one.
+
+**I do not see the "🔑 Đăng nhập công ty" button on the title screen.**
+The button is hidden for players who are not testing sign-in. If you are a company member, ask the administrator to turn it on in your browser (see the note in **Signing in**).
 
 **I signed in, but the game says my account is not linked to a character.**
 The company email is not yet linked to a coworker. Ask the person who runs the game to check it. You are signed out, and the sign-in screen shows the message again.
 
 **I see "Chưa lưu được lên máy chủ" (Could not save to the server yet).**
 The game keeps your changes and tries again every 15 seconds. You can keep playing. If the message stays for a long time, check your internet connection.
+
+**I see "⚠ Máy chủ chưa cấp quyền lưu tiến độ" (The server is not yet allowed to save progress).**
+The game server is not set up to save player progress yet. This is a setup problem, not something you did. Tell the person who runs the game, and ask them to check the server permissions. The game keeps trying every 15 seconds, and the message appears at most once a minute. Keep the game open until the save works. Changes made while the save is failing can be lost if you close the page first. Once the server is set up, the message stops and your progress is saved as usual.
 
 **Why don't I see the 3D office?**
 Your browser or device may not show 3D graphics. The title screen then shows a short reason, and the game uses a simple list of places and people to interact with instead. The game still works. To try the 3D office again:
@@ -349,7 +378,7 @@ Tap the **🎥** button at the top right. It cycles through close (Gần), mediu
 The layout adjusts to the screen. Try rotating your device or reloading the page.
 
 **What do coworkers call me?**
-The name you typed on the title screen. If you left it empty, they call you "bạn". Their wording also follows the gender you picked (Nam, Nữ, or Không nêu).
+The name you typed on the title screen. If you left it empty, they call you "bạn". Their wording also follows the gender you picked (Nam, Nữ, or Không nêu). If you signed in as a coworker, they call you by that character's name (for example "anh Bảo" or "chị Ba"), see **Signing in**.
 
 **I want to start over.**
 Use **Xóa dữ liệu** (Delete data) on the title screen. This removes all saved progress.

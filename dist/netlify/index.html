@@ -243,10 +243,11 @@ function pickSay(arr) {
   return pick(pool.length ? pool : arr).replace(/^@\w+ /, '');
 }
 // Điền {ten}, {anh} theo người chơi (tên và giới tính do người chơi chọn)
+let MEMBER_CALL = '';                                            // cách mọi người gọi người chơi đã đăng nhập: "anh Bảo", "chị Ba", "chú 7", "Chủ tịt"...
 function fill(t) {
   if (typeof t !== 'string' || t.indexOf('{') < 0) return t;
   const d = (typeof Store !== 'undefined') ? Store.get() : {}, a = d.gender === 'nam' ? 'anh' : d.gender === 'nu' ? 'chị' : 'anh/chị';
-  return t.replace(/\{ten\}/g, d.name || 'bạn').replace(/\{anh\}/g, a).replace(/\{Anh\}/g, a[0].toUpperCase() + a.slice(1));
+  return t.replace(/\{ten\}/g, MEMBER_CALL || d.name || 'bạn').replace(/\{anh\}/g, a).replace(/\{Anh\}/g, a[0].toUpperCase() + a.slice(1));
 }
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -1012,6 +1013,16 @@ addOwn(295); addOwn(752); addOwn(887); addOwn(1022);                           /
 const addOwnAt = (x) => { const z = planZ(651); DESKS.push({ kind: 'own', x, z, seat: { cx: x, cz: z + 1.12, yaw: Math.PI, ax: x, az: z + 2.15 }, visit: { x: x + 1.5, z: z + 1.1 } }); };
 addOwnAt(-4.4);                                                                  // 13 Tùng (bàn mới, kế bàn Thông)
 const PLAYER_DESK = { kind: 'own', x: -10.2, z: planZ(651), seat: { cx: -10.2, cz: planZ(651) + 1.12, yaw: Math.PI, ax: -10.2, az: planZ(651) + 2.15 } };   // bàn người chơi: bên trái Thông
+PLAYER_DESK.sx = PLAYER_DESK.x; PLAYER_DESK.sz = PLAYER_DESK.z; PLAYER_DESK.north = false;                       // sx, sz: tâm mặt bàn; north: ghế ở phía bắc của bàn dài
+const PLAYER_DESK_HOME = { x: PLAYER_DESK.x, z: PLAYER_DESK.z, seat: { ...PLAYER_DESK.seat } };
+// Người chơi đã đăng nhập ngồi đúng bàn của nhân vật mình (người chơi Guest ngồi bàn mới ở góc dưới bên trái)
+function applyPlayerDesk(profile) {
+  const d = profile && profile.desk != null ? DESKS[profile.desk] : null;
+  if (d) { const sg = d.kind === 'long' ? (d.north ? -1 : 1) : 0; Object.assign(PLAYER_DESK, { kind: d.kind, x: d.x, z: d.z, seat: { ...d.seat }, north: !!d.north, sx: d.kind === 'long' ? d.seat.cx : d.x, sz: d.kind === 'long' ? d.tbl.z + sg * 0.5 : d.z }); }
+  else Object.assign(PLAYER_DESK, { kind: 'own', x: PLAYER_DESK_HOME.x, z: PLAYER_DESK_HOME.z, seat: { ...PLAYER_DESK_HOME.seat }, north: false, sx: PLAYER_DESK_HOME.x, sz: PLAYER_DESK_HOME.z });
+  const sp = SPOTS[0]; if (sp) { sp.x = PLAYER_DESK.seat.ax; sp.z = PLAYER_DESK.seat.az + (PLAYER_DESK.seat.az < PLAYER_DESK.seat.cz ? 0.4 : -0.4); }
+  if (scene) buildDeskItems();
+}
 const COLUMNS = [{ x: planX(582.5), z: planZ(357.5), w: 1.0, d: 1.06 }, { x: planX(521), z: planZ(641), w: 0.94, d: 1.0 }];                           // 2 cột trong sơ đồ
 
 // Phòng họp (sơ đồ không có): đặt giữa phía trên, khoảng trống giữa hai dãy bàn. Mở phía nam + 2 cửa hông.
@@ -1046,7 +1057,7 @@ function buildDeskItems() {
   const bao = DESKS[2];                                          // bàn anh Bảo luôn có một ly cà phê đen đá
   if (bao && bao.lunchbox && !bao.icedCoffee) { const lb = bao.lunchbox; bao.icedCoffee = makeTakeawayCup(); setCupDrink(bao.icedCoffee, 'cafeden'); bao.icedCoffee.position.set(lb.position.x + 0.95, 0.815, lb.position.z - 0.12); lb.parent.add(bao.icedCoffee); }
   if (DESK_ITEMS) { scene.remove(DESK_ITEMS); DESK_ITEMS = null; }
-  const have = Store.get().unlocked || [], g = new THREE.Group(); g.position.set(PLAYER_DESK.x, 0.75, PLAYER_DESK.z); scene.add(g); DESK_ITEMS = g;
+  const have = Store.get().unlocked || [], g = new THREE.Group(); g.position.set(PLAYER_DESK.sx, 0.75, PLAYER_DESK.sz); g.rotation.y = PLAYER_DESK.kind === 'long' && PLAYER_DESK.north ? Math.PI : 0; scene.add(g); DESK_ITEMS = g;
   const Y = 0.0, at = (id) => UNLOCKS.find((u) => u.id === id).slot;
   if (have.includes('mug')) { const [x, z] = at('mug'); cyl(g, 0.065, 0.06, 0.12, 0xd84a3a, x, 0.06, z, 10); box(g, 0.13, 0.02, 0.01, 0xffffff, x, 0.07, z + 0.062); }
   if (have.includes('cactus')) { const [x, z] = at('cactus'); cyl(g, 0.07, 0.05, 0.08, 0xc4703c, x, 0.04, z, 8); cyl(g, 0.035, 0.04, 0.14, 0x4f9d5d, x, 0.15, z, 8); box(g, 0.05, 0.03, 0.03, 0x4f9d5d, x + 0.045, 0.16, z); }
@@ -2006,7 +2017,7 @@ function confirmBox(text, yesLabel, onYes) {
 }
 const MS = [
   { id: 'arrive', from: T('08:30'), name: 'Đến công ty', hint: () => `Chào ít nhất 2 đồng nghiệp (${Math.min(2, D.greeted.size)}/2). Đến gần ai đó rồi bấm nút hành động.`, done: () => D.greeted.size >= 2 },
-  { id: 'morning', from: T('09:00'), name: 'Buổi sáng', hint: () => 'Đến bàn của bạn (có nhãn “💻 Bàn của bạn”, góc dưới bên trái, cạnh bàn Thông) rồi bấm nút “Làm việc”.', done: () => D.tasks >= 1 },
+  { id: 'morning', from: T('09:00'), name: 'Buổi sáng', hint: () => (MEMBER ? 'Đến bàn của bạn (có nhãn “💻 Bàn của bạn”) rồi bấm nút “Làm việc”.' : 'Đến bàn của bạn (có nhãn “💻 Bàn của bạn”, góc dưới bên trái, cạnh bàn Thông) rồi bấm nút “Làm việc”.'), done: () => D.tasks >= 1 },
   { id: 'meeting', from: T('10:00'), name: 'Họp ngắn', hint: () => 'Vào phòng họp (giữa phía trên, giữa hai dãy bàn dài) và tới bàn họp.', done: () => D.flags.meeting },
   { id: 'break', from: T('11:00'), name: 'Giải lao', hint: () => 'Ghé pantry (góc trái phía trên), pha đồ uống và trò chuyện.', done: () => D.flags.break },
   { id: 'lunch', from: T('12:00'), name: 'Ăn trưa', hint: () => 'Ăn trưa ở pantry, có thể rủ đồng nghiệp cùng ăn.', done: () => D.flags.lunch },
@@ -2583,16 +2594,25 @@ function showWelcomeBack() {
       : h('button', { class: 'btn alt', onclick: () => { Modal.close(false); G.mode = 'title'; askNew(); } }, '🆕 Chơi mới'));
 }
 /* ============ ĐĂNG NHẬP & LƯU TRÊN SUPABASE (nhiều người chơi, giai đoạn 1) ============ */
+const MEMBER_CALLS = { bao: 'anh Bảo', an3: 'chị Ba', an7: 'chú 7', thanh: 'Chủ tịt' };         // người khác gọi họ thế nào (còn lại gọi tên nhân vật)
 let MEMBER = null;                                                   // {char} khi đã đăng nhập bằng email công ty và nhận nhân vật theo email
 const CLOUD = { client: null, user: null, timer: null, dirty: false, failedAt: 0 };
+// Đăng nhập công ty đang ẩn với mọi người: chỉ bật trên trình duyệt đã mở trang với ?login (nhớ lại lần sau), tắt bằng ?login=off
+const loginEnabled = (() => {
+  try { const q = new URLSearchParams(location.search); if (q.has('login')) { if (q.get('login') === 'off') localStorage.removeItem('mot-ngay.dev'); else localStorage.setItem('mot-ngay.dev', '1'); } return localStorage.getItem('mot-ngay.dev') === '1'; }
+  catch (e) { return false; }
+})();
 const guestPref = () => { try { return localStorage.getItem('mot-ngay.guest') === '1'; } catch (e) { return false; } };
 const setGuestPref = (v) => { try { v ? localStorage.setItem('mot-ngay.guest', '1') : localStorage.removeItem('mot-ngay.guest'); } catch (e) { dlog('[setGuestPref]', e); } };
 function friendlyAuthError(e) {
   const m = String((e && e.message) || e || '').toLowerCase();
-  if (m.includes('signups not allowed') || m.includes('not allowed') || m.includes('not found')) return 'Email này chưa được mời vào game. Hãy nhờ quản trị viên thêm email của bạn.';
-  if (m.includes('rate') || m.includes('too many') || m.includes('seconds')) return 'Gửi quá nhiều lần rồi, hãy đợi vài phút rồi thử lại.';
+  if (m.includes('invalid login credentials') || m.includes('invalid_credentials')) return 'Email hoặc mật khẩu chưa đúng. Hãy hỏi quản trị viên nếu bạn chưa có mật khẩu.';
+  if (m.includes('email not confirmed')) return 'Tài khoản chưa được kích hoạt. Hãy nhờ quản trị viên kiểm tra.';
+  if (m.includes('same password') || m.includes('different from the old')) return 'Mật khẩu mới phải khác mật khẩu cũ.';
+  if (m.includes('weak') || m.includes('at least') || m.includes('password should')) return 'Mật khẩu chưa đủ mạnh, hãy dùng ít nhất 8 ký tự.';
+  if (m.includes('rate') || m.includes('too many') || m.includes('seconds')) return 'Thử quá nhiều lần rồi, hãy đợi vài phút rồi thử lại.';
   if (m.includes('fetch') || m.includes('network') || m.includes('failed')) return 'Không kết nối được. Hãy kiểm tra mạng rồi thử lại.';
-  return 'Không gửi được link đăng nhập. Hãy kiểm tra email rồi thử lại.';
+  return 'Chưa thực hiện được. Hãy kiểm tra thông tin rồi thử lại.';
 }
 async function cloudInit() {
   try {
@@ -2610,7 +2630,7 @@ function cloudApply(row) {
   const d = row.data || {};
   Store.useCloud(cloudPush);
   Store.replace({ ...d, settings: { sound: true, tutorial: false, cam: 1, ...(d.settings || {}) }, name: p.real || p.name, gender: CHAR_GENDER[p.id] || 'nam', avatar: 0, days: row.days || 0, tasksTotal: row.tasks_total || 0, unlocked: row.unlocked || [], affinity: row.affinity || {}, diary: row.diary || [], session: row.session || null });
-  MEMBER = { char: p.id }; Object.keys(AFF).forEach((k) => delete AFF[k]); Object.entries(Store.get().affinity).forEach(([k, v]) => { AFF[k] = v; });
+  MEMBER = { char: p.id }; MEMBER_CALL = MEMBER_CALLS[p.id] || p.name; applyPlayerDesk(p); Object.keys(AFF).forEach((k) => delete AFF[k]); Object.entries(Store.get().affinity).forEach(([k, v]) => { AFF[k] = v; });
 }
 function cloudPush() { CLOUD.dirty = true; clearTimeout(CLOUD.timer); CLOUD.timer = setTimeout(cloudFlush, 3000); }
 async function cloudFlush() {
@@ -2621,41 +2641,53 @@ async function cloudFlush() {
     if (error) throw error;
   } catch (e) {
     CLOUD.dirty = true; dlog('[cloudFlush] Chưa lưu được lên máy chủ, sẽ thử lại:', e, e && e.stack);
-    if (Date.now() - CLOUD.failedAt > 60000) { CLOUD.failedAt = Date.now(); toast('⚠ Chưa lưu được lên máy chủ, game sẽ tự thử lại.', 3500); }
+    const noPerm = e && (e.code === '42501' || /permission denied/i.test(String(e.message || '')));
+    if (Date.now() - CLOUD.failedAt > 60000) { CLOUD.failedAt = Date.now(); toast(noPerm ? '⚠ Máy chủ chưa cấp quyền lưu tiến độ. Hãy báo quản trị viên kiểm tra.' : '⚠ Chưa lưu được lên máy chủ, game sẽ tự thử lại.', 4200); }
     clearTimeout(CLOUD.timer); CLOUD.timer = setTimeout(cloudFlush, 15000);
   }
 }
+const AUTH_INPUT_STYLE = 'width:100%;padding:12px 14px;border:2px solid var(--line);border-radius:12px;font-size:16px;margin:6px 0;background:#fff;color:var(--ink)';
 function showLogin(msg) {
   $('#title').classList.add('hidden');
-  const web = /^https?:/.test(location.protocol);
-  const note = h('p', { class: 'sub' }, msg || (web ? 'Nhập email công ty để chơi đúng vai nhân vật của bạn. Nhân vật chưa có ai đăng nhập sẽ do máy điều khiển.' : 'Đăng nhập chỉ dùng được khi mở game qua đường link web (không mở file trực tiếp). Bạn vẫn chơi Guest được.'));
-  const input = h('input', { type: 'email', placeholder: 'email công ty', autocomplete: 'email', style: 'width:100%;padding:12px 14px;border:2px solid var(--line);border-radius:12px;font-size:16px;margin:8px 0;background:#fff;color:var(--ink)' });
-  const send = h('button', { class: 'btn', onclick: async () => {
-    const email = input.value.trim().toLowerCase();
-    if (!/^\S+@\S+\.\S+$/.test(email)) { note.textContent = 'Email chưa đúng, hãy nhập lại.'; return; }
-    if (!CLOUD.client || !web) { note.textContent = 'Chưa kết nối được máy chủ. Hãy kiểm tra mạng và mở game qua đường link web, hoặc chơi Guest.'; return; }
-    send.disabled = true;
-    try {
-      const { error } = await CLOUD.client.auth.signInWithOtp({ email, options: { shouldCreateUser: false, emailRedirectTo: location.origin + location.pathname } }); if (error) throw error;
-      note.textContent = `Đã gửi link tới ${email}. Mở email và bấm vào link để vào game (mở link trên chính máy này).`;
-    } catch (err) { dlog('[showLogin] Không gửi được link đăng nhập:', err, err && err.stack); note.textContent = friendlyAuthError(err); }
-    send.disabled = false;
-  } }, '✉️ Gửi link đăng nhập');
-  Modal.open(h('h2', {}, '🔑 Đăng nhập công ty'), note, input, send,
-    h('button', { class: 'btn alt', onclick: () => { Modal.close(false); G.mode = 'title'; setGuestPref(true); $('#title').classList.remove('hidden'); refreshTitle(); showWelcomeBack(); } }, '🎮 Chơi Guest (nhân viên mới)'));
+  const web = /^https?:/.test(location.protocol), back = () => { Modal.close(false); G.mode = 'title'; };
+  const note = h('p', { class: 'sub' }, msg || (web ? 'Đăng nhập bằng email công ty và mật khẩu do quản trị viên đưa để chơi đúng vai nhân vật của bạn. Nhân vật chưa có ai đăng nhập sẽ do máy điều khiển.' : 'Đăng nhập chỉ dùng được khi mở game qua đường link web (không mở file trực tiếp). Bạn vẫn chơi Guest được.'));
+  const email = h('input', { type: 'email', placeholder: 'email công ty', autocomplete: 'email', style: AUTH_INPUT_STYLE });
+  const pass = h('input', { type: 'password', placeholder: 'mật khẩu', autocomplete: 'current-password', style: AUTH_INPUT_STYLE });
+  const okEmail = () => { const v = email.value.trim().toLowerCase(); if (!/^\S+@\S+\.\S+$/.test(v)) { note.textContent = 'Email chưa đúng, hãy nhập lại.'; return null; } return v; };
+  const offline = () => { if (!CLOUD.client || !web) { note.textContent = 'Chưa kết nối được máy chủ. Hãy kiểm tra mạng và mở game qua đường link web, hoặc chơi Guest.'; return true; } return false; };
+  const login = h('button', { class: 'btn', onclick: async () => {
+    const em = okEmail(); if (!em || offline()) return;
+    if (!pass.value) { note.textContent = 'Hãy nhập mật khẩu.'; return; }
+    login.disabled = true;
+    try { const { data, error } = await CLOUD.client.auth.signInWithPassword({ email: em, password: pass.value }); if (error) throw error; back(); await cloudEnter(data.session); return; }
+    catch (err) { dlog('[showLogin] Đăng nhập bằng mật khẩu thất bại:', err, err && err.stack); note.textContent = friendlyAuthError(err); }
+    login.disabled = false;
+  } }, 'Đăng nhập');
+  pass.addEventListener('keydown', (e) => { if (e.key === 'Enter') login.click(); });
+  Modal.open(h('h2', {}, '🔑 Đăng nhập công ty'), note, email, pass, login,
+    h('button', { class: 'btn alt', onclick: () => { back(); setGuestPref(true); $('#title').classList.remove('hidden'); refreshTitle(); showWelcomeBack(); } }, '🎮 Chơi Guest (nhân viên mới)'));
 }
 async function memberLogout() {
   clearTimeout(CLOUD.timer); await cloudFlush();
   try { await CLOUD.client.auth.signOut(); } catch (e) { dlog('[memberLogout] signOut lỗi:', e, e && e.stack); }
-  MEMBER = null; CLOUD.user = null; Store.useLocal(); Object.keys(AFF).forEach((k) => delete AFF[k]); Object.entries(Store.get().affinity || {}).forEach(([k, v]) => { AFF[k] = v; });
+  MEMBER = null; MEMBER_CALL = ''; applyPlayerDesk(null); CLOUD.user = null; Store.useLocal(); Object.keys(AFF).forEach((k) => delete AFF[k]); Object.entries(Store.get().affinity || {}).forEach(([k, v]) => { AFF[k] = v; });
   refreshTitle(); showLogin();
 }
-async function cloudBoot() {
-  const sess = await cloudInit();
-  if (sess) {
-    try { CLOUD.user = sess.user; const row = await cloudClaim(); cloudApply(row); if (location.hash) history.replaceState(null, '', location.pathname + location.search); rebuildPlayer(); refreshTitle(); showWelcomeBack(); return; }
-    catch (e) { dlog('[cloudBoot] Không nhận được nhân vật cho tài khoản này:', e, e && e.stack); try { await CLOUD.client.auth.signOut(); } catch (e2) { dlog('[cloudBoot] signOut lỗi:', e2); } CLOUD.user = null; showLogin('Tài khoản này chưa được gán nhân vật hoặc chưa kết nối được máy chủ. Hãy nhờ quản trị viên kiểm tra email của bạn.'); return; }
+async function cloudEnter(sess) {                                   // vào game với một phiên đăng nhập hợp lệ
+  try {
+    CLOUD.user = sess.user; const row = await cloudClaim(); cloudApply(row); if (location.hash) history.replaceState(null, '', location.pathname + location.search); rebuildPlayer(); refreshTitle();
+    showWelcomeBack();
+  } catch (e) {
+    dlog('[cloudEnter] Không nhận được nhân vật cho tài khoản này:', e, e && e.stack);
+    try { await CLOUD.client.auth.signOut(); } catch (e2) { dlog('[cloudEnter] signOut lỗi:', e2); } CLOUD.user = null; MEMBER = null;
+    showLogin('Tài khoản này chưa được gán nhân vật hoặc chưa kết nối được máy chủ. Hãy nhờ quản trị viên kiểm tra email của bạn.');
   }
+}
+async function cloudBoot() {
+  $('#btn-login').classList.toggle('hidden', !loginEnabled);
+  if (!loginEnabled) { showWelcomeBack(); return; }                  // người chơi bình thường: chỉ có game Guest, không tải thư viện đăng nhập
+  const sess = await cloudInit();
+  if (sess) { await cloudEnter(sess); return; }
   if (CLOUD.client && !guestPref()) showLogin(); else showWelcomeBack();
 }
 function newDayState() {
@@ -2840,7 +2872,7 @@ function update(dt) {
   if (P.walked > 1.2) tutorialAdvance('moved');
   if (!LITE) updateCamera(dt, false);
   if (G.mode === 'play' && !LITE) updateActButton(false); else if (G.mode !== 'play') { /* nút ẩn khi đang hội thoại */ }
-  if (deskTag) { deskTag.on = G.mode === 'play' && !LITE && !P.lock && D.tasks < CFG.MAX_TASKS && Math.hypot(P.pos.x - PLAYER_DESK.x, P.pos.z - PLAYER_DESK.z) < 10; deskTag.alpha = 1; }
+  if (deskTag) { deskTag.on = G.mode === 'play' && !LITE && !P.lock && D.tasks < CFG.MAX_TASKS && Math.hypot(P.pos.x - PLAYER_DESK.sx, P.pos.z - PLAYER_DESK.sz) < 10; deskTag.alpha = 1; }
   hudT += dt; if (hudT > 0.25) { hudT = 0; updateHud(); }
   liteT += dt; if (liteT > 0.8) { liteT = 0; if (LITE) refreshLite(); }
   // tiếng bàn phím nhè nhẹ khi ở gần người đang gõ
@@ -2907,7 +2939,7 @@ function init() {
     renderer.domElement.addEventListener('webglcontextrestored', () => { clearTimeout(lostT); });
   }
   buildOffice(); buildNav(); createNpcs(); rebuildPlayer(); buildSpots(); setupInput(); resize();
-  deskTag = Bubbles.makeTag('💻 Bàn của bạn', (o) => { o.x = PLAYER_DESK.x; o.y = 1.55; o.z = PLAYER_DESK.z; }); deskTag.el.style.background = 'var(--accent)'; deskTag.clampX = true;
+  deskTag = Bubbles.makeTag('💻 Bàn của bạn', (o) => { o.x = PLAYER_DESK.sx; o.y = 1.55; o.z = PLAYER_DESK.sz; }); deskTag.el.style.background = 'var(--accent)'; deskTag.clampX = true;
   listen(window, 'resize', resize); listen(window, 'orientationchange', () => setTimeout(resize, 150));
   listen(document, 'visibilitychange', () => { if (document.hidden) { saveSession(); cloudFlush(); if (G.mode === 'play') pauseGame(); Sfx.suspend(); } else if (G.mode !== 'paused') Sfx.resume(); });
   listen(window, 'pagehide', (e) => { saveSession(); cloudFlush(); if (!e.persisted) cleanupGame(); });
