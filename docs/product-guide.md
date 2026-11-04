@@ -18,7 +18,7 @@ If you leave the name empty, coworkers simply call you "bạn" (you).
 
 After your first day, the title screen button reads **"▶ Tiếp tục"** (Continue). It shows the weekday and week of the next day, for example "Thứ Ba, tuần 1".
 
-Your progress is saved only on this device. No account is needed. The Mac app keeps its own save, separate from your web browser.
+Your progress is saved only on this device. No account is needed. The Mac app keeps its own save, separate from your web browser. Your day in progress is saved too, so you can carry on after closing the game (see **Saving your day** below).
 
 ## Controls
 
@@ -60,7 +60,7 @@ You can also leave early from the front door after 16:00. If you leave before 17
 - **Notice board** (right-hand wall, next to the front door): read the notes posted there. They may be office gossip, or news about App Dating.
 - **Filing cabinet** (bottom right): where the document favor is fetched.
 - **Printer** (left wall): may jam during the afternoon event. On those days, Nam is the one standing at it.
-- **Daybed** (back wall, next to the pantry): Nguyên naps here on the days he comes into the office. You can walk around it.
+- **Daybed** (back wall, next to the pantry): Nguyên takes one short nap here after lunch, on the days he comes into the office. The rest of the day he works from a pantry sofa. You can walk around it.
 - **Desks**: your desk is the yellow one at the bottom left. Nine coworkers share two long tables, one on the left and one on the right, and sit facing each other across them. Four more coworkers have single desks in the bottom row. Nguyên works remotely and has no desk. Some coworkers wander over to chat at a colleague's desk during the day.
 
 ### Your desk and its items
@@ -154,7 +154,7 @@ At the end of the day you can:
 2. **Read the summary.** It shows your tasks, energy, who you talked to, memorable moments, notes from coworkers, a closing comment, the day's badges, and the App Dating user count and version.
 3. Choose **"☀ Sang ngày tiếp theo"** (Go to the next day) to keep going. On Friday the button reads **"🌙 Qua cuối tuần"** (Go through the weekend), and a short weekend note comes first. You can also open **"📖 Nhật ký"** (Diary) or go to **"🏠 Màn hình chính"** (Title screen).
 
-Each day is saved to your diary. The diary keeps the most recent 150 days. If you leave in the middle of a day, that day is not saved to the diary.
+Each day is saved to your diary when it ends. The diary keeps the most recent 150 days. If you leave in the middle of a day, that day is not written to the diary yet, but it is kept and you can continue it (see **Saving your day**).
 
 ## Diary and data
 
@@ -162,6 +162,18 @@ Each day is saved to your diary. The diary keeps the most recent 150 days. If yo
 - **What the diary says at the top**: during a workday, it tells you which day you are on and that today is written in the diary at the end of the day. Outside a workday (on the title screen or after the summary), it tells you how many days you have worked, or that no day has been recorded yet.
 - **Reset** (🗑 *Xóa dữ liệu*): on the title screen or at the bottom of the diary. This deletes your name, gender choice, avatar, diary, camera view, coworker closeness, and the App Dating user count and version. It cannot be undone.
 - **Replay the tutorial**: from the pause menu, choose "Xem lại hướng dẫn".
+
+### Saving your day
+
+- Your day is saved about every 5 seconds while you play. It is also saved when you switch to another tab or close the window. The last few seconds of play may be lost.
+- Kept: the time, your tasks, energy and mood, your position and direction, how close you are with each coworker, surprises that already happened, your desk job progress, the day's type, and the cake party or printer jam of that day.
+- Not kept: open cards and windows, speech bubbles, and exactly where each coworker was. Coworkers go back to their usual plan for that time.
+- When you come back, the title screen shows **▶ Tiếp tục ngày đang dở** (Continue the day in progress) with the time it stopped.
+- **Welcome back:** when you open the game and you have played before, a window says **"Chào mừng … quay lại!"** (Welcome back). It tells you if a day is still in progress and at what time.
+  - **▶ Tiếp tục ngày đang dở** (Continue the day in progress) picks up where you stopped. If no day is in progress, the button reads **▶ Tiếp tục chơi** (Keep playing) and starts your next day.
+  - **🆕 Chơi mới** (New game) asks you to confirm first. **🗑 Xóa hết và chơi mới** (Delete everything and start over) erases your name, diary, closeness with coworkers, and unlocked items on this device. **Thôi, quay lại** (Never mind) goes back to the welcome window.
+  - The first time you play, there is no welcome window. You go straight to typing your name.
+- Each save belongs to one device and one browser. A copy of the game opened from a file, from a web address, or in the Mac app keeps its own save. There is no way to move a save to another device yet.
 
 ## The coworkers
 
@@ -177,10 +189,10 @@ Each day is saved to your diary. The diary keeps the most recent 150 days. If yo
 | Thảo | Bella | HR (brings the birthday cake) | Caring, and the office foodie. Knows many restaurants, drink shops, and good dishes, and most chats are about food. Often brings cakes and treats. Around lunchtime suggests where to eat |
 | Yến | Én Pink | QC | A little grumpy in a playful way. Loves teasing and asks "Là sao?" a lot |
 | Chú 7 (An) | | QC | Young and cheerful. Loves tea (ô long or lotus tea, and has opinions about both). Often teases Chị Ba, who answers with a playful shoulder punch. Chị Ba's teasing nickname for him is "bánh tét" |
-| Chị Ba (An) | | Business Support (helps with product research: runs user surveys, writes reports, and checks the numbers) | Strict in a fun way, and careful with numbers. Asks you for help with survey results and reports. Playfully gives colleagues a light shoulder punch (it is a joke). When she gets up from her desk, she sometimes grumbles that the "bánh tét" guy is nowhere to be found, and Chú 7 may answer from behind his cup of tea. This happens more often on busy days |
+| Chị Ba (An) | | Business Support (helps with product research: runs user surveys, writes reports, and checks the numbers) | Strict in a fun way, and careful with numbers. Asks you for help with survey results and reports. Playfully gives colleagues a light shoulder punch (it is a joke). When she gets up from her desk, she sometimes grumbles that the "bánh tét" guy is nowhere to be found, and Chú 7 may answer from behind his cup of tea. This happens more often on busy days. She has a golden cat named Nghệ, and she and Chủ tịt tease each other about whose cat is better, all in fun |
 | Anh Bảo | | Product | The oldest in the office. Asks "vì sao" (why) a lot. Likes connecting people. Currently weighing a Dating-app matching suggestion feature against fixing a login bug |
 | Thông | Bamboo | R&D | Cheerful and enthusiastic about new ideas. Talks about real estate, land, and investing, and always wants a backup plan |
-| Nguyên | | Designer (works remotely) | Relaxed and sleepy. Often works from home, and comes into the office on about half of the days. When he is in, he naps on the pantry daybed |
+| Nguyên | | Designer (works remotely) | Relaxed. Often works from home, and comes into the office on about half of the days. When he is in, he works from a pantry sofa and takes a short nap on the daybed after lunch |
 
 Most coworkers call each other by their first names. A few are called by a title: Anh Bảo, Chủ tịt, and Chị Ba.
 
@@ -272,7 +284,7 @@ Yes. After the summary, choose "☀ Sang ngày tiếp theo" (Go to the next day)
 Each day has a type (normal, rainy, busy, relaxed, or milk tea), 3 or 4 random surprises, one daily event (printer jam or cake party), and sometimes a coworker's birthday cake party. A random coworker may also ask for help. Coworker behavior varies a little from day to day.
 
 **What happens if I quit in the middle of a day?**
-That day is not saved to the diary. Some relationship changes from surprise choices you already made may still be kept.
+The day is kept in progress. Choose **▶ Tiếp tục ngày đang dở** on the title screen to carry on. The day is written to the diary only when it ends. Choosing **🔄 Bắt đầu lại ngày này** (Start this day again) on the title screen throws the saved day away and starts over at 08:30.
 
 **Why doesn't today show in my diary yet?**
 Diary entries are written at the end of the day, after the summary. Until then, the diary shows the day you are on but no entry for it. On your first day, the diary says so.
@@ -287,13 +299,13 @@ It is a teasing nickname. Chị Ba uses it for Chú 7, the QC coworker. It is a 
 The game is in Vietnamese only.
 
 **Why isn't Nguyên in the office?**
-He often works from home. He comes into the office on about half of the days. When he does, a short message appears shortly after he arrives, and he naps on the pantry daybed.
+He often works from home. He comes into the office on about half of the days. When he does, a short message appears shortly after he arrives. He works from a pantry sofa, with one short nap on the daybed after lunch.
 
 **Where do I see everything I need to do today?**
 Tap the goal box at the top of the screen, or press P. The pause menu shows the day's milestones and small tasks. Press **▶ Tiếp tục** to go back.
 
 **Can I stop a job halfway through?**
-Yes. Press **⏸ Tạm dừng (giữ nguyên tiến độ)** (Pause, keep progress) or **Để lát nữa (không mất gì)** (Later, nothing is lost). When you go back to your desk, the same job is waiting with your progress kept. The job is cleared when you finish it or when a new day starts. Closing the game or reloading the page in the middle of the day loses the unfinished job, the same as the rest of that day.
+Yes. Press **⏸ Tạm dừng (giữ nguyên tiến độ)** (Pause, keep progress) or **Để lát nữa (không mất gì)** (Later, nothing is lost). When you go back to your desk, the same job is waiting with your progress kept. The job is cleared when you finish it or when a new day starts. Closing the game or reloading the page keeps the unfinished job with your progress, like the rest of the day (see **Saving your day**). Pop-up cards close when you reload.
 
 **I am stuck on a job. What do I do?**
 Each wrong tap shows a hint. After two wrong taps, the game outlines the right answer: the right group, or the job with the nearest deadline.

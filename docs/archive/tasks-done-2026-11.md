@@ -306,3 +306,36 @@ Moved from `docs/tasks.md` on 2026-11-04 to keep that file under 300 lines. Entr
   - [x] Headless-Chrome full-day run (reported by requester; not re-run in the doc pass): no JS errors, no collision violations, content ids valid
   - [x] `index-offline.html`, `dist/MinhLee.app`, `dist/netlify/index.html` rebuilt. The three are byte-identical and contain the new strings (checked in the doc pass)
   - [x] Docs: `CLAUDE.md`, `docs/spec/dong-nghiep.md`, `docs/spec/noi-dung-bat-ngo.md`, `docs/product-guide.md`, `docs/glossary.md`, `docs/changelog.md`, `docs/tasks.md`
+
+## Done (v1.9.1 to v1.9.4, moved from tasks.md in v1.10.0)
+
+- [x] v1.9.4 (2026-11-04): `look.detail` (detailed eyes, brows, smile, neck, hair style) enabled for the remaining nine coworkers. All 14 now use it. Looks were upgraded from the existing look data and colours. No reference photos were re-checked in this pass, so likeness is unverified. Toàn's navy polo collar closes the photo gap in the v1.8.6 item. Details: `docs/changelog.md` v1.9.4, `docs/spec/dong-nghiep.md` §8
+  - [x] `NPC_PROFILES` looks for Trung, Toàn, Hiện, Tùng, Nam, Chú 7, Chị Ba, Anh Bảo, and Nguyên in `index.html` (`look.detail: true`, hair, neck, collar, glasses, lashes, lips, earrings)
+  - [x] Headless-Chrome lineup render, screenshot viewed (by eye only)
+  - [x] Offline copies (`index-offline.html`, `dist/netlify/index.html`, `dist/MinhLee.app/Contents/Resources/index.html`) hold the same 14 `look: {` lines as `index.html` (grep and diff check). The three copies are byte-identical; `index.html` differs only by the importmap and the comment line
+  - [ ] Likeness check of the nine against the reference photos, side by side (see Follow-ups, v1.9.4)
+  - [ ] Real-device check (not run)
+  - [ ] `dist/MinhLee-mac.zip` and `CFBundleShortVersionString` (still 1.8.5) not rebuilt in this pass (see Follow-ups, v1.8.6 item)
+
+- [x] v1.9.3 (2026-11-04): looks for Yến, Thạnh, and Phú re-matched to the user's reference photos (viewed this session). New `look.teeth`, `look.part`, `look.shortSleeve` and hairStyle `quiff`. Details: `docs/changelog.md` v1.9.3, `docs/spec/dong-nghiep.md` §8, `docs/glossary.md`
+  - [x] `NPC_PROFILES` looks for Yến (centre part, no clip or fringe, rose-gold glasses, coral lips, gold earrings), Thạnh (`quiff`, light-silver glasses, slimmer face, gingham short sleeves), Phú (`side` hair, rect dark glasses, wider face, collared shirt) in `index.html`
+  - [x] `detailFace()`, `detailHair()`, `buildCharacter()` in `index.html`: `look.teeth`, `look.part: 'center'`, `quiff`, `look.shortSleeve`
+  - [x] Headless-Chrome render, screenshot viewed; compared to the photos by eye only
+  - [x] Offline copies (`index-offline.html`, `dist/netlify/index.html`, `dist/MinhLee.app`) contain the v1.9.3 code (grep check; byte-identical in the doc pass)
+  - [ ] Real-device check (not run)
+  - [ ] Side-by-side likeness score against the reference photos (not recorded)
+  - [ ] `dist/MinhLee-mac.zip` and `CFBundleShortVersionString` not rebuilt in this pass (see Follow-ups, v1.8.6 item)
+
+- [x] v1.9.2 (2026-11-04): detailed character look (`look.detail`), still Three.js primitives in one file. Five coworkers upgraded: Thạnh, Phú, Thảo, Yến, Thông. Thảo's wavy hair gap is closed. Other coworkers unchanged. Details: `docs/changelog.md` v1.9.2, `docs/spec/dong-nghiep.md` §8, `docs/glossary.md`
+  - [x] `buildCharacter()` (section 6) in `index.html`: `detailFace()`, `detailHair()`, `detailClothes()`, opt-in on `look.detail`
+  - [x] Headless-Chrome render of a lineup, screenshot viewed
+  - [x] Offline copies (`index-offline.html`, `dist/netlify/index.html`, `dist/MinhLee.app`) contain the code (grep check; `index-offline.html` differs from `index.html` only by the importmap and the comment line)
+  - [ ] Real-device check (not run)
+  - [ ] Likeness against the reference photos, side by side (not done; earlier notes only)
+  - [ ] `dist/MinhLee-mac.zip` and `CFBundleShortVersionString` not rebuilt in this pass (see Follow-ups, v1.8.6 item)
+
+- [x] v1.9.1 (2026-11-04): text-only. Chị Ba's (`an3`) lines made grumpier and visibly annoyed, still funny and never mean. Signature stand line unchanged. No logic or ids changed. Details: `docs/changelog.md` v1.9.1, `docs/spec/dong-nghiep.md` §7.6
+  - [x] Lines rewritten in `index.html`: `say.greet`, `say.idle`, `say.chat`, `say.pantry`, `reply`, `request`, `meeting`, `quirks`, `DOC_QUESTS` ask, two `DUOS` lines (Chú 7, Nam), `dammhaam` result
+  - [x] JavaScript syntax check and headless smoke run
+  - [ ] Native-speaker review of the new Chị Ba wording (not reviewed)
+  - [ ] Hand-check Chị Ba's lines in a real browser (tone and bubble fit, not recorded)

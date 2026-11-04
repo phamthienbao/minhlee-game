@@ -1,6 +1,6 @@
 # Spec: Một Ngày Ở MinhLee
 
-Status: v1.9.2 (2026-11-04). Detailed looks for five coworkers (`look.detail`, `docs/spec/dong-nghiep.md` §8). Earlier: v1.9.0. Six new day themes with story intros, and desk items unlocked by finished desk tasks (`tasksTotal`, `unlocked`; see `docs/spec/noi-dung-bat-ngo.md` §3.2 and `docs/spec/bang-nhiem-vu.md` §9). Earlier: v1.8.6. Desk task reworked around a requester, with progress kept on pause (AC-71 to AC-73); Thông, Thảo, and Toàn looks updated from photos (§4.4). Nguyên's look is from the user's reference photo (v1.8.5). Earlier releases are in `docs/changelog.md`.
+Status: v1.10.0 (2026-11-04). Trung visits Nguyên, with two new duo scripts (§4.2; `docs/spec/noi-dung-bat-ngo.md` §2). Welcome-back popup on boot (AC-84; `docs/spec/the-gioi-lien-tuc.md` §11.5). Mid-day save and resume (`Store.session`, §4.2, AC-81 to AC-83; `docs/spec/the-gioi-lien-tuc.md` §11). Earlier: v1.9.2 (2026-11-04). Detailed looks for five coworkers (`look.detail`, `docs/spec/dong-nghiep.md` §8). Earlier: v1.9.0. Six new day themes with story intros, and desk items unlocked by finished desk tasks (`tasksTotal`, `unlocked`; see `docs/spec/noi-dung-bat-ngo.md` §3.2 and `docs/spec/bang-nhiem-vu.md` §9). Earlier: v1.8.6. Desk task reworked around a requester, with progress kept on pause (AC-71 to AC-73); Thông, Thảo, and Toàn looks updated from photos (§4.4). Nguyên's look is from the user's reference photo (v1.8.5). Earlier releases are in `docs/changelog.md`.
 
 ## 1. Goal
 
@@ -14,7 +14,7 @@ A solo, offline-playable, Vietnamese-language office-day simulation. The player 
 | Rendering | Three.js 0.160.0 loaded via an import map from `https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js` (`index.html`), or inlined as a data URL (`index-offline.html`). |
 | Network | `index.html`: required on first load to fetch Three.js. `index-offline.html`: no network at all. Gameplay makes no network calls. |
 | Audio | Web Audio API only, synthesized in code. No audio files. |
-| Persistence | `localStorage` only, key `mot-ngay-o-cong-ty.v1`. Holds player data and the world state (`world`, `recentEv`, `lastTheme`). No accounts, no server. |
+| Persistence | `localStorage` only, key `mot-ngay-o-cong-ty.v1`. Holds player data, the world state (`world`, `recentEv`, `lastTheme`), and the day in progress (`session`, v1.10.0). No accounts, no server. |
 | Language | UI text and all dialogue in Vietnamese. |
 | Art | Low-poly 3D built from primitives; chibi-style characters. |
 | Fiction | All characters, MinhLee, and its products (including App Dating) are fictional. |
@@ -58,6 +58,10 @@ Status legend: `Verified` = headless Chrome run via a throwaway harness (not in 
 | AC-71 | Desk task (`workActivity()`) opens a work card naming the requester (role "Đang nhờ bạn"), a briefing (N notes to sort, or N tasks to order), "about 30–60 seconds", and "no score, no penalty". "▶ Bắt đầu làm" starts a new task. "▶ Làm tiếp" resumes an unfinished one. | Partly verified (headless Chrome only, reported by requester; not re-run in the doc pass) |
 | AC-72 | Pausing a desk task ("Để lát nữa (không mất gì)" or "⏸ Tạm dừng (giữ nguyên tiến độ)") keeps `D.work`: the same set, done items, and order. The task resumes from there. `D.work` clears only on completion, or at a new day. | Partly verified (headless Chrome only, reported by requester; not re-run in the doc pass) |
 | AC-73 | Requester reaction on completion: +3 affinity for the requester, and a card with their reply. Mini-game hints: a group or item is outlined (`.glow`) after 2 wrong answers. | Partly verified (headless Chrome only, reported by requester; not re-run in the doc pass) |
+| AC-81 | Closing the tab or reloading mid-day, then reopening, shows the welcome-back popup (AC-84) with "▶ Tiếp tục ngày đang dở", and the title-screen button "▶ Tiếp tục ngày đang dở (hh:mm)". Pressing either restores the minute, tasks, energy, mood, desk task progress, position, affinity, day theme, NPC times, and surprises. | Partly verified (headless Chrome, 2026-11-04: snapshot fields restored and button visibility checked). Real browser restart and real devices not tested |
+| AC-82 | The session is cleared at day end, on exit to title, and on "🔄 Bắt đầu lại ngày này". The next start is a new day at 08:30. | Partly verified (headless Chrome: session cleared. Coverage of each clear path not recorded) |
+| AC-83 | A failed restore logs the error and stack, clears the session, and starts a new day. The player sees no raw error. | Source check only (2026-11-04). Not run |
+| AC-84 | On boot with saved data (`days > 0` or a valid session) the welcome-back popup shows "Chào mừng <tên> quay lại!" and its buttons: "▶ Tiếp tục ngày đang dở" or "▶ Tiếp tục chơi", "🆕 Chơi mới" (a confirmation; "Xóa hết và chơi mới" clears all saved data, "Thôi, quay lại" returns to the popup). A first-time player with no data sees the name screen directly. | Partly verified (headless Chrome, 2026-11-04: popup text and buttons, continue resumes at 13:10 with 1 task, back keeps data, clear leads to 0 days). Not tested across a real browser restart or on a real device |
 
 ## 4. Architecture
 
@@ -87,7 +91,7 @@ One HTML file with three parts: a `<style>` block, the static DOM (`#game`, `#hu
 - **Modes:** `G.mode` is one of `title`, `play`, `dialog`, `modal`, `paused`, `summary`. `update()` skips simulation in `title` and `paused`.
 - **Clock:** `tickClock(dt)` advances `D.minute` at `CFG.SPEED` (1.25 game-minutes per real second). A full day is about 7.2 real minutes; fast-forward multiplies by `CFG.FAST` (4).
 - **Day state:** `D` is recreated by `newDayState()` each day. It holds minute, tasks, energy, mood, talked/greeted sets, flags, quest stage, moments (max 14), the day `theme`, the day's `surprises` list, and `work` (`D.work`, the current desk task, or `null`). `D.work` is kept when the player pauses the task, set to `null` when the task is finished, and reset at a new day by `newDayState()` (v1.8.6).
-- **Persistent state:** `Store` holds name, gender, avatar, day count, diary (max 150), affinity per coworker, settings (`sound`, `tutorial`, `cam`), and the world state (`world.users`, `recentEv`, `lastTheme`). Affinity `AFF` is loaded from `Store` at boot.
+- **Persistent state:** `Store` holds name, gender, avatar, day count, diary (max 150), affinity per coworker, settings (`sound`, `tutorial`, `cam`), and the world state (`world.users`, `recentEv`, `lastTheme`). Affinity `AFF` is loaded from `Store` at boot. `Store.session` (v1.10.0) holds a snapshot of the day in progress, written every 5 s of play and when the tab hides. It is cleared at day end and on exit to title. Details: `docs/spec/the-gioi-lien-tuc.md` §11.
 - **Diary intro (v1.7.2):** `showDiary()` picks the intro line from context. During a day (previous mode `paused` or `play`, `D` set, not ended), it shows the workday number (`Store.days + 1`) and says the entry is written at the end of the day. On day 1 with no entries, a second line explains the first entry. Outside a day (title screen, summary), it shows days worked, or "Chưa có ngày làm nào được ghi lại." when `days` is 0. Exact strings in `docs/changelog.md` v1.7.2.
 - **Calendar and world:** day N is weekday `(N-1) % 5` of week `floor((N-1)/5)+1`; there is no ending. Details in `docs/spec/the-gioi-lien-tuc.md`.
 - **Placeholders:** `fill(text)` replaces `{ten}` with the saved name (or "bạn" if empty) and `{anh}` / `{Anh}` with "anh" (`nam`), "chị" (`nu`), or "anh/chị" (`khac`). It runs when bubbles and cards are rendered.
@@ -95,7 +99,7 @@ One HTML file with three parts: a `<style>` block, the static DOM (`#game`, `#hu
 - **Spots:** `SPOTS` entries have position, radius, icon, label, `enabled()` and `run()`. `computeNearest()` picks the closest enabled spot or coworker in range.
 - **Coworker schedule:** each NPC has `habits` (arrive, coffee, lunch, leave, joinsMeeting, and in v1.2.0 `lounge` and `attendance` for the remote worker Nguyên, see `docs/spec/dong-nghiep.md` §3) and `stats` (outgoing, focus, team). `decideGoal()` and `updateNpc()` drive movement and states. Chủ tịt's (Thạnh's) `arrive` is 09:20 (the late-arrival note is in `traits`, a maintainer note only). Pace (v1.3.0): `CFG.NPC_SPEED` is 1.9 (was 1.55), lunch lasts 55 minutes (was 45), and each coffee window is 16 minutes (was 13).
 - **Quirks:** `quirks` entries fire once per day within 8 game minutes of their `at` time, only when the optional `ctx` matches (default `desk`). The optional `anim` plays for 3.5 s when the line is shown. Rules in `docs/spec/dong-nghiep.md` §7.
-- **Visits:** a coworker may visit a seated colleague's desk during windows 09:05–09:50, 13:35–14:45, and 15:40–16:50. A visit ends after 3 completed stages (then a 70–150 s cooldown) or after 15 seconds (ends without that cooldown). Visits are started from the cooldown loop in `npcAmbient()`, not from a daily count. On stage 0, the visitor plays `visitAnim` for 2.4 s if the profile sets one (only Chị Ba: `punch`). Fifteen coworker pairs have scripted duo lines (see `docs/spec/noi-dung-bat-ngo.md`).
+- **Visits:** a coworker may visit a seated colleague's desk during windows 09:05–09:50, 13:35–14:45, and 15:40–16:50. A visit ends after 3 completed stages (then a 70–150 s cooldown) or after 15 seconds (ends without that cooldown). Visits are started from the cooldown loop in `npcAmbient()`, not from a daily count. On stage 0, the visitor plays `visitAnim` for 2.4 s if the profile sets one (only Chị Ba: `punch`). Nineteen coworker pairs have scripted duo lines, 23 scripts in total (see `docs/spec/noi-dung-bat-ngo.md`). From v1.10.0, Nguyên, seated on a pantry sofa, may also start a visit, but only to Chị Thảo's desk (she must be at `desk:work`); he never visits from the daybed. Trung may visit Nguyên instead (v1.10.0): 40% per visit attempt while Nguyên is on a sofa seat or the daybed, and Trung stands at Nguyên's seat approach point (`noi-dung-bat-ngo.md` §2).
 - **Treat events (Chủ tịt):** `processTimeEvents()` fires two events when the clock crosses 11:05 and 14:10, including on a time skip. Each fires only if Chủ tịt is not hidden. Effects: +8 energy, +3 mood, +2 affinity with Thạnh, one diary moment, a toast, a chime, and a line from Thạnh.
 - **Camera presets:** `CAM_PRESETS` has three entries, all viewed from above: Gần (pitch 0.98, distance 7.5), Vừa (pitch 1.12, distance 10.5, default), and Xa (nhìn từ trên) (pitch 1.3, distance 14). The 🎥 HUD button (`#b-cam`) cycles them. `setCamPreset()` stores the index in `settings.cam` and shows a toast. `startDay()` applies the saved preset.
 - **Camera framing:** `updateCamera()` aims 1.3 m ahead of the player along the camera's yaw, so the player can see what is coming. Field of view: 58 when the aspect ratio is below 0.8 (portrait), 50 below 1.2, otherwise 44. Drag changes pitch within 0.6–1.4. The camera distance is limited so it stays within the office bounds (`updateCamera` clamps it against the room limits).
@@ -131,19 +135,7 @@ No other libraries, frameworks, or assets are used.
 | `pattern` | `'gingham'` (black-and-white caro), `'stripe'` (horizontal grey-teal), `'plaid'` (red-and-blue, v1.4.1) | Shirt pattern, overrides `shirt`. Drawn by `patternMat(kind)`, one cached canvas texture per kind; unknown values fall back to gingham (v1.1.1 named the gingham case `ginghamMat()`) |
 | `round`, `smile` | `true` | Round face, wide smile |
 
-- Custom stylized looks (chibi, primitives only; headless-Chrome screenshots only, not on devices):
-  - Thạnh (`id: 'thanh'`, "Chủ tịt", v1.1.1): short black hair, thin rectangular glasses, round face, wide smile, black-and-white gingham shirt.
-  - Trung (`id: 'trung'`, v1.1.2): short black hair, thin dark rectangular glasses (`glassColor`), small mustache, grey-teal horizontal-striped polo.
-  - Tùng (`id: 'tung'`, v1.1.2): black hair with side fringe, white-lavender shirt, wide smile.
-  - Chú 7 (`id: 'an7'`, v1.1.2): short dark hair, no glasses, white shirt, neutral expression.
-  - Nguyên (`id: 'nguyen'`, v1.8.5): black hair with side fringe (`style: 'fringe'`, voluminous per the target look), fair skin (`0xf3d3bb`), black top (`0x1b1b1d`, replaces the earlier green top), no glasses, no `smile` (relaxed, neutral mouth). Based on a reference photo the user supplied; the photo is not embedded.
-  - Yến (`id: 'yen'`, v1.3.1): long auburn-brown hair, thin round gold-rimmed glasses, black top, smile.
-  - Chị Ba (`id: 'an3'`, v1.3.1): shoulder-length brown bob, thick dark round glasses (`glassThick`), round face, black top.
-  - Thảo (`id: 'thao'`, v1.3.1; updated v1.8.6 from the user's photo; v1.9.2 detailed look): wavy long hair (`hairStyle: 'wavy'`), orange V-neck blouse (`0xe8923a`), lashes, gold earrings, pink lips, smile, no glasses. Detail fields in `docs/spec/dong-nghiep.md` §8.
-  - Phú (`id: 'phu'`, v1.4.1): short black hair, thin rectangular glasses (`glassColor`), black shirt, smile.
-  - Nam (`id: 'nam'`, v1.4.1): black fringe (`style: 'fringe'`), red-and-blue plaid shirt (`pattern: 'plaid'`), neutral expression.
-  - Anh Bảo (`id: 'bao'`, v1.4.1): short neat black hair, thin dark rectangular glasses (`glassColor`), mustard shirt, smile. Approximation: built from a written brief, no photo.
-  - Thông (`id: 'thong'`, v1.8.6, from the user's photo): short black hair, white tee (`shirt: 0xf4f4f2`), smile, no glasses. Toàn (`id: 'toan'`, v1.8.6, from the user's photo): short black hair, round face, navy shirt (`shirt: 0x1f2a5c`, plain torso, no polo collar), mustache, no glasses. No plant pot is placed at desk 3 in the code.
+- Per-coworker looks (v1.1.1 to v1.9.5) are listed in `docs/spec/dong-nghiep.md` §1 (roster) and §8 (detailed looks). They are built from primitives only. Nguyên's look was built from a user-supplied photo, which is not embedded. No plant pot is placed at desk 3 in the code.
 
 ## 5. Data model
 
@@ -161,6 +153,7 @@ Stored under key `mot-ngay-o-cong-ty.v1` as JSON:
 | `world` | object | v1.1.0. `{ users }`: App Dating user count in thousands, default 12 |
 | `recentEv` | array | v1.1.0. Ids of the last 8 surprises that fired (used to avoid repeats) |
 | `lastTheme` | string | v1.1.0. Id of the previous day's theme (default empty) |
+| `session` | object or null | v1.10.0. Snapshot of the day in progress: `v: 1`, `day`, and the day state. Written every 5 s of play and when the tab hides. Cleared at day end, on exit to title, and on start-over. Fields in `docs/spec/the-gioi-lien-tuc.md` §11 |
 
 Reset ("Xóa dữ liệu") removes the key and clears in-memory affinity.
 

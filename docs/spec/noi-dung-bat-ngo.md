@@ -1,6 +1,6 @@
 # Spec: Nội dung đa dạng (surprises, duos, day themes, badges)
 
-Status: v1.9.0 (2026-11-04). Six new day themes, each with a story intro at 08:50 (§3.2, AC-75 to AC-77). Earlier: surprise trigger changed in v1.8.7 (§1, AC-40): a surprise waits for the player to stand near the related coworker instead of popping up at its time. Narration uses "anh" (not "ông") for Chủ tịt in three `SURPRISES` strings. The Nam–Thạnh scripts (v1.8.1, v1.8.2) and the random script pick per visit are in §2.
+Status: v1.10.0 (2026-11-04). Two `nguyen`→`thao` duo scripts added (§2), 21 scripts in total. Then two `trung`→`nguyen` scripts, for Trung's visits to Nguyên (§2): 23 scripts for 19 pairs. They are reachable since a later v1.10.0 change: Nguyên visits Chị Thảo from a pantry sofa (§2 note). Earlier: v1.9.5 (2026-11-04). `th-cat` intro text and options changed (Chị Ba is not allergic to cats; §3.2). Two cat-banter duo scripts added for Chị Ba and Chủ tịt (§2). Earlier: v1.9.0. Six new day themes, each with a story intro at 08:50 (§3.2, AC-75 to AC-77). Earlier: surprise trigger changed in v1.8.7 (§1, AC-40): a surprise waits for the player to stand near the related coworker instead of popping up at its time. Narration uses "anh" (not "ông") for Chủ tịt in three `SURPRISES` strings. The Nam–Thạnh scripts (v1.8.1, v1.8.2) and the random script pick per visit are in §2.
 
 ## 1. Daily surprises
 
@@ -54,6 +54,8 @@ Status: v1.9.0 (2026-11-04). Six new day themes, each with a story intro at 08:5
 - A visit prefers a duo partner 70% of the time when one is available. Otherwise it picks any seated colleague.
 - When a pair has more than one script, one is picked at random for each visit (`runVisit()`, v1.8.2). The pick is stored with the visit, so the script stays the same until the visit ends.
 - The visit ends after the last duo line or after 24 seconds, whichever comes first.
+- Reachability (v1.10.0): a visit starts from a seated coworker at `desk:work`, or from a sofa seat for Nguyên (`habits.lounge`, goal `sofa:N`). Nguyên may visit only Chị Thảo (`npcAmbient()`, `dong-nghiep.md` §3). The partner must be seated at `desk:work`. So the two `nguyen`→`thao` scripts can play. Headless: 6 of 6 runs.
+- Trung → Nguyên (v1.10.0): when Trung is at `desk:work` in a visit window, each visit attempt has a 40% chance to add Nguyên to the partner candidates, if Nguyên is on a sofa seat or the daybed (not frozen, not visiting). A `trung`↔`nguyen` duo is then preferred. Nguyên has no desk, so the visitor stands at his seat approach point (`seat.ax` / `seat.az`, facing the seat; `LOUNGE_SEAT` if the goal has no seat). Verified headless only: 1 of 6 short runs.
 - When the visitor speaks at stage 0, the visitor plays `visitAnim` (Chị Ba: `punch`). The animation also plays on any visitor line that contains "đấm".
 
 | Pair | Lines |
@@ -75,8 +77,11 @@ Status: v1.9.0 (2026-11-04). Six new day themes, each with a story intro at 08:5
 | Chủ tịt (Thạnh) – Hiện (added v1.4.2, cat talk; v1.4.3: "anh" kept for younger Hiện) | 3 |
 | Nam – Chủ tịt (Thạnh), playful: Nam teases with "Bé Hạnh" and asks for the milk tea; Thạnh says not to call him that, and agrees to buy it (in `DUOS` since v1.8.1, missing from this table until v1.8.2) | 4 |
 | Nam – Chủ tịt (Thạnh), serious: Nam asks Thạnh to settle the mobile login-screen design by Friday; Thạnh replies humbly ("Dạ, anh Nam gửi em bản mới…") (added v1.8.2) | 4 |
+| Nguyên – Chị Thảo (v1.10.0, new pair, reachable from Nguyên's sofa seat, see the note above): `nguyen`→`thao` two scripts, "Chị Thảo ơi, nay có ai mời nước không?" and "Chị Thảo, hôm nay ai mời trà sữa hông chị?" | 4 + 4 |
+| Trung – Nguyên (v1.10.0, Trung visits Nguyên from his sofa or daybed, see the note above): `trung`→`nguyen` two scripts, "Nguyên ơi, đổi design lại chút đi, cái này khó quá." and "Nguyên, nút này vẽ đẹp mà code mất ba ngày. Đổi lại chút được không?" | 4 + 4 |
+| Chị Ba – Chủ tịt (Thạnh), cat banter, two scripts (v1.9.5): `an3`→`thanh` (fridge-opening cat, "Mèo em thiền… lười có triết lý") and `thanh`→`an3` ("mèo em hơi ú", "Mập là có phúc!") | 4 + 4 |
 
-Seventeen scripts for 16 pairs (v1.8.2). Nam–Chủ tịt is the only pair with two scripts. Pairs not in this table use the generic `say.chat` lines.
+Twenty-three scripts for 19 pairs (v1.10.0; 21 scripts for 18 pairs before the Trung–Nguyên scripts; 19 scripts for 17 pairs in v1.9.5). Nam–Chủ tịt, Chị Ba–Chủ tịt, Nguyên–Chị Thảo, and Trung–Nguyên each have two scripts. Pairs not in this table use the generic `say.chat` lines.
 
 ## 3. Day themes
 
@@ -124,9 +129,9 @@ One theme is drawn at the start of each day (`pickTheme()`), weighted by `w`, le
 | `th-power` | Rủ cả nhóm chia sẻ hotspot | mood +6, aff `thong` +4, moment |
 | `th-power` | Sắp xếp lại ghi chú giấy | mood +4, energy +3, aff `an3` +3, moment |
 | `th-power` | Đi pha cà phê chờ mạng về | mood +5, energy +6, moment |
-| `th-cat` | Xin ít sữa cho mèo | mood +8, aff `thanh` +5, moment |
-| `th-cat` | Bế mèo ra ngoài giúp Chị Ba | mood +4, aff `an3` +4, aff `thanh` −1, moment |
-| `th-cat` | Chụp ảnh gửi nhóm chung | mood +7, moment |
+| `th-cat` | Xin ít sữa cho mèo ở pantry | mood +8, aff `thanh` +5, moment |
+| `th-cat` | Hỏi Chị Ba cho xem ảnh mèo vàng nhà chị | mood +7, aff `an3` +4, aff `thanh` +1, moment |
+| `th-cat` | Chụp một tấm ảnh rồi gửi nhóm chung | mood +7, moment |
 | `th-hack` | Xin vào đội của Nam | mood +7, aff `nam` +4, moment |
 | `th-hack` | Xin vào đội của Trung | mood +5, aff `trung` +4, moment |
 | `th-hack` | Làm thử một mình | mood +4, energy −3, aff `tung` +3, moment |
@@ -136,6 +141,8 @@ One theme is drawn at the start of each day (`pickTheme()`), weighted by `w`, le
 | `th-award` | Bầu cho Phú | mood +6, aff `phu` +5, moment |
 | `th-award` | Bầu cho Thông | mood +5, aff `thong` +4, moment |
 | `th-award` | Bỏ phiếu trắng, vẽ ngôi sao | mood +4, aff `thao` +3, moment |
+
+- `th-cat` intro text (v1.9.5): Chị Ba says her golden cat is prettier. No allergy line. Her cat is Nghệ, Chủ tịt's is Nhân Quả (see `dong-nghiep.md` §2 for the cat canon). Chị Ba's intro line is "Xấu hoắc. Mèo vàng nhà chị đẹp gấp mười."
 
 ## 4. End-of-day badges
 
@@ -166,7 +173,7 @@ Status legend as in `docs/spec/mot-ngay-o-cong-ty.md` section 3.
 | AC-38 | Every surprise shows 3 options. Each option shows a result card and applies its effects. No raw placeholders appear. | Verified (v1.4.2 headless harness: all 19 surprises x 3 options exercised, no raw placeholders, no JS errors. v1.4.3 re-run: all 19 x 3 again, no JS errors. Earlier: v1.4.0 run, 18 surprises) |
 | AC-39 | The mystery gift box shows 3 boxes, and each box gives an outcome. | Verified (every gift box exercised in the 12-day run) |
 | AC-40 | A surprise waits after its time until the player is within 4.2 m of the related coworker (any visible coworker if none). It is skipped if not reached within 150 game-minutes or by 17:10. Far from the coworker: not fired. Near: fired. | Verified (v1.8.7, headless Chrome only: far not fired, near fired) |
-| AC-41 | The 15 duo pairs play their scripted lines when those pairs visit each other. | Partly verified (v1.4.0 harness: all duo and surprise ids valid, before `thanhmeo` and the Chủ tịt–Hiện duo were added in v1.4.2. Scripted lines not recorded as played. v1.4.3 re-run: 15 duos run, no JS errors) |
+| AC-41 | The duo pairs play their scripted lines when those pairs visit each other. Pairs: 19 and scripts: 23 since v1.10.0 (18 pairs and 21 scripts before the Trung–Nguyên scripts; 17 pairs and 19 scripts in v1.9.5). The Nguyên–Chị Thảo pair visits from a sofa seat (§2 note). | Partly verified (headless, v1.10.0: 6 of 6 runs Nguyên visited Chị Thảo and a `nguyen`→`thao` script was picked; scripted lines not recorded as played). Trung–Nguyên (v1.10.0): 1 of 6 short headless runs, Trung reached Nguyên's approach point and the duo was picked (consistent with 40%); not tested over a full day; scripted lines not recorded as played. Earlier (v1.4.0 harness: all duo and surprise ids valid, before `thanhmeo` and the Chủ tịt–Hiện duo were added in v1.4.2. Scripted lines not recorded as played. v1.4.3 re-run: 15 duos run, no JS errors) |
 | AC-42 | All 5 day themes appear. The emoji shows after the clock. The rain day shows grey light and plays the rain sound. | Partly verified (themes varied in the 12-day run; rain light and sound not recorded; audio not tested) |
 | AC-43 | Milk-tea days add Chủ tịt's (Thạnh's) treats at 09:55 and 16:00. | Not recorded (source only) |
 | AC-44 | Up to 4 badges appear on the summary and in the diary. | Not recorded (source only) |

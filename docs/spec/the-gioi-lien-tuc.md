@@ -1,6 +1,6 @@
 # Spec: Thế giới liên tục (endless world)
 
-Status: v1.3.1 (2026-11-04). v1.3.0 changed the birthday offsets (`× 4`, unique for all 14 coworkers), excluded remote coworkers from birthday and cake picks, and moved the notice board to the east wall. v1.2.0 changed the birthday roster (14 coworkers) and the notice-board name pool. Parent spec: `docs/spec/mot-ngay-o-cong-ty.md`. Source of truth: `index.html` (section 14 and the calendar block above section 3).
+Status: v1.10.0 (2026-11-04). Mid-day save and resume added (§11). Welcome-back popup on boot (§11.5, AC-84). Earlier: v1.3.1 (2026-11-04). v1.3.0 changed the birthday offsets (`× 4`, unique for all 14 coworkers), excluded remote coworkers from birthday and cake picks, and moved the notice board to the east wall. v1.2.0 changed the birthday roster (14 coworkers) and the notice-board name pool. Parent spec: `docs/spec/mot-ngay-o-cong-ty.md`. Source of truth: `index.html` (section 14 and the calendar block above section 3).
 
 ## 1. Purpose
 
@@ -17,7 +17,7 @@ The game has no ending. Each day is one work day. Days run Monday to Friday, the
 | Day-start toast | "<weekday> · Tuần N · Ngày D" plus the day theme line (see `noi-dung-bat-ngo.md`) | `startDay()` |
 | After Friday | The summary button reads "🌙 Qua cuối tuần" and opens the weekend vignette | `showSummary()`, `weekendFlow()` |
 | Other days | The summary button reads "☀ Sang ngày tiếp theo" and starts the next day | `showSummary()` |
-| Title button | "Bắt đầu ngày mới" when `days` is 0. Otherwise "▶ Tiếp tục: <weekday>, tuần N" | `refreshTitle()` |
+| Title button | "Bắt đầu ngày mới" when `days` is 0. Otherwise "▶ Tiếp tục: <weekday>, tuần N". With a valid mid-day session, "🔄 Bắt đầu lại ngày này" (§11) | `refreshTitle()` |
 | Title info | "Bạn đã làm ở MinhLee N ngày. Game không có hồi kết…" | `refreshTitle()` |
 | Ending | None. No end screen, no game-over, no day cap. The 17:30 prompt ends only the current day | `processTimeEvents()` |
 
@@ -38,7 +38,7 @@ The game has no ending. Each day is one work day. Days run Monday to Friday, the
 App version examples: days 1–5 show v1.0, days 6–10 v1.1, days 11–15 v1.2, days 16–20 v1.3, days 21–25 v2.0.
 
 - `world` is written to `Store` at the summary, together with `days`, `diary`, `affinity`, `lastTheme`, and `recentEv`.
-- Coworker relationships (`affinity`) persist. They are written at the summary, and also immediately after each surprise option (`saveProgress()`), so surprise effects survive even if the day is abandoned. The day record itself is not saved.
+- Coworker relationships (`affinity`) persist. They are written at the summary, and also immediately after each surprise option (`saveProgress()`), so surprise effects survive even if the day is abandoned. The day record is written only at the end of the day. The day in progress is kept in `Store.session` (§11).
 
 ## 5. Monday meeting
 
@@ -89,3 +89,61 @@ Status legend as in `docs/spec/mot-ngay-o-cong-ty.md` section 3.
 | AC-34 | Theme and surprise do not repeat on consecutive days (`lastTheme`, `recentEv`), except the known Friday milk-tea path. | Partly verified (themes varied in the 12-day run; the no-repeat rule itself not recorded) |
 | AC-35 | Each coworker's birthday recurs every 65 days and forces a cake party that day. Offsets are unique (v1.3.0). Remote coworkers are not picked (§7). | Not recorded (a 65-day cycle is longer than the 12-day run; source only) |
 | AC-36 | The diary keeps the most recent 150 entries. | Not recorded (source only) |
+
+## 11. Mid-day save and resume (v1.10.0)
+
+Before v1.10.0 only the end-of-day summary was saved, so closing the tab during a day restarted that day at 08:30. The in-progress day is now snapshotted.
+
+### 11.1 What is saved
+
+| Item | Rule | Code |
+|---|---|---|
+| Location | `Store.session` in the existing key `mot-ngay-o-cong-ty.v1`. No new key | `saveSession()` (`index.html` section 14) |
+| Version and day | `v: 1`, `day` = `Store.days + 1` at save time | `validSession()` |
+| When | Every 5 s of play, on `visibilitychange` (tab hidden), and on `pagehide` | `saveSession()` |
+| Day state | `minute`, `tasks`, `energy`, `mood`, `sets`, `moments`, `flags`, `quest`, `stats`, `work` (desk task), `meetTopic`, theme id, `noteLeft`, `aff` | `D` |
+| Surprises | `surprises` as `t`, `id`, `fired` | `D.surprises` |
+| Events | `EVENT` (cake, printer) | `EVENT` |
+| Player | Position and yaw | player object |
+| Coworkers | Per NPC: `times`, `attends`, `meetSeat`, `joinsCake` | `NPCS` |
+
+Not saved: open cards and modals, a conversation in progress, speech bubbles, active visits, and spot occupancy. `snapNpcsToSchedule` rebuilds the schedule and frees the spots on restore. The last 5 s of play can be lost.
+
+### 11.2 Lifecycle
+
+| Event | Effect |
+|---|---|
+| Boot with saved data | `showWelcomeBack()` opens the welcome-back popup (§11.5) when `days > 0` or a valid session exists |
+| Title screen opens | `refreshTitle()` shows "▶ Tiếp tục ngày đang dở (hh:mm)" (`#btn-resume`) when `validSession()` is true. The start button reads "🔄 Bắt đầu lại ngày này" |
+| "▶ Tiếp tục ngày đang dở" | `resumeSession()`: `startDay()` rebuilds the scene, then `D`, `EVENT`, and NPC state are overwritten from the snapshot, then `snapNpcsToSchedule()` |
+| Restore throws | `dlog` logs the error and stack, `session` is cleared, and the start falls back to a new day |
+| "🔄 Bắt đầu lại ngày này" | Clears `session` and starts a new day |
+| End of day | `endDay()` patch sets `session: null` |
+| Exit to title | `session` is cleared |
+
+### 11.3 Limits
+
+- Storage is per origin and device. The file path, Netlify, GitHub Pages, the Mac app, and each browser keep separate saves. No export or import yet (`docs/tasks.md`).
+- Verified in headless Chrome only: snapshot fields restored, resume button visibility, session cleared. Not tested across a real browser restart or on a real device.
+
+### 11.4 Acceptance criteria
+
+Criteria AC-81 to AC-84 are in `docs/spec/mot-ngay-o-cong-ty.md` §3.
+
+### 11.5 Welcome-back popup (v1.10.0)
+
+`init()` calls `showWelcomeBack()` (`index.html` section 14) after boot. It opens only when there is saved data (`Store.days > 0` or `validSession()`). A first-time player with no data sees the name screen directly. It also reopens when the player picks "Thôi, quay lại".
+
+| Element | Text or rule | Code |
+|---|---|---|
+| Title | "Chào mừng <tên> quay lại!", or "Chào mừng bạn quay lại!" when the name is empty | `showWelcomeBack()` |
+| Body, with a session | "Ngày làm thứ N đang dở lúc hh:mm. Bạn có thể làm tiếp đúng chỗ đã dừng." | `validSession()` |
+| Body, without a session | "Bạn đã làm ở MinhLee N ngày. Ngày mới đang chờ bạn." | `Store.days` |
+| "▶ Tiếp tục ngày đang dở" (session) or "▶ Tiếp tục chơi" (none) | `resumeSession()`, or `startDay()` when it returns false. Closes the popup | `resumeSession()` |
+| "🆕 Chơi mới" | Opens the "Chơi mới?" confirmation | `showWelcomeBack()` (inner `askNew`) |
+| "🗑 Xóa hết và chơi mới" | `Store.clear()`, clears affinity, refreshes the title, toast. Starts from the name screen | `showWelcomeBack()` (inner `askNew`) |
+| "Thôi, quay lại" | Returns to the welcome-back popup | `showWelcomeBack()` |
+
+The confirmation says that the name, character, diary, closeness, and unlocked items are erased from this device. The title-screen buttons `#btn-resume` and `#btn-start` remain and are not replaced by the popup.
+
+Verified in headless Chrome only (2026-11-04): popup text and buttons, continue at 13:10 with 1 task, "Thôi, quay lại" keeps the data, clear leads to 0 days. Not tested across a real browser restart or on a real device (`docs/tasks.md`).

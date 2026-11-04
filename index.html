@@ -188,6 +188,7 @@ window.__bootTimer=setTimeout(function(){
     <div class="chips" id="gens"></div>
     <label class="f">Chọn nhân vật</label>
     <div class="avs" id="avs"></div>
+    <button class="btn hidden" id="btn-resume">▶ Tiếp tục ngày đang dở</button>
     <button class="btn" id="btn-start" disabled>Đang tải thư viện 3D…</button>
     <div class="row">
       <button class="btn alt" id="btn-diary">📖 Nhật ký ngày làm</button>
@@ -359,7 +360,7 @@ const NPC_PROFILES = [
     note: { high: 'Cảm ơn bạn. Mai gặp.', low: 'Mai gặp.' } },
 
   { id: 'hien', name: 'Hiện', role: 'Mobile Dev', desk: 5,
-    look: { skin: 0xe3b78f, hair: 0x6b4a2b, shirt: 0x7b5ea7, style: 'short', glasses: true, smile: true, detail: true, hairStyle: 'quiff', neck: 'crew', neckColor: 0x654a8c },
+    look: { skin: 0xe3b78f, hair: 0x6b4a2b, shirt: 0x7b5ea7, style: 'short', glasses: false, smile: true, detail: true, hairStyle: 'quiff', neck: 'crew', neckColor: 0x654a8c },
     traits: ['nhỏ tuổi nhất', 'thích đùa', 'mê game'], stats: { outgoing: 0.7, focus: 0.55, team: 0.5 },
     habits: { arrive: '09:00', coffee: 'both', lunch: 'desk', leave: '17:30', joinsMeeting: true }, relation: 40,
     taste: { warm: 1, joke: 2, work: 0 },
@@ -465,7 +466,7 @@ const NPC_PROFILES = [
     taste: { warm: 1, joke: 2, work: 1 },
     say: { greet: ['Gì đó? Đứng thẳng lên coi, chị đấm cái cho tỉnh bây giờ!', '@am Sáng sớm chị chạy xong số liệu khảo sát rồi đó. Cần gì thì nói lẹ, chị đang bận. (nắm tay hờ)', 'Cần báo cáo hay số liệu thì nói cho rõ, đừng có “cái đó đó” nha.'],
       idle: ['Lệch có vài phần trăm thôi mà… ai làm ra cái này, chị đấm liền.', 'Ngứa tay quá… à không, ngứa mắt. Cái biểu đồ này nhìn muốn nổi quạu.'],
-      chat: ['Ái da, đấm nhẹ có xíu mà kêu quá trời!', 'Ghi nguồn số liệu vô giùm chị cái. Nói hoài, không thuộc hả?', 'Báo cáo tuần này xong rồi, người dùng App Dating tăng đều. Đỡ bực chút.'],
+      chat: ['Mèo vàng nhà chị tên Nghệ, ngoan hơn mấy đứa trong phòng này nhiều. Anh Thạnh nói gì thì nói, mèo chị đẹp hơn.', 'Ái da, đấm nhẹ có xíu mà kêu quá trời!', 'Ghi nguồn số liệu vô giùm chị cái. Nói hoài, không thuộc hả?', 'Báo cáo tuần này xong rồi, người dùng App Dating tăng đều. Đỡ bực chút.'],
       pantry: ['Cốc này của chị. Ai đụng vô là chị đấm, nói trước đó nha.', 'Đang đọc phản hồi App Dating. Mấy bạn khen gợi ý ghép đôi nhiều lắm… mà có bạn chê, đọc muốn bực.'],
       stand: ['Bực bội quá… thằng bánh tét đâu rồi!', 'Áp lực quá! Bực bội quá… thằng bánh tét đâu rồi!', '*vươn vai* Bực bội quá… thằng bánh tét đâu rồi!'],
       standReply: { id: 'an7', line: 'Dạ có em đây chị Ba! (nép sau ly trà)' },
@@ -477,7 +478,7 @@ const NPC_PROFILES = [
     quirks: [{ at: '09:12', say: '*đấm vai ai đó* Tỉnh chưa? Chị chạy xong số liệu từ sớm rồi nha!', anim: 'punch' }, { at: '09:48', say: 'Để chị rà biểu đồ lần cuối trước khi họp. Ai nhìn chị cũng không rà nhanh hơn đâu.', anim: 'check' }],
     note: { high: 'Em làm gọn lắm, chị khen một lần thôi nha. Mai chị không đấm đâu… chắc vậy.', low: 'Mai gặp em. Nhớ ghi nguồn số liệu, chị nhắc rồi đó!' } },
   { id: 'bao', name: 'Anh Bảo', real: 'Bảo', role: 'Product', desk: 2,
-    look: { skin: 0xf0d0b0, hair: 0x1a1410, shirt: 0xe9c46a, style: 'short', glasses: 'rect', glassColor: 0x30343a, smile: true, detail: true, hairStyle: 'side', neck: 'collar', collar: 0xd4ac4d },
+    look: { skin: 0xe6c09c, hair: 0x1a1410, shirt: 0xd6322f, pattern: 'redwhite', style: 'short', glasses: 'rect', glassColor: 0xb9bfc4, smile: true, detail: true, hairStyle: 'swept', neck: 'collar', collarStyle: 'polo', collar: 0x1a1a1c, shortSleeve: true, cuff: 0xf4f1ea },
     traits: ['hay hỏi “vì sao”', 'kết nối mọi người'], stats: { outgoing: 0.65, focus: 0.65, team: 0.85 },
     habits: { arrive: '08:40', coffee: 'both', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 45,
     taste: { warm: 1, joke: 1, work: 2 },
@@ -517,13 +518,13 @@ const NPC_PROFILES = [
     say: { greet: ['Ơ {ten}… mình mới lên công ty, để mình nằm chút nhé.', 'Chào… (ngáp) Pantry hôm nay mát quá.'],
       idle: ['Zzz… à không, mình đang nghĩ.', 'Cho mình thêm năm phút nữa…'],
       chat: ['Làm ở nhà sướng, mà lên công ty mới có pantry.', 'Mình nằm ở đây là để giữ chỗ cho mọi người thôi.'],
-      pantry: ['Cà phê sữa đá… cho mình thêm cái gối nữa.', 'Pantry là nhà thứ hai của mình.'],
+      pantry: ['Cà phê sữa đá… cho mình thêm cái gối nữa.', 'Pantry là nhà thứ hai của mình.', 'Chị Thảo ơi, nay có ai mời nước không?'],
       deep: 'Mình ít lên vì ở nhà vẽ yên tĩnh hơn. Lên đây là để nhớ mọi người thôi.' },
     reply: { great: ['Ôi, nghe vậy mình tỉnh ngủ hẳn!', 'Hôm nay lên công ty đúng là đáng.'], ok: ['Ừ ừ, nghe nhẹ nhàng đó.', 'Được, mình ghi nhận… sau khi chợp mắt.'], meh: ['Hơi nhiều việc… để mình nằm nghĩ thêm.', 'Ờ… mình cân nhắc sau giấc ngủ trưa.'] },
     request: { ask: 'Mình làm thiết kế ở nhà, hôm nay mới lên công ty. Giờ nên chốt bản vẽ giao diện trước hay chợp mắt chút?',
       options: [['Chốt xong bản vẽ chính rồi hẵng ngủ', 'work'], ['Nghỉ chút cho khỏe, mình canh giúp', 'warm'], ['Ngủ! Công ty có pantry mà 😴', 'joke']] },
     meeting: { values: ['steady', 'fun'], pos: 'Ừ ừ, nghe nhẹ nhàng, mình ủng hộ.', neg: 'Hơi nhiều việc… mình xin phép nằm nghĩ thêm.' },
-    quirks: [{ at: '11:20', say: '(nằm dài ở pantry, mắt lim dim)', anim: null, ctx: 'lounge' }],
+    quirks: [{ at: '10:35', say: 'Chị Thảo ơi, nay có ai mời nước không?', anim: 'wave' }, { at: '11:20', say: '(nằm dài ở pantry, mắt lim dim)', anim: null, ctx: 'lounge' }],
     note: { high: 'Hôm nay lên công ty vui ghê. Lần sau mình lên sớm… chắc vậy. 😴', low: 'Mình về nhà ngủ tiếp đây. Hẹn lần sau.' } },
 ];
 
@@ -672,6 +673,12 @@ const SURPRISES = [
 ];
 // Cặp đồng nghiệp có đoạn tán gẫu riêng khi sang bàn nhau ([idNgườiNói, lời])
 const DUOS = [
+  { a: 'trung', b: 'nguyen', lines: [['trung', 'Nguyên ơi, đổi design lại chút đi, cái này khó quá.'], ['nguyen', 'Khó chỗ nào? Mình vẽ đúng brief mà.'], ['trung', 'Em nói thiệt, dev làm muốn xỉu luôn. Bớt cái hiệu ứng đi.'], ['nguyen', 'Để mình nằm nghĩ rồi tính. (ngáp)']] },
+  { a: 'trung', b: 'nguyen', lines: [['trung', 'Nguyên, nút này vẽ đẹp mà code mất ba ngày. Đổi lại chút được không?'], ['nguyen', 'Ba ngày? Mình vẽ có nửa tiếng.'], ['trung', 'Em nói thiệt, đẹp thì đẹp, mà khó quá trời.'], ['nguyen', 'Ừ ừ… mai mình sửa. Chắc vậy.']] },
+  { a: 'nguyen', b: 'thao', lines: [['nguyen', 'Chị Thảo ơi, nay có ai mời nước không?'], ['thao', 'Chưa đó. Chủ tịt chưa vô, chờ xíu. Mà quán nước đầu hẻm mới ra món mới nha.'], ['nguyen', 'Vậy em chờ. Em ngồi đây tính sổ nước.'], ['thao', 'Em lên công ty là để hỏi câu đó hả?']] },
+  { a: 'nguyen', b: 'thao', lines: [['nguyen', 'Chị Thảo, hôm nay ai mời trà sữa hông chị?'], ['thao', 'Chưa biết. Nghe đồn thứ Sáu hay có.'], ['nguyen', 'Vậy em lên đúng thứ Sáu luôn.'], ['thao', 'Em thông minh ở mấy chỗ kỳ cục thiệt.']] },
+  { a: 'an3', b: 'thanh', lines: [['an3', 'Anh Thạnh, mèo vàng nhà chị hôm qua tự mở tủ lạnh đó. Mèo nhà anh làm được không?'], ['thanh', 'Dạ… mèo em thiền, không mở tủ lạnh. Nhân quả mà chị.'], ['an3', 'Thiền gì, lười thì có! Bực bội ghê!'], ['thanh', 'Mèo em lười có triết lý, chị Ba ơi.']] },
+  { a: 'thanh', b: 'an3', lines: [['thanh', 'Chị Ba, em vừa xem ảnh mèo vàng nhà chị. Đẹp, mà hơi ú nha.'], ['an3', 'Ú cái gì! Mập là có phúc! Anh nói nữa chị đấm đó!'], ['thanh', 'Dạ em xin lỗi. Mà ảnh mèo em chị coi chưa?'], ['an3', 'Coi rồi. Tạm được. (liếc đi chỗ khác)']] },
   { a: 'nam', b: 'thanh', lines: [['nam', 'Thạnh, màn hình đăng nhập bên mobile cần chốt thiết kế trước thứ Sáu.'], ['thanh', 'Dạ, anh Nam gửi em bản mới, chiều nay em duyệt.'], ['nam', 'Cảm ơn Thạnh. Tuần sau mình thử trên máy thật nhé.'], ['thanh', 'Dạ, em sắp xếp thời gian giúp anh.']] },
   { a: 'nam', b: 'thanh', lines: [['nam', 'Bé Hạnh ơi, hôm nay trà sữa đâu? Khìn khìn!'], ['thanh', 'Anh Nam đừng gọi em vậy, nhân quả đó. Chiều em mua, được chưa?'], ['nam', 'Đồng ý! Bé Hạnh là số một! Khìn khìn!'], ['thanh', 'Em nghe hết rồi nha… cả phòng cười kìa.']] },
   { a: 'thanh', b: 'hien', lines: [['thanh', 'Hiện à, em có biết nuôi mèo không? Mèo thiền giỏi hơn anh đó.'], ['hien', 'Dạ… em chỉ nuôi game thôi anh ạ.'], ['thanh', 'Game cũng như mèo, phải chăm mới ngoan.']] },
@@ -709,10 +716,10 @@ const DAY_THEMES = [
         ['Tranh thủ sắp xếp lại ghi chú giấy', 'Không mạng cũng làm được việc. Chị Ba liếc sang: “Biết tận dụng đó.”', { mood: 4, energy: 3, aff: { an3: 3 }, moment: 'Tranh thủ làm việc giấy lúc wifi rớt.' }],
         ['Đi pha cà phê chờ mạng về', 'Mạng về lúc cà phê vừa nguội. Bình yên.', { mood: 5, energy: 6, moment: 'Pha cà phê chờ wifi trở lại.' }]] } },
   { id: 'cat', w: 1, emoji: '🐈', name: 'Ngày mèo ghé thăm', desc: 'Một chú mèo lạ lang thang vào văn phòng, Chủ tịt sáng mắt hẳn lên.', decay: 0.8, visit: 1.4, extra: 0, treats: [],
-    intro: { id: 'th-cat', emoji: '🐈', title: 'Mèo lạ ngoài cửa', text: 'Một chú mèo tam thể thản nhiên bước qua cửa, ngồi liếm chân giữa văn phòng. Chủ tịt khựng lại: “Nhân quả… nó chọn mình luôn rồi.” Chị Ba thì đang dị ứng.',
+    intro: { id: 'th-cat', emoji: '🐈', title: 'Mèo lạ ngoài cửa', text: 'Một chú mèo tam thể thản nhiên bước qua cửa, ngồi liếm chân giữa văn phòng. Chủ tịt khựng lại: “Nhân quả… nó chọn mình luôn rồi.” Chị Ba liếc qua: “Xấu hoắc. Mèo vàng nhà chị đẹp gấp mười.”',
       opts: [['Xin ít sữa cho mèo ở pantry', 'Chủ tịt nhìn bạn như gặp tri kỷ. Chú mèo uống sữa xong thì ngủ luôn dưới bàn Phú.', { mood: 8, aff: { thanh: 5 }, moment: 'Cho chú mèo lạ uống sữa cùng Chủ tịt.' }],
-        ['Bế mèo ra ngoài giúp Chị Ba', 'Chị Ba hắt xì liền ba cái nhưng vẫn khen bạn: “Biết nghĩ cho người khác.”', { mood: 4, aff: { an3: 4, thanh: -1 }, moment: 'Bế mèo ra ngoài vì Chị Ba bị dị ứng.' }],
-        ['Chụp một tấm ảnh rồi gửi nhóm chung', 'Cả nhóm thả tim kín màn hình. Ai cũng đòi nhận nuôi, trừ Chị Ba.', { mood: 7, moment: 'Chụp ảnh chú mèo lạ gửi cả nhóm.' }]] } },
+        ['Hỏi Chị Ba cho xem ảnh mèo vàng nhà chị', 'Chị Ba rút điện thoại ra khoe liền mười lăm phút. Chủ tịt đứng sau chen vào: “Ảnh mèo em cũng có nè!” Hai người cãi nhau vui như chợ.', { mood: 7, aff: { an3: 4, thanh: 1 }, moment: 'Xem ảnh mèo vàng của Chị Ba, Chủ tịt chen vào khoe mèo mình.' }],
+        ['Chụp một tấm ảnh rồi gửi nhóm chung', 'Cả nhóm thả tim kín màn hình. Chị Ba thả một tấm ảnh mèo vàng nhà chị vào nhóm: “Đây mới là mèo.” Chủ tịt thả lại ba tấm ảnh mèo.', { mood: 7, moment: 'Chụp ảnh chú mèo lạ gửi cả nhóm.' }]] } },
   { id: 'hack', w: 1, emoji: '🏁', name: 'Ngày hackathon mini', desc: 'Cả phòng chia đội làm thử một ý tưởng nhỏ trong một ngày, vừa bận vừa vui.', decay: 1.3, visit: 0.8, extra: 1, treats: [],
     intro: { id: 'th-hack', emoji: '🏁', title: 'Hackathon mini', text: 'Tùng đứng lên giữa phòng: “Hôm nay mini hackathon nha! Đội nào làm ra cái gì vui nhất thì được… quyền chọn quán trưa.” Thảo đã chuẩn bị sẵn danh sách quán.',
       opts: [['Xin vào đội của Nam', 'Đội Nam ồn ào nhất phòng. Làm được một con bot chào buổi sáng, chào sai tên bốn lần.', { mood: 7, aff: { nam: 4 }, moment: 'Vào đội Nam làm con bot chào buổi sáng.' }],
@@ -1146,6 +1153,8 @@ function patternMat(kind) {                              // họa tiết áo v�
   if (_patMats[kind]) return _patMats[kind];
   const t = canvasTex(64, 64, kind === 'plaid'
     ? (g) => { g.fillStyle = '#b02a32'; g.fillRect(0, 0, 64, 64); g.fillStyle = 'rgba(28,40,120,0.7)'; [4, 36].forEach((p) => { g.fillRect(p, 0, 14, 64); g.fillRect(0, p, 64, 14); }); g.fillStyle = 'rgba(240,240,240,0.5)'; [28, 60].forEach((p) => { g.fillRect(p, 0, 2, 64); g.fillRect(0, p, 64, 2); }); }
+    : kind === 'redwhite'
+    ? (g) => { g.fillStyle = '#f7f4ee'; g.fillRect(0, 0, 64, 64); g.fillStyle = '#d6322f'; for (let i = 0; i < 4; i++) g.fillRect(0, i * 16 + 4, 64, 8); }
     : kind === 'stripe'
     ? (g) => { [['#4b6163', 0, 14], ['#aeb2b3', 14, 14], ['#4b6163', 28, 10], ['#f1f1ee', 38, 10], ['#9da2a3', 48, 16]].forEach(([c, y, hh]) => { g.fillStyle = c; g.fillRect(0, y, 64, hh); }); }
     : (g) => { g.fillStyle = '#f4f1ea'; g.fillRect(0, 0, 64, 64); g.fillStyle = 'rgba(30,30,30,0.55)'; for (let i = 0; i < 4; i++) { g.fillRect(i * 16, 0, 8, 64); g.fillRect(0, i * 16, 64, 8); } });
@@ -1180,6 +1189,9 @@ function detailHair(look, mk, head) {
     if (look.clip) mk(boxGeo(0.07, 0.03, 0.03), look.clip, -0.27, 0.2, 0.28, head);
   } else if (st === 'side') {                                   // tóc ngắn rẽ ngôi gọn gàng
     mk(boxGeo(0.5, 0.09, 0.12), c, -0.05, 0.22, 0.2, head).rotation.z = 0.12; mk(boxGeo(0.09, 0.2, 0.34), c, 0.31, 0.04, -0.02, head); mk(boxGeo(0.09, 0.2, 0.34), c, -0.31, 0.04, -0.02, head);
+  } else if (st === 'swept') {                                  // tóc ngắn nam, mái hất lệch, hai bên ngắn gọn
+    mk(boxGeo(0.4, 0.09, 0.1), c, 0.05, 0.21, 0.23, head).rotation.z = -0.16; mk(boxGeo(0.16, 0.08, 0.09), c, -0.17, 0.2, 0.22, head).rotation.z = 0.3;
+    mk(boxGeo(0.07, 0.11, 0.28), c, 0.315, 0.12, -0.02, head); mk(boxGeo(0.07, 0.11, 0.28), c, -0.315, 0.12, -0.02, head);
   } else if (st === 'quiff') {                                  // tóc ngắn, mái dựng nhẹ phía trước, hai bên ngắn
     mk(boxGeo(0.36, 0.13, 0.12), c, -0.04, 0.27, 0.16, head).rotation.z = 0.12; mk(boxGeo(0.5, 0.08, 0.1), c, 0, 0.2, 0.22, head);
     mk(boxGeo(0.08, 0.18, 0.32), c, 0.31, 0.03, -0.02, head); mk(boxGeo(0.08, 0.18, 0.32), c, -0.31, 0.03, -0.02, head);
@@ -1190,8 +1202,13 @@ function detailHair(look, mk, head) {
   if (look.earring) [-1, 1].forEach((sx) => mk(_D.ear, look.earring, sx * 0.325, -0.1, 0.02, head).castShadow = false);
 }
 function detailClothes(look, mk, shirtC) {
+  if (look.hem) mk(new THREE.CylinderGeometry(0.2275, 0.2515, 0.25, 10), look.hem, 0, 0.425, 0);        // áo hai màu: nửa thân dưới khác màu
   if (look.neck === 'crew') { const r = mk(_D.torus, look.neckColor || look.shirt, 0, 0.79, 0); r.rotation.x = Math.PI / 2; r.scale.set(1, 1, 0.9); }
-  if (look.neck === 'collar') [-1, 1].forEach((sx) => { const k = mk(boxGeo(0.11, 0.06, 0.02), look.collar || shirtC, sx * 0.07, 0.775, 0.205); k.rotation.z = -sx * 0.3; });
+  if (look.neck === 'collar' && look.collarStyle === 'polo') {            // cổ polo: vòng cổ + hai cánh bẻ ra ngoài
+    const band = mk(new THREE.TorusGeometry(0.2, 0.03, 5, 16), look.collar || shirtC, 0, 0.8, 0); band.rotation.x = Math.PI / 2;
+    [-1, 1].forEach((sx) => { const k = mk(boxGeo(0.15, 0.085, 0.022), look.collar || shirtC, sx * 0.1, 0.755, 0.215); k.rotation.z = sx * 0.6; k.rotation.x = -0.15; });
+    const back = mk(boxGeo(0.3, 0.07, 0.022), look.collar || shirtC, 0, 0.785, -0.2); back.rotation.x = 0.2;
+  } else if (look.neck === 'collar') [-1, 1].forEach((sx) => { const k = mk(boxGeo(0.11, 0.06, 0.02), look.collar || shirtC, sx * 0.07, 0.775, 0.205); k.rotation.z = -sx * 0.3; });
   if (look.neck === 'vneck') [-1, 1].forEach((sx) => { const k = mk(boxGeo(0.16, 0.035, 0.03), look.neckColor || 0xb85f1c, sx * 0.055, 0.73, 0.215); k.rotation.z = sx * 0.9; });
 }
 function buildCharacter(look, isPlayer = false) {
@@ -1224,6 +1241,7 @@ function buildCharacter(look, isPlayer = false) {
   const legL = mkLimb(CH_GEO.leg, 0x44495a, -0.1, 0.3, -0.15), legR = mkLimb(CH_GEO.leg, 0x44495a, 0.1, 0.3, -0.15);
   [legL, legR].forEach((l) => { const s = new THREE.Mesh(CH_GEO.shoe, lam(0x3b2f2a)); s.position.set(0, -0.3, 0.03); l.add(s); });
   if (look.shortSleeve) [armL, armR].forEach((a) => { const f = new THREE.Mesh(boxGeo(0.112, 0.17, 0.112), lam(look.skin)); f.position.y = -0.26; f.castShadow = true; a.add(f); });
+  if (look.cuff) [armL, armR].forEach((a) => { const f = new THREE.Mesh(boxGeo(0.116, 0.03, 0.116), lam(look.cuff)); f.position.y = -0.175; a.add(f); });
   [armL, armR].forEach((a) => { const s = new THREE.Mesh(new THREE.SphereGeometry(0.06, 6, 5), lam(look.skin)); s.position.y = -0.36; a.add(s); });
   const cup = new THREE.Mesh(CH_GEO.cup, lam(0xffffff)); cup.position.set(0, -0.4, 0.07); cup.visible = false; armR.add(cup);
   if (isPlayer) { const r = new THREE.Mesh(CH_GEO.ring, new THREE.MeshBasicMaterial({ color: 0xffd166, side: THREE.DoubleSide })); r.rotation.x = -Math.PI / 2; r.position.y = 0.03; root.add(r); }
@@ -1505,6 +1523,7 @@ function resetNpcDay(n) {
   if (hb.coffee === 'afternoon' || hb.coffee === 'both') { const s = T('14:40') + rand(0, 25); cof.push([s, s + 16]); }
   const remote = hb.attendance != null && Math.random() > hb.attendance;      // làm từ xa: hôm nay không lên công ty
   n.times = { arrive: remote ? 99999 : T(hb.arrive), leave: T(hb.leave) + rand(-3, 5), lunchStart: ls, lunchEnd: ls + 55, coffee: cof };
+  if (hb.lounge) { const ns = ls + 55 + rand(0, 25); n.times.nap = [ns, ns + rand(30, 50)]; }          // chỉ nằm ngủ một lúc sau bữa trưa, còn lại ngồi ghế sofa làm việc
   Object.assign(n, { state: 'hidden', goal: null, path: [], override: null, visit: null, frozen: false, mood: 45 + Math.random() * 25, greetedPlayer: false, attends: false, meetSeat: -1, visitCool: rand(30, 90),
     inviteReady: false, animOverride: null, joinsCake: false, curSeat: null, hostUntil: 0, idleCool: rand(20, 50), standCool: 0, absentCool: rand(5, 12) });
   n.quirkDone.clear(); n.ch.root.visible = false;
@@ -1536,10 +1555,20 @@ function decideGoal(n, m) {
   if (m >= T_.lunchStart && m < T_.lunchEnd) { const l = n.p.habits.lunch; return l === 'pantry' ? goalPantry(n, 'lunch') : l === 'sofa' ? goalSofa(n) : goalDesk(n, 'eat'); }
   if (T_.coffee.some(([a, b]) => m >= a && m < b)) return goalPantry(n, 'coffee');
   if (n.visit && m < n.visit.until) {
-    const partner = npcById(n.visit.partner), d = DESKS[partner.p.desk];
+    const partner = npcById(n.visit.partner);
+    if (partner.p.desk == null) { const st = partner.goal && partner.goal.seat ? partner.goal.seat : LOUNGE_SEAT;       // người không có bàn riêng (Nguyên): đứng ở lối vào sofa/giường để nói chuyện
+      return { id: 'visit:' + partner.id, x: st.ax, z: st.az, yaw: Math.atan2(st.cx - st.ax, st.cz - st.az), anim: 'talk' }; }
+    const d = DESKS[partner.p.desk];
     return { id: 'visit:' + partner.id, x: d.visit.x, z: d.visit.z, yaw: Math.atan2(d.seat.cx - d.visit.x, d.seat.cz - d.visit.z), anim: 'talk' };
   }
-  return n.p.habits.lounge ? goalLounge(n) : goalDesk(n, 'work');
+  if (n.p.habits.lounge) {
+    const nap = T_.nap;
+    if (nap && m >= nap[0] && m < nap[1]) return goalLounge(n);                       // giờ ngủ trưa ngắn
+    const i = n.sofa >= 0 && sofaOwner[n.sofa] === n.id ? n.sofa : sofaOwner.findIndex((x) => x === null);     // còn lại: ngồi sofa làm việc trên laptop
+    if (i < 0) return goalLounge(n);
+    sofaOwner[i] = n.id; n.sofa = i; return { id: 'sofa:' + i, x: SOFA_SEATS[i].cx, z: SOFA_SEATS[i].cz, yaw: SOFA_SEATS[i].yaw, anim: 'type', seat: SOFA_SEATS[i] };
+  }
+  return goalDesk(n, 'work');
 }
 function setGoal(n, g, instant) {
   if (n.goal && n.goal.id.startsWith('pantry') && !g.id.startsWith('pantry') && n.spot >= 0) { if (spotOwner[n.spot] === n.id) spotOwner[n.spot] = null; n.spot = -1; }
@@ -1693,13 +1722,16 @@ function npcAmbient(n, dt, m, dP, now) {
   }
   n.idleCool -= dt;
   if (n.idleCool <= 0 && n.state === 'seated' && n.goal && n.goal.id === 'desk:work' && dP < 7) { n.idleCool = rand(35, 80) / (0.5 + p.stats.outgoing); tryNpcSay(n, pickSay(p.say.idle)); }
-  if (n.state === 'seated' && n.goal && n.goal.id === 'desk:work' && !n.visit && !n.frozen) {   // sang bàn người khác
+  const sofaWorker = n.p.habits.lounge && n.state === 'seated' && n.goal && n.goal.id.startsWith('sofa');      // Nguyên ngồi sofa cũng có thể sang bàn Thảo hỏi chuyện nước
+  if (((n.state === 'seated' && n.goal && n.goal.id === 'desk:work') || sofaWorker) && !n.visit && !n.frozen) {   // sang bàn người khác
     n.visitCool -= dt;
     if (n.visitCool <= 0) {
       n.visitCool = rand(20, 50); const hrs = [[T('09:05'), T('09:50')], [T('13:35'), T('14:45')], [T('15:40'), T('16:50')]];
       const free = hrs.some(([a, b]) => m >= a && m < b), active = NPCS.filter((x) => x.visit).length;
       if (free && active < 2 && Math.random() < p.stats.outgoing * 0.8 * D.theme.visit) {
-        const cands = NPCS.filter((x) => x !== n && x.state === 'seated' && x.goal && x.goal.id === 'desk:work' && !x.frozen && now > x.hostUntil + 5);
+        const cands = NPCS.filter((x) => x !== n && x.state === 'seated' && x.goal && x.goal.id === 'desk:work' && !x.frozen && now > x.hostUntil + 5 && (!n.p.habits.lounge || x.id === 'thao'));
+        const ngy = npcById('nguyen');                                                    // thỉnh thoảng Trung sang chỗ Nguyên góp ý về design
+        if (n.id === 'trung' && ngy && ngy.state === 'seated' && ngy.goal && /^(sofa|lounge)/.test(ngy.goal.id) && !ngy.frozen && !ngy.visit && Math.random() < 0.4) cands.push(ngy);
         const duoC = cands.filter((x) => DUOS.some((d) => (d.a === n.id && d.b === x.id) || (d.b === n.id && d.a === x.id)));
         if (cands.length) { const partner = duoC.length && Math.random() < 0.7 ? pick(duoC) : pick(cands); n.visit = { partner: partner.id, until: m + 12, stage: 0, t: 0 }; }
       }
@@ -2264,6 +2296,54 @@ function pickTheme(dn) {
   const pool = DAY_THEMES.filter((t) => t.id !== last), total = pool.reduce((a, t) => a + t.w, 0); let r = Math.random() * total;
   return pool.find((t) => (r -= t.w) < 0) || pool[0];
 }
+/* ----- Lưu giữa ngày: tắt tab rồi mở lại vẫn chơi tiếp được đúng chỗ đang dở ----- */
+const SESSION_SETS = ['talked', 'greeted', 'deskDone', 'deepDone', 'pantryWith'];
+function saveSession() {
+  if (!D || D.ended || !G.started || G.mode === 'title' || G.mode === 'summary') return;
+  try {
+    const S = { v: 1, day: Store.get().days + 1, minute: D.minute, tasks: D.tasks, energy: D.energy, mood: D.mood,
+      sets: Object.fromEntries(SESSION_SETS.map((k) => [k, [...D[k]]])), moments: D.moments, flags: D.flags, quest: D.quest, stats: D.stats, work: D.work, meetTopic: D.meetTopic, theme: D.theme.id,
+      surprises: D.surprises.map((x) => ({ t: x.t, id: x.ev.id, fired: x.fired })), noteLeft: D.noteLeft, noticeIdx: D.noticeIdx, aff0: D.aff0, lastMs: D.lastMs, meetMissed: D.meetMissed, warned: D.warned,
+      pos: { x: P.pos.x, z: P.pos.z, yaw: P.yaw }, aff: { ...AFF },
+      ev: { cake: EVENT.cake ? { ...EVENT.cake, who: EVENT.cake.who.id } : null, printer: EVENT.printer, printerNpc: EVENT.printerNpc },
+      npcs: NPCS.map((n) => ({ id: n.id, times: n.times, attends: n.attends, meetSeat: n.meetSeat, joinsCake: n.joinsCake })) };
+    Store.patch({ session: S });
+  } catch (e) { dlog('[saveSession] Không lưu được ngày đang dở (game vẫn chạy bình thường):', e, e && e.stack); }
+}
+function validSession() { const S = Store.get().session; return S && S.v === 1 && S.day === Store.get().days + 1 && typeof S.minute === 'number' && S.minute < CFG.END + 1 ? S : null; }
+function resumeSession() {
+  const S = validSession(); if (!S) return false;
+  try {
+    startDay();                                                    // dựng lại cảnh, sau đó ghi đè bằng trạng thái đã lưu
+    const pool = [...SURPRISES, ...DAY_THEMES.filter((t) => t.intro).map((t) => t.intro)];
+    Object.assign(D, { minute: S.minute, tasks: S.tasks, energy: S.energy, mood: S.mood, moments: S.moments || [], flags: S.flags || D.flags, quest: S.quest || D.quest, stats: S.stats || D.stats, work: S.work || null,
+      meetTopic: S.meetTopic || D.meetTopic, theme: DAY_THEMES.find((t) => t.id === S.theme) || D.theme, noteLeft: S.noteLeft || null, noticeIdx: S.noticeIdx || 0, aff0: S.aff0 || D.aff0, lastMs: S.lastMs || '', meetMissed: !!S.meetMissed, warned: !!S.warned });
+    SESSION_SETS.forEach((k) => { D[k] = new Set((S.sets && S.sets[k]) || []); });
+    D.surprises = (S.surprises || []).map((x) => ({ t: x.t, ev: pool.find((e) => e.id === x.id), fired: x.fired })).filter((x) => x.ev);
+    Object.entries(S.aff || {}).forEach(([k, v]) => { AFF[k] = v; });
+    EVENT.cake = S.ev && S.ev.cake ? { ...S.ev.cake, who: npcById(S.ev.cake.who) } : null; EVENT.printer = S.ev ? S.ev.printer : null; EVENT.printerNpc = S.ev ? S.ev.printerNpc : null;
+    NPCS.forEach((n) => { const o = (S.npcs || []).find((x) => x.id === n.id); if (o) Object.assign(n, { times: o.times, attends: o.attends, meetSeat: o.meetSeat, joinsCake: o.joinsCake }); });
+    spotOwner.fill(null); sofaOwner.fill(null); NPCS.forEach((n) => releaseSpots(n));
+    snapNpcsToSchedule(D.minute);
+    if (S.pos) { P.pos = { x: S.pos.x, z: S.pos.z }; P.yaw = S.pos.yaw || 0; P.lock = null; P.forced = null; CAM.tx = P.pos.x; CAM.tz = P.pos.z; }
+    Sfx.rain(D.theme.id === 'rain'); applyTimeOfDay(D.minute); if (!LITE) updateCamera(0, true); setBars(); updateHud();
+    toast('▶ Đã quay lại ngày đang dở · ' + fmtTime(D.minute), 3200);
+    return true;
+  } catch (e) { dlog('[resumeSession] Không khôi phục được ngày đang dở, bắt đầu ngày mới:', e, e && e.stack); Store.patch({ session: null }); return false; }
+}
+/* Mở lại game đã có dữ liệu: hỏi Tiếp tục hay Chơi mới, thay vì luôn dừng ở màn hình đặt tên */
+function showWelcomeBack() {
+  const d = Store.get(), sess = validSession();
+  if (!d.days && !sess) return;
+  const who = d.name ? `Chào mừng ${d.name} quay lại!` : 'Chào mừng bạn quay lại!';
+  const info = sess ? `Ngày làm thứ ${d.days + 1} đang dở lúc ${fmtTime(sess.minute)}. Bạn có thể làm tiếp đúng chỗ đã dừng.` : `Bạn đã làm ở MinhLee ${d.days} ngày. Ngày mới đang chờ bạn.`;
+  const askNew = () => Modal.open(h('h2', {}, 'Chơi mới?'), h('p', { class: 'sub' }, 'Toàn bộ tên, nhân vật, nhật ký, mức thân thiết và đồ đã mở khóa sẽ bị xóa khỏi thiết bị này, rồi bạn bắt đầu lại từ ngày đầu tiên.'),
+    h('button', { class: 'btn', onclick: () => { Modal.close(false); Store.clear(); Object.keys(AFF).forEach((k) => delete AFF[k]); refreshTitle(); toast('Đã xóa dữ liệu. Hãy đặt tên và bắt đầu nhé!', 3000); } }, '🗑 Xóa hết và chơi mới'),
+    h('button', { class: 'btn alt', onclick: () => { Modal.close(false); G.mode = 'title'; showWelcomeBack(); } }, 'Thôi, quay lại'));
+  Modal.open(h('h2', {}, who), h('p', { class: 'sub' }, info),
+    h('button', { class: 'btn', onclick: () => { Modal.close(false); G.mode = 'title'; Sfx.init(); Sfx.setMuted(!Store.get().settings.sound); rebuildPlayer(); if (!resumeSession()) startDay(); } }, sess ? '▶ Tiếp tục ngày đang dở' : '▶ Tiếp tục chơi'),
+    h('button', { class: 'btn alt', onclick: () => { Modal.close(false); G.mode = 'title'; askNew(); } }, '🆕 Chơi mới'));
+}
 function newDayState() {
   const dn = Store.get().days + 1, bonus = G.bonus || { mood: 0, energy: 0 }; G.bonus = null;
   D = { minute: CFG.START, tasks: 0, energy: clamp(80 + bonus.energy, 0, 100), mood: clamp(60 + bonus.mood, 0, 100), talked: new Set(), greeted: new Set(), deskDone: new Set(), deepDone: new Set(), pantryWith: new Set(), moments: [],
@@ -2298,6 +2378,7 @@ function startDay() {
   Sfx.door(); toast(`${WEEKDAYS[calInfo(Store.get().days + 1).wd]} · Tuần ${calInfo(Store.get().days + 1).week} · Ngày ${Store.get().days + 1}\n${D.theme.emoji} ${D.theme.name}: ${D.theme.desc}`, 5200); tutorialStart(); updateHud();
 }
 function exitToTitle() {
+  Store.patch({ session: null });
   Sfx.rain(false); if (deskTag) deskTag.on = false; Card.hide(); Modal.close(false); Bubbles.clear(); G.mode = 'title'; $('#hud').classList.add('hidden'); $('#lite').classList.add('hidden'); $('#tut').classList.add('hidden');
   NPCS.forEach((n) => { n.tag.on = false; }); $('#title').classList.remove('hidden'); refreshTitle(); Sfx.resume();
 }
@@ -2313,7 +2394,7 @@ function processTimeEvents(prev, now) {
   const treat = (t, msg, en) => { if (!cross(t)) return; const n = npcById('thanh'); if (!n || n.state === 'hidden') return; addEnergy(en); addMood(3); changeAff('thanh', 2); addMoment(msg); toast('🧋 ' + msg); { const g = n.goal ? n.goal.id : ''; tryNpcSay(n, g.startsWith('pantry') ? 'Nước em pha sẵn rồi nè, mọi người ra lấy nhé!' : g.startsWith('desk') ? 'Em vừa đặt đồ uống cho cả nhà, lát giao tới nha!' : 'Em mời cả nhà nè, đừng ngại!', 1); } Sfx.chime(); };
   treat(T('11:05'), 'Chủ tịt mua nước mời cả phòng.', 8); treat(T('14:10'), 'Chủ tịt mua đồ ăn vặt cho mọi người.', 8);
   D.theme.treats.forEach(([t, msg]) => treat(T(t), msg, 8));
-  const ng = npcById('nguyen'); if (ng && ng.times.arrive < 99999 && cross(ng.times.arrive + 8)) toast('😴 Nguyên hiếm hoi lên công ty hôm nay, đang nằm ở pantry!');
+  const ng = npcById('nguyen'); if (ng && ng.times.arrive < 99999 && cross(ng.times.arrive + 8)) toast('😴 Nguyên hiếm hoi lên công ty hôm nay, đang ở pantry!');
   if (cross(T('17:00'))) toast('🌇 Hết giờ làm rồi. Ra cửa chính để về nhé!');
   const ms = currentMilestone(now); if (ms.id !== D.lastMs) { if (D.lastMs) toast(`🕘 ${fmtTime(now)} · ${ms.name}`); D.lastMs = ms.id; }
 }
@@ -2352,7 +2433,7 @@ function showSummary() {
   const comment = pick(cmts);
   const notes = shuffle(talked).sort((a, b) => (AFF[b.id] ?? 0) - (AFF[a.id] ?? 0)).slice(0, 3).map((n) => ({ from: n.p.name, text: (AFF[n.id] ?? 0) >= 58 ? n.p.note.high : n.p.note.low }));
   const entry = { day, date, tasks: D.tasks, energy: Math.round(D.energy), moodFace: moodFace(D.mood), moodLabel: moodLabel(D.mood), talked: talked.map((n) => n.p.name), moments: D.moments.slice(0, 8), noteLeft: D.noteLeft, comment, theme: D.theme.emoji + ' ' + D.theme.name, badges: makeBadges(), label: `Tuần ${cal.week} · ${WEEKDAYS[cal.wd]}`, world: worldTxt };
-  Store.patch({ days: day, diary: [entry, ...Store.get().diary].slice(0, 150), affinity: { ...AFF }, world: { users }, lastTheme: D.theme.id, recentEv: [...D.surprises.filter((s) => s.fired).map((s) => s.ev.id), ...Store.get().recentEv].slice(0, 8) });
+  Store.patch({ days: day, diary: [entry, ...Store.get().diary].slice(0, 150), affinity: { ...AFF }, world: { users }, session: null, lastTheme: D.theme.id, recentEv: [...D.surprises.filter((s) => s.fired).map((s) => s.ev.id), ...Store.get().recentEv].slice(0, 8) });
   Sfx.rain(false); G.mode = 'summary'; $('#hud').classList.add('hidden'); $('#lite').classList.add('hidden'); $('#tut').classList.add('hidden'); Bubbles.clear(); Sfx.chime();
   Modal.open(h('div', { class: 'big' }, entry.moodFace), h('h2', { class: 'center' }, `Ngày ${day} khép lại`), h('p', { class: 'sub center' }, `${entry.label} · ${entry.theme} · Tâm trạng cuối ngày: ${entry.moodLabel}`),
     h('div', { class: 'chips', style: 'justify-content:center' }, entry.badges.map((t) => h('span', { class: 'nchip', style: 'padding:8px 12px;min-height:0;font-size:14px' }, t))),
@@ -2394,6 +2475,7 @@ let rafId = 0, lastTs = 0, hudT = 0, liteT = 0, tickCount = 0;
 function update(dt) {
   if (!D || !G.started || G.mode === 'title' || G.mode === 'paused') return;
   if (G.mode === 'play') tickClock(dt);
+  G.saveT = (G.saveT || 0) + dt; if (G.saveT > 5) { G.saveT = 0; saveSession(); }
   updatePlayer(dt);
   for (const n of NPCS) {
     updateNpc(n, dt, D.minute);
@@ -2439,7 +2521,10 @@ function refreshTitle() {
   });
   const gb = $('#gens'); gb.replaceChildren();
   [['nam', '👨 Nam'], ['nu', '👩 Nữ'], ['khac', '🙂 Không nêu']].forEach(([k, t]) => { const b = h('button', { class: 'nchip' + (d.gender === k ? ' sel' : '') }, t); b.addEventListener('click', () => { Store.patch({ gender: k, name: $('#in-name').value.trim().slice(0, 16) }); Sfx.click(); refreshTitle(); }); gb.append(b); });
-  const sb0 = $('#btn-start'); if (!sb0.disabled) sb0.textContent = d.days ? `▶ Tiếp tục: ${WEEKDAYS[calInfo(d.days + 1).wd]}, tuần ${calInfo(d.days + 1).week}` : 'Bắt đầu ngày mới';
+  const sb0 = $('#btn-start'), rs = $('#btn-resume'), sess = validSession();
+  rs.classList.toggle('hidden', !sess); sb0.classList.toggle('alt', !!sess);
+  if (sess) rs.textContent = `▶ Tiếp tục ngày đang dở (${fmtTime(sess.minute)})`;
+  if (!sb0.disabled) sb0.textContent = sess ? '🔄 Bắt đầu lại ngày này' : d.days ? `▶ Tiếp tục: ${WEEKDAYS[calInfo(d.days + 1).wd]}, tuần ${calInfo(d.days + 1).week}` : 'Bắt đầu ngày mới';
   $('#in-name').value = d.name; $('#title-info').textContent = d.days ? `Bạn đã làm ở MinhLee ${d.days} ngày. Game không có hồi kết, cứ chơi tiếp bao lâu tùy ý. Dữ liệu chỉ lưu trên thiết bị này.` : 'Dữ liệu chỉ lưu trên thiết bị của bạn, không cần tài khoản.';
 }
 function cleanupGame() {
@@ -2468,8 +2553,8 @@ function init() {
   buildOffice(); buildNav(); createNpcs(); rebuildPlayer(); buildSpots(); setupInput(); resize();
   deskTag = Bubbles.makeTag('💻 Bàn của bạn', (o) => { o.x = PLAYER_DESK.x; o.y = 1.55; o.z = PLAYER_DESK.z; }); deskTag.el.style.background = 'var(--accent)'; deskTag.clampX = true;
   listen(window, 'resize', resize); listen(window, 'orientationchange', () => setTimeout(resize, 150));
-  listen(document, 'visibilitychange', () => { if (document.hidden) { if (G.mode === 'play') pauseGame(); Sfx.suspend(); } else if (G.mode !== 'paused') Sfx.resume(); });
-  listen(window, 'pagehide', (e) => { if (!e.persisted) cleanupGame(); });
+  listen(document, 'visibilitychange', () => { if (document.hidden) { saveSession(); if (G.mode === 'play') pauseGame(); Sfx.suspend(); } else if (G.mode !== 'paused') Sfx.resume(); });
+  listen(window, 'pagehide', (e) => { saveSession(); if (!e.persisted) cleanupGame(); });
   // nút HUD
   $('#act').addEventListener('click', () => { if (INPUT.onAct) INPUT.onAct(); });
   $('#hud-obj').addEventListener('click', () => { Sfx.click(); if (G.mode === 'play') pauseGame(); });
@@ -2482,7 +2567,11 @@ function init() {
   Sfx.setMuted(!Store.get().settings.sound); setBars(); refreshTitle();
   $('#btn-start').addEventListener('click', () => {
     Sfx.init(); Sfx.setMuted(!Store.get().settings.sound);               // lần chạm đầu tiên mới bật âm thanh
-    const name = $('#in-name').value.trim().slice(0, 16); Store.patch({ name }); rebuildPlayer(); startDay();
+    const name = $('#in-name').value.trim().slice(0, 16); Store.patch({ name, session: null }); rebuildPlayer(); startDay();
+  });
+  $('#btn-resume').addEventListener('click', () => {
+    Sfx.init(); Sfx.setMuted(!Store.get().settings.sound);
+    const name = $('#in-name').value.trim().slice(0, 16); Store.patch({ name }); rebuildPlayer(); if (!resumeSession()) startDay();
   });
   $('#btn-diary').addEventListener('click', () => { Sfx.init(); Sfx.click(); showDiary(); });
   const lb = $('#btn-lite'); lb.textContent = LITE_WHY === 'user' ? '🎮 Thử lại chế độ 3D' : '🧩 Không thấy hình? Dùng chế độ đơn giản';
@@ -2491,7 +2580,7 @@ function init() {
   $('#btn-clear').addEventListener('click', () => confirmBox('Tên, nhân vật, nhật ký và mức thân thiết sẽ bị xóa khỏi thiết bị này.', 'Xóa dữ liệu', () => { Store.clear(); Object.keys(AFF).forEach((k) => delete AFF[k]); refreshTitle(); toast('Đã xóa dữ liệu đã lưu.'); }));
   Object.entries(Store.get().affinity || {}).forEach(([k, v]) => { AFF[k] = v; });
   const sb = $('#btn-start'); sb.disabled = false; refreshTitle();
-  window.__gameReady = true; clearTimeout(window.__bootTimer); $('#boot-error').classList.add('hidden');
+  window.__gameReady = true; clearTimeout(window.__bootTimer); $('#boot-error').classList.add('hidden'); showWelcomeBack();
   if (LITE) setInterval(() => { try { update(0.1); } catch (e) { dlog('[lite loop]', e, e && e.stack); } }, 100); else rafId = requestAnimationFrame(frame);
 }
 try { init(); } catch (e) { dlog('[init] Lỗi khởi tạo:', e, e && e.stack); const b = $('#boot-error'); b.classList.remove('hidden'); b.textContent = 'Có lỗi khi khởi động game. Hãy thử tải lại trang.'; }

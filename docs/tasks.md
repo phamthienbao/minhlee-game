@@ -6,38 +6,30 @@ Legend: `[x]` done, `[ ]` todo, `[~]` in progress, `[!]` blocked.
 
 ## Done
 
-Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`. Done entries v1.8.2 to v1.8.6 were moved there in the v1.9.3 pass.
+Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`. Done entries v1.8.2 to v1.8.6 were moved there in the v1.9.3 pass. Done entries v1.9.1 to v1.9.4 were moved there in the v1.10.0 pass.
 
-- [x] v1.9.4 (2026-11-04): `look.detail` (detailed eyes, brows, smile, neck, hair style) enabled for the remaining nine coworkers. All 14 now use it. Looks were upgraded from the existing look data and colours. No reference photos were re-checked in this pass, so likeness is unverified. Toàn's navy polo collar closes the photo gap in the v1.8.6 item. Details: `docs/changelog.md` v1.9.4, `docs/spec/dong-nghiep.md` §8
-  - [x] `NPC_PROFILES` looks for Trung, Toàn, Hiện, Tùng, Nam, Chú 7, Chị Ba, Anh Bảo, and Nguyên in `index.html` (`look.detail: true`, hair, neck, collar, glasses, lashes, lips, earrings)
-  - [x] Headless-Chrome lineup render, screenshot viewed (by eye only)
-  - [x] Offline copies (`index-offline.html`, `dist/netlify/index.html`, `dist/MinhLee.app/Contents/Resources/index.html`) hold the same 14 `look: {` lines as `index.html` (grep and diff check). The three copies are byte-identical; `index.html` differs only by the importmap and the comment line
-  - [ ] Likeness check of the nine against the reference photos, side by side (see Follow-ups, v1.9.4)
-  - [ ] Real-device check (not run)
-  - [ ] `dist/MinhLee-mac.zip` and `CFBundleShortVersionString` (still 1.8.5) not rebuilt in this pass (see Follow-ups, v1.8.6 item)
+- [x] v1.10.0 (2026-11-04): mid-day save and resume (closing the tab no longer restarts the day), welcome-back popup on boot (continue, new game with confirmation, or back), Anh Bảo's look (black polo collar, white cuffs, swept hair, red-and-white striped shirt), Nguyên sleeps less (one nap after lunch, otherwise works on a pantry sofa) and can visit Chị Thảo from the sofa, so his two `nguyen`→`thao` duo scripts play (21 in total). Trung also visits Nguyên (40% per visit attempt, two `trung`→`nguyen` scripts), so the total is 23 scripts for 19 pairs. Details: `docs/changelog.md` v1.10.0, `docs/spec/the-gioi-lien-tuc.md` §11
+  - [x] `saveSession()`, `validSession()`, `resumeSession()`, `#btn-resume`, `Store.session` (`session: null` in the `endDay` patch, `exitToTitle`, and start-over) in `index.html` section 14 and the title code
+  - [x] `showWelcomeBack()` (section 14, called from `init()`): the popup, the "Chơi mới?" confirmation, and "Thôi, quay lại". Spec `docs/spec/the-gioi-lien-tuc.md` §11.5, AC-84
+  - [x] `npcAmbient()` `sofaWorker`: a sofa-seated Nguyên may start a visit, to Chị Thảo only (who must be at `desk:work`). Closes the duo defect
+  - [x] `times.nap` in `resetNpcDay()`, `goalSofa()` and `decideGoal()` (section 9). Measured in 30 simulated days: lying about 10% of checked time, sofa work about 71%, other about 19%
+  - [x] `NPC_PROFILES` `bao` look: `hem` removed, black polo collar (`collar: 0x1a1a1c`), white `cuff`, `hairStyle: 'swept'` (new style replaces `fringe`), `pattern: 'redwhite'` shirt (intentional, per the user)
+  - [x] Arrival toast reworded to "đang ở pantry" (`processTimeEvents()`)
+  - [x] Headless Chrome: snapshot fields restored, resume button visibility, session cleared. Popup: text and buttons, continue at 13:10 with 1 task, back keeps data, clear to 0 days. Nguyên visits Chị Thảo in 6 of 6 runs. The v1.10.0 code is in all four copies (grep check)
+  - [x] Docs: changelog, `docs/spec/the-gioi-lien-tuc.md`, `docs/spec/mot-ngay-o-cong-ty.md`, `docs/spec/dong-nghiep.md`, `docs/spec/noi-dung-bat-ngo.md`, `docs/product-guide.md`, `docs/glossary.md`
+  - [ ] Real browser restart test: close the browser (or the Mac app) mid-day, reopen, press "▶ Tiếp tục ngày đang dở". Headless only so far
+  - [ ] Test on a real phone (iOS Safari, Android Chrome): `visibilitychange` and `pagehide` save, and the resume path
+  - [ ] `dist/MinhLee-mac.zip` and `CFBundleShortVersionString` (still 1.8.5) not rebuilt in this pass (see Follow-ups, v1.10.0)
 
-- [x] v1.9.3 (2026-11-04): looks for Yến, Thạnh, and Phú re-matched to the user's reference photos (viewed this session). New `look.teeth`, `look.part`, `look.shortSleeve` and hairStyle `quiff`. Details: `docs/changelog.md` v1.9.3, `docs/spec/dong-nghiep.md` §8, `docs/glossary.md`
-  - [x] `NPC_PROFILES` looks for Yến (centre part, no clip or fringe, rose-gold glasses, coral lips, gold earrings), Thạnh (`quiff`, light-silver glasses, slimmer face, gingham short sleeves), Phú (`side` hair, rect dark glasses, wider face, collared shirt) in `index.html`
-  - [x] `detailFace()`, `detailHair()`, `buildCharacter()` in `index.html`: `look.teeth`, `look.part: 'center'`, `quiff`, `look.shortSleeve`
-  - [x] Headless-Chrome render, screenshot viewed; compared to the photos by eye only
-  - [x] Offline copies (`index-offline.html`, `dist/netlify/index.html`, `dist/MinhLee.app`) contain the v1.9.3 code (grep check; byte-identical in the doc pass)
-  - [ ] Real-device check (not run)
-  - [ ] Side-by-side likeness score against the reference photos (not recorded)
-  - [ ] `dist/MinhLee-mac.zip` and `CFBundleShortVersionString` not rebuilt in this pass (see Follow-ups, v1.8.6 item)
-
-- [x] v1.9.2 (2026-11-04): detailed character look (`look.detail`), still Three.js primitives in one file. Five coworkers upgraded: Thạnh, Phú, Thảo, Yến, Thông. Thảo's wavy hair gap is closed. Other coworkers unchanged. Details: `docs/changelog.md` v1.9.2, `docs/spec/dong-nghiep.md` §8, `docs/glossary.md`
-  - [x] `buildCharacter()` (section 6) in `index.html`: `detailFace()`, `detailHair()`, `detailClothes()`, opt-in on `look.detail`
-  - [x] Headless-Chrome render of a lineup, screenshot viewed
-  - [x] Offline copies (`index-offline.html`, `dist/netlify/index.html`, `dist/MinhLee.app`) contain the code (grep check; `index-offline.html` differs from `index.html` only by the importmap and the comment line)
-  - [ ] Real-device check (not run)
-  - [ ] Likeness against the reference photos, side by side (not done; earlier notes only)
-  - [ ] `dist/MinhLee-mac.zip` and `CFBundleShortVersionString` not rebuilt in this pass (see Follow-ups, v1.8.6 item)
-
-- [x] v1.9.1 (2026-11-04): text-only. Chị Ba's (`an3`) lines made grumpier and visibly annoyed, still funny and never mean. Signature stand line unchanged. No logic or ids changed. Details: `docs/changelog.md` v1.9.1, `docs/spec/dong-nghiep.md` §7.6
-  - [x] Lines rewritten in `index.html`: `say.greet`, `say.idle`, `say.chat`, `say.pantry`, `reply`, `request`, `meeting`, `quirks`, `DOC_QUESTS` ask, two `DUOS` lines (Chú 7, Nam), `dammhaam` result
-  - [x] JavaScript syntax check and headless smoke run
-  - [ ] Native-speaker review of the new Chị Ba wording (not reviewed)
-  - [ ] Hand-check Chị Ba's lines in a real browser (tone and bubble fit, not recorded)
+- [x] v1.9.5 (2026-11-04): Anh Bảo's look re-matched to the user's photo (by eye only: navy colour-block polo, black fringe, thin light-silver glasses). Canon fix: Chị Ba is not allergic to cats (golden cat Nghệ). Cat banter with Chủ tịt added (chat line, two duos, `th-cat` intro and options). Details: `docs/changelog.md` v1.9.5
+  - [x] `NPC_PROFILES` `bao` look (`hem`, `cuff`, `shortSleeve`, navy collar, `fringe`, `rect` glasses), new look fields `look.hem` and `look.cuff` in `buildCharacter()`
+  - [x] `th-cat` intro: allergy lines removed. Option 2 relabelled, option 3 result updated. Chị Ba `say.chat` line about Nghệ. Two `DUOS` entries (`an3`–`thanh`, `thanh`–`an3`): 19 scripts for 17 pairs
+  - [x] JavaScript syntax check and headless render of Anh Bảo (viewed by eye)
+  - [x] Docs: `docs/spec/dong-nghiep.md`, `docs/spec/noi-dung-bat-ngo.md`, `docs/glossary.md`, `docs/product-guide.md`
+  - [ ] Native-speaker review of the cat banter, the `th-cat` intro, and its options (not reviewed)
+  - [ ] Side-by-side likeness check of Anh Bảo against the reference photo (by eye only, not measured). Real-device look check at the default camera distance (Vừa)
+  - [ ] Hand-check the Chị Ba–Chủ tịt duo visit (both script orders, bubbles) and the `th-cat` cards in a real browser (not recorded)
+  - [ ] `dist/MinhLee-mac.zip` not rebuilt in this pass (see the v1.8.6 follow-up)
 
 - [x] v1.9.0 (2026-11-04): six new day themes (demo, power, cat, hack, sick, award), each opening with a story intro at 08:50 that fires when the player is near a coworker. Desk items: finished desk tasks add up across days and unlock 8 items on the 3D desk, with a collection screen in the pause menu. Details: `docs/changelog.md` v1.9.0, `docs/spec/noi-dung-bat-ngo.md` §3.2 and AC-75 to AC-77, `docs/spec/bang-nhiem-vu.md` §9 and AC-78 to AC-80, `docs/product-guide.md`
   - [x] `DAY_THEMES` (six themes with `intro`), `UNLOCKS`, `awardWork()`, `showUnlocks()`, `nextUnlockLine()`, `showCollection()`, `buildDeskItems()` in `index.html`
@@ -55,6 +47,9 @@ Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`.
 
 ## Known defects
 
+- [x] (v1.10.0, closed 2026-11-04) Anh Bảo's shirt colour is not a defect. The red-and-white striped shirt (`pattern: 'redwhite'`, `index.html` line 481) is intentional, per the user's explicit request for this release. The solid polo of the first brief is not used. The look is recorded in `docs/spec/dong-nghiep.md` §8
+- [x] (v1.10.0, closed 2026-11-04) Nguyên–Chị Thảo duo scripts (`nguyen`→`thao`, `index.html` `DUOS`) never played. Fixed in `npcAmbient()`: a sofa-seated Nguyên may start a visit, to Chị Thảo only, who must be seated at `desk:work`. Headless: 6 of 6 runs. Not tested on a real device
+- [x] (v1.10.0, closed 2026-11-04) The arrival toast now reads `😴 Nguyên hiếm hoi lên công ty hôm nay, đang ở pantry!` (`index.html`, `processTimeEvents()`)
 - [ ] (v1.8.4) Not tested on a real phone. Check the lying coworker's name tag and speech bubble (Nguyên on the daybed) in portrait and landscape, under the top bar and in the notch or safe-area zone
 - [x] (v1.8.4, closed 2026-11-04) The ambient on-screen gate in `tryNpcSay()` (`index.html`, `Bubbles.onScreen(n.pos.x, root.y + 1.8, n.pos.z)`) still tests the standing point at the coworker's position, not `npcAnchor()`. For a lying coworker the gate can pass while the bubble anchor is off screen (the bubble is then hidden), or block a bubble that would be visible. Found by reading the code, not reproduced. Decide whether the gate should use `npcHead(n)`. Not changed in v1.8.4 (scope: anchors only) **Fixed:** `Bubbles.onScreen()` now gets `npcAnchor(n, …, false)`, the same point as the bubble. Not reproduced in a browser; checked by reading the code.
 - [ ] (v1.7.0) Root cause of the "no graphics" reports after sharing is not identified. v1.7.0 adds detection and fallbacks but does not fix a known cause. Ask the reporters for browser, version, device, and whether the page was opened inside an app. Check whether `index.html` or `index-offline.html` was used
@@ -93,6 +88,19 @@ Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`.
 
 ## Follow-ups
 
+v1.10.0 (mid-day save, Nguyên, Anh Bảo):
+
+- [ ] (v1.10.0) Export and import of the save (download and upload of the `Store` JSON). Storage is per origin and device: the file path, Netlify, GitHub Pages, the Mac app, and each browser keep separate saves. Open follow-up from the user's request
+- [ ] (v1.10.0) Tune the nap: length (30–50 min) and start (55–80 min after lunch starts). Set by simulation only. Check that the sofa share feels right in play
+- [ ] (v1.10.0) Native-speaker review of Nguyên's new lines ("Chị Thảo ơi, nay có ai mời nước không?", the 10:35 quirk, the two `nguyen`→`thao` scripts, the two `trung`→`nguyen` scripts)
+- [ ] (v1.10.0) Anh Bảo's look: check it by eye against the reference photo and on a real device at the default camera distance (Vừa)
+- [ ] (v1.10.0) Tune the stripe thickness of Anh Bảo's shirt. `patternMat('redwhite')` draws 8 px red bands with 8 px off-white gaps on a 64 px texture. Check by eye at the default camera distance and adjust the band height if it reads too busy
+- [ ] (v1.10.0) Welcome-back popup: test a real browser restart (close the tab or app, reopen, and check the popup), and a real phone. Headless Chrome only so far
+- [ ] (v1.10.0) Confirm the four copies are identical apart from the importmap and comment lines (`diff index.html index-offline.html`; `dist/netlify/index.html` and `dist/MinhLee.app/Contents/Resources/index.html` by diff). Only the grep check was run in the doc pass
+- [ ] (v1.10.0) `tools/macapp/Info.plist` `CFBundleShortVersionString` is still 1.8.5. Set it to 1.10.0 and rebuild `dist/MinhLee-mac.zip` with `tools/build-mac-app.sh`
+- [ ] (v1.10.0) Tune the 40% chance that Trung visits Nguyên (`npcAmbient()`, `index.html` line ~1734). Headless only: 1 of 6 short runs. Playtest a full day and check how often the visit happens
+- [ ] (v1.10.0) `npcAmbient()` pushes Nguyên into `duoC` twice (once by the `filter`, once explicitly), so he has double weight among the duo partners. Decide whether that is intended, then keep it or change it
+
 Diary intro (v1.7.2):
 
 - [ ] (v1.7.2) Native-speaker review of the diary intro lines in `showDiary()` (section 13). The wording was written without review
@@ -126,7 +134,7 @@ Verification gaps:
 - [ ] Hand-test Thạnh's 13:20 meditation quirk (eyes closed, line appears, no animation)
 - [ ] Visually check the title, north-wall "MinhLee" sign, and front-door "MinhLee" mat in a browser (text readable, not clipped). Checked in source only
 - [ ] (v1.4.1) Visually check the Phú, Nam, and Anh Bảo looks on a real device at the default camera distance (Vừa). Checked only in isolated headless-Chrome close-ups. Check the thin rect glasses and the plaid shirt
-- [ ] (v1.4.1) Anh Bảo's look is an approximation from a written brief, with no reference photo. Ask the user for a photo or corrections before calling it final
+- [x] (v1.4.1, closed in v1.9.5 by eye) Anh Bảo's look was an approximation from a written brief. Re-matched to the user's photo in v1.9.5. Side-by-side likeness check still open (v1.9.5 item)
 - [ ] (v1.8.5, partly closed in v1.8.6) Looks not yet built from a photo: Hiện. Toàn and Thông were updated from photos in v1.8.6. Bảo's look is still an approximation from a verbal description. Ask the user for photos before replacing these looks
 - [ ] (v1.8.5) Visually check Nguyên's new look (black side fringe, black top, no glasses) on a real device at the default camera distance (Vừa). Checked only in a headless-Chrome screenshot on the daybed
 - [x] (v1.8.5, closed 2026-11-04) Macintosh app version: `tools/macapp/Info.plist` and `dist/MinhLee.app/Contents/Info.plist` read `CFBundleShortVersionString` 1.8.5

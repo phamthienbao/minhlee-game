@@ -2,6 +2,127 @@
 
 All notable changes to "Một Ngày Ở MinhLee" (formerly "Một Ngày Ở Công Ty", renamed in v1.0.3). Newest first. Entries are appended, never rewritten.
 
+## v1.10.0 — 2026-11-04
+
+Mid-day save and resume: closing the tab during a workday no longer restarts that day. A welcome-back popup opens on boot when saved data exists, with continue, new game, and a confirmed reset. Anh Bảo's white lower hem is removed, and he gets a black polo collar, white cuffs, short sleeves, a men's swept haircut, and a red-and-white striped shirt (set by the user's explicit request, so the solid polo of the first brief is not used). Nguyên sleeps much less: one short nap after lunch, otherwise he works from a pantry sofa, and from the sofa he can now visit Chị Thảo, so his two duo scripts play. Trung now sometimes visits Nguyên (sofa or daybed) to talk about the design, with two new `trung`→`nguyen` scripts. Save key `mot-ngay-o-cong-ty.v1` and its existing fields are unchanged. The new `session` field is added beside them, with no migration needed.
+
+Also in this release: Hiện no longer wears glasses (`glasses: false`), as the user stated (earlier looks had given him round glasses).
+
+### Added
+
+- Mid-day save, `index.html` section 14, `saveSession()`: writes a snapshot to `Store.session` (`v: 1`) every 5 s of play, on `visibilitychange` (tab hidden), and on `pagehide`. The snapshot holds: `day`, `minute`, `tasks`, `energy`, `mood`, `sets`, `moments`, `flags`, `quest`, `stats`, `work` (desk task), `meetTopic`, the day theme id, `surprises` (`t`, `id`, `fired`), `noteLeft`, `aff`, player position and yaw, `EVENT` (cake, printer), and per-NPC `times`, `attends`, `meetSeat`, `joinsCake`.
+- Title screen, `#btn-resume` (`index.html` line 191): "▶ Tiếp tục ngày đang dở (hh:mm)", shown when `validSession()` finds a session for the current day number. Its click handler calls `resumeSession()`, which rebuilds the scene through `startDay()`, overwrites `D`, `EVENT`, and NPC state from the snapshot, then calls `snapNpcsToSchedule`. If restoring throws, `resumeSession()` logs with `dlog` and clears the session, and the player starts a new day.
+- Nguyên's nap window: `times.nap`, one window of 30–50 min starting 55–80 min after his lunch start (`ls + 55 + rand(0, 25)`). Set in `resetNpcDay()`, read in `decideGoal()`.
+- Nguyên's pantry line "Chị Thảo ơi, nay có ai mời nước không?" (`say.pantry`), a 10:35 quirk on the same line (`wave`), and two `DUOS` entries `nguyen`→`thao` (`DUOS` had 21 scripts, 18 pairs at this point; 23 scripts, 19 pairs after the Trung entry below). The two duo scripts play through the sofa-visit rule under Changed.
+- Trung visits Nguyên (`npcAmbient()` and `decideGoal()`, section 9):
+  - Trigger: Trung is seated at `desk:work` in a visit window and not already visiting. Each visit attempt then has a 40% chance (`Math.random() < 0.4`) to add Nguyên to the partner candidates, if Nguyên is seated on a sofa seat or the daybed (goal id `sofa*` or `lounge*`), not frozen, and not visiting.
+  - Preference: when a `trung`↔`nguyen` duo exists, Nguyên is pushed into the duo pool (`duoC`) explicitly, so he is preferred like other duo partners. He is pushed twice (once by the `filter`, once explicitly), so he has double weight in that pool.
+  - Partners without a desk: `decideGoal()`'s visit branch now handles a partner with `p.desk == null`. The visitor stands at the partner's seat approach point (`seat.ax` / `seat.az`, facing the seat), or at `LOUNGE_SEAT` if the partner's goal has no seat.
+  - Scripts (`DUOS`, two new entries):
+    - Trung asks Nguyên to change the design a bit, because it is too hard to build ("Nguyên ơi, đổi design lại chút đi, cái này khó quá."). Nguyên answers sleepily that he will think about it after lying down ("Để mình nằm nghĩ rồi tính. (ngáp)").
+    - Second script: Trung says the button is pretty but took three days of code; Nguyên says he drew it in half an hour.
+  - Verification: headless Chrome only, 1 of 6 short runs. Trung reached Nguyên's approach point and the duo was picked (consistent with 40%). Not tested over a full day. Wording not native-reviewed.
+- Welcome-back popup, `index.html` section 14, `showWelcomeBack()`, called from `init()` after boot. It opens only when `Store.days > 0` or `validSession()` is set (first-time players see the name screen directly):
+  - Title: "Chào mừng <tên> quay lại!" (or "Chào mừng bạn quay lại!" when the name is empty).
+  - Body: with a session, "Ngày làm thứ N đang dở lúc hh:mm. Bạn có thể làm tiếp đúng chỗ đã dừng."; without one, "Bạn đã làm ở MinhLee N ngày. Ngày mới đang chờ bạn."
+  - "▶ Tiếp tục ngày đang dở" (with a session, `resumeSession()`, falling back to `startDay()`) or "▶ Tiếp tục chơi" (without one, `startDay()`).
+  - "🆕 Chơi mới" opens a confirmation, "Chơi mới?". "🗑 Xóa hết và chơi mới" calls `Store.clear()`, clears `AFF`, refreshes the title, and shows a toast. "Thôi, quay lại" returns to the popup.
+  - The title-screen buttons `#btn-resume` and `#btn-start` are unchanged.
+
+### Changed
+
+- Session lifecycle: `Store.session` is cleared at end of day (`session: null` in the `endDay` patch), on `exitToTitle`, and when the player chooses to start the day again. Save key and other fields are unchanged.
+- Title screen: when a valid session exists, the start button reads "🔄 Bắt đầu lại ngày này" and discards the session (`refreshTitle()`). Without a session it keeps its old labels.
+- Anh Bảo's look (`NPC_PROFILES` `bao`, `index.html` line 481, section 2):
+  - Removed the white lower-half hem (it read as a skirt). `look.hem` still exists in `buildCharacter()` but no profile uses it now.
+  - Shirt: `shirt: 0xd6322f`, `pattern: 'redwhite'`. `patternMat('redwhite')` draws full-width horizontal red bands (8 px on a 16 px pitch) on off-white, and the pattern overrides `shirt`. The red-and-white shirt is the user's explicit request for this release. The solid polo of the first brief (`0x1f2f5f`) is not used. This closes the earlier colour mismatch.
+  - Collar: `neck: 'collar'`, `collarStyle: 'polo'`, `collar: 0x1a1a1c` (black neck band, V flaps, and back band, drawn in `buildCharacter()`).
+  - Sleeves: `cuff: 0xf4f1ea` (white sleeve cuffs), `shortSleeve` (bare forearms).
+  - Glasses: `glasses: 'rect'`, `glassColor: 0xb9bfc4` (thin silver rectangles).
+  - Hair: `hairStyle: 'swept'` (new style, men's short hair, drawn in `detailHair()`). Replaces `style: 'fringe'`, which read as feminine.
+- Nguyên's routine (section 9): he no longer lies down for most of the day.
+  - Within the nap window he lies on the pantry daybed (`decideGoal()` calls `goalLounge()`).
+  - Otherwise `goalSofa()` gives him a free pantry sofa seat (`SOFA_SEATS`, `sofaOwner`), where he works on his laptop (`anim: 'type'`).
+  - He lies down only if all sofa seats are taken (`goalSofa()` falls back to `goalLounge()`).
+  - Measured in 30 simulated days, 10:30–16:50: lying about 10% of checked time, sofa work about 71%, other (lunch, coffee, visits) about 19%.
+- Nguyên's visits (`npcAmbient()`, section 9): a seated coworker with `habits.lounge` (Nguyên) on a sofa seat (goal `sofa:N`) may start a visit. This is the `sofaWorker` check. Such a visit goes only to Chị Thảo (`x.id === 'thao'`), and Chị Thảo must be seated at `desk:work`. He never visits from the daybed. The rule for everyone else is unchanged. Trung is the one exception: he visits Nguyên, who has no desk (see Added, Trung visits Nguyên).
+- Arrival toast in `processTimeEvents()` (`index.html` line 2390): "😴 Nguyên hiếm hoi lên công ty hôm nay, đang ở pantry!" (was "đang nằm ở pantry", which no longer matched his routine).
+
+### Fixed
+
+- Closing the tab, or reloading, in the middle of a day restarted the day from 08:30. Only the end-of-day summary was saved. Now the day resumes from the last snapshot (at most 5 s of play is lost).
+- The two `nguyen`→`thao` duo scripts (`DUOS`) never played, because a visit could not start from Nguyên. Fixed by the sofa-visit rule under Changed.
+
+### Build and artifacts
+
+- The v1.10.0 code is present in `index.html`, `index-offline.html`, `dist/netlify/index.html`, and `dist/MinhLee.app/Contents/Resources/index.html` (grep: `btn-resume`, `validSession`, `swept`). Full byte diff between the copies not recorded in this doc pass.
+- `tools/macapp/Info.plist` still reads `CFBundleShortVersionString` 1.8.5. `dist/MinhLee-mac.zip` not rebuilt in this pass (open follow-up).
+- `CLAUDE.md` and `index.html` were not edited in the doc pass.
+
+### Verification
+
+- Headless Chrome: snapshot fields restored (minute, tasks, talked, energy, work progress, position, affinity, theme, NPC times, surprises). Resume button visibility and session clearing checked.
+- Headless Chrome, welcome-back popup: popup title and buttons checked. "▶ Tiếp tục ngày đang dở" resumed at 13:10 with 1 task. "Thôi, quay lại" kept the data. "🗑 Xóa hết và chơi mới" cleared to 0 days.
+- Headless Chrome, Nguyên's visits: in 6 of 6 runs he visited Chị Thảo and a `nguyen`→`thao` duo script was picked.
+- Not tested across a real browser restart, a real device, or Safari/Firefox.
+- Nap share (lying 10%, sofa 71%) measured by simulation, not in a real browser.
+- Wording of the Nguyên lines: not reviewed by a native speaker. Anh Bảo's look was not checked by eye against the photo in this doc pass.
+
+### Docs
+
+- `docs/spec/the-gioi-lien-tuc.md` (§4, §11 save and resume, §11.2 lifecycle, §11.5 welcome-back popup), `docs/spec/mot-ngay-o-cong-ty.md` (status, §2, §4.2, §4.4, §5 data model, AC-81 to AC-84), `docs/spec/dong-nghiep.md` (status, §1, §3 routine, visits, and canon, §8 Anh Bảo row, AC-49), `docs/spec/noi-dung-bat-ngo.md` (status, §2 duo note and table, AC-41), `docs/product-guide.md` (saving: welcome-back popup), `docs/glossary.md` (`session`, `nap`, `showWelcomeBack()`, `look.collarStyle`, `look.cuff` note, `pattern: 'redwhite'`), `docs/tasks.md` (known defects closed, follow-ups).
+- `docs/tasks.md`: v1.9.1 to v1.9.4 done entries moved to `docs/archive/tasks-done-2026-11.md`.
+
+## v1.9.5 — 2026-11-04
+
+Anh Bảo's look re-matched to the user's reference photo. Canon fix: Chị Ba is not allergic to cats. Her cat is a golden cat named Nghệ, and she and Chủ tịt tease each other about whose cat is better. Look data, `buildCharacter()` options, and text only. No change to logic, schedule, save format, or save key.
+
+### Added
+
+- `index.html`, `buildCharacter()`: two opt-in look fields for two-tone shirts:
+  - `look.hem` (colour): a cylinder band (0.25 m tall, at y 0.425) around the lower body, in its own colour, so the lower half of the top differs from the upper half.
+  - `look.cuff` (colour): a 0.03 m band on each arm, at y −0.175, in its own colour (sleeve-end cuffs).
+- `NPC_PROFILES` (`index.html`, section 2), Chị Ba (`an3`) `say.chat`: "Mèo vàng nhà chị tên Nghệ, ngoan hơn mấy đứa trong phòng này nhiều. Anh Thạnh nói gì thì nói, mèo chị đẹp hơn."
+- `DUOS` (`index.html`, section 2): two cat-banter scripts for the same pair, one each way:
+  - `an3` → `thanh`: Chị Ba asks whether Thạnh's cat can open the fridge; Thạnh says his cat meditates; Chị Ba says the cat is only lazy.
+  - `thanh` → `an3`: Thạnh says Chị Ba's cat is a little chubby; Chị Ba says plump means lucky.
+  - `DUOS` now has 19 entries for 17 pairs (was 17 entries for 16 pairs). The pick is per visit (`runVisit()`, both directions match).
+
+### Changed
+
+- `NPC_PROFILES` look for Anh Bảo (`bao`), matched to his photo by eye:
+  - Navy colour-block polo: `shirt: 0x1f2f5f` (navy top), `hem: 0xf0f0f0` (white lower half), `cuff: 0xf0f0f0` (white sleeve cuffs), `shortSleeve: true`.
+  - Navy collar: `neck: 'collar'`, `collar: 0x1f2f5f`. The yellow collar (`0xd4ac4d`) and `hairStyle: 'side'` are removed.
+  - Hair: `style: 'fringe'` (no `hairStyle`), `hair: 0x1a1410` (black), fringe swept over the forehead.
+  - Glasses: `glasses: 'rect'`, `glassColor: 0xb9bfc4` (thin light-silver rectangles).
+  - `skin: 0xe6c09c` (slightly tanned), `smile: true` (slight closed smile), `detail: true`.
+- `DAY_THEMES` `cat` intro `th-cat` (`index.html`, section 3 block), text and options:
+  - Intro: Chị Ba's allergy lines are removed. She now says her golden cat is prettier ("Mèo vàng nhà chị đẹp gấp mười.").
+  - Option 2 is now "Hỏi Chị Ba cho xem ảnh mèo vàng nhà chị". Chị Ba shows her photos, and Chủ tịt cuts in with his own. Effects as they stand in the code: mood +7, `aff` `an3` +4, `thanh` +1 (the spec table had `thanh` −1 and an older label; corrected in `noi-dung-bat-ngo.md` §3.2).
+  - Option 3 result: Chị Ba posts a photo of her golden cat to the group chat, and Chủ tịt reacts with three cat photos.
+- Canon: Chị Ba is not allergic to cats. The cat lines of Chị Ba and Chủ tịt (cat Nhân Quả) now tease each other about whose cat is better, mock-gruff and friendly.
+
+### Fixed
+
+- Cat canon contradiction: the `th-cat` intro had Chị Ba allergic to cats. Removed. Her cat is now Nghệ.
+- The player's allergy option in surprise `thanhmeo` ("Em hơi dị ứng lông mèo") is not changed. It is the player's own line, not Chị Ba's.
+
+### Build and artifacts
+
+- `index-offline.html`, `dist/netlify/index.html`, and `dist/MinhLee.app/Contents/Resources/index.html` each contain the v1.9.5 Bảo look (`hem: 0xf0f0f0`) and the Nghệ line (grep check in the doc pass). `index.html` differs from them only by the importmap line and the offline comment line.
+- `dist/MinhLee-mac.zip` was not rebuilt in this pass.
+
+### Verification
+
+- JavaScript syntax check on `index.html`. Headless render of Anh Bảo, viewed by eye.
+- Anh Bảo was compared with the reference photo by eye only, not measured. Not checked on a real device or in any other browser.
+- Wording of the cat banter, the `th-cat` intro, and the options is not reviewed by a native speaker.
+
+### Docs
+
+- `docs/spec/dong-nghiep.md` (status, roster rows for Chủ tịt, Chị Ba, Anh Bảo; §2 cat canon row; §7.6 teasing; §8 Anh Bảo row and heading), `docs/spec/noi-dung-bat-ngo.md` (§2 duo table and count; §3.2 `th-cat` rows, corrected to match the code), `docs/glossary.md` (`look.hem`, `look.cuff`, `Nghệ`), `docs/tasks.md` (Done entry, follow-ups), `docs/product-guide.md` (Chị Ba row).
+- `CLAUDE.md` and `index.html` not changed in this pass.
+
 ## v1.9.4 — 2026-11-04
 
 `look.detail` (detailed eyes, brows, smile, neck ring or collar, and hair style) is now enabled for the remaining nine coworkers. All 14 coworkers use it. Look data only. No change to logic, schedule, text, save format, or save key.

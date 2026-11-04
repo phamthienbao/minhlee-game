@@ -94,6 +94,8 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **visitAnim** — Optional profile field: the animation the visitor plays at the start of a visit. Only Chị Ba sets it (`punch`).
 
+**Điểm tiếp cận (approach point, `seat.ax` / `seat.az`)** — *(needs definition)* The spot in front of a seat where a visitor stands. Used when the visited coworker has no desk (Nguyên, v1.10.0). Added v1.10.0.
+
 **Thói quen (quirk)** — A coworker's scheduled line or action around a set time (`quirks`). Fires once per day.
 
 **Mời nước (treat)** — Thạnh's drinks event at 11:05 and snacks event at 14:10. Gives the player energy and mood, plus a diary moment. *(Extended in v1.1.0: milk-tea days add treats at 09:55 and 16:00.)* *(Name note, v1.2.0: Thạnh is shown in game as Chủ tịt.)*
@@ -194,11 +196,11 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **Làm từ xa (remote work)** — Working from home. A coworker with `habits.attendance` below 1 is in the office only on that share of days.
 
-**Giường nằm (daybed)** — The pantry daybed at (−7.0, −4.2), where Nguyên lies when he is in the office. An obstacle the player walks around. *(Outdated as of v1.3.0: moved to the north wall, east of the pantry, at (−4.6, −6.9).)*
+**Giường nằm (daybed)** — The pantry daybed at (−7.0, −4.2), where Nguyên lies when he is in the office. An obstacle the player walks around. *(Outdated as of v1.3.0: moved to the north wall, east of the pantry, at (−4.6, −6.9).)* *(Outdated as of v1.10.0: he lies on it only in a 30–50 min nap window after lunch. See `docs/spec/dong-nghiep.md` §3.)*
 
 **LOUNGE_SEAT** — Code constant for the daybed seat (`lie: true`). Only one coworker uses it.
 
-**habits.lounge** — Profile flag. When `true`, the coworker's default idle goal is the daybed instead of a desk.
+**habits.lounge** — Profile flag. When `true`, the coworker's default idle goal is the daybed instead of a desk. *(Outdated as of v1.10.0: outside the nap window the idle goal is a pantry sofa seat, `goalSofa()`. See `docs/spec/dong-nghiep.md` §3.)*
 
 **habits.attendance** — Profile number from 0 to 1: the chance that the coworker comes into the office on a given day. Missing means always in.
 
@@ -462,3 +464,23 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 **look.part** — Used with `look.detail` and `hairStyle: 'sleek'`. Value `'center'` draws a centre parting with two side panels instead of the side fringe. Used by Yến. Added v1.9.3. See `docs/spec/dong-nghiep.md` §8.
 
 **look.shortSleeve** — Opt-in flag in a coworker's `look` (`NPC_PROFILES`). When `true`, `buildCharacter()` adds skin-coloured forearms below the shirt sleeves, for short-sleeve shirts. Used by Thạnh. Added v1.9.3. See `docs/spec/dong-nghiep.md` §8.
+
+**look.hem** — *(needs definition)* Opt-in colour in a coworker's `look` (`NPC_PROFILES`) for the lower half of a two-tone shirt. `buildCharacter()` adds a cylinder band (0.25 m tall, at y 0.425) in this colour around the lower body. Used by Anh Bảo (white on navy). Added v1.9.5. See `docs/spec/dong-nghiep.md` §8. *(Outdated as of v1.10.0: no profile uses it. Anh Bảo's white lower half was removed.)*
+
+**look.cuff** — *(needs definition)* Opt-in colour in a coworker's `look` for the sleeve-end bands of a shirt. `buildCharacter()` adds a 0.03 m band on each arm, at y −0.175, in this colour. Used by Anh Bảo (white on navy). Added v1.9.5. See `docs/spec/dong-nghiep.md` §8. *(v1.10.0: still used by Anh Bảo, now white cuffs on the red-and-white shirt in code. The solid polo of the first brief is not used.) *(Closed 2026-11-04: the red-and-white shirt is intentional, per the user. Black polo collar: `look.collarStyle`.)**
+
+**Nghệ (cat name)** — *(needs definition)* The golden cat of Chị Ba (`an3`). Named in her `say.chat` line, in the `th-cat` intro and option 2 (`docs/spec/noi-dung-bat-ngo.md` §3.2), and in the duo `an3`–`thanh`. Canon: Chị Ba is not allergic to cats. Added v1.9.5. See `docs/spec/dong-nghiep.md` §2.
+
+**session (`Store.session`)** — *(needs definition)* Snapshot of the day in progress, saved every 5 s of play and when the tab hides. Restored by "▶ Tiếp tục ngày đang dở" on the title screen. Cleared at day end, on exit to title, and on "🔄 Bắt đầu lại ngày này". Added v1.10.0. See `docs/spec/the-gioi-lien-tuc.md` §11. *(Also offered by the welcome-back popup, `showWelcomeBack()`, on boot.)*
+
+**nap (`times.nap`)** — *(needs definition)* Nguyên's one short sleep window of the day, 30–50 min, starting 55–80 min after his lunch starts. In that window he lies on the daybed. Added v1.10.0. See `docs/spec/dong-nghiep.md` §3.
+
+**goalSofa()** — *(needs definition)* Gives a coworker with `habits.lounge` a free `SOFA_SEATS` seat to work from (pose `type`). Falls back to `goalLounge()` when all seats are taken. Added v1.10.0.
+
+**hairStyle `swept`** — *(needs definition)* Men's short hair style, drawn by `detailHair()`. Used by Anh Bảo from v1.10.0 in place of `style: 'fringe'`. See `docs/spec/dong-nghiep.md` §8.
+
+**showWelcomeBack()** — *(needs definition)* Boot-time popup in `index.html` section 14 ("Chào mừng <tên> quay lại!"). Shown when `Store.days > 0` or a valid `session` exists. Offers continue (`resumeSession()` or `startDay()`), "🆕 Chơi mới" (with a confirmation that calls `Store.clear()`), and "Thôi, quay lại". Added v1.10.0. See `docs/spec/the-gioi-lien-tuc.md` §11.5.
+
+**look.collarStyle** — *(needs definition)* Used with `look.neck: 'collar'`. Value `'polo'` draws a polo collar: a neck band in `look.collar`, two V flaps, and a back band. Used by Anh Bảo, with `collar: 0x1a1a1c` (black). Added v1.10.0. See `docs/spec/dong-nghiep.md` §8.
+
+**pattern `redwhite`** — *(needs definition)* A `look.pattern` value drawn by `patternMat()`: full-width horizontal red bands on off-white, which override `look.shirt`. Used by Anh Bảo, intentionally (the user's request for v1.10.0). Added v1.10.0. See `docs/spec/dong-nghiep.md` §8.

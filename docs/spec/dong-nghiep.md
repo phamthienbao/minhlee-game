@@ -1,6 +1,6 @@
 # Spec: Đồng nghiệp (coworkers, address terms, remote worker)
 
-Status: v1.9.4 (2026-11-04). All 14 coworkers have detailed looks (`look.detail`, §8). Yến, Thạnh, and Phú re-matched to reference photos in v1.9.3 (by eye). The nine added in v1.9.4 are not re-matched to photos. Earlier history: `docs/changelog.md`.
+Status: v1.10.0 (2026-11-04). Nguyên naps once after lunch and otherwise works from a pantry sofa (§3, AC-49). Anh Bảo's look: black polo collar, white cuffs, swept hair, red-and-white striped shirt (§8; set by the user's request, not the solid polo of the first brief). Nguyên visits Chị Thảo from a pantry sofa (§3). Trung sometimes visits him there or on the daybed (§3, v1.10.0). Earlier: v1.9.5 (2026-11-04). 13 of 14 coworkers use `look.detail` (§8); Trung keeps his original face. Yến, Thạnh, and Phú were re-matched to photos in v1.9.3, and Anh Bảo in v1.9.5 (both by eye). The other looks are not re-matched to photos. Cat canon for Chị Ba and Chủ tịt is in §2. Earlier history: `docs/changelog.md`.
 
 ## 1. Roster
 
@@ -10,9 +10,9 @@ Status: v1.9.4 (2026-11-04). All 14 coworkers have detailed looks (`look.detail`
 
 | # | In-game name | Real name / nickname | Team | Desk | Notes |
 |---|---|---|---|---|---|
-| 1 | Chủ tịt | real: Thạnh | Leadership (chủ tịt) | 1 | Hosts the 10:00 meeting. Arrives 09:20. Humble speech since v1.4.3 (§2). Nam calls him "bé Hạnh" when teasing (v1.8.1) and "Thạnh" in serious work talk (v1.8.2). Treat events (see `noi-dung-bat-ngo.md` §3.1). Cat lover: his cat is called Nhân Quả, and the trait "rất thích mèo" and the cat lines were added in v1.4.2. Quirk 12:50 (looks at cat photos). Cat plush on his desk. Surprises `cat` and `thanhmeo` (see `noi-dung-bat-ngo.md` §1.1) |
+| 1 | Chủ tịt | real: Thạnh | Leadership (chủ tịt) | 1 | Hosts the 10:00 meeting. Arrives 09:20. Humble speech since v1.4.3 (§2). Nam calls him "bé Hạnh" when teasing (v1.8.1) and "Thạnh" in serious work talk (v1.8.2). Treat events (see `noi-dung-bat-ngo.md` §3.1). Cat lover: his cat is called Nhân Quả (v1.4.2; cat canon with Chị Ba in §2). Quirk 12:50 (looks at cat photos). Cat plush on his desk. Surprises `cat` and `thanhmeo` (see `noi-dung-bat-ngo.md` §1.1) |
 | 2 | Phú | nick: Siêu nhân may mắn | Backend Dev | 0 | Unlucky; loves investing and massages. Left table, north |
-| 3 | Trung | — | Backend Dev | 4 | Catchphrase "Em nói thiệt". Custom look (v1.1.2). Right table, north |
+| 3 | Trung | — | Backend Dev | 4 | Catchphrase "Em nói thiệt". Custom look (v1.1.2). Right table, north. Visits Nguyên (v1.10.0, §3) |
 | 4 | Toàn | — | Backend Dev | 3 | Quiet, says little. Left table, south |
 | 5 | Hiện | — | Mobile Dev | 5 | Youngest. Refers to self as "em". Right table, north |
 | 6 | Tùng | — | Mobile Dev | 8 | Often invites people out for a light after-work drink (nhậu, kept light). Likes dares and challenge games: the request is to say "MinhLee" ten times in a row. Quirk 16:50 calls for nhậu. Custom look (v1.1.2). Right table, south |
@@ -20,10 +20,10 @@ Status: v1.9.4 (2026-11-04). All 14 coworkers have detailed looks (`look.detail`
 | 8 | Thảo | nick: Bella | HR | 11 | The office foodie: knows many restaurants, drink shops, and good dishes. Greetings, chats, and requests are about food. Quirk 11:40 recommends a lunch place. Brings the birthday cake. Lower row |
 | 9 | Yến | nick: Én Pink | QC | 12 | "Là sao?". Lower row, right end |
 | 10 | Chú 7 | real: An (male) | QC | 7 | Young ("Chú" is a nickname). Loves tea (trà ô long, trà sen). Often teases Chị Ba, who answers with playful punches. Tea duo with Thông (v1.4.3). Custom look (v1.1.2). Right table, south. Chị Ba's teasing nickname for him is "bánh tét" (chat line, v1.7.1). When Chị Ba stands up and calls for "thằng bánh tét", he answers from behind his tea (`say.standReply`, §7.5) |
-| 11 | Chị Ba | real: An (female) | Business Support | 10 | Supports product research: runs user surveys, builds reports, analyses the numbers. Strict in a fun way, and playfully "punches" colleagues (`visitAnim: 'punch'`, quirk 09:12). Quirk 09:48 re-checks charts before the meeting. Desk request: a survey report with only 40 respondents, and the options are to state the small sample, write it honestly, or overstate it as a joke. Afternoon quest: fetch "Báo cáo khảo sát người dùng" (`DOC_QUESTS`). Duo with Nam about survey data he forgot to send (`noi-dung-bat-ngo.md` §2). Same age as Chủ tịt and Nam. Stand-up catchphrase (v1.7.1): "Bực bội quá… thằng bánh tét đâu rồi!" (§7.5). Lower row |
-| 12 | Anh Bảo | real: Bảo | Product | 2 | Oldest in the office. Asks "vì sao". Left table, south |
+| 11 | Chị Ba | real: An (female) | Business Support | 10 | Supports product research: runs user surveys, builds reports, analyses the numbers. Strict in a fun way, and playfully "punches" colleagues (`visitAnim: 'punch'`, quirk 09:12). Quirk 09:48 re-checks charts before the meeting. Desk request: a survey report with only 40 respondents, and the options are to state the small sample, write it honestly, or overstate it as a joke. Afternoon quest: fetch "Báo cáo khảo sát người dùng" (`DOC_QUESTS`). Duo with Nam about survey data he forgot to send (`noi-dung-bat-ngo.md` §2). Golden cat Nghệ, not allergic (§2, v1.9.5). Same age as Chủ tịt and Nam. Stand-up catchphrase (v1.7.1): "Bực bội quá… thằng bánh tét đâu rồi!" (§7.5). Lower row |
+| 12 | Anh Bảo | real: Bảo | Product | 2 | Oldest in the office. Asks "vì sao". Red-and-white striped shirt with black polo collar and white cuffs, swept hair (§8, v1.10.0). Left table, south |
 | 13 | Thông | nick: Bamboo | R&D | 9 | Lower row, left end (bottom-left of the office) |
-| 14 | Nguyên | — | Designer | none (`desk: null`) | Works remotely. In the office on about half of the days. Rests on the pantry daybed (§3) |
+| 14 | Nguyên | — | Designer | none (`desk: null`) | Works remotely. In the office on about half of the days. Naps once for 30–50 min after lunch, otherwise works from a pantry sofa, and visits Chị Thảo from it (§3, v1.10.0) |
 
 Desks 0–12 are used by coworkers 1–13. Since v1.3.0: desks 0–3 are the left long table, 4–8 the right long table, and 9–12 the lower row. The player's own desk is a separate spot (`Bàn của bạn`) at the bottom left. Seat positions: `docs/spec/van-phong-layout.md` §3.
 
@@ -37,7 +37,7 @@ Coworkers mostly address each other by first name. These are the special cases:
 | Chủ tịt (Thạnh) | Others call him "Chủ tịt" in game text. Nam calls him "Thạnh" in serious work talk (serious duo, quirk 09:42, v1.8.2) and "bé Hạnh" when teasing (playful duo, `say.absent`, v1.8.1). Cat lines and the cat surprises `cat` and `thanhmeo` (cat named Nhân Quả). Duo with Hiện about cats and games. Shown as "Chủ tịt" on cards, with real name Thạnh. Spelling is "Chủ tịt", not "Chủ tịch" (confirmed 2026-11-04) | Meeting host text (`HOSTN`), surprises, duos, gossip |
 | Chủ tịt (Thạnh), speech (v1.4.3) | Humble style. Himself: "em". Most people, including the player (`{anh}`) and in group talk: "anh" / "chị". Normal "anh" / "em" with the younger coworkers below and with Chị Ba. Nam (same age) gets the humble style. Duo `thanh`–`hien` keeps "anh" | Greetings, idle, chat, pantry, request, reply, meeting, quirks, notes, treat bubble, duo lines, surprises, the document ask (`DOC_QUESTS`) |
 | Younger coworkers (for Chủ tịt's speech) | Hiện (stated youngest). Chú 7, Trung, and Nguyên are assumed younger (not stated, to confirm, see `docs/tasks.md`) | Chủ tịt's speech above |
-| Chị Ba (An, female) | Calls Chủ tịt "anh" (same age). Her line in surprise `dammhaam` uses the real name: "Chị xin lỗi anh Thạnh!" | Surprise `dammhaam` |
+| Chị Ba (An, female) | Calls Chủ tịt "anh" (same age). Her line in surprise `dammhaam` uses the real name: "Chị xin lỗi anh Thạnh!". **Cats (v1.9.5 canon):** Chị Ba is NOT allergic to cats. Her golden cat is named Nghệ. Chủ tịt's cat is Nhân Quả. The two tease each other about whose cat is better (mock-gruff, friendly) | Surprise `dammhaam`; `th-cat` intro (`noi-dung-bat-ngo.md` §3.2); `say.chat` (Nghệ line); duos `an3`–`thanh` and `thanh`–`an3` (§7.6) |
 | Chú 7 (An, male) | Called "Chú 7". "Chú" is a nickname, not an age term. Chú 7 is young (confirmed 2026-11-04). Teases Chị Ba in surprise `khiatra` and in the 09:46 quirk | Profile name, surprise `khiatra` |
 | Chị Ba → Chú 7 (v1.7.1) | Chị Ba's teasing nickname for Chú 7 is "bánh tét" (in her stand-up line and his chat line). Chú 7 answers her call with "Dạ có em đây chị Ba!" ("em", respectful to her) | `say.stand` and `say.standReply` on `an3`, chat line on `an7` |
 | Ages | Anh Bảo is the oldest. Chủ tịt, Nam, and Chị Ba are the same age (confirmed 2026-11-04). Chú 7 is young (confirmed 2026-11-04). Toàn's age tier is not specified. Other ages are not recorded | — |
@@ -52,10 +52,9 @@ The player is addressed with `{anh}` / `{Anh}` by gender (`fill()`, see `mot-nga
 - Profile: `id: 'nguyen'`, `role: 'Designer'`, `desk: null`. No gender is recorded: the profile has no gender field, no gender was stated, and Nguyên's lines contain no `{anh}` / `{Anh}`.
 - Habits: `arrive: '10:15'`, `leave: '17:00'`, `coffee: 'morning'`, `lunch: 'pantry'`, `joinsMeeting: false`, `lounge: true`, `attendance: 0.5`.
 - Attendance: `resetNpcDay()` rolls `Math.random() > attendance` each day. On a remote day `times.arrive` is 99999, so Nguyên stays hidden all day. On about 50% of days he comes in (raised from 0.3 on 2026-11-04).
-- In office: the default goal (`decideGoal()`, after meeting, events, lunch, coffee, and visits) is `goalLounge()`. He walks to `LOUNGE_SEAT` (cx −4.0, cz −6.9, `lie: true`) and plays pose `lie`. He is not a desk worker, so he is never a visit candidate. Lunch and coffee still use pantry spots. `LOUNGE_SEAT` is one seat, and `goalLounge()` does not check occupancy, so only one coworker may use `habits.lounge` at a time (only Nguyên does).
-- Daybed (moved in v1.3.0 to the north wall, east of the pantry): obstacle at (−4.6, −6.9), 1.8 × 1.0 m (`addObst`). Scene parts: teal frame, cream mattress, orange pillow. Built in section 5, `buildOffice()`.
-- Arrival toast: `processTimeEvents()` shows "😴 Nguyên hiếm hoi lên công ty hôm nay, đang nằm ở pantry!" at arrival + 8 min. Not shown on remote days. Quirk: 11:20, "(nằm dài ở pantry, mắt lim dim)", no animation.
-- Pantry: `PANTRY_SPOTS` still has 8 standing spots. Two were moved in v1.2.0. Their previous coordinates are not recorded.
+- In office (v1.10.0): after meeting, events, lunch, coffee, and visits, `decideGoal()` picks the nap window first (`times.nap`: one window of 30–50 min, starting 55–80 min after lunch starts, `resetNpcDay()`). In that window he lies on `LOUNGE_SEAT` (cx −4.0, cz −6.9, `lie: true`, pose `lie`). Otherwise `goalSofa()` gives him a free pantry sofa seat from `SOFA_SEATS` (pose `type`, laptop). He lies down only if all sofa seats are taken. Simulated over 30 days, 10:30–16:50: lying ≈10% of checked time, sofa work ≈71%, other (lunch, coffee, visits) ≈19%. Visits (v1.10.0, `npcAmbient()` `sofaWorker`): from a sofa seat (goal `sofa:N`) he may start a visit, but only to Chị Thảo, who must be seated at `desk:work`. He never visits from the daybed. Trung visits him (v1.10.0, `npcAmbient()`, `decideGoal()`): when Trung is at `desk:work` in a visit window, each attempt has a 40% chance to add Nguyên as a partner while he is on a sofa seat or the daybed. Trung stands at Nguyên's seat approach point (`seat.ax` / `seat.az`; `LOUNGE_SEAT` if none), because Nguyên is never at `desk:work`. Lunch and coffee still use pantry spots. `goalLounge()` does not check occupancy, so only one coworker may use `habits.lounge` at a time (only Nguyên does). Canon (v1.10.0): he often asks Chị Thảo "Chị Thảo ơi, nay có ai mời nước không?" (pantry lines, 10:35 quirk, duos `nguyen`→`thao`, `noi-dung-bat-ngo.md` §2, reachable from the sofa since v1.10.0). Trung sometimes asks him to simplify a design because it is too hard to build; he answers sleepily that he will think about it after lying down (duos `trung`→`nguyen`, same section).
+- Daybed (moved in v1.3.0 to the north wall, east of the pantry): obstacle at (−4.6, −6.9), 1.8 × 1.0 m (`addObst`). Scene parts: teal frame, cream mattress, orange pillow. Built in section 5, `buildOffice()`. `PANTRY_SPOTS` has 8 standing spots (two moved in v1.2.0; old coordinates not recorded).
+- Arrival toast: `processTimeEvents()` shows "😴 Nguyên hiếm hoi lên công ty hôm nay, đang ở pantry!" at arrival + 8 min (wording changed in v1.10.0). Not shown on remote days. Quirk: 11:20, "(nằm dài ở pantry, mắt lim dim)", no animation.
 
 ## 4. Profile fields added in v1.2.0
 
@@ -76,7 +75,7 @@ Status legend as in `docs/spec/mot-ngay-o-cong-ty.md` section 3.
 | AC-46 | `NPC_PROFILES` has 14 entries. 13 have desks 0–12. Nguyên has `desk: null`. The title subtitle says 14 coworkers. | Verified (14 NPCs in two headless runs). Subtitle checked in source only |
 | AC-47 | Address conventions (§2) appear in rendered lines. No old names (Thạnh, Bảo) appear in rendered text, except Chị Ba's "anh Thạnh" line. | Not recorded (source only). Native-speaker review pending. v1.4.3 source check: one Chủ tịt line in surprise `dating100k` still uses "Anh" (see §6) |
 | AC-48 | Nguyên is in the office on about 50% of days. On other days he never appears. | Not recorded (source only). Rate not measured |
-| AC-49 | On an office day Nguyên arrives about 10:15, lies on the pantry daybed, and the arrival toast shows. | Partly verified (screenshot shows him lying on the daybed). Arrival time and toast not recorded |
+| AC-49 | On an office day Nguyên arrives about 10:15 and the arrival toast shows. He naps on the daybed once for 30–50 min after lunch and otherwise works from a pantry sofa seat (v1.10.0). | Partly verified (v1.4.x screenshot showed him lying on the daybed). Arrival time and toast not recorded. Sofa and nap split measured by simulation only (§3). Arrival toast reads "đang ở pantry" since v1.10.0 (`index.html` line 2390) |
 | AC-50 | The daybed is an obstacle. No collision violations with 14 NPCs. | Verified (two headless runs, plus a re-run after the 2026-11-04 changes: no JS errors, no collision violations). Transient NPC overlaps: see `mot-ngay-o-cong-ty.md` AC-4 |
 | AC-51 | Duos `thao-yen` and `hien-bao` play their scripted lines when those pairs visit. | Not recorded (source only) |
 | AC-61 | Bubbles sit above the speaker's head. If that point is off-screen, under the top bar, or in the bottom margin, the bubble is hidden, not pinned to the edge. Ambient bubbles are not started for coworkers outside the viewport (§7.1). | Reported verified (headless Chrome: `Bubbles.onScreen` true for visible coworkers, false for off-screen). Not checked on a real phone |
@@ -174,13 +173,13 @@ Absent (`say.absent`):
 Chị Ba (`an3`) is grumpier than before, and visibly annoyed, but still funny. Tone guidance for any new or edited line:
 
 - Short sentences. Gruff and mock-annoyed ("cọc", "bực bội").
-- Never mean. She teases, she does not insult. Teasing is aimed at Chú 7 (the "bánh tét" nickname) and in the duo with Nam, and the joke is always light.
+- Never mean. She teases, she does not insult. Teasing is aimed at Chú 7 (the "bánh tét" nickname), in the duo with Nam, and in the cat banter with Chủ tịt (v1.9.5, §2). The joke is always light.
 - The playful "đấm nhẹ" (light punch) stays as a running joke. The punch animation is `visitAnim: 'punch'` (roster row 11, quirk 09:12).
 - Keep her address terms (§2): "anh" for Chủ tịt, peer "tui / ông" banter with Nam.
 - Lines updated in v1.9.1: `say.greet`, `say.idle`, `say.chat`, `say.pantry`, `reply`, `request` (ask), `meeting` (pos/neg), `quirks`, `note`, the `DOC_QUESTS` ask line, duo lines with Chú 7 and Nam, and the `dammhaam` result. Unchanged: `say.stand`, `say.standReply`.
 - Wording is not native-reviewed (see `docs/tasks.md`).
 
-## 8. Detailed looks (v1.9.2 to v1.9.4, `look.detail` on 13 of 14, Trung keeps his original face; hair is `hairStyle` unless noted; fields in `docs/glossary.md`)
+## 8. Detailed looks (v1.9.2 to v1.10.0, `look.detail` on 13 of 14, Trung keeps his original face; hair is `hairStyle` unless noted; fields in `docs/glossary.md`)
 
 | Coworker | Hair | Neck (`neck`) | Other |
 |---|---|---|---|
@@ -188,13 +187,13 @@ Chị Ba (`an3`) is grumpier than before, and visibly annoyed, but still funny. 
 | Phú | `side` (v1.9.3) | `collar`, dark (`0x141416`) | rect dark glasses, wider face (`round`), teeth |
 | Trung | original face (no `look.detail`, kept at the user's request: closer to him) | striped shirt | rect glasses, mustache |
 | Toàn | `side` | `collar`, navy (`0x1f2a5c`), closes the polo-collar gap | mustache, wider face (`round`), no glasses |
-| Hiện | `quiff` | `crew`, purple (`0x654a8c`) | round glasses, smile |
+| Hiện | `quiff` | `crew`, purple (`0x654a8c`) | no glasses (per the user), smile |
 | Tùng | `style: 'fringe'` (no `hairStyle`) | `crew`, pale lilac (`0xd9d4e6`) | smile |
 | Nam | `style: 'fringe'` (no `hairStyle`) | `collar`, plaid (`pat:plaid`) | smile, teeth, no glasses |
 | Thảo | `wavy`, long over the shoulders | `vneck`, orange | lashes, gold earrings, pink lips |
 | Yến | `sleek`, centre part (`part: 'center'`) | `crew`, dark | lashes, coral lips, gold earrings, thin rose-gold glasses, teeth |
 | Chú 7 | `tousled` | `crew`, cream | smile |
 | Chị Ba | `style: 'bob'` (no `hairStyle`) | `crew`, dark grey | lashes, muted lips, silver earrings, dark thick round glasses, flat mouth (no smile) |
-| Anh Bảo | `side` | `collar`, yellow (`0xd4ac4d`) | smile |
+| Anh Bảo (v1.10.0) | `hairStyle: 'swept'` (men's short hair, replaces `style: 'fringe'`), black | `pattern: 'redwhite'` shirt (`shirt: 0xd6322f`, full-width horizontal red bands on off-white, intentional per the user). `collar: 0x1a1a1c` black polo collar (`collarStyle: 'polo'`), white cuffs (`cuff: 0xf4f1ea`), `shortSleeve`. No white lower half (`hem` unused). The solid polo of the first brief is not used | thin light-silver rect glasses (`0xb9bfc4`), slight closed smile |
 | Thông | `side`, neat side part | `crew`, light grey ring on white tee | — |
 | Nguyên | `style: 'fringe'` (no `hairStyle`) | `crew`, black | detailed eyes and brows, no glasses |
