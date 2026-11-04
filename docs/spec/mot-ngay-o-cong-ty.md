@@ -1,6 +1,6 @@
 # Spec: Một Ngày Ở MinhLee
 
-Status: v1.8.6 (2026-11-04). Desk task reworked around a requester, with progress kept on pause (AC-71 to AC-73); Thông, Thảo, and Toàn looks updated from photos (§4.4). Nguyên's look is from the user's reference photo (v1.8.5). Earlier releases are in `docs/changelog.md`.
+Status: v1.9.0 (2026-11-04). Six new day themes with story intros, and desk items unlocked by finished desk tasks (`tasksTotal`, `unlocked`; see `docs/spec/noi-dung-bat-ngo.md` §3.2 and `docs/spec/bang-nhiem-vu.md` §9). Earlier: v1.8.6. Desk task reworked around a requester, with progress kept on pause (AC-71 to AC-73); Thông, Thảo, and Toàn looks updated from photos (§4.4). Nguyên's look is from the user's reference photo (v1.8.5). Earlier releases are in `docs/changelog.md`.
 
 ## 1. Goal
 
@@ -164,7 +164,7 @@ Stored under key `mot-ngay-o-cong-ty.v1` as JSON:
 
 Reset ("Xóa dữ liệu") removes the key and clears in-memory affinity.
 
-On load, the diary is filtered to well-formed entries and `affinity` is reset to `{}` if it is not an object. A missing or malformed `world` resets to `{ users: 12 }`. A missing `recentEv` resets to `[]`. Unreadable data falls back to defaults and logs via `dlog`. Missing `settings.cam` falls back to 1. Loading a v1.0.3 save under v1.1.0 was not separately recorded (see `docs/tasks.md`).
+On load, the diary is filtered to well-formed entries and `affinity` is reset to `{}` if it is not an object. A missing or malformed `world` resets to `{ users: 12 }`. A missing `recentEv` resets to `[]`. Unreadable data falls back to defaults and logs via `dlog`. Missing `settings.cam` falls back to 1. Loading a v1.0.3 save under v1.1.0 was not separately recorded (see `docs/tasks.md`). v1.9.0 adds `tasksTotal` (number, desk tasks finished across all days) and `unlocked` (array of desk item ids); missing values read as `0` and `[]`, no migration (`docs/spec/bang-nhiem-vu.md` §9).
 
 ## 6. Content rules
 

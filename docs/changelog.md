@@ -2,6 +2,73 @@
 
 All notable changes to "Một Ngày Ở MinhLee" (formerly "Một Ngày Ở Công Ty", renamed in v1.0.3). Newest first. Entries are appended, never rewritten.
 
+## v1.9.0 — 2026-11-04
+
+Six new day themes, each opening with a short story at 08:50 that the player answers with one of three choices. Finished desk tasks now add up across days and unlock eight items that appear on the player's desk in 3D. A collection screen in the pause menu lists them. No change to schedule, attendance, layout, save key, or the save format's existing fields.
+
+### Added
+
+- `index.html`, `DAY_THEMES` (variety block, between sections 2 and 3): six themes, each with `w: 1`, `treats: []`, and an `intro` event `{ id, emoji, title, text, opts }`. `opts` uses the same `[label, result, fx]` shape as `SURPRISES`.
+  - `demo` (🤝 Ngày khách tới xem demo, `extra: 1`). Intro `th-demo`.
+  - `power` (🔌 Ngày wifi chập chờn). Intro `th-power`.
+  - `cat` (🐈 Ngày mèo ghé thăm). Intro `th-cat`.
+  - `hack` (🏁 Ngày hackathon mini, `extra: 1`). Intro `th-hack`.
+  - `sick` (🤧 Ngày giao mùa). Intro `th-sick`.
+  - `award` (🏆 Ngày bình chọn tháng). Intro `th-award`.
+- `startDay()` (section 14): if the drawn theme has an `intro`, it is put at the front of `D.surprises` with `t = 08:50` (`D.surprises.unshift`). It uses the same proximity gate as other surprises in `tickClock()`: it waits until a visible coworker is within `CFG.SURPRISE_NEAR` (4.2 m), and is skipped at 11:20 (08:50 plus 150 game-minutes). The intro has no `npc`, so any coworker counts. It goes through `fireSurprise()`, so it counts toward `D.stats.surprise` and the "Bạn của những điều bất ngờ" badge. Intros are not in `SURPRISES`, so `recentEv` does not affect them.
+- `UNLOCKS` (variety block, before `SURPRISES`): eight desk items, each with `need` (cumulative finished desk tasks), `emoji`, `name`, `desc`, and `slot` (x, z offset from the desk centre). `mug` 1, `cactus` 2, `duck` 4, `cat` 6, `lamp` 9, `frame` 13, `phones` 18, `trophy` 25.
+- `awardWork()` (section 11, beside the desk task): called from `startMiniGame()`'s `finish(true)`. It increments `Store.tasksTotal`, appends every item whose `need` is reached to `Store.unlocked`, and calls `buildDeskItems()` if any were added. It returns the new items.
+- `showUnlocks(list)`: one reward card per new item, shown after the requester's reply card (or directly if there is no requester). The button reads "Xem tiếp" while more items remain.
+- `nextUnlockLine()`: appended to the work card for a new desk task: "🎁 Phần thưởng kế tiếp: … (còn N việc)", or a line saying all items are unlocked. Not shown for a resumed task.
+- `showCollection(onBack)`: new pause-menu button "🎁 Đồ trên bàn làm việc", placed after the diary button. Unlocked items show emoji, name, and description. Locked items show 🔒, the name, and "Làm thêm N việc để mở khóa."
+- `buildDeskItems()` (section 5, beside the desk and office builders): builds a `THREE.Group` at `PLAYER_DESK` (y 0.75) from box and cylinder primitives, one block per owned item. It is called from `startDay()` and after each unlock. It returns early in list mode (`LITE`) and when there is no scene. Unlocks are still saved in list mode, and the collection screen still works there. Only the 3D desk is skipped.
+
+### Changed
+
+- `Store` (section 3): two new fields, `tasksTotal` (number, all desk tasks ever finished) and `unlocked` (array of item ids). Neither is in `defaults()`. They are read with `|| 0` and `|| []`, so existing saves load with no migration. The save key `mot-ngay-o-cong-ty.v1` is unchanged.
+- `pickTheme()`: the pool now has 17 weight units (11 before, plus 6 for the new themes at `w: 1`). The Friday milk-tea rule (50%) and the "not the same as last day" rule are unchanged.
+- Text pass (in progress, another agent): more natural Vietnamese wording in the content pools (`p1_data.js`). No logic change. This entry is not part of the functional changes above.
+
+### Verification
+
+- Headless Chrome only: the intro fires when the player is near a coworker. Unlock thresholds were checked, and all eight desk items were built. The far-away skip and the 11:20 cut-off were not recorded.
+- Item looks were not reviewed visually. Not run on a real phone or in any other browser.
+
+### Build and artifacts
+
+- `index.html` matches the working copy at `/private/tmp/claude-501/-Volumes-SSD-1TB-Projects-Mingle/bdfb8f79-fac3-4f27-a4e8-c631d8e88ae8/scratchpad/index.html` (byte compare in the doc pass).
+- `index-offline.html`, `dist/netlify/index.html`, and `dist/MinhLee.app/Contents/Resources/index.html` contain `UNLOCKS` and the `th-demo` intro (grep check). The `dist/MinhLee-mac.zip` file was not checked in this pass.
+- `tools/macapp/Info.plist` and `dist/MinhLee.app/Contents/Info.plist` still read `CFBundleShortVersionString` 1.8.5. See `docs/tasks.md`.
+
+### Docs
+
+- `docs/spec/noi-dung-bat-ngo.md` (§1 intro note, §3 themes, §3.2 intro events, AC-75 to AC-77), `docs/spec/bang-nhiem-vu.md` (§2 pause menu, §9 desk collection, AC-78 to AC-80), `docs/spec/mot-ngay-o-cong-ty.md` (status, data model), `docs/spec/van-phong-layout.md` (status), `docs/product-guide.md` (day types, surprises, desk items, FAQ), `docs/glossary.md`, `docs/tasks.md`.
+- `CLAUDE.md` not touched (user choice, gitignored).
+
+## v1.8.8 — 2026-11-04
+
+The wall clock on the north wall now shows the in-game time. Before, it was a static texture that always showed the same fixed time. No change to schedule, attendance, layout, save format, or the save key.
+
+### Fixed
+
+- `index.html`, wall clock (section 5, `buildOffice()`): the clock face is a `WALL_CLOCK` canvas texture (128 × 128 px) on a 0.6 × 0.6 m plane at (2.2, 2.6), z −7.93. It is now redrawn by `drawWallClock(g, minutes)`, which draws the white face, the dark rim, 12 tick marks, the hour hand (30 px), and the minute hand (46 px).
+- `index.html`, `applyTimeOfDay(m)` (section 5): when the in-game minute changes (`Math.floor(m)` differs from `WALL_CLOCK.userData.drawn`), the clock is redrawn and `needsUpdate` is set. Redraw runs at most once per in-game minute. It is also called after a time skip (`applyTimeOfDay(D.minute)`), so the face jumps to the new time.
+- The clock is drawn once at 08:30 when built, so the first frame is correct before `applyTimeOfDay()` runs.
+- `applyTimeOfDay()` returns early in list mode (`LITE`, the no-3D fallback) and when there is no scene. The clock is not drawn there, because there is no 3D office.
+
+### Verification
+
+- Headless Chrome only: the clock face was exported at 08:30, 10:10, and 14:20. The three images differ, and the hands at 14:20 are correct. Not viewed on a real device or in any other browser.
+
+### Build and artifacts
+
+- `index-offline.html`, `dist/netlify/index.html`, and `dist/MinhLee.app/Contents/Resources/index.html` contain `drawWallClock` and the `WALL_CLOCK.userData.drawn` redraw check. `diff index.html index-offline.html` shows only the importmap line and the comment line (expected). Checked in the doc pass.
+- `dist/MinhLee-mac.zip` and the app bundle were not rebuilt in this doc pass. `tools/macapp/Info.plist` and `dist/MinhLee.app/Contents/Info.plist` still read `CFBundleShortVersionString` 1.8.5. See `docs/tasks.md`.
+
+### Docs
+
+- `docs/spec/van-phong-layout.md` (status, wall clock row in §2 and §6, AC-74), `docs/tasks.md` (v1.8.8 Done entry), `docs/glossary.md` (new term "Đồng hồ treo tường"). `docs/product-guide.md` not changed: it mentions only the clock at the top of the screen (HUD), which did not change.
+
 ## v1.8.7 — 2026-11-04
 
 Surprise events no longer pop up at their scheduled time from anywhere. After the scheduled time, a surprise waits until the player stands within 4.2 m of the coworker it involves. If that does not happen in time, the surprise is skipped for the day. Three narration strings now call Chủ tịt "anh" instead of "ông". No change to schedule, attendance, layout, save format, or the save key.

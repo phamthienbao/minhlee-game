@@ -1,6 +1,6 @@
 # Spec: Thẻ mục tiêu và bảng nhiệm vụ (goal card, mission board)
 
-Status: v1.8.6 (2026-11-04). The goal card and board layout are as shipped in v1.8.0. v1.8.6 changes the morning hint (§3.1, §3.4), adds the desk world label (§2), and notes that the desk-task pause button is separate from the pause menu (§4).
+Status: v1.9.0 (2026-11-04). Pause menu gets a "🎁 Đồ trên bàn làm việc" button (§2). Desk items unlocked by finished tasks are in §9 (AC-78 to AC-80). The goal card and board layout are as shipped in v1.8.0. v1.8.6 changes the morning hint (§3.1, §3.4), adds the desk world label (§2), and notes that the desk-task pause button is separate from the pause menu (§4).
 
 Source of truth: `index.html`, section 10 (HUD, pause menu) and the `.obj` / `.qb` CSS in `<style>`. Parent spec: `docs/spec/mot-ngay-o-cong-ty.md` (§4.2 milestones and pause).
 
@@ -22,7 +22,7 @@ The goal card is larger and tapping it opens the pause menu. The pause menu show
 | Mission board | class `.qb` | `missionBoard()` | Three parts: current goal card, milestone list, side tasks (§3). |
 | Desk world label | `Bubbles.makeTag()` in `init()` (`deskTag`), placed each frame in `frame()` | Text "💻 Bàn của bạn", above the player's desk (v1.8.6) | Shown in play mode, not in list mode, not while sitting, with fewer than `CFG.MAX_TASKS` tasks done, and within 10 m of the desk. Its horizontal position is clamped to the screen edges, so it points toward the desk when the desk is off-screen to a side. Hidden when its projected point is above 130 px or below `innerHeight - 40`. Not part of the board; listed here because it is the only HUD-style cue for the desk. |
 
-Pause menu order: "▶ Tiếp tục" (resume), mission board, "⏭ Bỏ qua tới …" (only when a later milestone exists), "📖 Nhật ký ngày làm", "🔊 Bật/tắt âm thanh", "❓ Xem lại hướng dẫn", "🏠 Về màn hình chính".
+Pause menu order: "▶ Tiếp tục" (resume), mission board, "⏭ Bỏ qua tới …" (only when a later milestone exists), "📖 Nhật ký ngày làm", "🎁 Đồ trên bàn làm việc" (v1.9.0, §9), "🔊 Bật/tắt âm thanh", "❓ Xem lại hướng dẫn", "🏠 Về màn hình chính".
 
 The board is built once when the pause menu opens. The clock does not run while paused (`update()` skips simulation in `paused` mode), so the board does not need to refresh.
 
@@ -89,6 +89,9 @@ The "Buổi sáng" (09:00) milestone's `hint()` reads: "Đến bàn của bạn 
 | MB-8 | Tap does nothing outside play mode or during a sit / stand transition | Not recorded (code reading only) |
 | MB-9 | macOS app self-test passes on the rebuilt app | Verified (reported by requester) |
 | MB-10 | Morning hint (§3.4) names the "💻 Bàn của bạn" label and the desk location, on the goal card and the board | Not recorded (text checked in `index.html`, code check only, 2026-11-04) |
+| AC-78 | Each finished desk task adds 1 to `tasksTotal`. Each item unlocks when `tasksTotal` reaches its `need`, cumulative across days (§9.1, §9.2). | Verified (v1.9.0, headless Chrome: unlock thresholds) |
+| AC-79 | Unlocked items appear on the player's 3D desk at day start and right after the unlock. Locked items are not drawn. All 8 items build (§9.3). | Partly verified (v1.9.0, headless Chrome: 8 items built. Look not reviewed visually; not on a real device) |
+| AC-80 | The collection screen lists all 8 items. Unlocked ones show emoji, name, and description. Locked ones show the name and the tasks left (§9.4). | Not recorded (source check only, v1.9.0) |
 | MB-11 | Desk world label (§2) shows in play mode, hides while sitting, after 3 tasks, and in list mode, and pins to the side edge when the desk is off-screen sideways | Not recorded (code check only, 2026-11-04). Headless Chrome only, per the v1.8.6 report; not re-run in the doc pass |
 
 ## 6. Data sources
@@ -114,3 +117,54 @@ The "Buổi sáng" (09:00) milestone's `hint()` reads: "Đến bàn của bạn 
 - `docs/product-guide.md`: "The mission board" (player-facing)
 - `docs/glossary.md`: goal card, mission board, milestone status
 - `docs/tasks.md`: v1.8.0 follow-ups
+
+## 9. Desk collection and unlocks (v1.9.0)
+
+Source of truth: `index.html`, `UNLOCKS` (variety block, between sections 2 and 3), `awardWork()`, `showUnlocks()`, `nextUnlockLine()`, `showCollection()` (section 11), and `buildDeskItems()` (section 5).
+
+### 9.1 Counting
+
+- `Store.tasksTotal` counts every finished desk task, across all days. It is not reset each day.
+- `D.tasks` is the per-day count, still capped at `CFG.MAX_TASKS` (3). `D.tasks` is not used for unlocks.
+- Only a finished task counts (`finish(true)` in `startMiniGame()`). A paused or unfinished task does not count.
+- The last item (25 tasks) needs at least 9 working days at the 3-task cap.
+
+### 9.2 Items
+
+| Need (tasks) | id | Item | Desk shape (primitives, `buildDeskItems()`) |
+|---|---|---|---|
+| 1 | `mug` | ☕ Cốc cà phê MinhLee | Red cylinder with a white label strip |
+| 2 | `cactus` | 🌵 Chậu xương rồng mini | Terracotta pot, green cylinder, one side arm |
+| 4 | `duck` | 🦆 Vịt cao su “Debug” | Yellow body, head, orange beak |
+| 6 | `cat` | 🐱 Mèo may mắn | White body and head, two ears, red collar |
+| 9 | `lamp` | 💡 Đèn bàn ấm áp | Dark base, grey pole, yellow shade |
+| 13 | `frame` | 🖼 Khung ảnh cả team | Wooden frame with a light blue pane, turned |
+| 18 | `phones` | 🎧 Tai nghe chống ồn | Dark headband and two earcups |
+| 25 | `trophy` | 🏆 Cúp “Người đồng hành” | Wooden base, gold stem and cup |
+
+Each item has a `slot` (x, z offset from the desk centre). The group sits at `PLAYER_DESK` with y 0.75.
+
+### 9.3 Unlock flow
+
+1. A desk task finishes. `awardWork()` increments `tasksTotal`, adds every item whose `need` is reached to `unlocked`, and rebuilds the desk group if anything was added.
+2. The requester's reply card shows first (if there is a requester). Then `showUnlocks()` shows one card per new item, with a "Xem tiếp" button while more remain.
+3. The next desk task's work card shows the next item and how many tasks it needs (`nextUnlockLine()`). The line is not shown for a resumed task. After all items: "Bạn đã mở khóa hết đồ trên bàn."
+4. `buildDeskItems()` runs at `startDay()` and after each unlock. It returns early in list mode (`LITE`) and with no scene. Unlocks are still saved in list mode, but nothing is drawn.
+
+### 9.4 Collection screen
+
+- Opened from the pause menu button "🎁 Đồ trên bàn làm việc" (§2).
+- Header: "Hoàn thành đầu việc để mở khóa đồ cho bàn của bạn. Đã làm tổng cộng N việc."
+- Unlocked item: emoji, name, description. Locked item: 🔒, name, and "Làm thêm N việc để mở khóa." (N is at least 1).
+- "Đóng" returns to the pause menu.
+
+### 9.5 Save data
+
+- `tasksTotal` (number) and `unlocked` (array of ids) are read with `|| 0` and `|| []`. Existing saves load with both at zero or empty. The save key `mot-ngay-o-cong-ty.v1` is unchanged.
+- "Xóa dữ liệu" removes the key, so both fields clear with it. See `docs/spec/mot-ngay-o-cong-ty.md` §5.
+
+### 9.6 Open items
+
+- Item looks are not reviewed visually (headless Chrome only). The 3D shapes are placeholders built from primitives.
+- Not checked on a real phone or in Safari or Firefox.
+- In list mode (`LITE`) the desk items are not drawn. The collection screen still works there (§9.3, step 4).

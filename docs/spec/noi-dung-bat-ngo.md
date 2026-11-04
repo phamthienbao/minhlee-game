@@ -1,10 +1,10 @@
 # Spec: Nội dung đa dạng (surprises, duos, day themes, badges)
 
-Status: v1.8.7 (2026-11-04). Surprise trigger changed in v1.8.7 (§1, AC-40): a surprise waits for the player to stand near the related coworker instead of popping up at its time. Narration uses "anh" (not "ông") for Chủ tịt in three `SURPRISES` strings. The Nam–Thạnh scripts (v1.8.1, v1.8.2) and the random script pick per visit are in §2.
+Status: v1.9.0 (2026-11-04). Six new day themes, each with a story intro at 08:50 (§3.2, AC-75 to AC-77). Earlier: surprise trigger changed in v1.8.7 (§1, AC-40): a surprise waits for the player to stand near the related coworker instead of popping up at its time. Narration uses "anh" (not "ông") for Chủ tịt in three `SURPRISES` strings. The Nam–Thạnh scripts (v1.8.1, v1.8.2) and the random script pick per visit are in §2.
 
 ## 1. Daily surprises
 
-- Each day has 3 surprises. A busy-theme day has 4 (`min(4, 3 + extra)`).
+- Each day has 3 surprises. A busy-theme day has 4 (`min(4, 3 + extra)`). A day whose theme has an `intro` (§3.2) adds one more, the intro, so it has 4 (5 on the `demo` and `hack` days, which have `extra: 1`).
 - The day has 4 time windows: 09:05–09:40, 11:15–11:55, 13:40–14:25, and 16:05–16:40. Each surprise uses one randomly chosen window, at a random minute inside it. Windows are sorted by time.
 - Events are drawn from `SURPRISES` (18 events plus the gift box, 19 entries). Events not in `recentEv` are drawn first. No event repeats within one day.
 - Firing runs in `tickClock()`. Only one surprise fires at a time, only in `play` mode, and only when no card or dialog holds the player (`!P.lock`).
@@ -80,7 +80,7 @@ Seventeen scripts for 16 pairs (v1.8.2). Nam–Chủ tịt is the only pair with
 
 ## 3. Day themes
 
-One theme is drawn at the start of each day (`pickTheme()`), weighted by `w`, leaving out `lastTheme`. On Friday there is a 50% chance of the milk-tea theme before the weighted draw.
+One theme is drawn at the start of each day (`pickTheme()`), weighted by `w`, leaving out `lastTheme`. On Friday there is a 50% chance of the milk-tea theme before the weighted draw. Total weight is 17 (v1.9.0): 11 for the five original themes, 1 each for the six new ones.
 
 | id | Name | Emoji | w | Energy decay | Visit rate | Extra surprises | Extra treats |
 |---|---|---|---|---|---|---|---|
@@ -89,6 +89,12 @@ One theme is drawn at the start of each day (`pickTheme()`), weighted by `w`, le
 | `busy` | Ngày chạy nước rút | 🔥 | 2 | 1.5 | 0.4 | +1 (4 total) | none |
 | `chill` | Ngày thư thả | 🌿 | 2 | 0.6 | 1.7 | 0 | none |
 | `milk` | Ngày trà sữa | 🧋 | 2 | 0.9 | 1.2 | 0 | 09:55 and 16:00 |
+| `demo` | Ngày khách tới xem demo | 🤝 | 1 | 1.2 | 0.7 | +1 (4 random + intro = 5) | none |
+| `power` | Ngày wifi chập chờn | 🔌 | 1 | 0.8 | 1.5 | 0 (+ intro = 4) | none |
+| `cat` | Ngày mèo ghé thăm | 🐈 | 1 | 0.8 | 1.4 | 0 (+ intro = 4) | none |
+| `hack` | Ngày hackathon mini | 🏁 | 1 | 1.3 | 0.8 | +1 (4 random + intro = 5) | none |
+| `sick` | Ngày giao mùa | 🤧 | 1 | 0.9 | 1.2 | 0 (+ intro = 4) | none |
+| `award` | Ngày bình chọn tháng | 🏆 | 1 | 1.0 | 1.3 | 0 (+ intro = 4) | none |
 
 - Energy decay multiplies the normal energy loss per game-minute (0.04).
 - Visit rate multiplies the chance that a seated coworker starts a visit.
@@ -101,6 +107,35 @@ One theme is drawn at the start of each day (`pickTheme()`), weighted by `w`, le
 - Each treat fires once when the clock crosses its time, including on a time skip. It does nothing if Chủ tịt is hidden.
 - Effect: +8 energy, +3 mood, +2 affinity with Chủ tịt, a diary moment, a toast, a chime, and a line from Chủ tịt.
 - Base treats: 11:05 ("Chủ tịt mua nước mời cả phòng.") and 14:10 ("Chủ tịt mua đồ ăn vặt cho mọi người."). Milk-tea extras: 09:55 and 16:00.
+
+### 3.2 Intro stories (v1.9.0)
+
+- Six themes have an `intro` event: `demo`, `power`, `cat`, `hack`, `sick`, `award`. Its id is `th-<theme>`, e.g. `th-demo`.
+- `startDay()` puts the intro at the front of `D.surprises` with `t = 08:50`. It uses the proximity gate in §1 (fires when a visible coworker is within 4.2 m, after 08:50). It is skipped at 11:20 (08:50 plus 150 game-minutes), so it is never shown after late morning.
+- An intro has no `npc`, so any visible coworker counts. It shows as a normal surprise card with 3 options and the same `[label, result, fx]` shape as `SURPRISES`. It is not in the `SURPRISES` pool, so it is never drawn at random and `recentEv` does not affect it.
+- The intro counts toward `D.stats.surprise`, so on a day with an intro the "Bạn của những điều bất ngờ" badge (3 or more) is easier to reach.
+- Intro options (effects are `mood`, `energy`, `aff`, and a diary `moment` where listed):
+
+| Intro | Option (short label) | Effects |
+|---|---|---|
+| `th-demo` | Phụ dọn khu pantry | mood +5, energy −4, aff `bao` +4, moment |
+| `th-demo` | Hỏi anh Bảo có cần tập demo thử | mood +6, aff `bao` +5, moment |
+| `th-demo` | Dọn bàn của mình | mood +3, moment |
+| `th-power` | Rủ cả nhóm chia sẻ hotspot | mood +6, aff `thong` +4, moment |
+| `th-power` | Sắp xếp lại ghi chú giấy | mood +4, energy +3, aff `an3` +3, moment |
+| `th-power` | Đi pha cà phê chờ mạng về | mood +5, energy +6, moment |
+| `th-cat` | Xin ít sữa cho mèo | mood +8, aff `thanh` +5, moment |
+| `th-cat` | Bế mèo ra ngoài giúp Chị Ba | mood +4, aff `an3` +4, aff `thanh` −1, moment |
+| `th-cat` | Chụp ảnh gửi nhóm chung | mood +7, moment |
+| `th-hack` | Xin vào đội của Nam | mood +7, aff `nam` +4, moment |
+| `th-hack` | Xin vào đội của Trung | mood +5, aff `trung` +4, moment |
+| `th-hack` | Làm thử một mình | mood +4, energy −3, aff `tung` +3, moment |
+| `th-sick` | Mang trà gừng cho Yến | mood +6, aff `yen` +5, moment |
+| `th-sick` | Khen Chú 7 chu đáo | mood +5, aff `an7` +4, moment |
+| `th-sick` | Mở bớt cửa sổ cho thoáng | mood +3, moment |
+| `th-award` | Bầu cho Phú | mood +6, aff `phu` +5, moment |
+| `th-award` | Bầu cho Thông | mood +5, aff `thong` +4, moment |
+| `th-award` | Bỏ phiếu trắng, vẽ ngôi sao | mood +4, aff `thao` +3, moment |
 
 ## 4. End-of-day badges
 
@@ -136,4 +171,7 @@ Status legend as in `docs/spec/mot-ngay-o-cong-ty.md` section 3.
 | AC-43 | Milk-tea days add Chủ tịt's (Thạnh's) treats at 09:55 and 16:00. | Not recorded (source only) |
 | AC-44 | Up to 4 badges appear on the summary and in the diary. | Not recorded (source only) |
 | AC-45 | The notice board shows either procedural gossip or one of the fixed notes. | Not recorded (source only) |
+| AC-75 | Themes with an `intro` queue it as the first surprise at 08:50. It fires when the player is near a visible coworker, and is skipped at 11:20 (§3.2). | Partly verified (v1.9.0, headless Chrome only: intro fired near a coworker. Far-away skip and 11:20 cut-off not recorded) |
+| AC-76 | The six new themes appear in the day draw with weight 1 each (total 17), and the day's theme emoji shows after the clock. | Source check only (v1.9.0, `DAY_THEMES`, `pickTheme()`). Draw spread not measured |
+| AC-77 | Each intro shows 3 options, and each option applies its effects and shows its result card. No raw placeholders appear. | Not recorded (v1.9.0 source check only; full run not reported) |
 | AC-69 | A visit to a pair with more than one script plays one script, chosen at random when the visit starts, and keeps it until the visit ends (§2). | Source check only (v1.8.2, `runVisit()`). The full-day headless run reported no JS errors and valid ids. Spread of the random pick not measured |

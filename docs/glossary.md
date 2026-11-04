@@ -423,3 +423,29 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 **Khoảng cách gần bất ngờ (surprise proximity)** — *(needs definition)* The 4.2 m distance (`CFG.SURPRISE_NEAR`) the player must stand from the related coworker, after a surprise's time, for the surprise to fire. Added v1.8.7.
 
 **Bỏ qua bất ngờ (skipped surprise)** — *(needs definition)* A surprise not triggered within 150 game-minutes after its time, or by 17:10. It is skipped for the day with nothing shown. Added v1.8.7.
+
+**Đồng hồ treo tường (wall clock)** — *(needs definition)* The clock on the north wall of the office, whose face shows the in-game time. Redrawn by `drawWallClock()` as the minute changes. Added v1.8.8.
+
+**Tình tiết mở đầu (intro)** — *(needs definition)* The story event at 08:50 that opens a story day. Queued as the first surprise by `startDay()`, with 3 choices. Added v1.9.0 (`docs/spec/noi-dung-bat-ngo.md` §3.2).
+
+**Ngày có tình tiết (story day)** — *(needs definition)* A day type whose theme has an `intro`: demo, power, cat, hack, sick, award. Added v1.9.0.
+
+**Ngày khách tới xem demo (demo day)** — *(needs definition)* Theme `demo`. Added v1.9.0.
+
+**Ngày wifi chập chờn (wifi day)** — *(needs definition)* Theme `power`. Added v1.9.0.
+
+**Ngày mèo ghé thăm (cat day)** — *(needs definition)* Theme `cat`. Added v1.9.0.
+
+**Ngày hackathon mini (hackathon day)** — *(needs definition)* Theme `hack`. Added v1.9.0.
+
+**Ngày giao mùa (sneezing day)** — *(needs definition)* Theme `sick`. Added v1.9.0.
+
+**Ngày bình chọn tháng (award day)** — *(needs definition)* Theme `award`. Added v1.9.0.
+
+**Đồ trên bàn làm việc (desk collection)** — *(needs definition)* The pause-menu screen (🎁) listing the 8 desk items, locked and unlocked. Added v1.9.0 (`docs/spec/bang-nhiem-vu.md` §9).
+
+**Đồ mở khóa (desk item)** — *(needs definition)* One of 8 items (`UNLOCKS`) built on the player's 3D desk after enough finished desk tasks. Added v1.9.0.
+
+**Tổng đầu việc (tasksTotal)** — *(needs definition)* The save field counting every finished desk task across all days. Drives desk item unlocks. Added v1.9.0.
+
+**Mở khóa (unlock)** — *(needs definition)* Adding a desk item to `unlocked` when `tasksTotal` reaches its `need`. Shows a reward card. Added v1.9.0.

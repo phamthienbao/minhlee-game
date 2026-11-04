@@ -8,6 +8,25 @@ Legend: `[x]` done, `[ ]` todo, `[~]` in progress, `[!]` blocked.
 
 Items for v1.0.0 to v1.8.1 are archived in `docs/archive/tasks-done-2026-11.md`.
 
+- [x] v1.9.0 (2026-11-04): six new day themes (demo, power, cat, hack, sick, award), each opening with a story intro at 08:50 that fires when the player is near a coworker. Desk items: finished desk tasks add up across days and unlock 8 items on the 3D desk, with a collection screen in the pause menu. Details: `docs/changelog.md` v1.9.0, `docs/spec/noi-dung-bat-ngo.md` §3.2 and AC-75 to AC-77, `docs/spec/bang-nhiem-vu.md` §9 and AC-78 to AC-80, `docs/product-guide.md`
+  - [x] `DAY_THEMES` (six themes with `intro`), `UNLOCKS`, `awardWork()`, `showUnlocks()`, `nextUnlockLine()`, `showCollection()`, `buildDeskItems()` in `index.html`
+  - [x] Headless Chrome: intro fires near a coworker; unlock thresholds; 8 desk items built
+  - [x] Offline copies, netlify, and app resources contain the v1.9.0 code (grep check in the doc pass)
+  - [ ] Look at the 8 desk items in 3D (shapes not reviewed)
+  - [ ] Test the intro on a real device and in Safari or Firefox; check the far-away skip and the 11:20 cut-off (not recorded)
+  - [ ] Full-day headless run covering the six new themes and all 18 intro options (AC-76, AC-77)
+  - [ ] Set `CFBundleShortVersionString` to 1.9.0 and rebuild `dist/MinhLee-mac.zip` (see v1.8.8 follow-ups)
+  - [ ] Docs: `docs/product-guide.md`, `docs/spec/*`, `docs/glossary.md` updated. `CLAUDE.md` not touched (user choice)
+
+- [x] v1.8.8 (2026-11-04): the north-wall clock shows the in-game time. The face is redrawn by `drawWallClock()` from `applyTimeOfDay()` when the minute changes. Details: `docs/changelog.md` v1.8.8, `docs/spec/van-phong-layout.md` §2, §6 and AC-74
+  - [x] `WALL_CLOCK` canvas texture redrawn with hour hand, minute hand, and 12 tick marks (`drawWallClock()`, `applyTimeOfDay()` in `index.html`)
+  - [x] Headless-Chrome check: face exported at 08:30, 10:10, 14:20 (three different images; 14:20 hands correct)
+  - [x] Offline copies and netlify and app resources contain the v1.8.8 code (grep check in the doc pass)
+  - [ ] Look at the wall clock on a real device and in Safari or Firefox (not run)
+  - [ ] Rebuild `dist/MinhLee-mac.zip` and `dist/MinhLee.app` (not rebuilt in the doc pass)
+  - [ ] Set `CFBundleShortVersionString` in `tools/macapp/Info.plist` and `dist/MinhLee.app/Contents/Info.plist` (still 1.8.5)
+  - [x] Docs: `docs/changelog.md`, `docs/spec/van-phong-layout.md`, `docs/tasks.md`, `docs/glossary.md`. `docs/product-guide.md` not changed (it mentions only the HUD clock). `CLAUDE.md` not touched (user choice)
+
 - [x] v1.8.7 (2026-11-04): surprise events wait for the player to stand within 4.2 m of the related coworker after their scheduled time, and are skipped after 150 game-minutes or at 17:10. Three narration strings call Chủ tịt "anh" instead of "ông". Details: `docs/changelog.md` v1.8.7, `docs/spec/noi-dung-bat-ngo.md` §1 and AC-40, `docs/product-guide.md` (Surprises)
   - [x] `tickClock()` proximity gate and skip rule (`CFG.SURPRISE_NEAR`, `sp.t + 150`, `CFG.END - 20`), `near()` check for `ev.npc` or any visible coworker
   - [x] Headless-Chrome check: far from the coworker, not fired; near, fired (reported by the requester; not re-run in the doc pass)
@@ -59,7 +78,7 @@ Items for v1.0.0 to v1.8.1 are archived in `docs/archive/tasks-done-2026-11.md`.
 
 ## In progress
 
-- [ ] None
+- [~] Text pass: more natural Vietnamese wording in the content pools (`p1_data.js`), no logic change. Another agent is working on it. Noted in `docs/changelog.md` v1.9.0
 
 ## Known defects
 

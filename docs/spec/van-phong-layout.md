@@ -1,6 +1,6 @@
 # Spec: Bố cục văn phòng (office layout)
 
-Status: v1.3.0 (2026-11-04). Source of truth: `index.html`, the layout constants block that starts at the comment "Bố cục theo sơ đồ" (section 5, about line 755), `buildOffice()` (section 5), and `buildSpots()` (section 11). Parent spec: `docs/spec/mot-ngay-o-cong-ty.md`. Coworker seats are listed by name in `docs/spec/dong-nghiep.md`.
+Status: v1.3.0 (2026-11-04). Wall clock (north wall) updated in v1.8.8 (AC-74). Unlocked desk items on the player's desk added in v1.9.0 (`docs/spec/bang-nhiem-vu.md` §9, AC-79). Source of truth: `index.html`, the layout constants block that starts at the comment "Bố cục theo sơ đồ" (section 5, about line 755), `buildOffice()` (section 5), and `buildSpots()` (section 11). Parent spec: `docs/spec/mot-ngay-o-cong-ty.md`. Coworker seats are listed by name in `docs/spec/dong-nghiep.md`.
 
 The layout follows a user-supplied floor plan, `so-do-van-phong-2.svg` (1200 × 900 px, top-down). The file is not in the repo. Before v1.3.0 the office had a different layout (desks in two rows, meeting table top right, door on the south wall). That layout is not recorded here.
 
@@ -32,6 +32,7 @@ All values in metres. Walls: north z −8.1, west x −12.1, east x 12.1 (with t
 | Printer | Obstacle centre (−11.3, 0.3), 1.2 × 0.8 | `PRINTER_SPOT` | West wall |
 | Front door | East wall, gap z 1.29 to 3.29, centre `DOOR.z` 2.29 | `DOOR`, `DOOR_GAP` | Aligned with the walkway. See §5 |
 | Notice board | East wall, plane at x 11.93, centre z 4.6 | `buildOffice()` | Next to the front door |
+| Wall clock | North wall, plane at z −7.93, centre (2.2, 2.6), 0.6 × 0.6 m | `buildOffice()`, `WALL_CLOCK`, `drawWallClock()`, `applyTimeOfDay()` | Face shows the in-game time. Redrawn once per in-game minute (v1.8.8). Hands: hour 30 px, minute 46 px, 12 ticks. Not drawn in list mode |
 | Filing cabinet | Obstacle centre (11.3, 6.2), 1.1 × 0.8 | `buildOffice()` | South east corner |
 | Coat stand | Obstacle centre (11.3, 0.4) | `buildOffice()` | Beside the door |
 | Work carpet | 23 × 11.8, centre (0, 1.6) | `buildOffice()` | Covers the seating zones and walkway |
@@ -95,7 +96,8 @@ The user can change each of these. The value to change is shown. The daybed, sof
 | Printer | West wall, z 0.3 | `PRINTER_SPOT` | Plan item moved as requested |
 | Notice board | East wall, z 4.6 | `buildOffice()`, spot in `buildSpots()` | Plan item moved as requested |
 | Filing cabinet | South east, stays | `buildOffice()`, spot in `buildSpots()` | Not moved |
-| Plants, windows, posters, wall clock, calendar, logo | Positions from v1.2.0 | `buildOffice()` | Decorative. Not in the plan. Checked by eye only |
+| Plants, windows, posters, calendar, logo | Positions from v1.2.0 | `buildOffice()` | Decorative. Not in the plan. Checked by eye only |
+| Wall clock | Position from v1.2.0 (§2). Face follows the in-game time since v1.8.8 | `buildOffice()`, `drawWallClock()` | Not in the plan. Checked by eye and by exported face image only |
 
 ## 7. Pantry spots and sitting spots
 
@@ -130,6 +132,7 @@ Status legend as in `docs/spec/mot-ngay-o-cong-ty.md` section 3.
 | AC-58 | Daybed on the north wall, sofa north east, printer west wall, notice board by the door, cabinet south east | Partly verified (screenshots) |
 | AC-59 | Layout matches the SVG by measurement | Not verified (checked by eye only) |
 | AC-60 | Layout works on phones and touch devices | Not verified (headless Chrome only) |
+| AC-74 | Wall clock on the north wall shows the in-game time and its hands move with the game clock. Redrawn when the in-game minute changes, and after a time skip | Partly verified (headless Chrome: face exported at 08:30, 10:10, 14:20; three different images; 14:20 hands correct). Not viewed on a real device |
 
 ## 10. Related docs
 

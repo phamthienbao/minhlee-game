@@ -297,29 +297,29 @@ const NPC_PROFILES = [
     traits: ['tốt bụng', 'hay giúp đỡ', 'hay đi trễ', 'hay mời nước, mua đồ ăn', 'mê nhân quả, thiền, tu hành', 'rất thích mèo'], stats: { outgoing: 0.55, focus: 0.55, team: 0.9 },
     habits: { arrive: '09:20', coffee: 'morning', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 50,
     taste: { warm: 2, joke: 1, work: 1 },
-    say: { greet: ['@am Xin lỗi {anh}, em lại đi trễ rồi! {Anh} {ten} uống gì không, em mua cho.', 'Chào {anh} {ten}! {Anh} cần em giúp gì không? Giúp người là tích phước đó {anh}.', 'Chào {anh} {ten}! {Anh} xem ảnh mèo nhà em chưa? Hôm qua nó ngồi thiền giỏi lắm!'],
-      idle: ['Mọi người ăn gì chưa nhỉ? Để em gọi đồ.', 'Ai cần giúp gì cứ gọi em nhé.', 'Hít thở sâu… ba hơi thôi là bớt căng liền.', 'Hôm qua mèo nhà em lại đạp rơi ly nước. Nhân quả đó.'],
-      chat: ['Hôm nay em mua bánh bao cho cả phòng, mọi người nhớ lấy nhé.', 'Em kẹt xe… à không, em ngủ quên, lần sau em sẽ cố.', 'Việc gì cũng có nhân có quả, làm tốt hôm nay thì mai nhẹ nhàng.', '{Anh} nuôi mèo chưa? Mèo dạy mình kiên nhẫn lắm. Mèo nhà em tên là Nhân Quả.', 'Anh Nam cứ gọi em là “bé Hạnh”, nghe quen rồi. Nhân quả cả thôi.'],
-      pantry: ['{Anh} uống gì? Em trả tiền, đừng ngại.', '{Anh} nhớ ăn uống đầy đủ nhé, em dặn rồi đó.', 'Uống trà chậm thôi, coi như thiền năm phút.', 'Em đang tính mua cây cào móng cho Nhân Quả. {Anh} thấy màu xám hay màu be?'],
-      deep: 'Em hay trễ vì sáng nào cũng ngồi thiền, cho mèo ăn, rồi ghé mua đồ ăn cho cả nhóm. Mà quên tính giờ.' },
-    reply: { great: ['Em vui lắm, {anh} có gì cần cứ nói em nhé.', 'Giỏi quá {anh}! Nhân lành thì quả ngọt, để em mời {anh} ly trà sữa.'], ok: ['Dạ, được đó {anh}. Mọi việc có nhân duyên cả.', 'Em hiểu rồi, cảm ơn {anh}.'], meh: ['Dạ, {anh} nghĩ thêm cũng không sao. Tùy duyên mà.', 'Cứ từ từ nhé {anh}, hít thở rồi tính.'] },
-    request: { ask: 'Hôm nay em trễ nữa, chắc là quả của việc hôm qua ngủ muộn. {Anh} thấy em nên sửa kiểu nào: đặt báo thức hay ngủ sớm hơn?',
+    say: { greet: ['@am Xin lỗi {anh}, em lại trễ rồi! {Anh} {ten} uống gì không, em mua cho.', 'Chào {anh} {ten}! Có gì cần em giúp không {anh}? Giúp người là tích phước mà.', 'Chào {anh} {ten}! {Anh} xem ảnh mèo nhà em chưa? Hôm qua nó ngồi thiền đỉnh lắm!'],
+      idle: ['Mọi người ăn gì chưa nhỉ? Để em gọi đồ.', 'Ai cần giúp gì cứ gọi em nhé.', 'Hít thở sâu… ba hơi thôi là bớt căng liền.', 'Mèo nhà em lại đạp rơi ly nước nữa. Nhân quả đó.'],
+      chat: ['Em mua bánh bao cho cả phòng nè, mọi người lấy nha.', 'Em kẹt xe… à không, em ngủ quên. Lần sau em cố.', 'Việc gì cũng có nhân có quả, làm tốt hôm nay thì mai nhẹ nhàng.', '{Anh} nuôi mèo chưa? Mèo dạy mình kiên nhẫn lắm. Mèo nhà em tên Nhân Quả.', 'Anh Nam cứ gọi em là “bé Hạnh”, nghe quen rồi. Nhân quả cả thôi.'],
+      pantry: ['{Anh} uống gì? Em trả tiền, đừng ngại.', '{Anh} nhớ ăn uống đàng hoàng nhé, em dặn rồi đó.', 'Uống trà chậm thôi, coi như thiền năm phút.', 'Em đang tính mua cây cào móng cho Nhân Quả. {Anh} thấy màu xám hay màu be?'],
+      deep: 'Em trễ vì sáng nào cũng ngồi thiền, cho mèo ăn, rồi ghé mua đồ ăn cho cả nhóm. Quên tính giờ thôi.' },
+    reply: { great: ['Em vui lắm, {anh} có gì cần cứ nói em nhé.', 'Hay quá {anh}! Nhân lành quả ngọt, em mời {anh} ly trà sữa nha.'], ok: ['Dạ, được đó {anh}. Mọi việc có nhân duyên cả.', 'Em hiểu rồi, cảm ơn {anh}.'], meh: ['Dạ, {anh} nghĩ thêm cũng không sao. Tùy duyên mà.', 'Cứ từ từ nhé {anh}, hít thở rồi tính.'] },
+    request: { ask: 'Hôm nay em lại trễ, chắc quả của việc hôm qua ngủ muộn. {Anh} thấy em nên sửa sao: đặt báo thức hay ngủ sớm?',
       options: [['Ngủ sớm hơn, nhân tốt thì sáng dậy mới tỉnh', 'work'], ['Chủ tịt cứ thong thả, mình nhắc cũng được', 'warm'], ['Hay Chủ tịt thiền luôn ở công ty, đỡ đi trễ 😄', 'joke']] },
     meeting: { values: ['team', 'steady'], pos: 'Em đồng ý. Làm điều thiện cho cả nhóm thì quả sẽ tốt.', neg: 'Dạ, em muốn nghe thêm ý khác nữa. Tùy duyên mà.' },
-    quirks: [{ at: '09:36', say: 'Xin lỗi cả nhà, em lại đến trễ! Nhân quả mà, chút nữa em mua nước chuộc lỗi!', anim: 'wave' }, { at: '13:20', say: '(nhắm mắt thiền năm phút, miệng lẩm bẩm “tâm an, vạn sự an”)', anim: null }, { at: '12:50', say: '(mở điện thoại xem ảnh mèo, cười tủm tỉm)', anim: null, ctx: 'any' }],
-    note: { high: 'Cảm ơn {anh} hôm nay nhé. Gieo nhân lành thì mai gặp quả ngọt. Em mua đồ ăn cho {anh}!', low: 'Hôm nay {anh} làm tốt rồi. Mai em mời {anh} ly nước, tùy duyên nhé.' } },
+    quirks: [{ at: '09:36', say: 'Xin lỗi cả nhà, em lại trễ! Nhân quả mà, chút em mua nước chuộc lỗi!', anim: 'wave' }, { at: '13:20', say: '(nhắm mắt thiền năm phút, miệng lẩm bẩm “tâm an, vạn sự an”)', anim: null }, { at: '12:50', say: '(mở điện thoại xem ảnh mèo, cười tủm tỉm)', anim: null, ctx: 'any' }],
+    note: { high: 'Cảm ơn {anh} hôm nay nhé. Gieo nhân lành thì mai gặp quả ngọt. Mai em mua đồ ăn cho {anh}!', low: 'Hôm nay {anh} làm tốt rồi. Mai em mời {anh} ly nước, tùy duyên nhé.' } },
   { id: 'phu', name: 'Phú', nick: 'Siêu nhân may mắn', role: 'Backend Dev', desk: 0,
     look: { skin: 0xe9c39d, hair: 0x15130f, shirt: 0x1c1c1e, style: 'short', glasses: 'rect', glassColor: 0x2a2a2e, smile: true },
     traits: ['hay xui xẻo', 'mê đầu tư (toàn lỗ)', 'mê massage'], stats: { outgoing: 0.85, focus: 0.5, team: 0.8 },
     habits: { arrive: '08:45', coffee: 'both', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 45,
     taste: { warm: 1, joke: 2, work: 0 },
-    say: { greet: ['Chào {ten}! Mình vừa mua cổ phiếu, mua xong nó giảm. Siêu nhân may mắn đây!', 'Ê {ten}, đứng xa mình chút, hôm nay mình xui lắm… mà thôi đứng gần cũng được.'],
+    say: { greet: ['Chào {ten}! Mình vừa mua cổ phiếu, mua xong nó tụt liền. Siêu nhân may mắn đây!', 'Ê {ten}, đứng xa mình chút, hôm nay mình xui lắm… mà thôi đứng gần cũng được.'],
       idle: ['Cổ phiếu ơi, hồi sinh đi…', 'Sao mình mua cái nào thì cái đó rớt nhỉ?'],
       chat: ['Ai biết tiệm massage nào ngon không? Lưng mình cứng như đá.', 'Mình bỏ tiền vào quỹ, hôm sau quỹ đóng cửa. Đỉnh thật.'],
-      pantry: ['Cà phê nóng thế này, cầm chắc tay kẻo đổ vào người, đúng bài xui của mình.', 'Cuối tuần mình đi massage, không là gãy lưng mất.'],
+      pantry: ['Cà phê nóng vầy, phải cầm chắc tay kẻo đổ lên người. Đúng bài xui của mình.', 'Cuối tuần mình đi massage, không là gãy lưng mất.'],
       deep: 'Mình biết mình xui. Nhưng ngày nào còn đùa được là ngày đó chưa xui thật.' },
     reply: { great: ['Haha đúng gu mình! Hôm nay xui mà vui!', 'Bạn nói làm mình quên luôn khoản lỗ hôm qua!'], ok: ['Ừ ừ, nghe có lý.', 'Ok, mình thử xem sao… có khi lại xui.'], meh: ['Ờ… nghe nghiêm quá, mình xui sẵn rồi.', 'Để mình nghĩ… mà nghĩ gì cũng xui.'] },
-    request: { ask: 'Mình định bỏ tiền vào một đồng coin mới, ai cũng bảo chắc ăn. Mà mình đầu tư chỗ nào chỗ đó thua. Bạn thấy sao?',
+    request: { ask: 'Mình định mua một đồng coin mới, ai cũng bảo chắc ăn. Mà mình mua chỗ nào là chỗ đó thua. Bạn thấy sao?',
       options: [['Đừng bỏ hết vào một chỗ, chia nhỏ cho an toàn', 'work'], ['Hay bạn đi massage thư giãn trước, tính sau nhé', 'warm'], ['Bạn mua thì coin tự rớt, mình bán theo bạn là lời 😂', 'joke']] },
     meeting: { values: ['bold', 'fun'], pos: 'Nghe ngon đó! Mà lỡ mình làm là hỏng thì đừng trách nhé!', neg: 'Hơi nhàm… mà thôi, chắc mình xui nên chọn gì cũng thế.' },
     quirks: [{ at: '09:35', say: 'Ai biết tiệm massage nào ngon không? Lưng mình sắp gãy rồi!', anim: 'talk' }],
@@ -330,13 +330,13 @@ const NPC_PROFILES = [
     traits: ['hay giải thích', 'lươn kiểu vui', 'mê làm ăn, đầu tư', 'hay nói “Em nói thiệt”'], stats: { outgoing: 0.5, focus: 0.95, team: 0.6 },
     habits: { arrive: '08:10', coffee: 'morning', lunch: 'desk', leave: '17:30', joinsMeeting: true }, relation: 40,
     taste: { warm: 1, joke: 2, work: 2 },
-    say: { greet: ['@am Em nói thiệt, hôm nay {ten} đến đúng giờ ghê! Để em giải thích vì sao em đến sớm nhé…', 'Em nói thiệt nha {ten}, cái này không phải lỗi của em đâu, là “tính năng chưa được mô tả”!'],
+    say: { greet: ['@am Em nói thiệt, {ten} đến đúng giờ ghê! Để em giải thích vì sao em đến sớm nha…', 'Em nói thiệt nha {ten}, cái này không phải lỗi của em đâu, là “tính năng chưa được mô tả”!'],
       idle: ['Em nói thiệt, nhìn thì giống lỗi nhưng thật ra là… tính năng.', 'Em nói thiệt, mở thêm một kênh làm ăn nữa là vừa… à, làm việc đã.'],
       chat: ['Em nói thiệt, có kèo đầu tư này hay lắm, để em giải thích kỹ rồi anh chị quyết.', 'Em nói thiệt, ban đầu tính làm ăn nhỏ, giờ nó thành… hơi to.'],
       pantry: ['Em nói thiệt, cà phê đen mới là chân lý. Để em giải thích nhé.', 'Em nói thiệt, làm ăn nhỏ mà đều còn hơn làm lớn mà ì ạch.'],
       deep: 'Em nói thiệt, em giải thích nhiều vì sợ bị hiểu lầm. Mà đúng là hơi dài dòng, em biết.' },
     reply: { great: ['Em nói thiệt, {ten} hiểu đúng ý em luôn, khỏi giải thích thêm!', 'Chuẩn! Em nói thiệt, giải thích mãi cuối cùng cũng có người hiểu.'], ok: ['Ừ, em nói thiệt, để em giải thích thêm một chút cho rõ.', 'Được, em nói thiệt nghe cũng hợp lý.'], meh: ['Em nói thiệt, ý em không phải vậy đâu, để em giải thích lại nhé…', 'Hmm, em nói thiệt, nghe em giải thích 2 phút thôi!'] },
-    request: { ask: 'Em nói thiệt, em đang tính góp vốn làm ăn nhỏ với bạn bè, mà vẫn phải giữ tiến độ code. {Anh} thấy sao? (Để em giải thích: em vẫn làm việc đàng hoàng nhé!)',
+    request: { ask: 'Em nói thiệt, em đang tính góp vốn làm ăn nhỏ với bạn bè, mà vẫn phải giữ tiến độ code. {Anh} thấy sao? (Em vẫn làm việc đàng hoàng nha!)',
       options: [['Xong việc chính trước, rồi hẵng tính làm ăn thêm', 'work'], ['Có gì mình nghe thử, đừng căng thẳng nhé', 'warm'], ['Cứ làm! Nhưng đừng để deadline “tự biến mất” như bug 😆', 'joke']] },
     meeting: { values: ['detail', 'steady'], pos: 'Em nói thiệt, em đồng ý. Để em giải thích thêm một chút nữa.', neg: 'Em nói thiệt, khoan đã, để em giải thích vì sao em thấy chưa ổn…' },
     quirks: [{ at: '09:30', say: 'Em nói thiệt, cái bug này là tính năng! Để em giải thích!', anim: 'talk' }],
@@ -365,7 +365,7 @@ const NPC_PROFILES = [
     taste: { warm: 1, joke: 2, work: 0 },
     say: { greet: ['Dạ em chào {anh} {ten}! Nay em lỡ thức khuya cày game, mắt thâm luôn.', 'Yo {anh} {ten}! {Anh} có cần em “debug” cuộc đời không ạ?'],
       idle: ['Commit này mà sai là em đổ cho cache.', 'Một ván nữa thôi… à không, làm việc.'],
-      chat: ['Tối qua em leo rank, mà thua ván cuối.', 'Ai chơi game mobile thì kết bạn với em nha.'],
+      chat: ['Tối qua em leo rank, thua đúng ván cuối luôn.', 'Ai chơi game mobile thì kết bạn với em nha.'],
       pantry: ['Nước tăng lực là bạn thân của dân code, {anh} ạ.', 'Trà sữa cũng là nhiên liệu đó {anh}.'],
       deep: 'Em hay đùa để bớt căng thẳng. Có {anh} đùa lại thì vui hơn.' },
     reply: { great: ['Haha em cười đau bụng luôn ạ!', '{Anh} hợp gu em ghê!'], ok: ['Dạ ok ạ, cũng được.', 'Em hiểu rồi ạ.'], meh: ['Dạ… hơi nghiêm tí nhỉ.', 'Dạ, em tập trung lại vậy ạ.'] },
@@ -380,11 +380,11 @@ const NPC_PROFILES = [
     traits: ['hay rủ nhậu', 'thích thách thức, trò chơi thử thách vui', 'hòa đồng'], stats: { outgoing: 0.8, focus: 0.55, team: 0.9 },
     habits: { arrive: '08:20', coffee: 'morning', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 50,
     taste: { warm: 1, joke: 2, work: 0 },
-    say: { greet: ['Chào {ten}! Tối nay nhậu không? Mình rủ cả phòng rồi, chỉ chờ bạn thôi!', 'Ê {ten}, mình có trò thử thách vui lắm, chơi không?'],
+    say: { greet: ['Ê {ten}! Tối nay nhậu không? Cả phòng rủ rồi, còn chờ mỗi bạn thôi!', 'Ê {ten}, mình có trò thử thách vui lắm, chơi không?'],
       idle: ['Chiều nay nhậu quán nào ta…', 'Thách ai làm được 20 cái hít đất ngay tại bàn không?'],
       chat: ['Thứ Sáu nhậu không? Mình bao vòng đầu!', 'Mình thách bạn nhịn cười 10 giây, không được nhìn Nam!'],
       pantry: ['Ly nước cam này mà uống một hơi hết không? Mình thách đó!', 'Tối nay có kèo nhậu, bạn đi không? Nhẹ nhàng thôi, mai còn đi làm.'],
-      deep: 'Mình hay rủ nhậu, thách đủ thứ vì mình thích thấy mọi người vui, gần nhau. Còn lúc một mình thì mình cũng lặng lắm.' },
+      deep: 'Mình hay rủ nhậu, thách đủ thứ vì thích thấy mọi người vui, gần nhau. Còn lúc một mình thì mình cũng lặng lắm.' },
     reply: { great: ['Chuẩn! Bạn chơi hay quá, tối nay mình mời!', 'Đỉnh! Thử thách tiếp nhé!'], ok: ['Ok, mình ghi sổ lần này!', 'Được đó, hôm sau thách tiếp.'], meh: ['Ơ… không chịu chơi hả? Thôi mình thách kiểu khác!', 'Hơi nghiêm đó nha, nhưng mình vẫn rủ tiếp.'] },
     request: { ask: 'Mình thách bạn nhé: nói “MinhLee” mười lần liền không vấp. Thành công thì mình mời trà sữa, thua thì bạn mời. Chơi không?',
       options: [['Chơi, nhưng cho mình luyện trước một phút', 'work'], ['Chơi, vui là chính nha!', 'warm'], ['Nâng cược: ai thua phải hát giữa văn phòng 🎤', 'joke']] },
@@ -414,10 +414,10 @@ const NPC_PROFILES = [
     traits: ['chu đáo', 'hay mang bánh', 'rành quán ăn, quán nước, đồ ngon'], stats: { outgoing: 0.75, focus: 0.6, team: 1 },
     habits: { arrive: '08:05', coffee: 'both', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 50,
     taste: { warm: 2, joke: 1, work: 1 },
-    say: { greet: ['@am Chào {ten}! Trưa nay ăn gì chưa? Mình biết quán bún bò mới mở, ngon xỉu luôn!', '@am Sáng nay bạn ăn sáng chưa? Mình mới phát hiện xe bánh mì trứng ốp la ngon nhất khu này!', 'Chào {ten}! Dạo này bạn ăn quán nào ngon chưa? Mình có vài địa chỉ hay lắm!'],
+    say: { greet: ['@am Chào {ten}! Trưa nay ăn gì chưa? Mình biết quán bún bò mới mở, ngon xỉu luôn!', '@am Sáng nay bạn ăn sáng chưa? Mình mới biết xe bánh mì heo quay ngon nhất khu này nè!', 'Chào {ten}! Dạo này bạn ăn quán nào ngon chưa? Mình có vài địa chỉ hay lắm!'],
       idle: ['Hôm nay ăn quán nào ta… phải chọn cho đúng.', 'Quán đó ngon, mà phải gọi món này, đừng gọi món kia.'],
-      chat: ['Quán cơm tấm đầu hẻm sườn nướng ngon nhất vùng, nhớ gọi thêm trứng ốp la.', 'Trà đào cam sả ở quán góc đường: đi trưa, đừng đi chiều, đông lắm.'],
-      pantry: ['Mình pha trà hoa quả. Mà chiều nay mình biết tiệm bánh mới, ngon dữ lắm!', 'Bạn thích ăn cay hay ăn ngọt? Để mình chọn quán cho.'],
+      chat: ['Cơm tấm đầu hẻm sườn nướng ngon nhất vùng, nhớ gọi thêm trứng ốp la nha.', 'Trà đào cam sả ở quán góc đường: đi trưa, đừng đi chiều, đông lắm.'],
+      pantry: ['Mình pha trà hoa quả nè. Chiều nay có tiệm bánh mới, nghe nói ngon dữ lắm!', 'Bạn thích ăn cay hay ăn ngọt? Để mình chọn quán cho.'],
       deep: 'Mình thích đi ăn vì mỗi quán là một câu chuyện. Mình nhớ từng quán, từng món, và cả người đã đi cùng.' },
     reply: { great: ['Bạn hợp gu ăn uống với mình quá! Hôm nào mình dắt bạn đi ăn nha!', 'Nghe vậy mình vui cả ngày luôn!'], ok: ['Ừ, mình cảm ơn bạn nha.', 'Mình hiểu rồi.'], meh: ['Ừm… mình tưởng bạn thích quán đó cơ.', 'Thôi để mình nghĩ thêm.'] },
     request: { ask: 'Mình đang chọn quán cho cả nhóm đi ăn thứ Sáu: quán lẩu nấm hay quán cơm niêu? Bạn nghĩ sao?',
@@ -503,7 +503,7 @@ const NPC_PROFILES = [
       pantry: ['Trà xanh, vì Bamboo mà! Bạn có đang tính mua nhà không?', 'Mình đang nghĩ tới lô đất mới, mà phải nghĩ luôn rủi ro nữa.'],
       deep: 'Mình mê nhà đất vì muốn có một chỗ an cư cho gia đình. Mình lo xa vì sợ mất công sức cả đời.' },
     reply: { great: ['Tuyệt vời! Bạn đúng là có tầm nhìn đầu tư!', 'Hay quá! Mình ghi vào kế hoạch luôn, kèm cả phương án dự phòng!'], ok: ['Ừ, nghe ổn đó! Mình ghi vào sổ.', 'Được rồi, mình cân nhắc thêm nhé.'], meh: ['Hmm… nhưng lỡ có rủi ro thì sao nhỉ?', 'Để mình xem kỹ pháp lý rồi tính… và chuẩn bị phương án B.'] },
-    request: { ask: 'Mình đang tính mua một lô đất nhỏ, hứng thú cực kỳ! Nhưng lỡ giá xuống thì kẹt vốn. Bạn thấy mình nên xuống tiền luôn không?',
+    request: { ask: 'Mình đang tính mua lô đất nhỏ, mê lắm! Nhưng lỡ giá xuống thì kẹt vốn. Bạn thấy mình có nên xuống tiền luôn không?',
       options: [['Kiểm tra pháp lý và chừa vốn dự phòng rồi hẵng mua', 'work'], ['Mình ủng hộ bạn, có gì mình ngồi tính cùng', 'warm'], ['Mua đi, mai mốt bạn thành “địa chủ Bamboo” 😆', 'joke']] },
     meeting: { values: ['creative', 'detail'], pos: 'Hay quá! Mình ủng hộ! Mà nhớ có phương án dự phòng nhé!', neg: 'Hmm, mình lo chỗ này thiếu phương án B…' },
     quirks: [{ at: '09:42', say: 'Kiểm tra lại phương án dự phòng trước khi họp… à mà tuần sau có lô đất đấu giá nữa!', anim: 'check' }],
@@ -537,7 +537,7 @@ const AVATARS = [
 
 // Chủ đề họp (mỗi ngày chọn ngẫu nhiên 1). tags khớp với meeting.values của đồng nghiệp.
 const MEETING_TOPICS = [
-  { q: 'Thứ Sáu này nhóm mình nên làm gì để cuối tuần nhẹ nhàng hơn?', opts: [
+  { q: 'Thứ Sáu này nhóm mình làm gì cho cuối tuần nhẹ nhàng hơn?', opts: [
     ['Ăn trưa chung cả nhóm', ['fun', 'team']], ['Dành buổi chiều dọn việc tồn cho gọn', ['steady', 'detail', 'work']], ['Thử cách làm báo cáo tuần theo kiểu mới', ['creative', 'bold']]] },
   { q: 'Đối tác xin dời hạn bàn giao tính năng mới của app Dating thêm 2 ngày. Mình trả lời sao?', opts: [
     ['Nhận lời, dồn sức làm kỹ hơn', ['detail', 'steady']], ['Giữ hạn, chia nhỏ để giao trước phần chính', ['bold', 'work']], ['Họp nhanh với khách để hỏi rõ ưu tiên', ['team', 'work']]] },
@@ -556,24 +556,35 @@ const ORDER_SETS = [
 ];
 // Nhờ tìm hồ sơ buổi chiều
 const DOC_QUESTS = [
-  { npc: 'an3', ask: 'Em ơi, giúp chị lấy bản “Báo cáo khảo sát người dùng” trong tủ tài liệu với. Chị đang dở bản phân tích.', doc: 'Báo cáo khảo sát người dùng' },
+  { npc: 'an3', ask: 'Em ơi, lấy giúp chị bản “Báo cáo khảo sát người dùng” trong tủ tài liệu với. Chị đang dở bản phân tích.', doc: 'Báo cáo khảo sát người dùng' },
   { npc: 'thanh', ask: '{Anh} lấy giúp em bản “Hợp đồng đối tác game” trong tủ nhé. Chiều nay em cần xem lại.', doc: 'Hợp đồng đối tác game' },
-  { npc: 'nam', ask: 'Dạ, anh/chị giúp em lấy “Biên bản họp tuần” trong tủ tài liệu được không ạ? Em tìm mãi chưa thấy.', doc: 'Biên bản họp tuần' },
+  { npc: 'nam', ask: 'Bạn ơi, giúp mình lấy “Biên bản họp tuần” trong tủ tài liệu với? Mình tìm hoài chưa thấy.', doc: 'Biên bản họp tuần' },
 ];
 const DOC_NAMES = ['Báo cáo khảo sát người dùng', 'Hợp đồng đối tác game', 'Biên bản họp tuần', 'Kế hoạch quý 4'];
 
 /* ===== NỘI DUNG BẤT NGỜ (dễ thêm/sửa) =====
    SURPRISES: mỗi ngày game bốc ngẫu nhiên 3–4 sự kiện. Mỗi lựa chọn: [nội dung, kết quả, hiệu ứng].
    hiệu ứng: mood, energy, aff {idNPC: điểm}, moment (ghi vào nhật ký). npc = người liên quan (phải đã đến công ty). */
+// Đồ mở khóa cho bàn làm việc: need = tổng số đầu việc đã hoàn thành (cộng dồn qua các ngày), slot = vị trí trên bàn (x, z so với tâm bàn)
+const UNLOCKS = [
+  { id: 'mug', need: 1, emoji: '☕', name: 'Cốc cà phê MinhLee', desc: 'Cốc đầu tiên của nhân viên chính thức.', slot: [0.38, 0.28] },
+  { id: 'cactus', need: 2, emoji: '🌵', name: 'Chậu xương rồng mini', desc: 'Dễ sống, giống bạn ở công ty mới.', slot: [0.88, -0.38] },
+  { id: 'duck', need: 4, emoji: '🦆', name: 'Vịt cao su “Debug”', desc: 'Kể lỗi cho vịt nghe là hết lỗi (thường là vậy).', slot: [0.15, 0.36] },
+  { id: 'cat', need: 6, emoji: '🐱', name: 'Mèo may mắn', desc: 'Quà từ Chủ tịt, đương nhiên.', slot: [-0.35, -0.38] },
+  { id: 'lamp', need: 9, emoji: '💡', name: 'Đèn bàn ấm áp', desc: 'Cho những buổi chiều làm nốt việc.', slot: [0.55, -0.4] },
+  { id: 'frame', need: 13, emoji: '🖼', name: 'Khung ảnh cả team', desc: 'Ảnh chụp chung, ai cũng nhắm mắt trừ Thảo.', slot: [0.92, 0.18] },
+  { id: 'phones', need: 18, emoji: '🎧', name: 'Tai nghe chống ồn', desc: 'Dành cho lúc Nam khìn khìn quá to.', slot: [-0.15, 0.34] },
+  { id: 'trophy', need: 25, emoji: '🏆', name: 'Cúp “Người đồng hành”', desc: 'Cả phòng góp tiền mua, Chủ tịt trả phần còn thiếu.', slot: [-0.95, -0.4] },
+];
 const SURPRISES = [
   { id: 'dating100k', npc: 'thanh', emoji: '📈', title: 'Tin vui: App Dating',
-    text: 'Chủ tịt bước vào, giơ điện thoại lên: “Cả nhà ơi! App Dating vừa vượt 100 nghìn lượt tải trong tuần! Nhân quả đó, mọi người làm tốt thì quả ngọt!”',
+    text: 'Chủ tịt bước vào, giơ điện thoại lên: “Cả nhà ơi! App Dating vừa qua mốc 100 nghìn lượt tải trong tuần! Nhân quả đó, mọi người làm tốt thì quả ngọt!”',
     opts: [['Hô to: “MinhLee muôn năm!”', 'Cả phòng ồ lên vỗ tay. Chủ tịt cười tít mắt: “Em mời trà sữa!”', { mood: 8, energy: 4, aff: { thanh: 3 }, moment: 'Cả phòng ăn mừng cột mốc mới của app Dating.' }],
       ['Nhắc nhẹ: “Mình giữ chất lượng nữa nha mọi người”', 'Chủ tịt gật gù: “Dạ đúng, thắng không kiêu.” Anh Bảo ghi ngay vào backlog.', { mood: 3, aff: { thanh: 2, bao: 3 }, moment: 'Nhắc cả nhóm giữ chất lượng sau cột mốc mới của app Dating.' }],
       ['Hỏi nhỏ: “Anh có mời trà sữa không ạ?”', 'Chủ tịt phá lên cười: “Có chứ! Cả phòng, em bao!”', { mood: 6, energy: 8, aff: { thanh: 2 }, moment: 'Được Chủ tịt mời trà sữa mừng app Dating.' }]] },
   { id: 'likebug', npc: 'yen', emoji: '🐞', title: 'Bug “Nút Thích”',
-    text: 'Yến bật dậy: “Ê! Cái nút Thích trên app Dating bấm vô mà… là sao? Nó hiện nút Ghét!”',
-    opts: [['Chạy qua giúp Yến tái hiện lỗi', 'Hai người lặp lại bảy lần mới thấy: nút đổi màu khi mạng chậm. Yến: “Á à, bắt được! Hóa ra là vậy!”', { mood: 5, energy: -3, aff: { yen: 4, trung: 1 }, moment: 'Giúp Yến bắt được lỗi nút Thích trên app Dating.' }],
+    text: 'Yến bật dậy: “Ê! Nút Thích trên app Dating bấm vô… là sao? Nó hiện nút Ghét!”',
+    opts: [['Chạy qua giúp Yến tái hiện lỗi', 'Làm đi làm lại bảy lần mới thấy: nút đổi màu khi mạng chậm. Yến: “Á à, bắt được rồi!”', { mood: 5, energy: -3, aff: { yen: 4, trung: 1 }, moment: 'Giúp Yến bắt được lỗi nút Thích trên app Dating.' }],
       ['Báo ngay cho Trung', 'Trung chạy tới: “Em nói thiệt, đó là tính năng…” Yến: “Là sao???” Cả phòng cười.', { mood: 6, aff: { yen: 2, trung: 2 }, moment: 'Chứng kiến Trung và Yến cãi vui về nút Thích.' }],
       ['Pha trò: “Nút Ghét thì cũng là tính năng mà”', 'Yến lườm: “Khịa hả?” rồi bật cười: “…Cũng buồn cười.”', { mood: 6, aff: { yen: 3 }, moment: 'Pha trò làm Yến bật cười giữa lúc bắt lỗi.' }]] },
   { id: 'phulai', npc: 'phu', emoji: '📉', title: 'Phú bất ngờ có lời',
@@ -597,7 +608,7 @@ const SURPRISES = [
       ['Rủ cả phòng ra pantry nghỉ chờ', 'Ai cũng ra pantry. Trò chuyện rôm rả hơn cả giờ làm việc.', { mood: 8, energy: 6, aff: { thanh: 1, thao: 2, nam: 1 }, moment: 'Rủ cả phòng ra pantry trong lúc mất mạng.' }],
       ['Ngồi thiền cùng Chủ tịt', 'Chủ tịt khẽ gật đầu: “Tâm an thì mạng cũng về.” Hai phút sau mạng về thật. Hú hồn!', { mood: 7, energy: 4, aff: { thanh: 4 }, moment: 'Thiền cùng Chủ tịt, mạng tự về.' }]] },
   { id: 'vip', npc: 'bao', emoji: '🤝', title: 'Nhà đầu tư ghé thăm',
-    text: 'Nhà đầu tư ghé văn phòng bất ngờ! Anh Bảo (Product) cuống cuồng nhìn quanh: “Chủ tịt chưa tới, ai tiếp khách giúp mình!” Bạn đứng gần cửa nhất…',
+    text: 'Nhà đầu tư ghé văn phòng bất ngờ! Anh Bảo cuống cuồng nhìn quanh: “Chủ tịt chưa tới, ai tiếp khách giúp mình với!” Bạn đứng gần cửa nhất…',
     opts: [['Mời khách ngồi và rót nước', 'Khách khen văn phòng ấm cúng. Chủ tịt vừa tới, thở hổn hển: “Xin lỗi… trễ…”', { mood: 7, aff: { thanh: 3, bao: 3 }, moment: 'Tiếp nhà đầu tư giúp Chủ tịt đi trễ.' }],
       ['Giới thiệu app Dating bằng điện thoại', 'Khách thích ý tưởng ghép đôi. Anh Bảo ghi nhận: “Tính năng gợi ý sẽ lên roadmap!”', { mood: 8, energy: -3, aff: { bao: 4 }, moment: 'Giới thiệu app Dating cho nhà đầu tư.' }],
       ['Gọi Chủ tịt: “Anh ơi nhà đầu tư tới rồi!”', 'Chủ tịt: “Em tới liền, đang… thiền ở bãi xe.” Năm phút sau anh Thạnh xuất hiện, vẫn bình tĩnh.', { mood: 5, aff: { thanh: 2 }, moment: 'Gọi Chủ tịt cứu nguy khi nhà đầu tư ghé.' }]] },
@@ -615,7 +626,7 @@ const SURPRISES = [
     text: 'Toàn bất ngờ đứng dậy: “Mình… có chuyện muốn nói.” Cả phòng đứng hình. Lần đầu Toàn nói quá ba từ…',
     opts: [['Chăm chú lắng nghe', 'Toàn nói ba câu liền, về chuyện thích ngắm sao. Cả phòng vỗ tay. Toàn đỏ mặt: “…Cảm ơn.”', { mood: 8, aff: { toan: 6 }, moment: 'Lắng nghe Toàn nói ba câu liền, lần đầu cả phòng thấy.' }],
       ['Hỏi: “Toàn khỏe không?”', 'Toàn gật: “Khỏe.” rồi ngồi xuống. Nhưng khóe môi hơi cười.', { mood: 5, aff: { toan: 3 }, moment: 'Hỏi thăm Toàn sau lần hiếm hoi anh lên tiếng.' }],
-      ['Lấy điện thoại ghi hình', 'Hiện thò đầu: “Khìn khìn! Cho mình xem!” Toàn: “…Xóa.” Cả phòng cười nghiêng ngả.', { mood: 7, aff: { toan: 1, hien: 2 }, moment: 'Suýt quay clip Toàn phát biểu lần đầu.' }]] },
+      ['Lấy điện thoại ghi hình', 'Hiện thò đầu: “Quay hả anh? Cho em xem với!” Toàn: “…Xóa.” Cả phòng cười nghiêng ngả.', { mood: 7, aff: { toan: 1, hien: 2 }, moment: 'Suýt quay clip Toàn phát biểu lần đầu.' }]] },
   { id: 'namdo', npc: 'nam', emoji: '🧋', title: 'Trà sữa đổ',
     text: 'Nam khìn khìn quá đà, đụng ly trà sữa. “Ào!” Trà sữa chảy lênh láng lên bàn Yến. Yến: “Là sao?!”',
     opts: [['Chạy lấy khăn lau giúp', 'Bạn, Nam và Yến lau chung. Yến: “Là sao mà tụi mình lau chung vậy?” rồi bật cười.', { mood: 6, energy: -2, aff: { nam: 3, yen: 3 }, moment: 'Lau trà sữa đổ cùng Nam và Yến.' }],
@@ -642,7 +653,7 @@ const SURPRISES = [
       ['Gửi lại sticker “Là sao?”', 'Yến cười phá lên: “Khịa tui hả? Hay lắm!”', { mood: 8, aff: { yen: 4 }, moment: 'Khịa lại Yến bằng sticker “Là sao?”.' }],
       ['Nói: “Là sao… là mình quý Yến”', 'Cả phòng ồ lên. Yến đỏ mặt: “Là… là sao trời!” rồi gõ bàn cười.', { mood: 8, aff: { yen: 3 }, moment: 'Làm Yến đỏ mặt bằng một câu “Là sao”.' }]] },
   { id: 'thaoquan', npc: 'thao', emoji: '🍜', title: 'Thảo khoe quán ngon',
-    text: 'Thảo chạy tới, mắt sáng rỡ: “Mình mới phát hiện một quán bún chả ngon hết sảy, cách văn phòng 200 mét! Trưa nay đi không?”',
+    text: 'Thảo chạy tới, hớn hở: “Mình mới phát hiện một quán bún chả ngon hết sảy, cách văn phòng 200 mét! Trưa nay đi không?”',
     opts: [['Rủ cả nhóm đi cùng', 'Cả nhóm kéo nhau đi, Thảo dẫn đường như hướng dẫn viên du lịch. Ai cũng khen: “Thảo biết quán ngon nhất!”', { mood: 9, energy: 12, aff: { thao: 4, tung: 1 }, moment: 'Cả nhóm đi ăn quán mới do Thảo giới thiệu.' }],
       ['Hỏi: “Quán đó có món gì nên gọi?”', 'Thảo thao thao năm phút về nước chấm, độ giòn của thịt nướng và loại rau nên gọi thêm. Bạn ghi lại cả nửa trang.', { mood: 7, energy: 6, aff: { thao: 4 }, moment: 'Nghe Thảo chỉ dẫn gọi món ở quán mới.' }],
       ['Đùa: “Thảo mà không biết quán thì quán đó chưa tồn tại”', 'Thảo cười: “Biết quá đi! Nhưng bạn nói vậy mình gọi thêm phần chè cho bạn!”', { mood: 8, energy: 4, aff: { thao: 3 }, moment: 'Đùa Thảo về khả năng biết mọi quán ăn.' }]] },
@@ -683,25 +694,56 @@ const DUOS = [
 const DAY_THEMES = [
   { id: 'normal', w: 3, emoji: '🌤', name: 'Ngày bình thường', desc: 'Một ngày làm việc êm ả ở MinhLee.', decay: 1, visit: 1, extra: 0, treats: [] },
   { id: 'rain', w: 2, emoji: '🌧', name: 'Ngày mưa', desc: 'Mưa lất phất ngoài cửa sổ, ai cũng thèm cà phê nóng.', decay: 0.9, visit: 1.1, extra: 0, treats: [] },
-  { id: 'busy', w: 2, emoji: '🔥', name: 'Ngày chạy nước rút', desc: 'Bản cập nhật app Dating sắp phát hành, cả phòng bận rộn (nhưng vẫn vui).', decay: 1.5, visit: 0.4, extra: 1, treats: [] },
-  { id: 'chill', w: 2, emoji: '🌿', name: 'Ngày thư thả', desc: 'Không ai vội, tán gẫu nhiều hơn thường lệ.', decay: 0.6, visit: 1.7, extra: 0, treats: [] },
-  { id: 'milk', w: 2, emoji: '🧋', name: 'Ngày trà sữa', desc: 'Chủ tịt hứng chí, hôm nay mời trà sữa nhiều lần!', decay: 0.9, visit: 1.2, extra: 0, treats: [['09:55', 'Chủ tịt mời trà sữa buổi sáng.'], ['16:00', 'Chủ tịt mời trà sữa buổi chiều.']] },
+  { id: 'busy', w: 2, emoji: '🔥', name: 'Ngày chạy nước rút', desc: 'Bản cập nhật app Dating sắp lên, cả phòng bận túi bụi (mà vẫn vui).', decay: 1.5, visit: 0.4, extra: 1, treats: [] },
+  { id: 'chill', w: 2, emoji: '🌿', name: 'Ngày thư thả', desc: 'Không ai vội, cả phòng tám chuyện nhiều hơn.', decay: 0.6, visit: 1.7, extra: 0, treats: [] },
+  { id: 'milk', w: 2, emoji: '🧋', name: 'Ngày trà sữa', desc: 'Chủ tịt hứng lên, hôm nay mời trà sữa mấy lượt!', decay: 0.9, visit: 1.2, extra: 0, treats: [['09:55', 'Chủ tịt mời trà sữa buổi sáng.'], ['16:00', 'Chủ tịt mời trà sữa buổi chiều.']] },
+  // Ngày có tình tiết riêng: mở đầu bằng một chuyện nhỏ (intro) ở văn phòng, bạn chọn cách phản ứng
+  { id: 'demo', w: 1, emoji: '🤝', name: 'Ngày khách tới xem demo', desc: 'Có đối tác ghé xem app Dating, cả phòng bỗng gọn gàng lạ thường.', decay: 1.2, visit: 0.7, extra: 1, treats: [],
+    intro: { id: 'th-demo', emoji: '🤝', title: 'Khách tới xem demo', text: 'Anh Bảo đi một vòng nhắc: “Chiều nay có đối tác tới xem demo app Dating, mọi người dọn bàn giúp nha.” Chị Ba đã lặng lẽ cất đống giấy tờ đi.',
+      opts: [['Phụ dọn khu pantry cho gọn', 'Cả phòng sáng bóng. Anh Bảo gật đầu hài lòng: “Có bạn trong team là yên tâm.”', { mood: 5, energy: -4, aff: { bao: 4 }, moment: 'Phụ dọn văn phòng trước giờ khách tới demo.' }],
+        ['Hỏi anh Bảo có cần tập demo thử không', 'Anh Bảo cười: “Có chứ! Bạn đóng vai khách khó tính nha.” Hai người tập một lượt, vui phết.', { mood: 6, aff: { bao: 5 }, moment: 'Tập demo thử với anh Bảo trước giờ khách tới.' }],
+        ['Dọn bàn của mình thôi', 'Bàn bạn thành bàn gọn nhất phòng, kể cả cái cốc đã rửa.', { mood: 3, moment: 'Dọn bàn mình thật gọn cho ngày khách tới.' }]] } },
+  { id: 'power', w: 1, emoji: '🔌', name: 'Ngày wifi chập chờn', desc: 'Wifi lúc có lúc không, ai cũng hỏi nhau “có mạng không?”.', decay: 0.8, visit: 1.5, extra: 0, treats: [],
+    intro: { id: 'th-power', emoji: '📶', title: 'Wifi lại chập chờn', text: 'Cả phòng cùng ngẩng lên: wifi rớt. Trung giải thích dài ba phút vì sao “đây không hẳn là lỗi”. Thông đã chuẩn bị phương án B: hotspot điện thoại.',
+      opts: [['Rủ cả nhóm chia sẻ hotspot', 'Thông mừng rỡ phát mật khẩu. Một lúc sau cả phòng vẫn làm việc được, còn trêu nhau “nhờ phương án B”.', { mood: 6, aff: { thong: 4 }, moment: 'Cả phòng dùng hotspot cứu buổi sáng wifi rớt.' }],
+        ['Tranh thủ sắp xếp lại ghi chú giấy', 'Không mạng cũng làm được việc. Chị Ba liếc sang: “Biết tận dụng đó.”', { mood: 4, energy: 3, aff: { an3: 3 }, moment: 'Tranh thủ làm việc giấy lúc wifi rớt.' }],
+        ['Đi pha cà phê chờ mạng về', 'Mạng về lúc cà phê vừa nguội. Bình yên.', { mood: 5, energy: 6, moment: 'Pha cà phê chờ wifi trở lại.' }]] } },
+  { id: 'cat', w: 1, emoji: '🐈', name: 'Ngày mèo ghé thăm', desc: 'Một chú mèo lạ lang thang vào văn phòng, Chủ tịt sáng mắt hẳn lên.', decay: 0.8, visit: 1.4, extra: 0, treats: [],
+    intro: { id: 'th-cat', emoji: '🐈', title: 'Mèo lạ ngoài cửa', text: 'Một chú mèo tam thể thản nhiên bước qua cửa, ngồi liếm chân giữa văn phòng. Chủ tịt khựng lại: “Nhân quả… nó chọn mình luôn rồi.” Chị Ba thì đang dị ứng.',
+      opts: [['Xin ít sữa cho mèo ở pantry', 'Chủ tịt nhìn bạn như gặp tri kỷ. Chú mèo uống sữa xong thì ngủ luôn dưới bàn Phú.', { mood: 8, aff: { thanh: 5 }, moment: 'Cho chú mèo lạ uống sữa cùng Chủ tịt.' }],
+        ['Bế mèo ra ngoài giúp Chị Ba', 'Chị Ba hắt xì liền ba cái nhưng vẫn khen bạn: “Biết nghĩ cho người khác.”', { mood: 4, aff: { an3: 4, thanh: -1 }, moment: 'Bế mèo ra ngoài vì Chị Ba bị dị ứng.' }],
+        ['Chụp một tấm ảnh rồi gửi nhóm chung', 'Cả nhóm thả tim kín màn hình. Ai cũng đòi nhận nuôi, trừ Chị Ba.', { mood: 7, moment: 'Chụp ảnh chú mèo lạ gửi cả nhóm.' }]] } },
+  { id: 'hack', w: 1, emoji: '🏁', name: 'Ngày hackathon mini', desc: 'Cả phòng chia đội làm thử một ý tưởng nhỏ trong một ngày, vừa bận vừa vui.', decay: 1.3, visit: 0.8, extra: 1, treats: [],
+    intro: { id: 'th-hack', emoji: '🏁', title: 'Hackathon mini', text: 'Tùng đứng lên giữa phòng: “Hôm nay mini hackathon nha! Đội nào làm ra cái gì vui nhất thì được… quyền chọn quán trưa.” Thảo đã chuẩn bị sẵn danh sách quán.',
+      opts: [['Xin vào đội của Nam', 'Đội Nam ồn ào nhất phòng. Làm được một con bot chào buổi sáng, chào sai tên bốn lần.', { mood: 7, aff: { nam: 4 }, moment: 'Vào đội Nam làm con bot chào buổi sáng.' }],
+        ['Xin vào đội của Trung', 'Trung thuyết trình ý tưởng như đang gọi vốn. Đội này làm gọn nhất, ai cũng phục.', { mood: 5, aff: { trung: 4 }, moment: 'Vào đội Trung làm demo gọn gàng.' }],
+        ['Làm thử một mình cho thoải mái', 'Một mình làm thử một nút “Thả tim” lấp lánh. Tùng cho điểm sáng tạo.', { mood: 4, energy: -3, aff: { tung: 3 }, moment: 'Tự làm một nút thả tim lấp lánh trong ngày hackathon.' }]] } },
+  { id: 'sick', w: 1, emoji: '🤧', name: 'Ngày giao mùa', desc: 'Thời tiết đổi, vài người hắt xì liên tục, ai cũng rủ nhau uống trà gừng.', decay: 0.9, visit: 1.2, extra: 0, treats: [],
+    intro: { id: 'th-sick', emoji: '🤧', title: 'Hắt xì dây chuyền', text: 'Yến hắt xì một cái: “Là sao, sáng giờ năm cái rồi?” Chú 7 đã pha sẵn một ấm trà gừng, đặt lên bàn pantry như chuyện hiển nhiên.',
+      opts: [['Mang cho Yến một ly trà gừng', 'Yến nhấp một ngụm: “Cũng được… là sao mà ngon vậy?” Yến cười lần đầu từ sáng tới giờ.', { mood: 6, aff: { yen: 5 }, moment: 'Mang trà gừng cho Yến lúc cô bị cảm.' }],
+        ['Khen Chú 7 chu đáo', 'Chú 7 ngượng nghịu: “Có gì đâu… trà là việc nghiêm túc.”', { mood: 5, aff: { an7: 4 }, moment: 'Khen Chú 7 vì ấm trà gừng buổi sáng.' }],
+        ['Mở bớt cửa sổ cho thoáng', 'Yến lườm nhẹ: “Lạnh á.” Bạn đóng lại ngay. Cả phòng cười.', { mood: 3, moment: 'Mở cửa sổ rồi bị Yến nhắc lạnh.' }]] } },
+  { id: 'award', w: 1, emoji: '🏆', name: 'Ngày bình chọn tháng', desc: 'Cuối tháng cả phòng bình chọn “Đồng nghiệp của tháng”, ai cũng giả vờ không quan tâm.', decay: 1, visit: 1.3, extra: 0, treats: [],
+    intro: { id: 'th-award', emoji: '🏆', title: 'Đồng nghiệp của tháng', text: 'Thảo dán một tờ giấy lên bảng thông báo: “Bình chọn Đồng nghiệp của tháng, ghi tên vào hộp, không được bầu cho chính mình!” Phú thì bảo năm nay mình lại xui, chắc không ai bầu.',
+      opts: [['Bầu cho Phú để Phú đỡ xui', 'Phú cảm động quá, làm đổ luôn ly nước. Vẫn là một tháng xui, mà vui.', { mood: 6, aff: { phu: 5 }, moment: 'Bầu cho Phú trong ngày bình chọn tháng.' }],
+        ['Bầu cho Thông vì lo xa giùm cả phòng', 'Thông ghi vào sổ: “Nếu thắng thì phải có phương án chia thưởng.”', { mood: 5, aff: { thong: 4 }, moment: 'Bầu cho Thông vì tính lo xa.' }],
+        ['Bỏ phiếu trắng, vẽ một ngôi sao', 'Thảo mở hộp ra, thấy ngôi sao, bật cười: “Hợp lệ… tạm thời.”', { mood: 4, aff: { thao: 3 }, moment: 'Bỏ phiếu trắng có vẽ ngôi sao.' }]] } },
 ];
 
 /* ===== THẾ GIỚI LIÊN TỤC (không có ending: ngày nối ngày, tuần nối tuần) ===== */
 const WEEKDAYS = ['Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu'];
 const calInfo = (dn) => ({ wd: (dn - 1) % 5, week: Math.floor((dn - 1) / 5) + 1 });                    // dn = số thứ tự ngày làm
 const appVersion = (dn) => `${1 + Math.floor((dn - 1) / 20)}.${Math.floor(((dn - 1) % 20) / 5)}`;       // bản app Dating tăng dần theo tuần
-const FRIEND_GREET = ['Ê {ten}! Bạn thân tới rồi!', 'Ôi {ten}, nay có gì vui kể mình nghe liền nha!', 'Chào {ten}! Mình nhớ bạn quá trời.', '{ten} ơi, lại đây ngồi chơi chút đi!'];
+const FRIEND_GREET = ['Ê {ten}! Bạn thân tới rồi!', 'Ôi {ten}, nay có gì vui kể mình nghe liền nha!', 'Chào {ten}! Nhớ bạn quá trời luôn.', '{ten} ơi, lại đây ngồi chơi chút đi!'];
 const WEEKENDS = [
-  { t: 'Cuối tuần bạn ngủ nướng đến trưa, rồi nấu một nồi mì cho cả… một người. Thơm ơi là thơm.', mood: 8, energy: 14 },
+  { t: 'Cuối tuần bạn ngủ nướng tới trưa, rồi nấu nồi mì cho… một người ăn. Thơm lừng.', mood: 8, energy: 14 },
   { t: 'Bạn đi cà phê với bạn cũ. Ai cũng hỏi “Công ty MinhLee làm app Dating hả? Cho mình xin link!”', mood: 10, energy: 6 },
   { t: 'Bạn dọn nhà, tìm ra một món đồ tưởng mất từ năm ngoái. Vui như trúng số (không như Phú).', mood: 9, energy: 8 },
   { t: 'Bạn đi dạo công viên, ngồi nhìn người ta chơi cờ. Một ông cụ bảo: “Thắng thua là nhân quả”. Nghe quen quen.', mood: 7, energy: 12 },
   { t: 'Cả cuối tuần mưa. Bạn nằm đọc sách, nghe mưa rơi. Hơi lười nhưng dễ chịu.', mood: 6, energy: 16 },
   { t: 'Bạn thử làm bánh, bánh cháy một nửa. Nửa còn lại ngon bất ngờ, bạn ăn hết sạch.', mood: 9, energy: 8 },
-  { t: 'Bạn đi massage vì nghe Phú kể mãi. Công nhận… dễ chịu thật, nhưng bạn không dám nói cho Phú biết.', mood: 10, energy: 14 },
-  { t: 'Bạn xem một chuyến đi tới khu đất mới của Thông trên mạng, rồi ngồi mơ có một mảnh sân nhỏ trồng rau.', mood: 8, energy: 10 },
+  { t: 'Bạn đi massage vì nghe Phú kể mãi. Công nhận… sướng thật, mà bạn không dám nói Phú biết.', mood: 10, energy: 14 },
+  { t: 'Bạn xem ảnh khu đất mới của Thông trên mạng, rồi ngồi mơ có mảnh sân nhỏ trồng rau.', mood: 8, energy: 10 },
 ];
 const GOSSIP_A = ['Nguyên', 'Phú', 'Yến', 'Chị Ba', 'Chủ tịt', 'Trung', 'Toàn', 'Hiện', 'Tùng', 'Nam', 'Thảo', 'Thông', 'Chú 7', 'Anh Bảo'];
 const GOSSIP_ACT = ['vừa phát hiện', 'bị bắt gặp đang giấu', 'khoe cả phòng', 'tuyên bố sẽ không bao giờ đụng vào', 'tình cờ tìm thấy', 'đặt mua nguyên một thùng', 'lén xem lại', 'tự hào giới thiệu'];
@@ -861,6 +903,28 @@ function cyl(parent, rt, rb, hh, color, x, y, z, seg = 10, shadow = true) {
 }
 function blob(parent, r, color, x, y, z, detail = 1) {
   const m = new THREE.Mesh(new THREE.IcosahedronGeometry(r, detail), lam(color)); m.position.set(x, y, z); m.castShadow = true; parent.add(m); return m;
+}
+let DESK_ITEMS = null;                                       // đồ đã mở khóa đặt trên bàn người chơi
+function buildDeskItems() {
+  if (LITE || !scene) return;
+  if (DESK_ITEMS) { scene.remove(DESK_ITEMS); DESK_ITEMS = null; }
+  const have = Store.get().unlocked || [], g = new THREE.Group(); g.position.set(PLAYER_DESK.x, 0.75, PLAYER_DESK.z); scene.add(g); DESK_ITEMS = g;
+  const Y = 0.0, at = (id) => UNLOCKS.find((u) => u.id === id).slot;
+  if (have.includes('mug')) { const [x, z] = at('mug'); cyl(g, 0.065, 0.06, 0.12, 0xd84a3a, x, 0.06, z, 10); box(g, 0.13, 0.02, 0.01, 0xffffff, x, 0.07, z + 0.062); }
+  if (have.includes('cactus')) { const [x, z] = at('cactus'); cyl(g, 0.07, 0.05, 0.08, 0xc4703c, x, 0.04, z, 8); cyl(g, 0.035, 0.04, 0.14, 0x4f9d5d, x, 0.15, z, 8); box(g, 0.05, 0.03, 0.03, 0x4f9d5d, x + 0.045, 0.16, z); }
+  if (have.includes('duck')) { const [x, z] = at('duck'); box(g, 0.1, 0.07, 0.07, 0xffd23f, x, 0.035, z); box(g, 0.06, 0.06, 0.06, 0xffd23f, x + 0.04, 0.1, z); box(g, 0.03, 0.02, 0.025, 0xf08a24, x + 0.08, 0.095, z); }
+  if (have.includes('cat')) { const [x, z] = at('cat'); box(g, 0.1, 0.1, 0.07, 0xf7f3ea, x, 0.05, z); box(g, 0.09, 0.08, 0.07, 0xf7f3ea, x, 0.14, z); box(g, 0.025, 0.04, 0.02, 0xf7f3ea, x - 0.035, 0.2, z); box(g, 0.025, 0.04, 0.02, 0xf7f3ea, x + 0.035, 0.2, z); box(g, 0.1, 0.015, 0.075, 0xd84a3a, x, 0.095, z); }
+  if (have.includes('lamp')) { const [x, z] = at('lamp'); cyl(g, 0.08, 0.08, 0.02, 0x333333, x, 0.01, z, 10); box(g, 0.02, 0.28, 0.02, 0x444444, x, 0.15, z); box(g, 0.14, 0.05, 0.1, 0xffc857, x - 0.04, 0.3, z); }
+  if (have.includes('frame')) { const [x, z] = at('frame'); const f = box(g, 0.2, 0.15, 0.02, 0x8a5a3a, x, 0.08, z); f.rotation.y = -0.5; const p = box(g, 0.17, 0.12, 0.022, 0x9ed0e6, x, 0.08, z); p.rotation.y = -0.5; }
+  if (have.includes('phones')) { const [x, z] = at('phones'); box(g, 0.16, 0.02, 0.03, 0x222222, x, 0.07, z); box(g, 0.04, 0.09, 0.07, 0x3b3b4f, x - 0.08, 0.04, z); box(g, 0.04, 0.09, 0.07, 0x3b3b4f, x + 0.08, 0.04, z); }
+  if (have.includes('trophy')) { const [x, z] = at('trophy'); box(g, 0.1, 0.03, 0.1, 0x6b4a2b, x, 0.015, z); cyl(g, 0.012, 0.012, 0.08, 0xf2c14e, x, 0.07, z, 8); cyl(g, 0.06, 0.03, 0.09, 0xf2c14e, x, 0.15, z, 10); }
+}
+let WALL_CLOCK = null;                                      // đồng hồ treo tường chạy theo giờ trong game
+function drawWallClock(g, m) {
+  g.clearRect(0, 0, 128, 128); g.fillStyle = '#fff'; g.beginPath(); g.arc(64, 64, 60, 0, 7); g.fill(); g.strokeStyle = '#3b2f2a'; g.lineWidth = 6; g.stroke();
+  g.lineWidth = 3; for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6; g.beginPath(); g.moveTo(64 + Math.sin(a) * 50, 64 - Math.cos(a) * 50); g.lineTo(64 + Math.sin(a) * 56, 64 - Math.cos(a) * 56); g.stroke(); }
+  const hand = (ang, len, w) => { g.lineWidth = w; g.lineCap = 'round'; g.beginPath(); g.moveTo(64, 64); g.lineTo(64 + Math.sin(ang) * len, 64 - Math.cos(ang) * len); g.stroke(); };
+  hand(((m / 60) % 12) * Math.PI / 6, 30, 6); hand((m % 60) * Math.PI / 30, 46, 4);
 }
 function canvasTex(w, hh, draw) {
   const c = document.createElement('canvas'); c.width = w; c.height = hh; draw(c.getContext('2d'), w, hh);
@@ -1022,7 +1086,8 @@ function buildOffice() {
     g.fillStyle = '#3b2f2a'; g.font = '20px system-ui,sans-serif'; g.fillText('Apps & Games', w / 2, 84);
   });
   planeTex(R, logo, 2.4, 0.75, -6.8, 2.5, -7.93);
-  const clock = canvasTex(128, 128, (g) => { g.fillStyle = '#fff'; g.beginPath(); g.arc(64, 64, 60, 0, 7); g.fill(); g.strokeStyle = '#3b2f2a'; g.lineWidth = 6; g.stroke(); g.lineWidth = 5; g.beginPath(); g.moveTo(64, 64); g.lineTo(64, 28); g.moveTo(64, 64); g.lineTo(90, 74); g.stroke(); });
+  const clock = canvasTex(128, 128, (g) => drawWallClock(g, 8 * 60 + 30)); clock.userData.drawn = -1;
+  WALL_CLOCK = clock;
   planeTex(R, clock, 0.6, 0.6, 2.2, 2.6, -7.93);
   const poster = canvasTex(128, 170, (g, w, hh) => { g.fillStyle = '#3aa6a0'; g.fillRect(0, 0, w, hh); g.fillStyle = '#fff3e0'; g.font = 'bold 20px system-ui,sans-serif'; g.textAlign = 'center'; g.fillText('Uống đủ', w / 2, 50); g.fillText('nước nhé!', w / 2, 78); g.font = '44px serif'; g.fillText('💧', w / 2, 140); });
   planeTex(R, poster, 0.8, 1.05, -11.93, 1.7, 2.4, Math.PI / 2);
@@ -1052,6 +1117,7 @@ const TOD = [
 const _c1 = new THREE.Color(), _c2 = new THREE.Color();
 function applyTimeOfDay(m) {
   if (LITE || !scene) return;
+  if (WALL_CLOCK) { const mm = Math.floor(m); if (WALL_CLOCK.userData.drawn !== mm) { WALL_CLOCK.userData.drawn = mm; drawWallClock(WALL_CLOCK.image.getContext('2d'), mm); WALL_CLOCK.needsUpdate = true; } }
   let a = TOD[0], b = TOD[TOD.length - 1];
   for (let i = 0; i < TOD.length - 1; i++) if (m >= TOD[i].m && m <= TOD[i + 1].m) { a = TOD[i]; b = TOD[i + 1]; break; }
   const k = a === b ? 0 : clamp((m - a.m) / (b.m - a.m), 0, 1);
@@ -1757,6 +1823,7 @@ function pauseGame() {
     h('button', { class: 'btn', onclick: () => resumeGame() }, '▶ Tiếp tục'), missionBoard(),
     nextMs ? h('button', { class: 'btn alt', onclick: () => { resumeGame(); skipTo(nextMs.from); } }, `⏭ Bỏ qua tới “${nextMs.name}” (${fmtTime(nextMs.from)})`) : null,
     h('button', { class: 'btn alt', onclick: () => { Modal.close(false); G.mode = 'paused'; showDiary(() => pauseGame2()); } }, '📖 Nhật ký ngày làm'),
+    h('button', { class: 'btn alt', onclick: () => { Modal.close(false); G.mode = 'paused'; showCollection(() => pauseGame2()); } }, '🎁 Đồ trên bàn làm việc'),
     h('button', { class: 'btn alt', onclick: () => { toggleMute(); } }, '🔊 Bật/tắt âm thanh'),
     h('button', { class: 'btn alt', onclick: () => { Store.setting('tutorial', true); tutorialStart(); resumeGame(); } }, '❓ Xem lại hướng dẫn'),
     h('button', { class: 'btn alt', onclick: () => confirmBox('Ngày làm hiện tại sẽ không được lưu vào nhật ký.', 'Về màn hình chính', () => exitToTitle()) }, '🏠 Về màn hình chính'));
@@ -1922,13 +1989,35 @@ function workBrief(w) {                                   // lời nhờ của �
   return w.kind === 'sort' ? `${nm} gửi bạn ${w.order.length} ghi chú và nhờ: “Em xếp mỗi ghi chú vào đúng nhóm giúp.” Xếp xong hết là hoàn thành.`
     : `${nm} nhờ bạn: “Em xem hạn chót rồi xếp ${w.order.length} việc này theo thứ tự làm trước – làm sau giúp nhé.” Chạm từng việc, việc gấp nhất chạm trước.`;
 }
+function awardWork() {                                  // cộng dồn đầu việc qua các ngày, mở khóa đồ mới trên bàn
+  const st = Store.get(), total = (st.tasksTotal || 0) + 1, have = st.unlocked || [], fresh = UNLOCKS.filter((u) => total >= u.need && !have.includes(u.id));
+  Store.patch({ tasksTotal: total, unlocked: [...have, ...fresh.map((u) => u.id)] });
+  if (fresh.length) buildDeskItems();
+  return fresh;
+}
+function showUnlocks(list) {
+  const u = list[0]; Sfx.chime();
+  Card.show({ who: { name: 'Mở khóa đồ mới', role: 'Bàn làm việc', color: 0xffd166, emoji: u.emoji }, meta: '🎁 Phần thưởng', text: `${u.emoji} ${u.name}\n${u.desc}\n\nĐồ mới đã xuất hiện trên bàn của bạn.`,
+    choices: [{ label: list.length > 1 ? 'Xem tiếp' : 'Ok', main: true, run: () => (list.length > 1 ? showUnlocks(list.slice(1)) : closeCard()) }] });
+}
+function nextUnlockLine() {
+  const total = Store.get().tasksTotal || 0, have = Store.get().unlocked || [], nx = UNLOCKS.find((u) => !have.includes(u.id));
+  return nx ? `\n\n🎁 Phần thưởng kế tiếp: ${nx.emoji} ${nx.name} (còn ${Math.max(1, nx.need - total)} việc).` : '\n\n🎁 Bạn đã mở khóa hết đồ trên bàn.';
+}
+function showCollection(onBack) {
+  const total = Store.get().tasksTotal || 0, have = Store.get().unlocked || [];
+  const nodes = [h('h2', {}, '🎁 Đồ trên bàn làm việc'), h('p', { class: 'sub' }, `Hoàn thành đầu việc để mở khóa đồ cho bàn của bạn. Đã làm tổng cộng ${total} việc.`)];
+  UNLOCKS.forEach((u) => { const ok = have.includes(u.id); nodes.push(h('div', { class: 'entry' }, h('h3', {}, ok ? `${u.emoji} ${u.name}` : `🔒 ${u.name}`), h('div', {}, ok ? u.desc : `Làm thêm ${Math.max(1, u.need - total)} việc để mở khóa.`))); });
+  nodes.push(h('button', { class: 'btn', onclick: () => { Modal.close(); if (onBack) onBack(); } }, 'Đóng'));
+  Modal.open(...nodes);
+}
 function workActivity() {
   if (D.tasks >= CFG.MAX_TASKS) { Card.show({ who: null, text: 'Hôm nay bạn đã hoàn thành rất nhiều rồi. Nghỉ một chút nhé!', choices: [{ label: 'Ok', main: true, run: () => closeCard() }] }); return; }
   if (D.energy < 20) addMoment('Bạn hơi mệt nhưng vẫn cố làm thêm một việc.');
   if (!D.work) D.work = newWork(D.tasks % 2 === 0 ? 'sort' : 'order');
   const w = D.work, started = workCount(w) > 0, n = npcById(w.from);
   const text = started ? `Bạn có một việc đang làm dở: ${workTitle(w.kind)} (${workProgress(w)}). Tiến độ vẫn được giữ nguyên.\nLàm tiếp nhé?`
-    : `Bạn ngồi xuống bàn. Đầu việc nhỏ số ${D.tasks + 1}/${CFG.MAX_TASKS}:\n${workBrief(w)}\n\nChỉ mất khoảng 30–60 giây, không tính điểm, không bị phạt gì.`;
+    : `Bạn ngồi xuống bàn. Đầu việc nhỏ số ${D.tasks + 1}/${CFG.MAX_TASKS}:\n${workBrief(w)}\n\nChỉ mất khoảng 30–60 giây, không tính điểm, không bị phạt gì.${nextUnlockLine()}`;
   Card.show({ who: n ? { ...whoOf(n), role: 'Đang nhờ bạn' } : { name: 'Bàn làm việc', role: 'Của bạn', color: 0xffd166, emoji: '💻' }, text, choices: [
     { label: started ? '▶ Làm tiếp' : '▶ Bắt đầu làm', main: true, run: () => { Card.hide(); playerSit(PLAYER_DESK.seat, () => { P.lock.anim = 'type'; startMiniGame(); }); } },
     { label: 'Để lát nữa (không mất gì)', run: () => closeCard() }] });
@@ -1941,12 +2030,14 @@ function startMiniGame() {
     Modal.close(false); G.mode = 'dialog';
     if (!ok) { toast('⏸ Đã lưu tiến độ. Quay lại bàn để làm tiếp bất cứ lúc nào.', 4000); playerStand(() => { G.mode = 'play'; }); return; }
     const sec = Math.max(1, Math.round(W.elapsed)), n = npcById(W.from); D.work = null;
-    D.tasks++; addEnergy(-6); addMood(4); Sfx.chime(); addMoment(`${n ? 'Giúp ' + n.p.name + ' ' : ''}${kind === 'sort' ? 'xếp ghi chú vào đúng nhóm' : 'xếp việc theo thứ tự ưu tiên'} trong ${sec} giây.`);
+    D.tasks++; const fresh = awardWork(); addEnergy(-6); addMood(4); Sfx.chime(); addMoment(`${n ? 'Giúp ' + n.p.name + ' ' : ''}${kind === 'sort' ? 'xếp ghi chú vào đúng nhóm' : 'xếp việc theo thứ tự ưu tiên'} trong ${sec} giây.`);
     toast(`✅ Xong đầu việc số ${D.tasks}! (${sec} giây)`);
     playerStand(() => {
       G.mode = 'play';
+      const after = () => { if (fresh.length) showUnlocks(fresh); };
       if (n) { changeAff(n.id, 3); D.talked.add(n.id); n.mood = clamp(n.mood + 8, 0, 100); const line = replyLine(n, 'great'); sayNpc(n, line);
-        Card.show({ who: whoOf(n), meta: hearts(AFF[n.id]), text: `Bạn gửi lại cho ${n.p.name}.\n\n“${line}”`, choices: [{ label: 'Ok', main: true, run: () => closeCard() }] }); }
+        Card.show({ who: whoOf(n), meta: hearts(AFF[n.id]), text: `Bạn gửi lại cho ${n.p.name}.\n\n“${line}”`, choices: [{ label: 'Ok', main: true, run: () => { closeCard(); after(); } }] }); }
+      else after();
     });
   };
   if (kind === 'sort') sortGame(finish, W); else orderGame(finish, W);
@@ -2152,7 +2243,7 @@ function startDay() {
     NPCS.forEach((n) => { n.joinsCake = n.id === 'thao' || n === who || Math.random() < n.p.stats.team * 0.8; });
     let cnt = 0; shuffle(NPCS).forEach((n) => { if (n.joinsCake && n.id !== 'thao' && n !== who && ++cnt > 5) n.joinsCake = false; });
   }
-  scheduleSurprises(); Sfx.rain(D.theme.id === 'rain');
+  scheduleSurprises(); if (D.theme.intro) D.surprises.unshift({ t: T('08:50'), ev: D.theme.intro, fired: false }); buildDeskItems(); Sfx.rain(D.theme.id === 'rain');
   snapNpcsToSchedule(D.minute);
   P.pos = { x: DOOR.x - 0.9, z: DOOR.z }; P.yaw = -Math.PI / 2; P.lock = null; P.forced = null; P.walked = 0;
   setCamPreset(Store.get().settings.cam ?? 1, false); CAM.yaw = 0; CAM.tx = P.pos.x; CAM.tz = P.pos.z;

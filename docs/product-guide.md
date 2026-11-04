@@ -44,7 +44,7 @@ Time runs from **08:30** to **17:30**. One full day takes about 7 minutes at nor
 | Time | Milestone | What to do |
 |---|---|---|
 | 08:30 | **Đến công ty** (Arrive) | Greet at least 2 coworkers. Walk up to someone and press the action button. |
-| 09:00 | **Buổi sáng** (Morning) | Go to your desk (the yellow spot at the bottom left, next to Thông's desk). A label "💻 Bàn của bạn" (My desk) floats above it. If the desk is off-screen to one side, the label sticks to that edge of the screen to show the way. A coworker asks you for a small job, which takes about 30–60 seconds. There is no score and no penalty. There are two kinds of job: sort notes into projects (for example App Dating, Game mới, or App tiện ích), or put work items in deadline order. Up to 3 jobs a day. Press "▶ Bắt đầu làm" (Start) to begin. |
+| 09:00 | **Buổi sáng** (Morning) | Go to your desk (the yellow spot at the bottom left, next to Thông's desk). A label "💻 Bàn của bạn" (My desk) floats above it. If the desk is off-screen to one side, the label sticks to that edge of the screen to show the way. A coworker asks you for a small job, which takes about 30–60 seconds. There is no score and no penalty. There are two kinds of job: sort notes into projects (for example App Dating, Game mới, or App tiện ích), or put work items in deadline order. Up to 3 jobs a day. Each finished job also counts toward new items for your desk (see "Your desk and its items" below). Press "▶ Bắt đầu làm" (Start) to begin. |
 | 10:00 | **Họp ngắn** (Short meeting) | Go to the meeting room (top middle, between the two long tables) and sit at the meeting table to join in. The meeting runs until 10:55. Chủ tịt (Thạnh) hosts it. The topic changes from day to day. On Mondays it is about the next App Dating version. One possible topic is a partner asking to push back the App Dating feature deadline by 2 days. If you miss it, Chủ tịt sends you a short summary. |
 | 11:00 | **Giải lao** (Break) | Visit the pantry (top left). Pick a drink and chat with someone. You can invite a coworker to join you. Around 11:05, Chủ tịt buys drinks for everyone, which gives you a little energy and mood. On milk-tea days he also treats the team around 09:55 and 16:00. |
 | 12:00 | **Ăn trưa** (Lunch) | Eat at the pantry. Lunch is available until about 13:40. |
@@ -62,6 +62,27 @@ You can also leave early from the front door after 16:00. If you leave before 17
 - **Printer** (left wall): may jam during the afternoon event. On those days, Nam is the one standing at it.
 - **Daybed** (back wall, next to the pantry): Nguyên naps here on the days he comes into the office. You can walk around it.
 - **Desks**: your desk is the yellow one at the bottom left. Nine coworkers share two long tables, one on the left and one on the right, and sit facing each other across them. Four more coworkers have single desks in the bottom row. Nguyên works remotely and has no desk. Some coworkers wander over to chat at a colleague's desk during the day.
+
+### Your desk and its items
+
+Your desk fills up over time. Every job you finish counts toward a total that keeps growing from day to day. When the total reaches a set number, a new item appears on your desk.
+
+| Jobs finished (total) | Item | What it is |
+|---|---|---|
+| 1 | ☕ Cốc cà phê MinhLee | Your first mug as a full-time employee |
+| 2 | 🌵 Chậu xương rồng mini | A small cactus. Easy to look after, like you in your new job |
+| 4 | 🦆 Vịt cao su “Debug” | A rubber duck. Explain the bug to the duck and it is solved (usually) |
+| 6 | 🐱 Mèo may mắn | A lucky cat, a gift from Chủ tịt, of course |
+| 9 | 💡 Đèn bàn ấm áp | A desk lamp for late afternoons |
+| 13 | 🖼 Khung ảnh cả team | A team photo. Everyone closes their eyes except Thảo |
+| 18 | 🎧 Tai nghe chống ồn | For when Nam's typing gets too loud |
+| 25 | 🏆 Cúp “Người đồng hành” | The whole office chipped in. Chủ tịt paid the rest |
+
+- When you unlock an item, a reward card appears after the coworker's reply.
+- The work card for a new job shows the next item and how many jobs are left until it.
+- To see your progress, pause the game and press **🎁 Đồ trên bàn làm việc** (Items on the desk). Locked items show their name and how many jobs are left. Unlocked items show a short description.
+- The items appear on your desk in the 3D office. In the simple list mode they are not drawn, but your progress still counts.
+- The count does not reset from one day to the next. Three jobs a day is the most you can finish, so the last item takes at least 9 working days.
 
 ### Your stats
 
@@ -92,6 +113,7 @@ Missing a milestone does not end the game or count against you. Close the menu w
 - A surprise does not pop up from wherever you are. Once its time comes, it waits until you **walk up close to the coworker involved**, within a few steps of them. Then the card appears. If the surprise has no particular coworker, walk near any coworker who is in the office.
 - If you do not get close to the right person in time, the surprise is skipped for that day. It waits up to 2½ hours on the clock, and never past 5:10 pm. Nothing is shown when a surprise is skipped.
 - Some surprises involve one particular coworker. If that person is out of the office, that surprise will not come up.
+- Some day types (see "Day types" below) open with a **short story** at about 8:50 in the morning. The story comes up when a coworker is nearby, like a surprise. It has three choices too. Story days can have one more surprise than usual.
 - Sometimes a **mystery gift box** turns up. Pick one of the three boxes to see what is inside.
 - The same surprise does not come back on the next day.
 
@@ -106,6 +128,12 @@ Each day has a type. It shows as an emoji next to the clock, and the message at 
 | 🔥 | Busy day (Ngày chạy nước rút) | Everyone is busy. Energy runs down faster, and there are more surprises |
 | 🌿 | Relaxed day (Ngày thư thả) | No rush. Coworkers chat more often |
 | 🧋 | Milk-tea day (Ngày trà sữa) | Chủ tịt brings milk tea several times |
+| 🤝 | Demo day (Ngày khách tới xem demo) | A partner visits to see the App Dating demo. Everyone tidies up |
+| 🔌 | Wifi day (Ngày wifi chập chờn) | The wifi keeps dropping. Someone always has a backup plan |
+| 🐈 | Cat day (Ngày mèo ghé thăm) | A stray cat walks into the office. Chủ tịt is delighted |
+| 🏁 | Hackathon day (Ngày hackathon mini) | Teams are formed for a small one-day project. Busy and fun |
+| 🤧 | Sneezing day (Ngày giao mùa) | The weather changes and everyone sneezes. Ginger tea is popular |
+| 🏆 | Award day (Ngày bình chọn tháng) | The office votes for "Coworker of the month", and nobody admits to caring |
 
 The day type is picked at random and usually does not repeat from one day to the next.
 
@@ -163,6 +191,13 @@ Speech bubbles float above the head of the coworker who is speaking. If that cow
 Some coworkers are close, and they have their own short chats when they visit each other's desks. Coworkers who like you a lot greet you like a close friend.
 
 ## Frequently asked questions
+
+**How do I unlock the items on my desk?**
+Finish desk jobs. Each finished job counts toward the next item. Open **🎁 Đồ trên bàn làm việc** from the pause menu to see what is left.
+
+**I finished jobs but I do not see new items on my desk.**
+Items appear in the 3D office. In the simple list mode, they are not drawn. Your progress still counts, so the items will show up if you switch back to 3D.
+
 
 **Can I lose or fail?**
 No. There is no failure state and no score. The goal is to have a pleasant day.
