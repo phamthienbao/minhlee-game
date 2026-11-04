@@ -1,6 +1,6 @@
 # Spec: Thẻ mục tiêu và bảng nhiệm vụ (goal card, mission board)
 
-Status: v1.9.0 (2026-11-04). Pause menu gets a "🎁 Đồ trên bàn làm việc" button (§2). Desk items unlocked by finished tasks are in §9 (AC-78 to AC-80). The goal card and board layout are as shipped in v1.8.0. v1.8.6 changes the morning hint (§3.1, §3.4), adds the desk world label (§2), and notes that the desk-task pause button is separate from the pause menu (§4).
+Status: v1.13.0 (2026-11-04). The document-quest row and the afternoon hint no longer name the document (§3.3, §3.5; `docs/spec/nhiem-vu-tai-lieu.md`). Earlier: v1.9.0 (2026-11-04). Pause menu gets a "🎁 Đồ trên bàn làm việc" button (§2). Desk items unlocked by finished tasks are in §9 (AC-78 to AC-80). The goal card and board layout are as shipped in v1.8.0. v1.8.6 changes the morning hint (§3.1, §3.4), adds the desk world label (§2), and notes that the desk-task pause button is separate from the pause menu (§4).
 
 Source of truth: `index.html`, section 10 (HUD, pause menu) and the `.obj` / `.qb` CSS in `<style>`. Parent spec: `docs/spec/mot-ngay-o-cong-ty.md` (§4.2 milestones and pause).
 
@@ -55,12 +55,21 @@ Rows appear in this order. Done rows show ✅, open rows show 🔹.
 | Row | Appears when | Done when |
 |---|---|---|
 | "Làm việc ở bàn của bạn (n/3)" | Always | `D.tasks >= 1`. The count is `D.tasks` out of `CFG.MAX_TASKS` (3) |
-| "Giúp <name> tìm hồ sơ “<doc>” ở tủ tài liệu" | `D.quest.stage >= 1` | `D.quest.stage >= 3` |
+| "Giúp <name> tìm hồ sơ đã nhờ ở tủ tài liệu" | `D.quest.stage >= 1` | `D.quest.stage >= 3` |
 | "Xem giúp chiếc máy in đang kẹt giấy" | `EVENT.printer` set and `D.minute >= EVENT.printer.start` | `EVENT.printer.solved` |
 | "Dự tiệc sinh nhật <name> ở pantry" | `EVENT.cake` set and start ≤ time < end + 30 min | `D.flags.party` |
 | "Để lại lời nhắn cho một đồng nghiệp trước khi về" | `D.minute >= 16:00` | `D.noteLeft` is set |
 
 The afternoon file quest and printer jam are generated per day (`DOC_QUESTS`, `EVENT.printer`). See `docs/spec/mot-ngay-o-cong-ty.md` §4.2 and `docs/spec/noi-dung-bat-ngo.md`.
+
+### 3.5 Afternoon hint with the document quest (v1.13.0)
+
+The 13:30 milestone's `hint()` is `afternoonHint()` (section 10). The document quest adds two lines, and neither names the document:
+
+- Stage 1 (asked): "<name> đang cần nhờ gì đó. Ghé bàn nói chuyện nhé."
+- Stage 2 (accepted): "Tìm hồ sơ <name> đã nhờ ở tủ tài liệu (góc phải phía dưới, gần cửa). Quên thì ghé hỏi lại nhé."
+
+The printer-jam line takes priority while that event is open. Rules: `docs/spec/nhiem-vu-tai-lieu.md`.
 
 ### 3.4 Morning hint (v1.8.6)
 

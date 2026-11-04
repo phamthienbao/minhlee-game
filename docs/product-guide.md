@@ -44,11 +44,11 @@ Time runs from **08:30** to **17:30**. One full day takes about 7 minutes at nor
 | Time | Milestone | What to do |
 |---|---|---|
 | 08:30 | **Đến công ty** (Arrive) | Greet at least 2 coworkers. Walk up to someone and press the action button. |
-| 09:00 | **Buổi sáng** (Morning) | Go to your desk (the yellow spot at the bottom left, next to Thông's desk). A label "💻 Bàn của bạn" (My desk) floats above it. If the desk is off-screen to one side, the label sticks to that edge of the screen to show the way. A coworker asks you for a small job, which takes about 30–60 seconds. There is no score and no penalty. There are two kinds of job: sort notes into projects (for example App Dating, Game mới, or App tiện ích), or put work items in deadline order. Up to 3 jobs a day. Each finished job also counts toward new items for your desk (see "Your desk and its items" below). Press "▶ Bắt đầu làm" (Start) to begin. |
+| 09:00 | **Buổi sáng** (Morning) | Go to your desk (the yellow spot at the bottom left, next to Thông's desk). A label "💻 Bàn của bạn" (My desk) floats above it. If the desk is off-screen to one side, the label sticks to that edge of the screen to show the way. A coworker asks you for a small job, which takes about 30–60 seconds. There is no score. If you finish fewer than 2 jobs by the end of the day, the coworker who asked you comes by to remind you (see "Ending the day"). You can also choose **🪑 Ngồi làm việc (thời gian trôi qua)** (Sit and work, time passes) to sit at your desk while the clock runs fast; see "Sit and let time pass" below. There are two kinds of job: sort notes into projects (for example App Dating, Game mới, or App tiện ích), or put work items in deadline order. Up to 3 jobs a day. Each finished job also counts toward new items for your desk (see "Your desk and its items" below). Press "▶ Bắt đầu làm" (Start) to begin. |
 | 10:00 | **Họp ngắn** (Short meeting) | Go to the meeting room (top middle, between the two long tables) and sit at the meeting table to join in. The meeting runs until 10:55. Chủ tịt (Thạnh) hosts it. The topic changes from day to day. On Mondays it is about the next App Dating version. One possible topic is a partner asking to push back the App Dating feature deadline by 2 days. If you miss it, Chủ tịt sends you a short summary. |
 | 11:00 | **Giải lao** (Break) | Visit the pantry (top left). Pick a drink and chat with someone. You can invite a coworker to join you. Around 11:05, Chủ tịt buys drinks for everyone, which gives you a little energy and mood. The drink is chosen at random: milk tea, rau má (a green herbal drink), or sugarcane juice. Chủ tịt asks people to come to the pantry. Up to eight coworkers gather there with him, and everyone else finds a takeaway cup on their desk. Around 14:10 he buys snacks instead. On milk-tea days he also treats the team around 09:55 and 16:00. |
 | 12:00 | **Ăn trưa** (Lunch) | Eat at the pantry. Lunch is available until about 13:40. |
-| 13:30 | **Buổi chiều** (Afternoon) | Help out. A coworker may ask you to fetch a file from the filing cabinet (bottom right), such as the "Báo cáo khảo sát người dùng" (user survey report) or the "Hợp đồng đối tác game" (game partner contract). Other events can happen: a printer jam, or a small birthday cake party in the pantry. Around 14:10, Chủ tịt brings snacks for everyone. |
+| 13:30 | **Buổi chiều** (Afternoon) | Help out. A coworker may ask you to fetch a document from the filing cabinet (bottom right). Listen to what they ask for, because the game will not remind you of the name later (see "The document request" below). Other events can happen: a printer jam, or a small birthday cake party in the pantry. Around 14:10, Chủ tịt brings snacks for everyone. |
 | 17:00 | **Kết thúc ngày** (Wrap-up) | Leave through the front door (on the right-hand wall, in the middle). You can leave a sticky note for a coworker first. |
 | 17:30 | End of the workday | The office closes. You are asked if you are ready to go home. |
 
@@ -106,6 +106,30 @@ Tap the goal box at the top of the screen, or press **P** or **Esc**, to pause. 
 
 Missing a milestone does not end the game or count against you. Close the menu with **▶ Tiếp tục** to go back to the day.
 
+### Sit and let time pass
+
+When you sit down at your desk, the first choice is **🪑 Ngồi làm việc (thời gian trôi qua)** (Sit and work, time passes).
+
+- The clock runs fast, about five game minutes every real second. A full workday takes about 2 minutes.
+- The camera slowly turns around the office. A small clock and the words "Đang ngồi làm việc…" (Sitting and working…) show at the top of the screen.
+- Coworkers keep going about their day while you sit.
+- Tap or click anywhere, or press Space, Enter, or Esc, to stop. You return to the job menu.
+- The clock also stops by itself when the next milestone starts. A notice shows the time and the milestone, and the job menu opens again.
+- Time-lapse does not count as a finished job. If you want the job to count, choose **▶ Bắt đầu làm** (Start) instead.
+- At 17:30 the end-of-day steps start, as usual.
+
+### The document request
+
+In the afternoon, a coworker may ask you for a favour: fetch a document from the filing cabinet.
+
+1. Go to the coworker and choose **📎 Hỏi xem họ cần gì** (Ask what they need). They tell you which document they want. Remember it.
+2. Choose **Được ạ, để mình đi tìm** (Sure, I'll go and look). If you are busy, choose the other option. The request stays open, and you can ask again later.
+3. Go to the filing cabinet (bottom right, near the door) and tap **Tìm hồ sơ** (Find document). The drawer shows several documents. Pick the one they asked for.
+
+The hints do not name the document. If you forget, go back to the coworker and choose **🔁 Hỏi lại: cần lấy gì nhỉ?** (Ask again: what was it I needed?). Asking again costs nothing.
+
+If you pick the wrong document, the coworker says so in their own way and tells you again what they need. You can go back to the drawer, or leave it for later. There is no penalty. Bringing the right document earns the coworker's thanks and a bit more closeness with them, and the badge **🗄 Thám tử hồ sơ** (Document detective) at the end of the day.
+
 ## Surprises, day types, and weekends
 
 ### Surprises
@@ -148,6 +172,8 @@ The day type is picked at random and usually does not repeat from one day to the
 - Its **version** goes up each week (v1.0, v1.1, and so on). The Monday meeting is about the upcoming version.
 
 ## Ending the day
+
+If you finished fewer than 2 jobs today, the coworker who gave you a job comes to your desk before you leave. Each coworker reacts in their own way. Chị Ba scolds you and gives you a light punch, Yến asks what happened, Thảo says it is fine and promises a treat, and Anh Bảo asks why. You lose a little of their friendliness and a little mood. If you say sorry, they forgive you and your friendliness goes up a little. The same reminder comes if you leave early.
 
 At the end of the day you can:
 
@@ -206,12 +232,21 @@ Some coworkers are close, and they have their own short chats when they visit ea
 
 ## Frequently asked questions
 
+**Can I just sit at my desk and let the day pass?**
+Yes. Sit at your desk and choose **🪑 Ngồi làm việc (thời gian trôi qua)**. Time runs fast and the camera turns slowly around the office. Tap the screen to stop. Sitting this way does not count as a finished job.
+
+**A coworker came to my desk at the end of the day because I did not finish their job. Why?**
+You finished fewer than 2 jobs that day. The coworker who gave you a job reminds you. Say sorry to get some friendliness back. The day still ends as usual, and you can still write a sticky note and read the summary.
+
 **How do I unlock the items on my desk?**
 Finish desk jobs. Each finished job counts toward the next item. Open **🎁 Đồ trên bàn làm việc** from the pause menu to see what is left.
 
 **I finished jobs but I do not see new items on my desk.**
 Items appear in the 3D office. In the simple list mode, they are not drawn. Your progress still counts, so the items will show up if you switch back to 3D.
 
+
+**I forgot what the coworker asked me to bring. What do I do?**
+Go back to that coworker and choose **🔁 Hỏi lại: cần lấy gì nhỉ?** (Ask again). They repeat the request. Asking again has no cost.
 
 **Can I lose or fail?**
 No. There is no failure state and no score. The goal is to have a pleasant day.

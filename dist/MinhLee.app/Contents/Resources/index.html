@@ -53,6 +53,9 @@ button{cursor:pointer;border:0}
 #act b{display:block;font-size:18px}
 #act small{display:block;font-size:13px;opacity:.92}
 @keyframes pulse{50%{transform:scale(1.04)}}
+#tl{position:fixed;inset:0;z-index:30;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#tl .tl-bar{position:absolute;left:50%;bottom:max(24px,env(safe-area-inset-bottom));transform:translateX(-50%);background:rgba(59,47,42,.88);color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;font-size:15px;text-align:center;max-width:92vw}
+#tl .tl-bar b{font-size:20px;margin-right:10px;font-variant-numeric:tabular-nums}
 #toast{position:fixed;top:calc(max(8px,env(safe-area-inset-top)) + 150px);left:50%;transform:translateX(-50%);z-index:20;background:rgba(59,47,42,.92);color:#fff;padding:10px 16px;border-radius:16px;font-size:15px;max-width:92vw;text-align:center;white-space:pre-line;pointer-events:none;opacity:0;transition:opacity .25s}
 #toast.show{opacity:1}
 #tut{position:fixed;left:50%;bottom:calc(190px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:22;width:min(92vw,420px);background:#3b2f2a;color:#fff;border-radius:18px;padding:12px 14px;display:flex;gap:10px;align-items:center;box-shadow:var(--shadow)}
@@ -173,6 +176,7 @@ window.__bootTimer=setTimeout(function(){
   <div id="keys">WASD / mũi tên: di chuyển · Kéo chuột: xoay · E / Space: hành động · P: tạm dừng</div>
 </div>
 
+<div id="tl" class="hidden"><div class="tl-bar"><b id="tl-clock">08:30</b>⏳ Đang ngồi làm việc… chạm bất kỳ đâu để dừng</div></div>
 <div id="toast"></div>
 <div id="tut" class="hidden"><p></p><button>Bỏ qua</button></div>
 <div id="card" class="card hidden"></div>
@@ -552,17 +556,51 @@ const SORT_SETS = [
   { from: 'bao', projects: ['💘 App Dating', '🎮 Game mới', '📱 App tiện ích'], descs: ['ghép đôi, nhắn tin, hồ sơ', 'màn chơi, nhân vật, độ khó', 'giao diện, chế độ tối, hướng dẫn'], notes: [['Chỉnh màn hình ghép đôi', 0], ['Sửa lỗi nhắn tin giữa hai người', 0], ['Cân bằng độ khó màn 3', 1], ['Vẽ nhân vật mới cho game', 1], ['Thêm chế độ tối', 2], ['Viết hướng dẫn sử dụng', 2]] },
   { from: 'an3', projects: ['📣 Quảng bá app Dating', '🔎 Nghiên cứu người dùng', '🧑‍🎓 Đào tạo người mới'], descs: ['banner, slogan, chiến dịch', 'khảo sát, biểu đồ, phản hồi', 'tài liệu, lịch hướng dẫn'], notes: [['Chọn hình cho banner', 0], ['Tổng hợp kết quả khảo sát', 1], ['Soạn tài liệu chào mừng', 2], ['Viết slogan 3 phương án', 0], ['Vẽ biểu đồ phản hồi người dùng', 1], ['Lên lịch buổi hướng dẫn', 2]] },
 ];
+SORT_SETS.push(
+  { from: 'yen', projects: ['🐞 Lỗi giao diện', '🔌 Lỗi kết nối', '⚡ Lỗi chạy chậm'], descs: ['nút, màu, chữ bị lệch', 'rớt mạng, không gửi được', 'giật, lag, tải lâu'], notes: [['Nút Thích bị lệch', 0], ['Tin nhắn không gửi được khi rớt mạng', 1], ['Màn hình ghép đôi tải lâu', 2], ['Chữ bị cắt ở màn hồ sơ', 0], ['Đăng nhập báo lỗi mạng', 1], ['Cuộn danh sách bị giật', 2]] },
+  { from: 'thao', projects: ['🧑‍💼 Tuyển dụng', '🎉 Sự kiện nội bộ', '📚 Đào tạo'], descs: ['phỏng vấn, hồ sơ ứng viên', 'tiệc, sinh nhật, team building', 'khóa học, buổi chia sẻ'], notes: [['Hẹn lịch phỏng vấn thứ Ba', 0], ['Đặt bánh sinh nhật cho cả phòng', 1], ['Soạn tài liệu cho nhân viên mới', 2], ['Đọc hồ sơ ứng viên Designer', 0], ['Chọn quán cho buổi team building', 1], ['Lên lịch buổi chia sẻ cuối tuần', 2]] },
+);
 const ORDER_SETS = [
   { from: 'bao', q: 'Việc nào có hạn chót gần nhất thì chạm trước.', items: [['Gửi báo giá cho khách', 'Hôm nay 15:00', 1], ['Chuẩn bị slide họp', 'Ngày mai', 2], ['Dọn lại thư mục tài liệu', 'Cuối tuần', 3], ['Trả lời email của Nam', 'Hôm nay 11:00', 0]] },
   { from: 'an3', q: 'Việc nào có hạn chót gần nhất thì chạm trước.', items: [['Gửi số liệu khảo sát cho Chị Ba', 'Chiều nay', 0], ['Soạn biên bản họp', 'Ngày mai', 1], ['Cập nhật bảng việc nhóm', 'Thứ Sáu', 2], ['Ý tưởng cho dịp cuối năm', 'Tuần sau', 3]] },
 ];
+ORDER_SETS.push(
+  { from: 'yen', q: 'Việc nào có hạn chót gần nhất thì chạm trước.', items: [['Kiểm lại lỗi đăng nhập trước khi phát hành', 'Hôm nay 16:00', 0], ['Viết báo cáo lỗi tuần này', 'Ngày mai', 1], ['Dọn bảng theo dõi lỗi cũ', 'Thứ Sáu', 2], ['Thử máy điện thoại cũ', 'Tuần sau', 3]] },
+  { from: 'thao', q: 'Việc nào có hạn chót gần nhất thì chạm trước.', items: [['Gửi lịch phỏng vấn cho ứng viên', 'Hôm nay 14:00', 0], ['Đặt bánh cho sinh nhật Thứ Sáu', 'Ngày mai', 1], ['Chọn quán cho team building', 'Tuần sau', 2], ['Cập nhật danh sách nhân sự', 'Cuối tháng', 3]] },
+);
+// Giọng lời nhờ việc theo tính cách (mặc định dùng câu chung)
+const WORK_VOICE = {
+  an3: { sort: 'Em xếp mỗi ghi chú vào đúng nhóm giùm chị, nhanh nhanh nha.', order: 'Em xếp mấy việc này theo thứ tự làm trước – làm sau giùm chị, đừng để chị phải nhắc lần hai.' },
+  yen: { sort: 'Ủa, bạn xếp giùm chị mấy cái này vô đúng nhóm nha.', order: 'Bạn xếp giùm chị mấy việc này, cái nào làm trước, cái nào làm sau nha.' },
+  thao: { sort: 'Em xếp mỗi ghi chú vào đúng nhóm giúp chị nha. Giúp chị đi, chị mua đồ ăn cho!', order: 'Em xếp mấy việc này theo thứ tự làm trước – làm sau giúp chị nhé. Chị cảm ơn nhiều!' },
+};
+// Cuối ngày chưa xong việc được giao: người giao việc phản ứng theo tính cách. aff/mood = mức trừ
+const WORK_QUOTA = 2;
+const WORK_NAG = {
+  an3: { aff: 3, mood: 5, punch: true, lines: ['Hết giờ rồi mà việc chị giao chưa xong?! Bực bội quá… chị đấm bây giờ đó! (đấm nhẹ vào vai) Mai làm cho xong, nghe chưa!', 'Em để việc của chị tồn tới giờ về hả? Lại đây, chị đấm một cái cho nhớ!'] },
+  yen: { aff: 2, mood: 3, lines: ['Ủa, là sao? Chiều giờ làm gì mà việc chị nhờ chưa xong? Là sao vậy trời?', 'Ủa… hết giờ mà chưa xong hả? Là sao?'] },
+  thao: { aff: 1, mood: 1, lines: ['Ơ, việc chị nhờ chưa xong hả em? Không sao đâu, mai mình làm nhé. Giúp chị đi, mai chị mua đồ ăn cho!', 'Chưa xong cũng không sao, em đừng áp lực nha. Mai mình làm tiếp, chị mua nước cho.'] },
+  bao: { aff: 1, mood: 2, lines: ['Ủa, việc mình nhờ chưa xong hả bạn? Vì sao vậy, có chỗ nào khó không? Mai mình dời deadline, nhưng nhớ làm trước nha.'] },
+  thanh: { aff: 1, mood: 1, lines: ['Dạ… việc chưa xong hả {anh}? Không sao, nhân quả mà. Mai làm tiếp nha, em mua nước cho.'] },
+  nam: { aff: 1, mood: 1, lines: ['Khìn khìn… chưa xong hả? Thôi mai mình làm chung nha.'] },
+};
 // Nhờ tìm hồ sơ buổi chiều
 const DOC_QUESTS = [
   { npc: 'an3', ask: 'Em ơi, lấy giùm chị bản “Báo cáo khảo sát người dùng” trong tủ tài liệu. Chị đang dở bản phân tích, nhanh nhanh giùm.', doc: 'Báo cáo khảo sát người dùng' },
   { npc: 'thanh', ask: '{Anh} lấy giúp em bản “Hợp đồng đối tác game” trong tủ nhé. Chiều nay em cần xem lại.', doc: 'Hợp đồng đối tác game' },
   { npc: 'nam', ask: 'Bạn ơi, giúp mình lấy “Biên bản họp tuần” trong tủ tài liệu với? Mình tìm hoài chưa thấy.', doc: 'Biên bản họp tuần' },
+  { npc: 'yen', ask: 'Ủa, bạn lấy giùm chị “Danh sách lỗi cần kiểm” trong tủ tài liệu được không? Chị đang cần gấp.', doc: 'Danh sách lỗi cần kiểm' },
+  { npc: 'thao', ask: 'Em ơi, lấy giúp chị “Hồ sơ nhân sự” trong tủ tài liệu nha. Giúp chị đi, chị mua đồ ăn cho!', doc: 'Hồ sơ nhân sự' },
 ];
-const DOC_NAMES = ['Báo cáo khảo sát người dùng', 'Hợp đồng đối tác game', 'Biên bản họp tuần', 'Kế hoạch quý 4'];
+// Lấy nhầm hồ sơ: mỗi người phản ứng theo tính cách rồi nhắc lại món cần lấy. {doc} = món cần, {name} = món bạn đưa
+const WRONG_DOC = {
+  an3: ['Trời ơi! “{name}” là cái gì đây?! Bực bội quá… chị đấm bây giờ đó! (đấm nhẹ vào vai) Chị cần “{doc}”, nghe rõ chưa!', 'Em đưa nhầm rồi! Muốn bị đấm hả? Chị nói “{doc}”, “{doc}”, nhớ chưa!', 'Hả? “{name}”? Em có nghe chị nói không vậy? Lấy cho chị “{doc}”, đừng để chị đấm lần hai.'],
+  yen: ['Ủa, là sao? Chị nhờ “{doc}” mà sao lại đưa “{name}”?', 'Ủa, “{name}” hả? Là sao vậy? Chị cần “{doc}” nha.', 'Hả… là sao? Cái này đâu phải “{doc}”. Đi tìm lại giùm chị.'],
+  thao: ['Ơ, cái này chưa phải rồi em. Chị cần “{doc}” nha. Giúp chị đi, chị mua đồ ăn cho nè!', 'Không sao đâu, em nhầm chút thôi. Mình tìm “{doc}” nhé, xong chị dẫn em đi ăn quán ngon!', 'Nhẹ nhàng thôi, thử lại nhé em. Chị cần “{doc}”. Giúp chị đi, chị mời trà sữa luôn.'],
+  thanh: ['Dạ… cái này chưa phải rồi {anh} ơi. Em cần “{doc}” nhé. Nhân quả mà, tìm lại là thấy.', 'Ơ, “{name}” hả? Em nhờ “{doc}” đó {anh}. Không sao, tìm lại nha.'],
+  nam: ['Khìn khìn… không phải cái này rồi. Mình cần “{doc}” nha.', 'Ơ, “{name}” hả? Mình nhờ “{doc}” mà. Khìn khìn, tìm lại giúp mình nha.'],
+};
+const DOC_NAMES = ['Báo cáo khảo sát người dùng', 'Hợp đồng đối tác game', 'Biên bản họp tuần', 'Kế hoạch quý 4', 'Danh sách lỗi cần kiểm', 'Hồ sơ nhân sự'];
 
 /* ===== NỘI DUNG BẤT NGỜ (dễ thêm/sửa) =====
    SURPRISES: mỗi ngày game bốc ngẫu nhiên 3–4 sự kiện. Mỗi lựa chọn: [nội dung, kết quả, hiệu ứng].
@@ -619,10 +657,10 @@ const SURPRISES = [
     opts: [['Đồng ý xem thử cùng', 'Thông trải bản đồ, giải thích 20 phút về quy hoạch. Bạn học thêm ba từ mới: “lộ giới”, “sổ hồng”, “đấu giá”.', { mood: 3, energy: -4, aff: { thong: 4 }, moment: 'Nghe Thông thuyết trình về lô đất khu mới.' }],
       ['Từ chối khéo: “Mình chưa tính vụ đó”', 'Thông gật gù: “Để mình lo xa giùm bạn nè!” rồi đưa bạn tờ giấy ghi “Quỹ dự phòng”.', { mood: 4, aff: { thong: 2 }, moment: 'Từ chối khéo kèo mua đất của Thông.' }],
       ['Đùa: “Mua cho mình một góc ban công nhé”', 'Thông ghi chú: “Mua thêm ban công cho bạn.” Cả hai cười ngặt.', { mood: 7, aff: { thong: 3 }, moment: 'Nhờ Thông mua cho một góc ban công.' }]] },
-  { id: 'wifi', npc: null, emoji: '🔌', title: 'Mất mạng',
+  { id: 'wifi', npc: null, emoji: '🔌', title: 'Rớt mạng',
     text: 'Đèn nhấp nháy, wifi rớt. Cả phòng đồng thanh: “Ơ??” Yến: “Là sao?!” Chủ tịt: “Hít thở, tâm an.” Bạn làm gì?',
-    opts: [['Khởi động lại router', 'Router sáng đèn xanh. Cả phòng vỗ tay, Phú: “Hên quá!” (lần đầu trong đời).', { mood: 6, energy: -2, aff: { phu: 2, yen: 1 }, moment: 'Khởi động lại router, cứu cả phòng khỏi mất mạng.' }],
-      ['Rủ cả phòng ra pantry nghỉ chờ', 'Ai cũng ra pantry. Trò chuyện rôm rả hơn cả giờ làm việc.', { mood: 8, energy: 6, aff: { thanh: 1, thao: 2, nam: 1 }, moment: 'Rủ cả phòng ra pantry trong lúc mất mạng.' }],
+    opts: [['Khởi động lại router', 'Router sáng đèn xanh. Cả phòng vỗ tay, Phú: “Hên quá!” (lần đầu trong đời).', { mood: 6, energy: -2, aff: { phu: 2, yen: 1 }, moment: 'Khởi động lại router, cứu cả phòng khỏi rớt mạng.' }],
+      ['Rủ cả phòng ra pantry nghỉ chờ', 'Ai cũng ra pantry. Trò chuyện rôm rả hơn cả giờ làm việc.', { mood: 8, energy: 6, aff: { thanh: 1, thao: 2, nam: 1 }, moment: 'Rủ cả phòng ra pantry trong lúc rớt mạng.' }],
       ['Ngồi thiền cùng Chủ tịt', 'Chủ tịt khẽ gật đầu: “Tâm an thì mạng cũng về.” Hai phút sau mạng về thật. Hú hồn!', { mood: 7, energy: 4, aff: { thanh: 4 }, moment: 'Thiền cùng Chủ tịt, mạng tự về.' }]] },
   { id: 'vip', npc: 'bao', emoji: '🤝', title: 'Nhà đầu tư ghé thăm',
     text: 'Nhà đầu tư ghé văn phòng bất ngờ! Anh Bảo cuống cuồng nhìn quanh: “Chủ tịt chưa tới, ai tiếp khách giúp mình với!” Bạn đứng gần cửa nhất…',
@@ -1537,7 +1575,8 @@ function updateLock(dt) {
 }
 function updateCamera(dt, snap) {
   const k = snap ? 1 : 1 - Math.exp(-dt * 7);
-  CAM.tx = lerp(CAM.tx, P.pos.x, k); CAM.tz = lerp(CAM.tz, P.pos.z, k);
+  if (G.tl) { CAM.tx = lerp(CAM.tx, 0, k); CAM.tz = lerp(CAM.tz, 0.5, k); }        // chế độ ngồi làm việc: camera quay nhẹ quanh phòng
+  else { CAM.tx = lerp(CAM.tx, P.pos.x, k); CAM.tz = lerp(CAM.tz, P.pos.z, k); }
   const lx = CAM.tx - Math.sin(CAM.yaw) * 1.3, lz = CAM.tz - Math.cos(CAM.yaw) * 1.3;   // nhìn lệch về phía trước để thấy nơi sắp tới
   const cp = Math.cos(CAM.pitch), sp = Math.sin(CAM.pitch), dx = Math.sin(CAM.yaw) * cp, dz = Math.cos(CAM.yaw) * cp, dy = sp;
   let dist = CAM.dist;     // giữ camera ở bên trong văn phòng (nam được phép ra ngoài vì tường thấp/kính)
@@ -1903,7 +1942,7 @@ function currentMilestone(m) { let cur = MS[0]; for (const x of MS) if (m >= x.f
 function afternoonHint() {
   if (EVENT.printer && !EVENT.printer.solved && D.minute >= EVENT.printer.start) return 'Máy in ở tường trái đang kẹt giấy, ghé xem giúp ' + npcById(EVENT.printerNpc).p.name + ' nhé.';
   if (D.quest.stage === 1) return `${npcById(D.quest.def.npc).p.name} đang cần nhờ gì đó. Ghé bàn nói chuyện nhé.`;
-  if (D.quest.stage === 2) return `Tìm hồ sơ “${D.quest.def.doc}” ở tủ tài liệu (góc phải phía dưới, gần cửa).`;
+  if (D.quest.stage === 2) return `Tìm hồ sơ ${npcById(D.quest.def.npc).p.name} đã nhờ ở tủ tài liệu (góc phải phía dưới, gần cửa). Quên thì ghé hỏi lại nhé.`;
   if (EVENT.cake && D.minute >= EVENT.cake.start && D.minute < EVENT.cake.end && !D.flags.party) return 'Có tiệc nhỏ ở pantry, ghé chung vui nhé!';
   if (D.tasks < 2) return 'Ra bàn làm nốt một việc còn dang dở.';
   return 'Thong thả giúp đỡ đồng nghiệp hoặc ghé pantry nghỉ chút.';
@@ -1967,7 +2006,7 @@ function toggleMute() { Sfx.setMuted(!Sfx.isMuted()); Store.setting('sound', !Sf
 function extraTasks() {
   const t = [], m = D.minute;
   t.push({ done: D.tasks >= 1, text: `Làm việc ở bàn của bạn (${D.tasks}/${CFG.MAX_TASKS})` });
-  if (D.quest.stage >= 1) t.push({ done: D.quest.stage >= 3, text: `Giúp ${npcById(D.quest.def.npc).p.name} tìm hồ sơ “${D.quest.def.doc}” ở tủ tài liệu` });
+  if (D.quest.stage >= 1) t.push({ done: D.quest.stage >= 3, text: `Giúp ${npcById(D.quest.def.npc).p.name} tìm hồ sơ đã nhờ ở tủ tài liệu` });
   if (EVENT.printer && m >= EVENT.printer.start) t.push({ done: EVENT.printer.solved, text: 'Xem giúp chiếc máy in đang kẹt giấy' });
   if (EVENT.cake && m >= EVENT.cake.start && m < EVENT.cake.end + 30) t.push({ done: D.flags.party, text: `Dự tiệc sinh nhật ${EVENT.cake.who.p.name} ở pantry` });
   if (m >= T('16:00')) t.push({ done: !!D.noteLeft, text: 'Để lại lời nhắn cho một đồng nghiệp trước khi về' });
@@ -2032,6 +2071,7 @@ function startTalk(n) {
   const atDesk = n.state === 'seated' && n.goal && n.goal.id.startsWith('desk') && m >= T('09:00') && m < T('17:00');
   if (atDesk && !D.deskDone.has(n.id)) ch.push({ label: '💼 Trao đổi công việc', hint: 'Họ có chuyện muốn hỏi ý bạn', run: () => deskChat(n) });
   if (D.quest.stage === 1 && D.quest.def.npc === n.id) ch.push({ label: '📎 Hỏi xem họ cần gì', main: true, run: () => questAsk(n) });
+  if (D.quest.stage === 2 && D.quest.def.npc === n.id) ch.push({ label: '🔁 Hỏi lại: cần lấy gì nhỉ?', run: () => { const line = fill(D.quest.def.ask); sayNpc(n, line); Card.show({ who: whoOf(n), meta: hearts(AFF[n.id]), text: `“${line}”`, choices: [{ label: 'Ok, mình đi lấy', main: true, run: () => closeCard() }] }); } });
   if (EVENT.printerNpc === n.id && EVENT.printer && !EVENT.printer.solved && m >= EVENT.printer.start) ch.push({ label: '🖨 Hỏi về chiếc máy in', run: () => printerFlow(n) });
   if (n.inviteReady) ch.push({ label: '☕ Uống cùng ' + n.p.name, main: true, run: () => pantryChat(n) });
   const inWin = (m >= T('10:50') && m < T('13:20')) || (m >= T('14:30') && m < T('16:30'));
@@ -2155,8 +2195,32 @@ const workCount = (w) => (w.kind === 'sort' ? w.done.length : w.next);
 function workProgress(w) { return w.kind === 'sort' ? `đã ghép ${w.done.length}/${w.order.length} ghi chú` : `đã xếp ${w.next}/${w.order.length} việc`; }
 function workBrief(w) {                                   // lời nhờ của đồng nghiệp: nói rõ ai nhờ, nhờ gì, làm thế nào là xong
   const n = npcById(w.from), nm = n ? n.p.name : 'Đồng nghiệp';
-  return w.kind === 'sort' ? `${nm} gửi bạn ${w.order.length} ghi chú và nhờ: “Em xếp mỗi ghi chú vào đúng nhóm giúp.” Xếp xong hết là hoàn thành.`
-    : `${nm} nhờ bạn: “Em xem hạn chót rồi xếp ${w.order.length} việc này theo thứ tự làm trước – làm sau giúp nhé.” Chạm từng việc, việc gấp nhất chạm trước.`;
+  const v = (WORK_VOICE[w.from] || {})[w.kind];
+  return w.kind === 'sort' ? `${nm} gửi bạn ${w.order.length} ghi chú và nhờ: “${v || 'Em xếp mỗi ghi chú vào đúng nhóm giúp.'}” Xếp xong hết là hoàn thành.`
+    : `${nm} nhờ bạn: “${v || `Em xem hạn chót rồi xếp ${w.order.length} việc này theo thứ tự làm trước – làm sau giúp nhé.`}” Chạm từng việc, việc gấp nhất chạm trước.`;
+}
+/* ----- Ngồi làm việc: camera quay nhẹ quanh phòng, thời gian trôi nhanh; chạm lần nữa quay về menu chọn việc ----- */
+function startTimelapse() {
+  const go = () => {
+    G.mode = 'timelapse'; G.tl = { fast: G.fast, yaw: CAM.yaw, dist: CAM.dist, pitch: CAM.pitch, ms: currentMilestone(D.minute).id };
+    G.fast = true; CAM.dist = 13; CAM.pitch = 0.85; $('#tl').classList.remove('hidden'); $('#tl-clock').textContent = fmtTime(D.minute);
+  };
+  if (P.lock && P.lock.type === 'seated') { P.lock.anim = 'type'; go(); } else playerSit(PLAYER_DESK.seat, () => { P.lock.anim = 'type'; go(); });
+}
+function endTimelapse(openMenu, msg) {
+  if (!G.tl) return;
+  const t = G.tl; G.tl = null; G.fast = t.fast; CAM.yaw = t.yaw; CAM.dist = t.dist; CAM.pitch = t.pitch; $('#tl').classList.add('hidden');
+  if (!LITE) updateCamera(0, true);
+  if (msg) toast(msg, 3200);
+  if (openMenu && G.mode === 'timelapse') { G.mode = 'play'; workActivity(); }
+}
+// Cuối ngày chưa xong việc: người giao việc phản ứng theo tính cách
+function workNag(next) {
+  const w = D.work || (D.work = newWork(D.tasks % 2 === 0 ? 'sort' : 'order')), n = npcById(w.from), cfg = WORK_NAG[w.from] || WORK_NAG.thanh;
+  if (!n) { next(); return; }
+  const line = fill(pick(cfg.lines)); changeAff(n.id, -cfg.aff); addMood(-cfg.mood); D.talked.add(n.id); Sfx.wrong(); D.stats.nagged = (D.stats.nagged || 0) + 1;
+  addMoment(`Chưa xong việc ${n.p.name} giao, bị ${n.p.name} nhắc.`); sayNpc(n, line); if (cfg.punch) n.animOverride = { name: 'punch', until: Bubbles.now() + 2.4 };
+  Card.show({ who: whoOf(n), meta: hearts(AFF[n.id]), text: `Sắp về mà việc ${n.p.name} giao vẫn chưa xong, ${n.p.name} ghé qua bàn bạn.\n\n“${line}”`, choices: [{ label: 'Dạ, em xin lỗi, mai em làm', main: true, run: () => { changeAff(n.id, 1); next(); } }] });
 }
 function awardWork() {                                  // cộng dồn đầu việc qua các ngày, mở khóa đồ mới trên bàn
   const st = Store.get(), total = (st.tasksTotal || 0) + 1, have = st.unlocked || [], fresh = UNLOCKS.filter((u) => total >= u.need && !have.includes(u.id));
@@ -2186,10 +2250,11 @@ function workActivity() {
   if (!D.work) D.work = newWork(D.tasks % 2 === 0 ? 'sort' : 'order');
   const w = D.work, started = workCount(w) > 0, n = npcById(w.from);
   const text = started ? `Bạn có một việc đang làm dở: ${workTitle(w.kind)} (${workProgress(w)}). Tiến độ vẫn được giữ nguyên.\nLàm tiếp nhé?`
-    : `Bạn ngồi xuống bàn. Đầu việc nhỏ số ${D.tasks + 1}/${CFG.MAX_TASKS}:\n${workBrief(w)}\n\nChỉ mất khoảng 30–60 giây, không tính điểm, không bị phạt gì.${nextUnlockLine()}`;
+    : `Bạn ngồi xuống bàn. Đầu việc nhỏ số ${D.tasks + 1}/${CFG.MAX_TASKS}:\n${workBrief(w)}\n\nChỉ mất khoảng 30–60 giây. Hôm nay nên xong ít nhất ${WORK_QUOTA} việc, không thì cuối ngày sẽ bị nhắc đó.${nextUnlockLine()}`;
   Card.show({ who: n ? { ...whoOf(n), role: 'Đang nhờ bạn' } : { name: 'Bàn làm việc', role: 'Của bạn', color: 0xffd166, emoji: '💻' }, text, choices: [
+    { label: '🪑 Ngồi làm việc (thời gian trôi qua)', run: () => { Card.hide(); startTimelapse(); } },
     { label: started ? '▶ Làm tiếp' : '▶ Bắt đầu làm', main: true, run: () => { Card.hide(); playerSit(PLAYER_DESK.seat, () => { P.lock.anim = 'type'; startMiniGame(); }); } },
-    { label: 'Để lát nữa (không mất gì)', run: () => closeCard() }] });
+    { label: 'Để lát nữa', run: () => { closeCard(); if (P.lock) playerStand(() => { G.mode = 'play'; }); } }] });
 }
 function startMiniGame() {
   const W = D.work, kind = W.kind, t0 = performance.now(); let over = false;
@@ -2248,14 +2313,18 @@ function questAsk(n) {
     { label: 'Để mình xong việc rồi giúp nhé', run: () => closeCard() }] });
 }
 function cabinetFlow() {
-  const q = D.quest.def, docs = shuffle(DOC_NAMES);
+  const q = D.quest.def, docs = shuffle([q.doc, ...shuffle(DOC_NAMES.filter((d) => d !== q.doc)).slice(0, 4)]);
   const pickDoc = (name) => {
     if (name === q.doc) {
       D.quest.stage = 3; changeAff(q.npc, 5); addMood(6); addEnergy(-3); D.talked.add(q.npc); Sfx.chime(); const n = npcById(q.npc); n.mood = clamp(n.mood + 15, 0, 100); addMoment(`Tìm giúp ${n.p.name} đúng hồ sơ “${q.doc}”.`);
       Card.show({ who: whoOf(n), meta: hearts(AFF[n.id]), text: `Bạn mang hồ sơ tới tận bàn ${n.p.name}.\n\n“${replyLine(n, 'great')}”`, choices: [{ label: '📁 Đưa hồ sơ', main: true, run: () => { sayNpc(n, 'Đúng là cái này rồi, cảm ơn nhiều nhé!'); closeCard(); } }] });
-    } else { D.stats.help = (D.stats.help || 0) + 1; Sfx.wrong(); Card.show({ who: null, text: `Bạn mở “${name}”… không phải rồi. ${D.stats.help >= 2 ? `(Gợi ý: cần đúng tên “${q.doc}”)` : 'Thử hồ sơ khác nhé.'}`, choices: [{ label: 'Thử lại', main: true, run: () => cabinetFlow() }] }); }
+    } else {
+      D.stats.help = (D.stats.help || 0) + 1; Sfx.wrong(); const n = npcById(q.npc), pool = WRONG_DOC[q.npc] || WRONG_DOC.thanh;
+      const line = fill(pick(pool).replaceAll('{doc}', q.doc).replaceAll('{name}', name)); sayNpc(n, line);
+      Card.show({ who: whoOf(n), meta: hearts(AFF[n.id]), text: `Bạn mang “${name}” tới ${n.p.name}.\n\n“${line}”`, choices: [{ label: 'Quay lại tủ tìm', main: true, run: () => cabinetFlow() }, { label: 'Để lát nữa', run: () => closeCard() }] });
+    }
   };
-  Card.show({ who: { name: 'Tủ tài liệu', role: `Cần tìm: “${q.doc}”`, color: 0xb8c4c8, emoji: '🗄' }, text: 'Bạn mở ngăn kéo, có vài tập hồ sơ. Chọn tập đúng nhé.', choices: docs.map((d) => ({ label: '📁 ' + d, run: () => pickDoc(d) })).concat([{ label: 'Đóng tủ', run: () => closeCard() }]) });
+  Card.show({ who: { name: 'Tủ tài liệu', role: 'Hồ sơ cần tìm', color: 0xb8c4c8, emoji: '🗄' }, text: `Bạn mở ngăn kéo, có vài tập hồ sơ. Chọn đúng tập ${npcById(q.npc).p.name} đã nhờ nhé.`, choices: docs.map((d) => ({ label: '📁 ' + d, run: () => pickDoc(d) })).concat([{ label: 'Đóng tủ', run: () => closeCard() }]) });
 }
 
 // --- Máy in kẹt giấy (tình huống phát sinh) ---
@@ -2521,10 +2590,11 @@ function tickClock(dt) {
   }
 }
 function endDay() {
-  if (D.ended) return; D.ended = true; Card.hide();
+  if (D.ended) return; D.ended = true; Card.hide(); endTimelapse(false);
   NPCS.forEach((n) => { n.frozen = false; });
-  Card.show({ who: { name: 'Trước khi về…', color: 0xfff3a8, emoji: '📝' }, text: 'Bạn có muốn để lại một mảnh giấy nhớ cho đồng nghiệp không?', choices: [
+  const showNote = () => Card.show({ who: { name: 'Trước khi về…', color: 0xfff3a8, emoji: '📝' }, text: 'Bạn có muốn để lại một mảnh giấy nhớ cho đồng nghiệp không?', choices: [
     { label: '📝 Có, viết một dòng', main: true, run: () => noteFlow(showSummary) }, { label: 'Hôm nay thôi', run: () => { Card.hide(); showSummary(); } }] });
+  if (D.tasks < WORK_QUOTA) workNag(showNote); else showNote();          // chưa xong việc được giao: người giao việc nhắc theo tính cách
 }
 function showSummary() {
   const date = new Date().toLocaleDateString('vi-VN'), day = Store.get().days + 1, cal = calInfo(day), isFri = cal.wd === 4;
@@ -2579,6 +2649,10 @@ let rafId = 0, lastTs = 0, hudT = 0, liteT = 0, tickCount = 0;
 function update(dt) {
   if (!D || !G.started || G.mode === 'title' || G.mode === 'paused') return;
   if (G.mode === 'play') tickClock(dt);
+  else if (G.mode === 'timelapse') {                              // ngồi làm việc: thời gian trôi nhanh, camera quay nhẹ; dừng khi sang mốc mới của ngày
+    tickClock(dt); CAM.yaw += dt * 0.2; const tc = $('#tl-clock'); if (tc) tc.textContent = fmtTime(D.minute);
+    if (G.mode === 'timelapse') { const ms = currentMilestone(D.minute); if (ms.id !== G.tl.ms) endTimelapse(true, `🕘 ${fmtTime(D.minute)} · ${ms.name}`); }
+  } else if (G.tl) endTimelapse(false);
   updatePantryTable(D.minute);
   G.saveT = (G.saveT || 0) + dt; if (G.saveT > 5) { G.saveT = 0; saveSession(); }
   updatePlayer(dt);
@@ -2664,6 +2738,8 @@ function init() {
   $('#act').addEventListener('click', () => { if (INPUT.onAct) INPUT.onAct(); });
   $('#hud-obj').addEventListener('click', () => { Sfx.click(); if (G.mode === 'play') pauseGame(); });
   $('#b-pause').addEventListener('click', () => { Sfx.click(); if (G.mode === 'play') pauseGame(); });
+  $('#tl').addEventListener('click', () => endTimelapse(true));
+  listen(document, 'keydown', (e) => { if (G.mode === 'timelapse' && (e.key === ' ' || e.key === 'Enter' || e.key === 'Escape')) { e.preventDefault(); endTimelapse(true); } });
   $('#b-cam').addEventListener('click', () => { Sfx.click(); setCamPreset((Store.get().settings.cam ?? 1) + 1); });
   $('#b-mute').addEventListener('click', () => { toggleMute(); Sfx.click(); });
   $('#b-fast').addEventListener('click', () => { G.fast = !G.fast; setBars(); Sfx.click(); toast(G.fast ? '⏩ Tua nhanh thời gian' : '▶ Tốc độ bình thường', 1500); });

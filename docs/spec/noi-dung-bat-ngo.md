@@ -1,6 +1,6 @@
 # Spec: Nội dung đa dạng (surprises, duos, day themes, badges)
 
-Status: v1.12.0 (2026-11-04). Chủ tịt's treats now pick a random drink, come with takeaway cups, and gather the team at the pantry (§3.1, AC-87 to AC-90 in `docs/spec/mot-ngay-o-cong-ty.md`). The pantry round table shows the cups and the 14:10 dish (§3.1, AC-93, AC-94). Earlier: v1.11.0 (2026-11-04). No script changes. Nguyên's visit reach now includes his desk (desk 8, §2 note). Earlier: v1.10.0 (2026-11-04). Two `nguyen`→`thao` duo scripts added (§2), 21 scripts in total. Then two `trung`→`nguyen` scripts, for Trung's visits to Nguyên (§2): 23 scripts for 19 pairs. They are reachable since a later v1.10.0 change: Nguyên visits Chị Thảo from a pantry sofa (§2 note). Earlier: v1.9.5 (2026-11-04). `th-cat` intro text and options changed (Chị Ba is not allergic to cats; §3.2). Two cat-banter duo scripts added for Chị Ba and Chủ tịt (§2). Earlier: v1.9.0. Six new day themes, each with a story intro at 08:50 (§3.2, AC-75 to AC-77). Earlier: surprise trigger changed in v1.8.7 (§1, AC-40): a surprise waits for the player to stand near the related coworker instead of popping up at its time. Narration uses "anh" (not "ông") for Chủ tịt in three `SURPRISES` strings. The Nam–Thạnh scripts (v1.8.1, v1.8.2) and the random script pick per visit are in §2.
+Status: v1.13.0 (2026-11-04). The `wifi` surprise is retitled "Rớt mạng" (was "Mất mạng"). The two diary moments written by its options say "rớt mạng" (§1.1, row 6). Wording only, no effect changes. Earlier: v1.12.0 (2026-11-04). Chủ tịt's treats now pick a random drink, come with takeaway cups, and gather the team at the pantry (§3.1, AC-87 to AC-90 in `docs/spec/mot-ngay-o-cong-ty.md`). The pantry round table shows the cups and the 14:10 dish (§3.1, AC-93, AC-94). Earlier: v1.11.0 (2026-11-04). No script changes. Nguyên's visit reach now includes his desk (desk 8, §2 note). Earlier: v1.10.0 (2026-11-04). Two `nguyen`→`thao` duo scripts added (§2), 21 scripts in total. Then two `trung`→`nguyen` scripts, for Trung's visits to Nguyên (§2): 23 scripts for 19 pairs. They are reachable since a later v1.10.0 change: Nguyên visits Chị Thảo from a pantry sofa (§2 note). Earlier: v1.9.5 (2026-11-04). `th-cat` intro text and options changed (Chị Ba is not allergic to cats; §3.2). Two cat-banter duo scripts added for Chị Ba and Chủ tịt (§2). Earlier: v1.9.0. Six new day themes, each with a story intro at 08:50 (§3.2, AC-75 to AC-77). Earlier: surprise trigger changed in v1.8.7 (§1, AC-40): a surprise waits for the player to stand near the related coworker instead of popping up at its time. Narration uses "anh" (not "ông") for Chủ tịt in three `SURPRISES` strings. The Nam–Thạnh scripts (v1.8.1, v1.8.2) and the random script pick per visit are in §2.
 
 ## 1. Daily surprises
 
@@ -23,7 +23,7 @@ Status: v1.12.0 (2026-11-04). Chủ tịt's treats now pick a random drink, come
 | 3 | `phulai` | Phú bất ngờ có lời | Phú | 3 |
 | 4 | `dammhaam` | Cú đấm nhầm | Chị Ba | 3 |
 | 5 | `thongdat` | Kèo đất của Thông | Thông | 3 |
-| 6 | `wifi` | Mất mạng | none | 3 |
+| 6 | `wifi` | Rớt mạng | none | 3 |
 | 7 | `vip` | Nhà đầu tư ghé thăm | Anh Bảo | 3 |
 | 8 | `cat` | Chú mèo lạc | Chủ tịt (Thạnh) | 3 |
 | 9 | `thanhmeo` | Ảnh mèo của Chủ tịt | Chủ tịt (Thạnh) | 3 |

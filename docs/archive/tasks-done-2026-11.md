@@ -361,3 +361,43 @@ Moved from `docs/tasks.md` on 2026-11-04 to keep that file under 300 lines. Entr
   - [ ] Full-day headless run covering the six new themes and all 18 intro options (AC-76, AC-77)
   - [ ] Set `CFBundleShortVersionString` to 1.9.0 and rebuild `dist/MinhLee-mac.zip` (see Follow-ups, v1.8.6 item)
   - [ ] Docs: `docs/product-guide.md`, `docs/spec/*`, `docs/glossary.md` updated. `CLAUDE.md` not touched (user choice)
+
+## Moved from docs/tasks.md in the v1.13.0 pass (v1.10.1 and v1.10.0 done entries)
+
+Entries are not edited.
+
+- [x] v1.10.1 (2026-11-04): welcome-back popup hides the title screen's name and gender form while it is open, so returning players see only "▶ Tiếp tục" and "🆕 Chơi mới". The form returns only after the confirmed reset. Reason: players could miss the small "Tiếp tục" button. Details: `docs/changelog.md` v1.10.1, `docs/spec/the-gioi-lien-tuc.md` §11.5, AC-84
+  - [x] `showWelcomeBack()` (`index.html` section 14): adds `hidden` to `#title` on open, unhides it after `Store.clear()` in "Xóa hết và chơi mới". "Thôi, quay lại" keeps it hidden
+  - [x] Headless Chrome: `#title` hidden during the popup, kept hidden after back, shown after reset, fresh player sees no popup
+  - [ ] Real browser and phone check of the popup (not tested outside headless Chrome)
+  - [ ] `dist/MinhLee-mac.zip` not rebuilt in this pass (see v1.10.0 follow-up)
+  - [x] Docs: changelog, `docs/spec/the-gioi-lien-tuc.md` §11.5, `docs/spec/mot-ngay-o-cong-ty.md` AC-84, `docs/product-guide.md`
+
+- [x] v1.10.0 (2026-11-04): mid-day save and resume (closing the tab no longer restarts the day), welcome-back popup on boot (continue, new game with confirmation, or back), Anh Bảo's look (black polo collar, white cuffs, swept hair, red-and-white striped shirt), Nguyên sleeps less (one nap after lunch, otherwise works on a pantry sofa) and can visit Chị Thảo from the sofa, so his two `nguyen`→`thao` duo scripts play (21 in total). Trung also visits Nguyên (40% per visit attempt, two `trung`→`nguyen` scripts), so the total is 23 scripts for 19 pairs. Details: `docs/changelog.md` v1.10.0, `docs/spec/the-gioi-lien-tuc.md` §11
+  - [x] `saveSession()`, `validSession()`, `resumeSession()`, `#btn-resume`, `Store.session` (`session: null` in the `endDay` patch, `exitToTitle`, and start-over) in `index.html` section 14 and the title code
+  - [x] `showWelcomeBack()` (section 14, called from `init()`): the popup, the "Chơi mới?" confirmation, and "Thôi, quay lại". Spec `docs/spec/the-gioi-lien-tuc.md` §11.5, AC-84
+  - [x] `npcAmbient()` `sofaWorker`: a sofa-seated Nguyên may start a visit, to Chị Thảo only (who must be at `desk:work`). Closes the duo defect
+  - [x] `times.nap` in `resetNpcDay()`, `goalSofa()` and `decideGoal()` (section 9). Measured in 30 simulated days: lying about 10% of checked time, sofa work about 71%, other about 19%
+  - [x] `NPC_PROFILES` `bao` look: `hem` removed, black polo collar (`collar: 0x1a1a1c`), white `cuff`, `hairStyle: 'swept'` (new style replaces `fringe`), `pattern: 'redwhite'` shirt (intentional, per the user)
+  - [x] Arrival toast reworded to "đang ở pantry" (`processTimeEvents()`)
+  - [x] Headless Chrome: snapshot fields restored, resume button visibility, session cleared. Popup: text and buttons, continue at 13:10 with 1 task, back keeps data, clear to 0 days. Nguyên visits Chị Thảo in 6 of 6 runs. The v1.10.0 code is in all four copies (grep check)
+  - [x] Docs: changelog, `docs/spec/the-gioi-lien-tuc.md`, `docs/spec/mot-ngay-o-cong-ty.md`, `docs/spec/dong-nghiep.md`, `docs/spec/noi-dung-bat-ngo.md`, `docs/product-guide.md`, `docs/glossary.md`
+  - [ ] Real browser restart test: close the browser (or the Mac app) mid-day, reopen, press "▶ Tiếp tục ngày đang dở". Headless only so far
+  - [ ] Test on a real phone (iOS Safari, Android Chrome): `visibilitychange` and `pagehide` save, and the resume path
+  - [ ] `dist/MinhLee-mac.zip` and `CFBundleShortVersionString` (still 1.8.5) not rebuilt in this pass (see Follow-ups, v1.10.0)
+
+## Moved from docs/tasks.md in the v1.14.0 pass (v1.11.0 and v1.12.0 done entries)
+
+- [x] v1.12.0 (2026-11-04): takeaway cups and pantry treats. Chủ tịt's 11:05 treat picks at random among trà sữa, rau má, and nước mía (14:10 stays snack). Up to 8 coworkers gather at the pantry for 30 game-minutes; everyone else gets a cup on their desk. Anh Bảo's desk has an iced black coffee cup (`cafeden`). The hand cup is now a street-style takeaway cup. Details: `docs/changelog.md` v1.12.0, `docs/spec/noi-dung-bat-ngo.md` §3.1, `docs/spec/van-phong-layout.md` §3 and AC-91, AC-92, `docs/spec/mot-ngay-o-cong-ty.md` AC-87 to AC-90
+  - [x] `makeTakeawayCup()`, `setCupDrink()`, `TREAT_DRINKS` (section 6). `startTreat()` and the treat branch of `processTimeEvents()` (section 14). `goalPantry(n, 'treat')` and `decideGoal()` (section 9). `dk.treatCup` and `DESKS[2].icedCoffee`
+  - [x] Headless Chrome: all random kinds appear, 8 join, 14 get cups, 7 at the pantry in one test, 14 desk cups later, the mid-day session saves `treat`. Cup close-ups rendered and viewed
+  - [ ] Cups not verified in the in-game camera at the default distance (cups are small and hidden behind bodies). Not on a real device. See Follow-ups, v1.12.0
+  - [x] Docs: changelog, `docs/spec/noi-dung-bat-ngo.md`, `docs/spec/dong-nghiep.md`, `docs/spec/van-phong-layout.md`, `docs/spec/mot-ngay-o-cong-ty.md`, `docs/spec/the-gioi-lien-tuc.md`, `docs/product-guide.md`, `docs/glossary.md`
+  - [x] Pantry table pass: `PANTRY_TABLE` (section 5) with a `nonav` obstacle, 8 `PANTRY_SPOTS` on a ring around it (AC-93, AC-94), cups and the 14:10 dish on the table (`updatePantryTable()`, `FOODS`, `makeFood()`), hand cups only after arrival. Headless Chrome checks in `docs/changelog.md` v1.12.0
+
+- [x] v1.11.0 (2026-11-04): office layout change. New private desk 13 in the lower row, next to Thông's (`addOwnAt(-4.4)`, x −4.4). Tùng moves from desk 8 to desk 13. Nguyên, who had no desk, takes desk 8 (Tùng's old seat, right table, south, next to Chú 7). He naps on the daybed after lunch and otherwise works at his desk. Trung's visits to Nguyên now go to his desk (same 40% gate, excluded from the normal candidate list). Nguyên's lines updated; arrival toast reads "Nguyên hiếm hoi lên công ty hôm nay!". Details: `docs/changelog.md` v1.11.0, `docs/spec/van-phong-layout.md` §3 and AC-85, `docs/spec/dong-nghiep.md` §3 and AC-46, AC-49, AC-86
+  - [x] `DESKS` has 14 entries (section 5, `addOwnAt(-4.4)`). `NPC_PROFILES`: `tung` `desk: 13`, `nguyen` `desk: 8` (section 2). Nguyên's nap and desk branch in `decideGoal()` (section 9)
+  - [x] Headless Chrome: `DESKS.length` 14; Tùng seats at (−4.4, 5.8) at the new desk; Nguyên at (8.1, −0.8) in `desk:work` at 10:00, nap goal `lounge`; screenshots show Nguyên at desk 8 and the new desk in the lower row
+  - [x] Docs: changelog, `docs/spec/van-phong-layout.md`, `docs/spec/dong-nghiep.md`, `docs/spec/mot-ngay-o-cong-ty.md`, `docs/spec/noi-dung-bat-ngo.md`, `docs/product-guide.md`, `docs/glossary.md` (dated notes only)
+  - [ ] Pathing at peak times around desks 9 and 13 and `COLUMNS[1]` not checked (Follow-ups, v1.11.0)
+  - [ ] Full-day run and real-device check not done

@@ -1,6 +1,6 @@
 # Spec: Đồng nghiệp (coworkers, address terms, remote worker)
 
-Status: v1.12.0 (2026-11-04). Chủ tịt's treats name a random drink and come with cups (§7.4). Anh Bảo's desk has an iced black coffee cup (§1). Earlier: v1.11.0 (2026-11-04). Nguyên sits at desk 8 (Tùng's old seat) and works there, with one daybed nap after lunch (§3, AC-49). Tùng moved to desk 13. Trung may visit Nguyên at his desk (§3, AC-86). Looks: §8. Earlier history: `docs/changelog.md`.
+Status: v1.14.0 (2026-11-04). Yến and Thảo assign desk tasks, so the work voice and the end-of-day reactions per assigner are in `docs/spec/ngoi-lam-viec.md` §3 (file-size split). Earlier: v1.13.0 (2026-11-04). Wrong-document reactions per coworker (§7.7, `docs/spec/nhiem-vu-tai-lieu.md`). Detailed looks moved to `docs/spec/ngoai-hinh-dong-nghiep.md` (file-size split). Earlier: v1.12.0 (2026-11-04). Chủ tịt's treats name a random drink and come with cups (§7.4). Anh Bảo's desk has an iced black coffee cup (§1). Earlier: v1.11.0 (2026-11-04). Nguyên sits at desk 8 (Tùng's old seat) and works there, with one daybed nap after lunch (§3, AC-49). Tùng moved to desk 13. Trung may visit Nguyên at his desk (§3, AC-86). Looks: `docs/spec/ngoai-hinh-dong-nghiep.md`. Earlier history: `docs/changelog.md`.
 
 ## 1. Roster
 
@@ -17,11 +17,11 @@ Status: v1.12.0 (2026-11-04). Chủ tịt's treats name a random drink and come 
 | 5 | Hiện | — | Mobile Dev | 5 | Youngest. Refers to self as "em". Right table, north |
 | 6 | Tùng | — | Mobile Dev | 13 | Often invites people out for a light after-work drink (nhậu, kept light). Likes dares and challenge games: the request is to say "MinhLee" ten times in a row. Quirk 16:50 calls for nhậu. Custom look (v1.1.2). Lower row, next to Thông (v1.11.0; was desk 8, right table, south) |
 | 7 | Nam | — | Mobile Dev | 6 | At the printer on printer days. "khìn khìn". Same age as Chủ tịt and Chị Ba (confirmed 2026-11-04). Calls Chủ tịt "bé Hạnh" when teasing (playful duo, `say.absent`, v1.8.1) and "Thạnh" in serious work talk (serious duo; quirk 09:42, "Thạnh ơi, 10 giờ họp nhé…", v1.8.2). Before Chủ tịt arrives (09:20), he sometimes says lines about missing him and jokes about him being late (`say.absent`, §7.5). Right table, north |
-| 8 | Thảo | nick: Bella | HR | 11 | The office foodie: knows many restaurants, drink shops, and good dishes. Greetings, chats, and requests are about food. Quirk 11:40 recommends a lunch place. Brings the birthday cake. Lower row |
-| 9 | Yến | nick: Én Pink | QC | 12 | "Là sao?". Lower row, right end |
+| 8 | Thảo | nick: Bella | HR | 11 | The office foodie: knows many restaurants, drink shops, and good dishes. Greetings, chats, and requests are about food. Assigns desk tasks from v1.14.0 (`ngoi-lam-viec.md` §3.4) Quirk 11:40 recommends a lunch place. Brings the birthday cake. Lower row |
+| 9 | Yến | nick: Én Pink | QC | 12 | "Là sao?". Lower row, right end. Assigns desk tasks (bug sorting) from v1.14.0 (`ngoi-lam-viec.md` §3.4) |
 | 10 | Chú 7 | real: An (male) | QC | 7 | Young ("Chú" is a nickname). Loves tea (trà ô long, trà sen). Often teases Chị Ba, who answers with playful punches. Tea duo with Thông (v1.4.3). Custom look (v1.1.2). Right table, south. Chị Ba's teasing nickname for him is "bánh tét" (chat line, v1.7.1). When Chị Ba stands up and calls for "thằng bánh tét", he answers from behind his tea (`say.standReply`, §7.5) |
 | 11 | Chị Ba | real: An (female) | Business Support | 10 | Supports product research: runs user surveys, builds reports, analyses the numbers. Strict in a fun way, and playfully "punches" colleagues (`visitAnim: 'punch'`, quirk 09:12). Quirk 09:48 re-checks charts before the meeting. Desk request: a survey report with only 40 respondents, and the options are to state the small sample, write it honestly, or overstate it as a joke. Afternoon quest: fetch "Báo cáo khảo sát người dùng" (`DOC_QUESTS`). Duo with Nam about survey data he forgot to send (`noi-dung-bat-ngo.md` §2). Golden cat Nghệ, not allergic (§2, v1.9.5). Same age as Chủ tịt and Nam. Stand-up catchphrase (v1.7.1): "Bực bội quá… thằng bánh tét đâu rồi!" (§7.5). Lower row |
-| 12 | Anh Bảo | real: Bảo | Product | 2 | Oldest in the office. Asks "vì sao". Red-and-white striped shirt with black polo collar and white cuffs, swept hair (§8, v1.10.0). Desk has an iced black coffee cup (`cafeden`, v1.12.0). Left table, south |
+| 12 | Anh Bảo | real: Bảo | Product | 2 | Oldest in the office. Asks "vì sao". Red-and-white striped shirt with black polo collar and white cuffs, swept hair (`ngoai-hinh-dong-nghiep.md`, v1.10.0). Desk has an iced black coffee cup (`cafeden`, v1.12.0). Left table, south |
 | 13 | Thông | nick: Bamboo | R&D | 9 | Lower row, left end (bottom-left of the office) |
 | 14 | Nguyên | — | Designer | 8 (v1.11.0) | Works remotely. In the office on about half of the days. Naps once for 30–50 min after lunch on the daybed, otherwise works at desk 8 (right table, south, next to Chú 7). Visits Chị Thảo (§3) |
 
@@ -180,21 +180,18 @@ Chị Ba (`an3`) is grumpier than before, and visibly annoyed, but still funny. 
 - Lines updated in v1.9.1: `say.greet`, `say.idle`, `say.chat`, `say.pantry`, `reply`, `request` (ask), `meeting` (pos/neg), `quirks`, `note`, the `DOC_QUESTS` ask line, duo lines with Chú 7 and Nam, and the `dammhaam` result. Unchanged: `say.stand`, `say.standReply`.
 - Wording is not native-reviewed (see `docs/tasks.md`).
 
-## 8. Detailed looks (v1.9.2 to v1.10.0, `look.detail` on 13 of 14, Trung keeps his original face; hair is `hairStyle` unless noted; fields in `docs/glossary.md`)
+### 7.7 Document-quest reactions (v1.13.0)
 
-| Coworker | Hair | Neck (`neck`) | Other |
-|---|---|---|---|
-| Chủ tịt (Thạnh) | `quiff` (v1.9.3) | `collar`, gingham (`pat:gingham`), short sleeves (`shortSleeve`) | thin light-silver rect glasses, slimmer face, teeth |
-| Phú | `side` (v1.9.3) | `collar`, dark (`0x141416`) | rect dark glasses, wider face (`round`), teeth |
-| Trung | original face (no `look.detail`, kept at the user's request: closer to him) | striped shirt | rect glasses, mustache |
-| Toàn | `side` | `collar`, navy (`0x1f2a5c`), closes the polo-collar gap | mustache, wider face (`round`), no glasses |
-| Hiện | `quiff` | `crew`, purple (`0x654a8c`) | no glasses (per the user), smile |
-| Tùng | `style: 'fringe'` (no `hairStyle`) | `crew`, pale lilac (`0xd9d4e6`) | smile |
-| Nam | `style: 'fringe'` (no `hairStyle`) | `collar`, plaid (`pat:plaid`) | smile, teeth, no glasses |
-| Thảo | `wavy`, long over the shoulders | `vneck`, orange | lashes, gold earrings, pink lips |
-| Yến | `sleek`, centre part (`part: 'center'`) | `crew`, dark | lashes, coral lips, gold earrings, thin rose-gold glasses, teeth |
-| Chú 7 | `tousled` | `crew`, cream | smile |
-| Chị Ba | `style: 'bob'` (no `hairStyle`) | `crew`, dark grey | lashes, muted lips, silver earrings, dark thick round glasses, flat mouth (no smile) |
-| Anh Bảo (v1.10.0) | `hairStyle: 'swept'` (men's short hair, replaces `style: 'fringe'`), black | `pattern: 'redwhite'` shirt (`shirt: 0xd6322f`, full-width horizontal red bands on off-white, intentional per the user). `collar: 0x1a1a1c` black polo collar (`collarStyle: 'polo'`), white cuffs (`cuff: 0xf4f1ea`), `shortSleeve`. No white lower half (`hem` unused). The solid polo of the first brief is not used | thin light-silver rect glasses (`0xb9bfc4`), slight closed smile |
-| Thông | `side`, neat side part | `crew`, light grey ring on white tee | — |
-| Nguyên | `style: 'fringe'` (no `hairStyle`) | `crew`, black | detailed eyes and brows, no glasses |
+Used when the player brings the wrong document to an asker (`WRONG_DOC[npc]`, variety block between sections 2 and 3). One line is picked at random per wrong pick. `{doc}` is the needed document, `{name}` the one brought. Rules: `docs/spec/nhiem-vu-tai-lieu.md` §5. Wording not native-reviewed. Desk-task assigners and their end-of-day reactions (v1.14.0, `WORK_NAG`): `docs/spec/ngoi-lam-viec.md` §3.3.
+
+| Coworker | Tone | Example line (`WRONG_DOC`) |
+|---|---|---|
+| Chị Ba (`an3`) | Scolds, gruff, playful light punch | "Bực bội quá… chị đấm bây giờ đó! (đấm nhẹ vào vai) Chị cần “{doc}”, nghe rõ chưa!" |
+| Yến (`yen`) | Puzzled, "Là sao?" | "Ủa, là sao? Chị nhờ “{doc}” mà sao lại đưa “{name}”?" |
+| Thảo (`thao`) | Gentle, encourages, offers a treat | "Giúp chị đi, chị mua đồ ăn cho nè!" |
+| Chủ tịt (Thạnh, `thanh`) | Humble ("em", "{anh}"), karma | "Dạ… cái này chưa phải rồi {anh} ơi. Em cần “{doc}” nhé. Nhân quả mà, tìm lại là thấy." |
+| Nam (`nam`) | Peer-level, keeps "khìn khìn" | "Khìn khìn… không phải cái này rồi. Mình cần “{doc}” nha." |
+
+## 8. Detailed looks
+
+Moved to `docs/spec/ngoai-hinh-dong-nghiep.md` in v1.13.0 (file-size split).

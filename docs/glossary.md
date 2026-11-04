@@ -420,7 +420,7 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **Đầu việc (desk task item)** — *(needs definition)* One small job at the player's desk, numbered "Đầu việc nhỏ số N/3" on the work card. Up to `CFG.MAX_TASKS` (3) per day. Two kinds: sort notes into project groups (`sort`), or put items in deadline order (`order`). Takes about 30–60 seconds, with no score and no penalty. Added v1.8.6.
 
-**Người nhờ (requester)** — *(needs definition)* The coworker who asks the player for a desk task, stored as `from` in `SORT_SETS` and `ORDER_SETS`: `bao` (Anh Bảo) or `an3` (Chị Ba). The work card shows them with the role "Đang nhờ bạn". On completion they gain +3 affinity and send a reply card. Added v1.8.6.
+**Người nhờ (requester)** — *(needs definition)* The coworker who asks the player for a desk task, stored as `from` in `SORT_SETS` and `ORDER_SETS`: `bao` (Anh Bảo) or `an3` (Chị Ba). The work card shows them with the role "Đang nhờ bạn". On completion they gain +3 affinity and send a reply card. Added v1.8.6. Since v1.14.0 `yen` (Yến) and `thao` (Thảo) also request desk tasks, so there are four requesters (`docs/spec/ngoi-lam-viec.md` §3.4).
 
 **Nhãn Bàn của bạn (desk label, `deskTag`)** — *(needs definition)* The yellow "💻 Bàn của bạn" label above the player's desk, built with `Bubbles.makeTag()` in `init()`. Its horizontal position is clamped to the screen edges to show the direction of the desk. Hidden in list mode, while sitting, after the three daily tasks, and when away from the desk. Added v1.8.6.
 
@@ -454,22 +454,22 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **Mở khóa (unlock)** — *(needs definition)* Adding a desk item to `unlocked` when `tasksTotal` reaches its `need`. Shows a reward card. Added v1.9.0.
 
-**look.detail** — *(needs definition)* Opt-in flag in a coworker's `look` (`NPC_PROFILES`). When `true`, `buildCharacter()` adds detailed eyes (white sclera, iris in `look.eye`, highlight), brows (`look.brow`, `look.browUp`), a curved smile in `look.lip`, and the hair and neck rules below. Optional: `look.lashes`, `look.clip` (hair clip colour), `look.earring` (earring colour). Used by five coworkers. Added v1.9.2. See `docs/spec/dong-nghiep.md` §8.
+**look.detail** — *(needs definition)* Opt-in flag in a coworker's `look` (`NPC_PROFILES`). When `true`, `buildCharacter()` adds detailed eyes (white sclera, iris in `look.eye`, highlight), brows (`look.brow`, `look.browUp`), a curved smile in `look.lip`, and the hair and neck rules below. Optional: `look.lashes`, `look.clip` (hair clip colour), `look.earring` (earring colour). Used by five coworkers. Added v1.9.2. See `docs/spec/ngoai-hinh-dong-nghiep.md`.
 
 **look.hairStyle** — *(needs definition)* Used with `look.detail`. Values: `wavy` (long, over the shoulders), `sleek` (long straight, side fringe, clip), `side` (neat side part), `tousled` (thick short hair with tufts). Added v1.9.2. v1.9.3 adds `quiff` (short hair, slight front lift, short sides).
 
 **look.neck** — *(needs definition)* Used with `look.detail`. Values: `crew` (neck ring in `look.neckColor`), `collar` (small collar in `look.collar`, which may be a pattern such as `pat:gingham`), `vneck` (V-neck in `look.neckColor`). Added v1.9.2.
 
 
-**look.teeth** — Opt-in flag in a coworker's `look` (`NPC_PROFILES`), used with `look.detail`. When `true`, `detailFace()` adds a white tooth strip under the smile. Used by Thạnh, Phú, and Yến. Added v1.9.3. See `docs/spec/dong-nghiep.md` §8.
+**look.teeth** — Opt-in flag in a coworker's `look` (`NPC_PROFILES`), used with `look.detail`. When `true`, `detailFace()` adds a white tooth strip under the smile. Used by Thạnh, Phú, and Yến. Added v1.9.3. See `docs/spec/ngoai-hinh-dong-nghiep.md`.
 
-**look.part** — Used with `look.detail` and `hairStyle: 'sleek'`. Value `'center'` draws a centre parting with two side panels instead of the side fringe. Used by Yến. Added v1.9.3. See `docs/spec/dong-nghiep.md` §8.
+**look.part** — Used with `look.detail` and `hairStyle: 'sleek'`. Value `'center'` draws a centre parting with two side panels instead of the side fringe. Used by Yến. Added v1.9.3. See `docs/spec/ngoai-hinh-dong-nghiep.md`.
 
-**look.shortSleeve** — Opt-in flag in a coworker's `look` (`NPC_PROFILES`). When `true`, `buildCharacter()` adds skin-coloured forearms below the shirt sleeves, for short-sleeve shirts. Used by Thạnh. Added v1.9.3. See `docs/spec/dong-nghiep.md` §8.
+**look.shortSleeve** — Opt-in flag in a coworker's `look` (`NPC_PROFILES`). When `true`, `buildCharacter()` adds skin-coloured forearms below the shirt sleeves, for short-sleeve shirts. Used by Thạnh. Added v1.9.3. See `docs/spec/ngoai-hinh-dong-nghiep.md`.
 
-**look.hem** — *(needs definition)* Opt-in colour in a coworker's `look` (`NPC_PROFILES`) for the lower half of a two-tone shirt. `buildCharacter()` adds a cylinder band (0.25 m tall, at y 0.425) in this colour around the lower body. Used by Anh Bảo (white on navy). Added v1.9.5. See `docs/spec/dong-nghiep.md` §8. *(Outdated as of v1.10.0: no profile uses it. Anh Bảo's white lower half was removed.)*
+**look.hem** — *(needs definition)* Opt-in colour in a coworker's `look` (`NPC_PROFILES`) for the lower half of a two-tone shirt. `buildCharacter()` adds a cylinder band (0.25 m tall, at y 0.425) in this colour around the lower body. Used by Anh Bảo (white on navy). Added v1.9.5. See `docs/spec/ngoai-hinh-dong-nghiep.md`. *(Outdated as of v1.10.0: no profile uses it. Anh Bảo's white lower half was removed.)*
 
-**look.cuff** — *(needs definition)* Opt-in colour in a coworker's `look` for the sleeve-end bands of a shirt. `buildCharacter()` adds a 0.03 m band on each arm, at y −0.175, in this colour. Used by Anh Bảo (white on navy). Added v1.9.5. See `docs/spec/dong-nghiep.md` §8. *(v1.10.0: still used by Anh Bảo, now white cuffs on the red-and-white shirt in code. The solid polo of the first brief is not used.) *(Closed 2026-11-04: the red-and-white shirt is intentional, per the user. Black polo collar: `look.collarStyle`.)**
+**look.cuff** — *(needs definition)* Opt-in colour in a coworker's `look` for the sleeve-end bands of a shirt. `buildCharacter()` adds a 0.03 m band on each arm, at y −0.175, in this colour. Used by Anh Bảo (white on navy). Added v1.9.5. See `docs/spec/ngoai-hinh-dong-nghiep.md`. *(v1.10.0: still used by Anh Bảo, now white cuffs on the red-and-white shirt in code. The solid polo of the first brief is not used.) *(Closed 2026-11-04: the red-and-white shirt is intentional, per the user. Black polo collar: `look.collarStyle`.)**
 
 **Nghệ (cat name)** — *(needs definition)* The golden cat of Chị Ba (`an3`). Named in her `say.chat` line, in the `th-cat` intro and option 2 (`docs/spec/noi-dung-bat-ngo.md` §3.2), and in the duo `an3`–`thanh`. Canon: Chị Ba is not allergic to cats. Added v1.9.5. See `docs/spec/dong-nghiep.md` §2.
 
@@ -479,13 +479,13 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **goalSofa()** — *(needs definition)* Gives a coworker with `habits.lounge` a free `SOFA_SEATS` seat to work from (pose `type`). Falls back to `goalLounge()` when all seats are taken. Added v1.10.0. *(Note v1.11.0: the code falls back to `goalDesk(n, 'eat')`, not `goalLounge()`. It is called only from the lunch branch with `habits.lunch: 'sofa'`, which no coworker uses now.)*
 
-**hairStyle `swept`** — *(needs definition)* Men's short hair style, drawn by `detailHair()`. Used by Anh Bảo from v1.10.0 in place of `style: 'fringe'`. See `docs/spec/dong-nghiep.md` §8.
+**hairStyle `swept`** — *(needs definition)* Men's short hair style, drawn by `detailHair()`. Used by Anh Bảo from v1.10.0 in place of `style: 'fringe'`. See `docs/spec/ngoai-hinh-dong-nghiep.md`.
 
 **showWelcomeBack()** — *(needs definition)* Boot-time popup in `index.html` section 14 ("Chào mừng <tên> quay lại!"). Shown when `Store.days > 0` or a valid `session` exists. Offers continue (`resumeSession()` or `startDay()`), "🆕 Chơi mới" (with a confirmation that calls `Store.clear()`), and "Thôi, quay lại". Added v1.10.0. See `docs/spec/the-gioi-lien-tuc.md` §11.5.
 
-**look.collarStyle** — *(needs definition)* Used with `look.neck: 'collar'`. Value `'polo'` draws a polo collar: a neck band in `look.collar`, two V flaps, and a back band. Used by Anh Bảo, with `collar: 0x1a1a1c` (black). Added v1.10.0. See `docs/spec/dong-nghiep.md` §8.
+**look.collarStyle** — *(needs definition)* Used with `look.neck: 'collar'`. Value `'polo'` draws a polo collar: a neck band in `look.collar`, two V flaps, and a back band. Used by Anh Bảo, with `collar: 0x1a1a1c` (black). Added v1.10.0. See `docs/spec/ngoai-hinh-dong-nghiep.md`.
 
-**pattern `redwhite`** — *(needs definition)* A `look.pattern` value drawn by `patternMat()`: full-width horizontal red bands on off-white, which override `look.shirt`. Used by Anh Bảo, intentionally (the user's request for v1.10.0). Added v1.10.0. See `docs/spec/dong-nghiep.md` §8.
+**pattern `redwhite`** — *(needs definition)* A `look.pattern` value drawn by `patternMat()`: full-width horizontal red bands on off-white, which override `look.shirt`. Used by Anh Bảo, intentionally (the user's request for v1.10.0). Added v1.10.0. See `docs/spec/ngoai-hinh-dong-nghiep.md`.
 
 **Cốc mang đi (takeaway cup)** — *(needs definition)* The street-style cup built by `makeTakeawayCup()`, used for pantry treats and Anh Bảo's desk. Added v1.12.0.
 
@@ -510,3 +510,29 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 **FOODS** — *(needs definition)* The dish table for Chủ tịt's 14:10 snack treat: `pizza`, `vitquay`, `takoyaki`, and `cavien`, each with a name and an emoji. `index.html` variety block, between sections 2 and 3. Added v1.12.0.
 
 **makeFood(kind)** — *(needs definition)* Builds the low-poly model of a dish from `FOODS` (`index.html` section 6). Added v1.12.0.
+
+**Hỏi lại (re-ask)** — *(needs definition)* The talk-menu choice "🔁 Hỏi lại: cần lấy gì nhỉ?" for the document-quest asker, shown only at quest stage 2. It repeats the ask line and changes nothing else. Added v1.13.0. See `docs/spec/nhiem-vu-tai-lieu.md` §3.
+
+**WRONG_DOC** — *(needs definition)* Table in `index.html` (variety block) with 2–3 reaction lines per document-quest asker, used after a wrong pick. `{doc}` is the needed document, `{name}` the one brought. Added v1.13.0. See `docs/spec/dong-nghiep.md` §7.7.
+
+**Giai đoạn nhiệm vụ (quest stage)** — *(needs definition)* `D.quest.stage` for the afternoon document quest: 0 not started, 1 asked, 2 accepted (cabinet open), 3 done. Added v1.13.0. See `docs/spec/nhiem-vu-tai-lieu.md` §2.
+
+**Thẻ lấy nhầm hồ sơ (wrong-pick card)** — *(needs definition)* The card "Bạn mang “X” tới <name>." shown after a wrong document pick at the cabinet, with the asker's reaction and the buttons "Quay lại tủ tìm" and "Để lát nữa". Added v1.13.0.
+
+**Rớt mạng (wifi drop)** — *(needs definition)* Title of the `wifi` surprise. Renamed from "Mất mạng" in v1.13.0 (wording only). See `docs/spec/noi-dung-bat-ngo.md` §1.1.
+
+**Hồ sơ nhân sự (HR file)** — *(needs definition)* Document named in Thảo's document quest. Added v1.13.0. See `docs/spec/nhiem-vu-tai-lieu.md` §5.
+
+**Danh sách lỗi cần kiểm (bug checklist)** — *(needs definition)* Document named in Yến's document quest. Added v1.13.0. See `docs/spec/nhiem-vu-tai-lieu.md` §5.
+
+**Ngồi làm việc (sit-and-work time-lapse)** — *(needs definition)* The first choice on the desk work card. It seats the player at the desk and runs the clock fast (`startTimelapse()`, `endTimelapse()`, `G.mode = 'timelapse'`). No task credit. Added v1.14.0. See `docs/spec/ngoi-lam-viec.md` §2.
+
+**Lớp phủ thời gian trôi (`#tl` overlay)** — *(needs definition)* The full-screen overlay with the clock and the text "chạm bất kỳ đâu để dừng", shown during the time-lapse. A tap or click on it ends the time-lapse. Added v1.14.0.
+
+**Hạn mức việc (`WORK_QUOTA`)** — *(needs definition)* `WORK_QUOTA = 2` in `index.html` (variety block). The number of finished desk tasks needed to avoid the end-of-day reaction. Added v1.14.0. See `docs/spec/ngoi-lam-viec.md` §3.1.
+
+**Nhắc việc cuối ngày (end-of-day nag, `workNag()`)** — *(needs definition)* The reaction card from the coworker who assigned the desk task, shown in `endDay()` when `D.tasks` is below `WORK_QUOTA`. It costs affinity and mood and then the note card follows. Added v1.14.0. See `docs/spec/ngoi-lam-viec.md` §3.2.
+
+**WORK_NAG** — *(needs definition)* Table in `index.html` (variety block) with, per assigner, `aff`, `mood`, an optional `punch`, and `lines` for the end-of-day reaction. The Chủ tịt and Nam entries are not reachable yet. Added v1.14.0. See `docs/spec/ngoi-lam-viec.md` §3.3 and §3.5.
+
+**WORK_VOICE** — *(needs definition)* Table in `index.html` with the request text per assigner for sort and order tasks, used by `workBrief()`. Anh Bảo has no entry and uses the generic line. Added v1.14.0. See `docs/spec/ngoi-lam-viec.md` §3.4.

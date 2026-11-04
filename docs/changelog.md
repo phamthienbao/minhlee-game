@@ -2,6 +2,75 @@
 
 All notable changes to "Một Ngày Ở MinhLee" (formerly "Một Ngày Ở Công Ty", renamed in v1.0.3). Newest first. Entries are appended, never rewritten.
 
+## v1.14.0 — 2026-11-04
+
+Sit-and-work time-lapse at the player's desk, and an unfinished-work reaction at day end. When the player finishes fewer than 2 desk tasks, the coworker who gave the work comes by before the note card. Two more coworkers, Yến and Thảo, can now assign desk tasks.
+
+### Added
+
+- Time-lapse choice "🪑 Ngồi làm việc (thời gian trôi qua)" as the first option on the desk work card (`workActivity()`, `index.html` section 11), before "▶ Bắt đầu làm / Làm tiếp" and "Để lát nữa".
+- `startTimelapse()` (section 11): seats the player with `playerSit(PLAYER_DESK.seat)` (or uses the existing seat), saves the camera in `G.tl = { fast, yaw, dist, pitch, ms }`, sets `G.mode = 'timelapse'`, `G.fast = true`, `CAM.dist = 13`, `CAM.pitch = 0.85`, and shows the `#tl` overlay with clock `#tl-clock`.
+- `endTimelapse(openMenu, msg)` (section 11): restores fast mode and camera, hides `#tl`, calls `updateCamera(0, true)` outside list mode, and when `openMenu` is true sets `G.mode = 'play'` and reopens the work card. Tap or click on `#tl`, Space, Enter, or Esc calls it with `openMenu = true`.
+- Timelapse branch of `update()` (section 14): ticks the clock, `CAM.yaw += dt * 0.2`, and stops when `currentMilestone(D.minute).id` differs from `G.tl.ms`, with a toast "🕘 hh:mm · <milestone>". `updateCamera()` uses `G.tl` for the target (0, 0.5).
+- `WORK_QUOTA = 2` and `WORK_NAG` (variety block, between sections 2 and 3): per assigner `aff`, `mood`, optional `punch`, and 1–2 reaction `lines`. Entries for `an3`, `yen`, `thao`, `bao`, `thanh`, and `nam`.
+- `workNag(next)` (section 11): picks a line, applies affinity and mood losses, adds a moment, bubble, and a card with "Dạ, em xin lỗi, mai em làm" (affinity +1). `D.stats.nagged` counts reactions. Chị Ba plays the `punch` animation for 2.4 s.
+- `WORK_VOICE` (variety block): request text per assigner for sort and order tasks. Used by `workBrief()`; a missing entry falls back to the generic line.
+- Two new sort sets and two new order sets (`SORT_SETS`, `ORDER_SETS`): Yến (QC bug sorting: "Lỗi giao diện", "Lỗi kết nối", "Lỗi chạy chậm"; order "Kiểm lại lỗi đăng nhập…") and Thảo (HR: "Tuyển dụng", "Sự kiện nội bộ", "Đào tạo"; order "Gửi lịch phỏng vấn…"). Desk tasks now come from four requesters: `bao`, `an3`, `yen`, `thao`.
+- Spec `docs/spec/ngoi-lam-viec.md` (new): time-lapse, end-of-day reaction, assigner voices, AC-100 to AC-115.
+
+### Changed
+
+- "🪑 Ngồi làm việc" is the first choice. "Để lát nữa" now also stands the player up (`playerStand`) when seated.
+- The work card briefing ends with "Hôm nay nên xong ít nhất 2 việc, không thì cuối ngày sẽ bị nhắc đó." (`WORK_QUOTA`).
+- `endDay()` (section 14): calls `endTimelapse(false)` first. If `D.tasks < WORK_QUOTA`, it runs `workNag(showNote)` before the note card. Otherwise it shows the note card directly. Early leave ("Có, mình về thôi") goes through `endDay()`, so the same check applies.
+- Reversal of the earlier "no penalty" promise. The desk task now has an end-of-day consequence (affinity and mood), as described above. `docs/spec/mot-ngay-o-cong-ty.md` AC-71 and the product guide's 9:00 row are updated. The work card text in `index.html` has no "không tính điểm / không bị phạt" line.
+
+### Verification
+
+- Headless Chrome, reported by the requester (not in the repo): menu order, mode switch, overlay, clock (15 game minutes in 3 s), yaw orbit, tap returns to the menu with camera and fast mode restored, auto-stop at the next milestone (09:00), reaction lines for all four assigners, and the no-reaction case with 2 or more tasks.
+- Not recorded: touch devices, a full real-time day, a screenshot of the camera orbit, the Chủ tịt and Nam lines (not reachable, see Internal), the "Bắt đầu làm" button after a time-lapse, and the values of affinity and mood losses.
+
+### Internal
+
+- `index-offline.html` contains the v1.14.0 code. The diff against `index.html` shows only the importmap line and the offline comment.
+- `CLAUDE.md` and `index.html` were not edited in this docs pass.
+- `WORK_NAG.thanh` and `WORK_NAG.nam` are never read: no set has `from: 'thanh'` or `'nam'`. Tracked in `docs/tasks.md` (v1.14.0).
+- Docs: `docs/spec/ngoi-lam-viec.md` (new), `docs/spec/mot-ngay-o-cong-ty.md` (status, modes, day-end bullet, AC-71 note, AC-100 to AC-115 row; §8 bullets merged to stay under 200 lines), `docs/spec/dong-nghiep.md` (status, roster rows for Thảo and Yến, §7.7 pointer), `docs/product-guide.md` (9:00 row, "Sit and let time pass", "Ending the day", two FAQ entries), `docs/glossary.md` (6 new terms, dated note on "Người nhờ"), `docs/tasks.md` (v1.14.0 entry and follow-ups; v1.11.0 and v1.12.0 done entries moved to `docs/archive/tasks-done-2026-11.md`).
+
+## v1.13.0 — 2026-11-04
+
+Afternoon document quest without hints, plus a wording fix for the wifi surprise. The player now has to remember what the coworker asked for. A new "🔁 Hỏi lại" choice repeats the ask, and a wrong document gets a reaction in the asker's own voice.
+
+### Added
+
+- Talk-menu choice "🔁 Hỏi lại: cần lấy gì nhỉ?" (`startTalk()`, `index.html` section 11). It shows only for the document-quest asker at quest stage 2. It speaks `fill(D.quest.def.ask)` as a bubble and opens a card with the line and "Ok, mình đi lấy". It does not change the stage and has no penalty.
+- `WRONG_DOC` (variety block, between sections 2 and 3): 2–3 reaction lines per asker, one picked at random per wrong pick. `{doc}` is replaced by the needed document and `{name}` by the document brought. The line is shown as a bubble and in a card from the asker: "Bạn mang “X” tới <name>.", with buttons "Quay lại tủ tìm" (reopens `cabinetFlow()`) and "Để lát nữa" (closes, stage stays 2). Per-person tone: `docs/spec/dong-nghiep.md` §7.7.
+- Two new askers in `DOC_QUESTS`: Yến (doc "Danh sách lỗi cần kiểm") and Thảo (doc "Hồ sơ nhân sự"). `DOC_QUESTS` now has 5 entries (an3, thanh, nam, yen, thao).
+- `DOC_NAMES` has 6 entries, including "Kế hoạch quý 4", which no quest asks for. The cabinet shows the needed document plus 4 random others (5 buttons) and "Đóng tủ".
+
+### Changed
+
+- Document quest hints (no document name, except the ask and the asker's reaction after a wrong pick):
+  - Cabinet card role line: "Hồ sơ cần tìm". The "Cần tìm: <doc>" line is removed.
+  - Wrong-pick text: the "(Gợi ý: cần đúng tên …)" sentence is removed. The asker restates the needed document in the reaction instead.
+  - Afternoon hint (`afternoonHint()`, section 10), stage 2: "Tìm hồ sơ <name> đã nhờ ở tủ tài liệu (góc phải phía dưới, gần cửa). Quên thì ghé hỏi lại nhé." Stage 1 is unchanged.
+  - Mission-board row (`extraTasks()`): "Giúp <name> tìm hồ sơ đã nhờ ở tủ tài liệu". The document name is removed. See `docs/tasks.md` (v1.13.0) for a wording check.
+  - Accept toast: "📎 Nhiệm vụ: tìm hồ sơ ở tủ tài liệu" (no document name).
+- Wrong picks no longer show the "(Gợi ý…)" line. The asker's reaction (`WRONG_DOC`) replaces it, and the card keeps the same two buttons.
+- Surprise `wifi` (variety block, `SURPRISES`): title "Mất mạng" becomes "Rớt mạng". The two diary moments of its options now say "rớt mạng" ("Khởi động lại router, cứu cả phòng khỏi rớt mạng." and "Rủ cả phòng ra pantry trong lúc rớt mạng."). Three strings in total. No effect values changed.
+
+### Verification
+
+- Headless Chrome, reported by the requester (not in the repo): all 5 askers give a personality line that names the needed document; no hint text appears; a correct pick completes the quest at stage 3.
+- Not recorded: "🔁 Hỏi lại" behaviour, the 5-button cabinet layout, and the badge at day end. Not tested over a full day or on a real device. Wording not reviewed by a native speaker.
+
+### Internal
+
+- `index-offline.html` matches `index.html` (diff shows only the importmap line and the offline comment). It contains the v1.13.0 strings; `tools/build-offline.py` was not run in this docs pass.
+- `CLAUDE.md` and `index.html` were not edited in this docs pass.
+- Spec split: `docs/spec/dong-nghiep.md` §8 "Detailed looks" moved to `docs/spec/ngoai-hinh-dong-nghiep.md` (file was at 200 lines). New `docs/spec/nhiem-vu-tai-lieu.md` holds the document-quest rules, stages, and AC-95 to AC-99. References to the looks section were updated in `docs/glossary.md`, `docs/tasks.md` (v1.13.0 entries), and `docs/spec/mot-ngay-o-cong-ty.md` §4.1 and §8. Older `docs/changelog.md` entries were not edited.
+- Docs: `docs/spec/mot-ngay-o-cong-ty.md` (status, AC-10, §4.2, §8), `docs/spec/bang-nhiem-vu.md` (§3.3 row, new §3.5), `docs/spec/dong-nghiep.md` (§7.7), `docs/spec/noi-dung-bat-ngo.md` (status, row 6), `docs/product-guide.md` ("The document request", FAQ), `docs/glossary.md` (6 new terms), `docs/tasks.md` (v1.13.0 Done and Follow-ups; the v1.10.0 and v1.10.1 done entries moved to `docs/archive/tasks-done-2026-11.md`).
+
 ## v1.12.0 — 2026-11-04
 
 Takeaway cups and pantry treats. The drinks Chủ tịt buys are now shown as street-style takeaway cups. The 11:05 treat picks a random drink, the coworkers who join him gather at the pantry, and everyone else finds a cup on their desk. Anh Bảo's desk has an iced black coffee.
