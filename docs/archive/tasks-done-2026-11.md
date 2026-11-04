@@ -339,3 +339,25 @@ Moved from `docs/tasks.md` on 2026-11-04 to keep that file under 300 lines. Entr
   - [x] JavaScript syntax check and headless smoke run
   - [ ] Native-speaker review of the new Chị Ba wording (not reviewed)
   - [ ] Hand-check Chị Ba's lines in a real browser (tone and bubble fit, not recorded)
+
+## Done (v1.9.0 and v1.9.5, moved from tasks.md in v1.11.0)
+
+- [x] v1.9.5 (2026-11-04): Anh Bảo's look re-matched to the user's photo (by eye only: navy colour-block polo, black fringe, thin light-silver glasses). Canon fix: Chị Ba is not allergic to cats (golden cat Nghệ). Cat banter with Chủ tịt added (chat line, two duos, `th-cat` intro and options). Details: `docs/changelog.md` v1.9.5
+  - [x] `NPC_PROFILES` `bao` look (`hem`, `cuff`, `shortSleeve`, navy collar, `fringe`, `rect` glasses), new look fields `look.hem` and `look.cuff` in `buildCharacter()`
+  - [x] `th-cat` intro: allergy lines removed. Option 2 relabelled, option 3 result updated. Chị Ba `say.chat` line about Nghệ. Two `DUOS` entries (`an3`–`thanh`, `thanh`–`an3`): 19 scripts for 17 pairs
+  - [x] JavaScript syntax check and headless render of Anh Bảo (viewed by eye)
+  - [x] Docs: `docs/spec/dong-nghiep.md`, `docs/spec/noi-dung-bat-ngo.md`, `docs/glossary.md`, `docs/product-guide.md`
+  - [ ] Native-speaker review of the cat banter, the `th-cat` intro, and its options (not reviewed)
+  - [ ] Side-by-side likeness check of Anh Bảo against the reference photo (by eye only, not measured). Real-device look check at the default camera distance (Vừa)
+  - [ ] Hand-check the Chị Ba–Chủ tịt duo visit (both script orders, bubbles) and the `th-cat` cards in a real browser (not recorded)
+  - [ ] `dist/MinhLee-mac.zip` not rebuilt in this pass (see the v1.8.6 follow-up)
+
+- [x] v1.9.0 (2026-11-04): six new day themes (demo, power, cat, hack, sick, award), each opening with a story intro at 08:50 that fires when the player is near a coworker. Desk items: finished desk tasks add up across days and unlock 8 items on the 3D desk, with a collection screen in the pause menu. Details: `docs/changelog.md` v1.9.0, `docs/spec/noi-dung-bat-ngo.md` §3.2 and AC-75 to AC-77, `docs/spec/bang-nhiem-vu.md` §9 and AC-78 to AC-80, `docs/product-guide.md`
+  - [x] `DAY_THEMES` (six themes with `intro`), `UNLOCKS`, `awardWork()`, `showUnlocks()`, `nextUnlockLine()`, `showCollection()`, `buildDeskItems()` in `index.html`
+  - [x] Headless Chrome: intro fires near a coworker; unlock thresholds; 8 desk items built
+  - [x] Offline copies, netlify, and app resources contain the v1.9.0 code (grep check in the doc pass)
+  - [ ] Look at the 8 desk items in 3D (shapes not reviewed)
+  - [ ] Test the intro on a real device and in Safari or Firefox; check the far-away skip and the 11:20 cut-off (not recorded)
+  - [ ] Full-day headless run covering the six new themes and all 18 intro options (AC-76, AC-77)
+  - [ ] Set `CFBundleShortVersionString` to 1.9.0 and rebuild `dist/MinhLee-mac.zip` (see Follow-ups, v1.8.6 item)
+  - [ ] Docs: `docs/product-guide.md`, `docs/spec/*`, `docs/glossary.md` updated. `CLAUDE.md` not touched (user choice)

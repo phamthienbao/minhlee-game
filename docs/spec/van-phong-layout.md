@@ -1,6 +1,6 @@
 # Spec: Bố cục văn phòng (office layout)
 
-Status: v1.3.0 (2026-11-04). Wall clock (north wall) updated in v1.8.8 (AC-74). Unlocked desk items on the player's desk added in v1.9.0 (`docs/spec/bang-nhiem-vu.md` §9, AC-79). Source of truth: `index.html`, the layout constants block that starts at the comment "Bố cục theo sơ đồ" (section 5, about line 755), `buildOffice()` (section 5), and `buildSpots()` (section 11). Parent spec: `docs/spec/mot-ngay-o-cong-ty.md`. Coworker seats are listed by name in `docs/spec/dong-nghiep.md`.
+Status: v1.11.0 (2026-11-04). Lower-row desk 13 added (next to Thông) and Tùng moved there. Nguyên now sits at desk 8 (§3, AC-85). Wall clock (north wall) updated in v1.8.8 (AC-74). Unlocked desk items on the player's desk added in v1.9.0 (`docs/spec/bang-nhiem-vu.md` §9, AC-79). Source of truth: `index.html`, the layout constants block that starts at the comment "Bố cục theo sơ đồ" (section 5, about line 755), `buildOffice()` (section 5), and `buildSpots()` (section 11). Parent spec: `docs/spec/mot-ngay-o-cong-ty.md`. Coworker seats are listed by name in `docs/spec/dong-nghiep.md`.
 
 The layout follows a user-supplied floor plan, `so-do-van-phong-2.svg` (1200 × 900 px, top-down). The file is not in the repo. Before v1.3.0 the office had a different layout (desks in two rows, meeting table top right, door on the south wall). That layout is not recorded here.
 
@@ -22,9 +22,9 @@ All values in metres. Walls: north z −8.1, west x −12.1, east x 12.1 (with t
 | Walkway | z 1.29 to 3.29, full width | `DOOR_GAP` (plan y 505–590) | Open floor band between the two seating zones. No separate object |
 | Left long table | centre (−6.62, −2.09), 6.9 × 1.5, spans x −10.07 to −3.17 | `LONG_TABLES[0]` | Seats 0–3 |
 | Right long table | centre (6.62, −2.09), 6.9 × 1.5, spans x 3.17 to 10.07 | `LONG_TABLES[1]` | Seats 4–8 |
-| Lower row of own desks | z 4.73 (seat z 5.85) | `DESKS` 9–12 | Four 2.0 × 1.0 desks |
+| Lower row of own desks | z 4.73 (seat z 5.85) | `DESKS` 9–13 | Five 2.0 × 1.0 desks. Desk 13 added in v1.11.0 at x −4.4 (`addOwnAt(-4.4)`) |
 | Column 1 | centre (−0.39, −2.18), 1.0 × 1.06, 3.2 m tall | `COLUMNS[0]` | Middle of the room, just south of the meeting room |
-| Column 2 | centre (−1.77, 4.49), 0.94 × 1.0, 3.2 m tall | `COLUMNS[1]` | Lower middle, at the level of the lower row, between Thông's and Chị Ba's desks |
+| Column 2 | centre (−1.77, 4.49), 0.94 × 1.0, 3.2 m tall | `COLUMNS[1]` | Lower middle, at the level of the lower row, between Tùng's (desk 13) and Chị Ba's desks |
 | Meeting room | x −3.0 to 3.0, z −8.0 to −2.9 | `MEET_ROOM` | Top centre, between the long tables. Not in the plan (see §6) |
 | Pantry | Counter x −11.5 to −7.3, z −7.85 to −7.05. Fridge at (−11.45, −5.9). Pantry area about x −11.9 to −6.4, z −8.0 to −4.6 | `PANTRY_SPOTS`, `buildOffice()` | Top left (north west) |
 | Daybed | Obstacle centre (−4.6, −6.9), 1.8 × 1.0 | `LOUNGE_SEAT` | North wall, east of the pantry. Used by Nguyên |
@@ -51,18 +51,19 @@ The index is the value of `desk` in `NPC_PROFILES` (`index.html`, section 2). Lo
 | 5 | Hiện | Right table, north | 6.17 | −3.39 | south |
 | 6 | Nam | Right table, north | 8.52 | −3.39 | south |
 | 7 | Chú 7 (An) | Right table, south | 4.93 | −0.79 | north |
-| 8 | Tùng | Right table, south | 8.07 | −0.79 | north |
+| 8 | Nguyên (Tùng's seat until v1.10.1) | Right table, south, next to Chú 7 | 8.07 | −0.79 | north |
 | 9 | Thông | Lower row | −6.84 | 5.85 | north |
 | 10 | Chị Ba (An) | Lower row | 3.41 | 5.85 | north |
 | 11 | Thảo | Lower row | 6.44 | 5.85 | north |
 | 12 | Yến | Lower row | 9.47 | 5.85 | north |
-| none | Nguyên | Remote. No seat at a desk (`desk: null`) | — | — | — |
+| 13 | Tùng (v1.11.0) | Lower row, next to Thông | −4.40 | 5.85 | north |
 | player | Player | `PLAYER_DESK`, lower row, left of Thông | −10.20 | 5.85 | north |
 
 Notes:
 - Long-table seat z is the table z ± 1.3 (north −1.3, south +1.3). Each seat has a visit point 1.2 m to its east (`visit`).
-- Lower-row desks sit at z 4.73, and the seat is 1.12 m south of the desk.
-- Seat x values come from the plan x of each mark.
+- Lower-row desks sit at z 4.73, and the seat is 1.12 m south of the desk. Own-desk visit point: desk x + 1.5, z + 1.1. Approach point: seat z + 2.15.
+- Desk 13 (v1.11.0): desk centre (−4.4, 4.73), visit point (−2.9, 5.83), approach (−4.4, 6.88). Desks are 2.0 m wide, so the gap to Thông's desk edge is about 0.44 m. The gap to `COLUMNS[1]` is about 1.2 m. Spacing and pathing not playtested.
+- Seat x values come from the plan x of each mark. Desk 8 is a plan seat: only the coworker changed in v1.11.0.
 
 ## 4. Fixed interaction points (`buildSpots()`)
 
@@ -90,6 +91,7 @@ The user can change each of these. The value to change is shown. The daybed, sof
 | Item | Current value | Where to change | Reason |
 |---|---|---|---|
 | Player desk | (−10.2, z 4.73), bottom left, left of Thông | `PLAYER_DESK` | The plan has no desk for the player. The position was chosen by the maintainer |
+| Desk 13 (v1.11.0) | (−4.4, z 4.73), lower row, next to Thông | `addOwnAt(-4.4)` | Added on the maintainer's brief. Not in the plan. Spacing and pathing not playtested |
 | Meeting room | x −3 to 3, z −8 to −2.9, top centre | `MEET_ROOM`, `MEET_TABLE`, `MEET_SEATS` | The plan has no meeting room. It sits between the two long tables. Glass walls on the east and west sides for z −8.0 to −5.1. The lower part of each side (z −5.1 to −2.9) is open as a side door. The south side is glass with an opening at x −1.9 to 1.9 |
 | Daybed | North wall, east of the pantry | `LOUNGE_SEAT` | Plan item moved as requested |
 | Sofa | North east corner | `SOFA_SEATS` | Plan item moved as requested |
@@ -112,6 +114,7 @@ The user can change each of these. The value to change is shown. The daybed, sof
 | Check | Result |
 |---|---|
 | Headless Chrome run, throwaway harness (not in the repo), 2026-11-04 | No JS errors. No collision violations, except one transient NPC overlap sample |
+| Headless Chrome, v1.11.0 (2026-11-04) | `DESKS.length` is 14. Tùng seats at (−4.4, 5.8) on desk 13. Nguyên is at desk 8 (8.1, −0.8) at 10:00. Screenshots show Nguyên at desk 8 and the new desk in the lower row |
 | Full simulated day | Completes |
 | NPCs reach the pantry | Confirmed with a 75-second lunch simulation |
 | Screenshots | Show the two long tables, the lower row, the two columns, the door, and the meeting room |
@@ -124,7 +127,7 @@ Status legend as in `docs/spec/mot-ngay-o-cong-ty.md` section 3.
 | # | Criterion | Status |
 |---|---|---|
 | AC-52 | Two shared long tables. Left: desks 0–3 (two north, two south). Right: desks 4–6 north, 7–8 south. Seated people face each other across the table | Partly verified (screenshots, checked by eye) |
-| AC-53 | Lower row: desks 9–12 face north. Player desk at bottom left, left of Thông | Partly verified (screenshots). Player desk position is an assumption (§6) |
+| AC-53 | Lower row: desks 9–13 face north. Player desk at bottom left, left of Thông | Partly verified (screenshots). Player desk position is an assumption (§6). Desk 13 added in v1.11.0 (AC-85) |
 | AC-54 | Two columns at the plan positions block movement | Verified (no collision violations; screenshot) |
 | AC-55 | Front door on the east wall, aligned with the walkway. NPCs arrive and leave there. The player starts beside it | Partly verified (harness and screenshots) |
 | AC-56 | Pantry top left with fridge and counter. NPCs reach pantry spots | Verified (75-second lunch simulation) |
@@ -133,6 +136,7 @@ Status legend as in `docs/spec/mot-ngay-o-cong-ty.md` section 3.
 | AC-59 | Layout matches the SVG by measurement | Not verified (checked by eye only) |
 | AC-60 | Layout works on phones and touch devices | Not verified (headless Chrome only) |
 | AC-74 | Wall clock on the north wall shows the in-game time and its hands move with the game clock. Redrawn when the in-game minute changes, and after a time skip | Partly verified (headless Chrome: face exported at 08:30, 10:10, 14:20; three different images; 14:20 hands correct). Not viewed on a real device |
+| AC-85 | (v1.11.0) Desk 13 in the lower row next to Thông, seat at (−4.4, 5.85), is used by Tùng. Desk 8 (right table, south) is used by Nguyên. Lower-row spacing and pathing at peak times are not checked | Partly verified (headless Chrome: seat positions, screenshot). Full-day run and real device not done |
 
 ## 10. Related docs
 

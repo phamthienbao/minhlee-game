@@ -2,6 +2,37 @@
 
 All notable changes to "Một Ngày Ở MinhLee" (formerly "Một Ngày Ở Công Ty", renamed in v1.0.3). Newest first. Entries are appended, never rewritten.
 
+## v1.11.0 — 2026-11-04
+
+Office layout change. A new private desk is added in the lower row, Tùng moves to it, and Nguyên (who had no desk) takes Tùng's old seat. Nguyên now works at that desk instead of on a pantry sofa. His single nap on the daybed after lunch is unchanged.
+
+### Added
+
+- Desk 13, lower row, next to Thông's desk 9: `addOwnAt(-4.4)` in `index.html` section 5. Built like the other own desks: z `planZ(651)`, seat (−4.4, 5.85) facing north, approach (−4.4, 6.88), visit point (−2.9, 5.83). `DESKS.length` is now 14.
+- Trung's visits to Nguyên can now happen at Nguyên's desk. The 40% gate in `npcAmbient()` accepts Nguyên when his goal matches `/^(sofa|lounge|desk)/`, so `desk:work` is included.
+
+### Changed
+
+- `NPC_PROFILES` `tung`: `desk: 8` → `desk: 13`.
+- `NPC_PROFILES` `nguyen`: `desk: null` → `desk: 8`, the south seat of the right-hand long table at (8.07, −0.79), next to Chú 7. He now works there outside the nap window.
+- `decideGoal()` (section 9), for a `habits.lounge` coworker: nap window → `goalLounge()`; else a coworker with a desk → `goalDesk(n, 'work')`. The inline pantry-sofa branch runs only when `desk` is null. No coworker is null now, so that branch is unused.
+- `npcAmbient()` Trung→Nguyên gate: Nguyên is removed from Trung's normal candidate list (`!(n.id === 'trung' && x.id === 'nguyen')`) and added once through the 40% gate. This also removes the double push into `duoC` that v1.10.0 had (`docs/tasks.md`).
+- A visitor to a partner with a desk walks to `DESKS[n].visit`. The approach-point branch in `decideGoal()` still serves partners without a desk.
+- Nguyên's lines: greet "Ơ {ten}… mình mới lên công ty, ngồi chỗ cũ của Tùng nha."; chat "Chỗ cũ của Tùng ngồi êm lắm, mình ké hoài."; traits note updated to the desk seat.
+- Arrival toast for Nguyên removed from `processTimeEvents()` (the user asked for no "Nguyên hiếm hoi lên công ty" message): he now just arrives without a toast.
+- Specs: `docs/spec/van-phong-layout.md` (desk table: 14 seats, desk 13, desk 8 owner, coordinates, AC-85), `docs/spec/dong-nghiep.md` (roster, §3, §4 field notes, AC-46, AC-49, AC-86), `docs/spec/mot-ngay-o-cong-ty.md`, `docs/spec/noi-dung-bat-ngo.md`, `docs/product-guide.md`, `docs/glossary.md` (dated notes added, no definitions rewritten).
+
+### Verification
+
+- Headless Chrome (2026-11-04): `DESKS.length` is 14. Tùng seats at (−4.4, 5.8) on desk 13. Nguyên is `desk:work` at (8.1, −0.8) at 10:00, and his nap goal is `lounge`. A screenshot shows Nguyên at desk 8 and the new desk in the lower row.
+- Source check only: Trung→Nguyên visit gate and visit point at desk 8.
+- Not checked: walking paths at peak times near desks 9 and 13 and `COLUMNS[1]`, a full simulated day, real devices.
+
+### Internal
+
+- `docs/tasks.md`: v1.9.0 and v1.9.5 done entries moved to `docs/archive/tasks-done-2026-11.md` to keep the file under 300 lines.
+- `CLAUDE.md` was not edited (user's instruction). Its Editing section still says desks 0–12 and Nguyên `desk: null`. Stale until updated by hand.
+
 ## v1.10.1 — 2026-11-04
 
 The welcome-back popup now hides the title screen's name and gender form. Returning players see only the popup, so the "▶ Tiếp tục" choice is the first thing they meet. The reason was that players could miss the small "Tiếp tục" button on the name screen.

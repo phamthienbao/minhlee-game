@@ -1,6 +1,6 @@
 # Spec: Đồng nghiệp (coworkers, address terms, remote worker)
 
-Status: v1.10.0 (2026-11-04). Nguyên naps once after lunch and otherwise works from a pantry sofa (§3, AC-49). Anh Bảo's look: black polo collar, white cuffs, swept hair, red-and-white striped shirt (§8; set by the user's request, not the solid polo of the first brief). Nguyên visits Chị Thảo from a pantry sofa (§3). Trung sometimes visits him there or on the daybed (§3, v1.10.0). Earlier: v1.9.5 (2026-11-04). 13 of 14 coworkers use `look.detail` (§8); Trung keeps his original face. Yến, Thạnh, and Phú were re-matched to photos in v1.9.3, and Anh Bảo in v1.9.5 (both by eye). The other looks are not re-matched to photos. Cat canon for Chị Ba and Chủ tịt is in §2. Earlier history: `docs/changelog.md`.
+Status: v1.11.0 (2026-11-04). Nguyên sits at desk 8 (Tùng's old seat) and works there, with one daybed nap after lunch (§3, AC-49). Tùng moved to desk 13. Trung may visit Nguyên at his desk (§3, AC-86). Looks: §8. Earlier history: `docs/changelog.md`.
 
 ## 1. Roster
 
@@ -15,7 +15,7 @@ Status: v1.10.0 (2026-11-04). Nguyên naps once after lunch and otherwise works 
 | 3 | Trung | — | Backend Dev | 4 | Catchphrase "Em nói thiệt". Custom look (v1.1.2). Right table, north. Visits Nguyên (v1.10.0, §3) |
 | 4 | Toàn | — | Backend Dev | 3 | Quiet, says little. Left table, south |
 | 5 | Hiện | — | Mobile Dev | 5 | Youngest. Refers to self as "em". Right table, north |
-| 6 | Tùng | — | Mobile Dev | 8 | Often invites people out for a light after-work drink (nhậu, kept light). Likes dares and challenge games: the request is to say "MinhLee" ten times in a row. Quirk 16:50 calls for nhậu. Custom look (v1.1.2). Right table, south |
+| 6 | Tùng | — | Mobile Dev | 13 | Often invites people out for a light after-work drink (nhậu, kept light). Likes dares and challenge games: the request is to say "MinhLee" ten times in a row. Quirk 16:50 calls for nhậu. Custom look (v1.1.2). Lower row, next to Thông (v1.11.0; was desk 8, right table, south) |
 | 7 | Nam | — | Mobile Dev | 6 | At the printer on printer days. "khìn khìn". Same age as Chủ tịt and Chị Ba (confirmed 2026-11-04). Calls Chủ tịt "bé Hạnh" when teasing (playful duo, `say.absent`, v1.8.1) and "Thạnh" in serious work talk (serious duo; quirk 09:42, "Thạnh ơi, 10 giờ họp nhé…", v1.8.2). Before Chủ tịt arrives (09:20), he sometimes says lines about missing him and jokes about him being late (`say.absent`, §7.5). Right table, north |
 | 8 | Thảo | nick: Bella | HR | 11 | The office foodie: knows many restaurants, drink shops, and good dishes. Greetings, chats, and requests are about food. Quirk 11:40 recommends a lunch place. Brings the birthday cake. Lower row |
 | 9 | Yến | nick: Én Pink | QC | 12 | "Là sao?". Lower row, right end |
@@ -23,9 +23,9 @@ Status: v1.10.0 (2026-11-04). Nguyên naps once after lunch and otherwise works 
 | 11 | Chị Ba | real: An (female) | Business Support | 10 | Supports product research: runs user surveys, builds reports, analyses the numbers. Strict in a fun way, and playfully "punches" colleagues (`visitAnim: 'punch'`, quirk 09:12). Quirk 09:48 re-checks charts before the meeting. Desk request: a survey report with only 40 respondents, and the options are to state the small sample, write it honestly, or overstate it as a joke. Afternoon quest: fetch "Báo cáo khảo sát người dùng" (`DOC_QUESTS`). Duo with Nam about survey data he forgot to send (`noi-dung-bat-ngo.md` §2). Golden cat Nghệ, not allergic (§2, v1.9.5). Same age as Chủ tịt and Nam. Stand-up catchphrase (v1.7.1): "Bực bội quá… thằng bánh tét đâu rồi!" (§7.5). Lower row |
 | 12 | Anh Bảo | real: Bảo | Product | 2 | Oldest in the office. Asks "vì sao". Red-and-white striped shirt with black polo collar and white cuffs, swept hair (§8, v1.10.0). Left table, south |
 | 13 | Thông | nick: Bamboo | R&D | 9 | Lower row, left end (bottom-left of the office) |
-| 14 | Nguyên | — | Designer | none (`desk: null`) | Works remotely. In the office on about half of the days. Naps once for 30–50 min after lunch, otherwise works from a pantry sofa, and visits Chị Thảo from it (§3, v1.10.0) |
+| 14 | Nguyên | — | Designer | 8 (v1.11.0) | Works remotely. In the office on about half of the days. Naps once for 30–50 min after lunch on the daybed, otherwise works at desk 8 (right table, south, next to Chú 7). Visits Chị Thảo (§3) |
 
-Desks 0–12 are used by coworkers 1–13. Since v1.3.0: desks 0–3 are the left long table, 4–8 the right long table, and 9–12 the lower row. The player's own desk is a separate spot (`Bàn của bạn`) at the bottom left. Seat positions: `docs/spec/van-phong-layout.md` §3.
+All 14 coworkers have a desk, numbered 0–13 (`DESKS` index). Desks 0–3 are the left long table, 4–8 the right long table, and 9–13 the lower row (since v1.3.0; desk 13 added in v1.11.0). The player's own desk is a separate spot (`Bàn của bạn`) at the bottom left. Seat positions: `docs/spec/van-phong-layout.md` §3.
 
 ## 2. Address conventions
 
@@ -49,19 +49,19 @@ The player is addressed with `{anh}` / `{Anh}` by gender (`fill()`, see `mot-nga
 
 ## 3. Remote worker: Nguyên
 
-- Profile: `id: 'nguyen'`, `role: 'Designer'`, `desk: null`. No gender is recorded: the profile has no gender field, no gender was stated, and Nguyên's lines contain no `{anh}` / `{Anh}`.
+- Profile: `id: 'nguyen'`, `role: 'Designer'`, `desk: 8` (v1.11.0; `null` before, with no desk). No gender is recorded: no gender field, none stated, and no `{anh}` / `{Anh}` in his lines.
 - Habits: `arrive: '10:15'`, `leave: '17:00'`, `coffee: 'morning'`, `lunch: 'pantry'`, `joinsMeeting: false`, `lounge: true`, `attendance: 0.5`.
 - Attendance: `resetNpcDay()` rolls `Math.random() > attendance` each day. On a remote day `times.arrive` is 99999, so Nguyên stays hidden all day. On about 50% of days he comes in (raised from 0.3 on 2026-11-04).
-- In office (v1.10.0): after meeting, events, lunch, coffee, and visits, `decideGoal()` picks the nap window first (`times.nap`: one window of 30–50 min, starting 55–80 min after lunch starts, `resetNpcDay()`). In that window he lies on `LOUNGE_SEAT` (cx −4.0, cz −6.9, `lie: true`, pose `lie`). Otherwise `goalSofa()` gives him a free pantry sofa seat from `SOFA_SEATS` (pose `type`, laptop). He lies down only if all sofa seats are taken. Simulated over 30 days, 10:30–16:50: lying ≈10% of checked time, sofa work ≈71%, other (lunch, coffee, visits) ≈19%. Visits (v1.10.0, `npcAmbient()` `sofaWorker`): from a sofa seat (goal `sofa:N`) he may start a visit, but only to Chị Thảo, who must be seated at `desk:work`. He never visits from the daybed. Trung visits him (v1.10.0, `npcAmbient()`, `decideGoal()`): when Trung is at `desk:work` in a visit window, each attempt has a 40% chance to add Nguyên as a partner while he is on a sofa seat or the daybed. Trung stands at Nguyên's seat approach point (`seat.ax` / `seat.az`; `LOUNGE_SEAT` if none), because Nguyên is never at `desk:work`. Lunch and coffee still use pantry spots. `goalLounge()` does not check occupancy, so only one coworker may use `habits.lounge` at a time (only Nguyên does). Canon (v1.10.0): he often asks Chị Thảo "Chị Thảo ơi, nay có ai mời nước không?" (pantry lines, 10:35 quirk, duos `nguyen`→`thao`, `noi-dung-bat-ngo.md` §2, reachable from the sofa since v1.10.0). Trung sometimes asks him to simplify a design because it is too hard to build; he answers sleepily that he will think about it after lying down (duos `trung`→`nguyen`, same section).
-- Daybed (moved in v1.3.0 to the north wall, east of the pantry): obstacle at (−4.6, −6.9), 1.8 × 1.0 m (`addObst`). Scene parts: teal frame, cream mattress, orange pillow. Built in section 5, `buildOffice()`. `PANTRY_SPOTS` has 8 standing spots (two moved in v1.2.0; old coordinates not recorded).
-- Arrival toast: `processTimeEvents()` shows "😴 Nguyên hiếm hoi lên công ty hôm nay, đang ở pantry!" at arrival + 8 min (wording changed in v1.10.0). Not shown on remote days. Quirk: 11:20, "(nằm dài ở pantry, mắt lim dim)", no animation.
+- In office (v1.11.0): `decideGoal()` runs meeting, events, lunch, coffee, visits, then the nap window (`times.nap`: one window of 30–50 min, starting 55–80 min after lunch starts, set in `resetNpcDay()`). In that window he lies on `LOUNGE_SEAT` (pose `lie`). Otherwise he sits at desk 8 (`desk:work`, pose `type`). Lunch and coffee still use pantry spots. Before v1.11.0 he had no desk and worked on a pantry sofa (simulated over 30 days: sofa work ≈71%, lying ≈10%, other ≈19%). The sofa branch in `decideGoal()` now runs only for a `habits.lounge` coworker with no desk, which nobody is. `goalLounge()` does not check occupancy, so only one coworker may use the daybed (only Nguyên does).
+- Visits (`npcAmbient()`): Nguyên may start a visit from his desk, or from a sofa seat, but only to Chị Thảo, who must be at `desk:work`. He never visits from the daybed. Trung may visit him (v1.10.0; desk since v1.11.0): when Trung is at `desk:work` in a visit window, each attempt has a 40% chance to add Nguyên as a partner, if Nguyên is at `desk:work`, on a sofa seat, or on the daybed. Nguyên at his desk is kept out of Trung's normal candidate list, so he enters only through this gate. Trung walks to desk 8's visit point (`DESKS[8].visit`, east of the seat). Lines and duo scripts: `docs/spec/noi-dung-bat-ngo.md` §2.
+- Daybed (moved in v1.3.0 to the north wall, east of the pantry): obstacle at (−4.6, −6.9), 1.8 × 1.0 m (`addObst`). Scene parts: teal frame, cream mattress, orange pillow. Built in section 5, `buildOffice()`. `PANTRY_SPOTS` has 8 standing spots (two moved in v1.2.0; old coordinates not recorded). No arrival toast (removed in v1.11.0 at the user's request). Quirk: 11:20, "(nằm dài ở pantry, mắt lim dim)", no animation.
 
 ## 4. Profile fields added in v1.2.0
 
 | Field | Type | Meaning |
 |---|---|---|
-| `desk` | number or `null` | `null`: no desk. `goalDesk()` returns `goalLounge()` instead |
-| `habits.lounge` | boolean | Idle default goal is the pantry daybed instead of the desk |
+| `desk` | number or `null` | Desk index 0–13. `null`: no desk, and `goalDesk()` returns `goalLounge()`. No coworker is `null` since v1.11.0 |
+| `habits.lounge` | boolean | Nap window on the daybed, otherwise desk work (since v1.11.0). Limits visits to Chị Thảo only |
 | `habits.attendance` | number 0–1 | Chance of coming in on a given day. Missing means always in |
 
 The section 2 header comment in `index.html` does not describe these three fields yet (see `docs/tasks.md`).
@@ -72,10 +72,10 @@ Status legend as in `docs/spec/mot-ngay-o-cong-ty.md` section 3.
 
 | # | Criterion | Status |
 |---|---|---|
-| AC-46 | `NPC_PROFILES` has 14 entries. 13 have desks 0–12. Nguyên has `desk: null`. The title subtitle says 14 coworkers. | Verified (14 NPCs in two headless runs). Subtitle checked in source only |
+| AC-46 | `NPC_PROFILES` has 14 entries, each with a unique desk 0–13 (v1.11.0; before, 13 had desks 0–12 and Nguyên had `desk: null`). The title subtitle says 14 coworkers. | Verified (v1.11.0, headless Chrome: `DESKS.length` 14). Subtitle checked in source only |
 | AC-47 | Address conventions (§2) appear in rendered lines. No old names (Thạnh, Bảo) appear in rendered text, except Chị Ba's "anh Thạnh" line. | Not recorded (source only). Native-speaker review pending. v1.4.3 source check: one Chủ tịt line in surprise `dating100k` still uses "Anh" (see §6) |
 | AC-48 | Nguyên is in the office on about 50% of days. On other days he never appears. | Not recorded (source only). Rate not measured |
-| AC-49 | On an office day Nguyên arrives about 10:15 and the arrival toast shows. He naps on the daybed once for 30–50 min after lunch and otherwise works from a pantry sofa seat (v1.10.0). | Partly verified (v1.4.x screenshot showed him lying on the daybed). Arrival time and toast not recorded. Sofa and nap split measured by simulation only (§3). Arrival toast reads "đang ở pantry" since v1.10.0 (`index.html` line 2390) |
+| AC-49 | On an office day Nguyên arrives about 10:15 (no arrival toast since v1.11.0). He naps on the daybed once for 30–50 min after lunch and otherwise works at desk 8 (v1.11.0). | Partly verified (v1.11.0, headless Chrome: at 10:00 `desk:work` at (8.1, −0.8), nap goal `lounge`, screenshot at desk 8). Arrival time not recorded. Full-day split not measured since v1.11.0; the v1.10.0 sofa split (§3) no longer applies |
 | AC-50 | The daybed is an obstacle. No collision violations with 14 NPCs. | Verified (two headless runs, plus a re-run after the 2026-11-04 changes: no JS errors, no collision violations). Transient NPC overlaps: see `mot-ngay-o-cong-ty.md` AC-4 |
 | AC-51 | Duos `thao-yen` and `hien-bao` play their scripted lines when those pairs visit. | Not recorded (source only) |
 | AC-61 | Bubbles sit above the speaker's head. If that point is off-screen, under the top bar, or in the bottom margin, the bubble is hidden, not pinned to the edge. Ambient bubbles are not started for coworkers outside the viewport (§7.1). | Reported verified (headless Chrome: `Bubbles.onScreen` true for visible coworkers, false for off-screen). Not checked on a real phone |
@@ -87,6 +87,7 @@ Status legend as in `docs/spec/mot-ngay-o-cong-ty.md` section 3.
 | AC-67 | Nam's 09:42 quirk ("Thạnh ơi, 10 giờ họp nhé…") shows once per day in its 09:42–09:50 window, while Nam is seated at his desk, within 9.5 m of the player, and on screen (§7.2). | Not recorded (source only, v1.8.2). Native-speaker review pending |
 | AC-68 | Duo `nam`–`thanh` plays both scripts across visits: the serious one ("Thạnh, màn hình đăng nhập…") and the playful one ("Bé Hạnh ơi…"), chosen at random per visit (`noi-dung-bat-ngo.md` AC-69). | Not recorded (source only, v1.8.2). The full-day headless run reported no JS errors and valid ids. Per-line playback not recorded |
 | AC-70 | A lying coworker (Nguyên on the pantry daybed) has his name tag on the body (0.6 m toward the head, 0.75 m high) and his speech bubble at the head end (1.05 m toward the head, 0.85 m high), not at standing height (§7.1). Standing and seated anchors are unchanged. | Reported (requester, v1.8.4): headless-Chrome screenshot shows both placed correctly. Not re-run in the doc pass. Not checked on a real phone. The ambient gate uses the same anchor (code check, 2026-11-04) |
+| AC-86 | (v1.11.0) Trung visits Nguyên at desk 8: 40% per visit attempt while Nguyên is at `desk:work`, on a sofa seat, or on the daybed. Nguyên at his desk is not in Trung's normal candidate list. Nguyên visits only Chị Thảo | Source check only (2026-11-04). Not run after v1.11.0. Earlier: 1 of 6 headless runs (v1.10.0, from the sofa) |
 
 ## 6. Known issues
 

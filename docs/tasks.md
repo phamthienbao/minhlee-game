@@ -6,7 +6,14 @@ Legend: `[x]` done, `[ ]` todo, `[~]` in progress, `[!]` blocked.
 
 ## Done
 
-Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`. Done entries v1.8.2 to v1.8.6 were moved there in the v1.9.3 pass. Done entries v1.9.1 to v1.9.4 were moved there in the v1.10.0 pass.
+Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`. Done entries v1.8.2 to v1.8.6 were moved there in the v1.9.3 pass. Done entries v1.9.1 to v1.9.4 were moved there in the v1.10.0 pass. Done entries v1.9.0 and v1.9.5 were moved there in the v1.11.0 pass.
+
+- [x] v1.11.0 (2026-11-04): office layout change. New private desk 13 in the lower row, next to Thông's (`addOwnAt(-4.4)`, x −4.4). Tùng moves from desk 8 to desk 13. Nguyên, who had no desk, takes desk 8 (Tùng's old seat, right table, south, next to Chú 7). He naps on the daybed after lunch and otherwise works at his desk. Trung's visits to Nguyên now go to his desk (same 40% gate, excluded from the normal candidate list). Nguyên's lines updated; arrival toast reads "Nguyên hiếm hoi lên công ty hôm nay!". Details: `docs/changelog.md` v1.11.0, `docs/spec/van-phong-layout.md` §3 and AC-85, `docs/spec/dong-nghiep.md` §3 and AC-46, AC-49, AC-86
+  - [x] `DESKS` has 14 entries (section 5, `addOwnAt(-4.4)`). `NPC_PROFILES`: `tung` `desk: 13`, `nguyen` `desk: 8` (section 2). Nguyên's nap and desk branch in `decideGoal()` (section 9)
+  - [x] Headless Chrome: `DESKS.length` 14; Tùng seats at (−4.4, 5.8) at the new desk; Nguyên at (8.1, −0.8) in `desk:work` at 10:00, nap goal `lounge`; screenshots show Nguyên at desk 8 and the new desk in the lower row
+  - [x] Docs: changelog, `docs/spec/van-phong-layout.md`, `docs/spec/dong-nghiep.md`, `docs/spec/mot-ngay-o-cong-ty.md`, `docs/spec/noi-dung-bat-ngo.md`, `docs/product-guide.md`, `docs/glossary.md` (dated notes only)
+  - [ ] Pathing at peak times around desks 9 and 13 and `COLUMNS[1]` not checked (Follow-ups, v1.11.0)
+  - [ ] Full-day run and real-device check not done
 
 - [x] v1.10.1 (2026-11-04): welcome-back popup hides the title screen's name and gender form while it is open, so returning players see only "▶ Tiếp tục" and "🆕 Chơi mới". The form returns only after the confirmed reset. Reason: players could miss the small "Tiếp tục" button. Details: `docs/changelog.md` v1.10.1, `docs/spec/the-gioi-lien-tuc.md` §11.5, AC-84
   - [x] `showWelcomeBack()` (`index.html` section 14): adds `hidden` to `#title` on open, unhides it after `Store.clear()` in "Xóa hết và chơi mới". "Thôi, quay lại" keeps it hidden
@@ -28,26 +35,6 @@ Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`.
   - [ ] Test on a real phone (iOS Safari, Android Chrome): `visibilitychange` and `pagehide` save, and the resume path
   - [ ] `dist/MinhLee-mac.zip` and `CFBundleShortVersionString` (still 1.8.5) not rebuilt in this pass (see Follow-ups, v1.10.0)
 
-- [x] v1.9.5 (2026-11-04): Anh Bảo's look re-matched to the user's photo (by eye only: navy colour-block polo, black fringe, thin light-silver glasses). Canon fix: Chị Ba is not allergic to cats (golden cat Nghệ). Cat banter with Chủ tịt added (chat line, two duos, `th-cat` intro and options). Details: `docs/changelog.md` v1.9.5
-  - [x] `NPC_PROFILES` `bao` look (`hem`, `cuff`, `shortSleeve`, navy collar, `fringe`, `rect` glasses), new look fields `look.hem` and `look.cuff` in `buildCharacter()`
-  - [x] `th-cat` intro: allergy lines removed. Option 2 relabelled, option 3 result updated. Chị Ba `say.chat` line about Nghệ. Two `DUOS` entries (`an3`–`thanh`, `thanh`–`an3`): 19 scripts for 17 pairs
-  - [x] JavaScript syntax check and headless render of Anh Bảo (viewed by eye)
-  - [x] Docs: `docs/spec/dong-nghiep.md`, `docs/spec/noi-dung-bat-ngo.md`, `docs/glossary.md`, `docs/product-guide.md`
-  - [ ] Native-speaker review of the cat banter, the `th-cat` intro, and its options (not reviewed)
-  - [ ] Side-by-side likeness check of Anh Bảo against the reference photo (by eye only, not measured). Real-device look check at the default camera distance (Vừa)
-  - [ ] Hand-check the Chị Ba–Chủ tịt duo visit (both script orders, bubbles) and the `th-cat` cards in a real browser (not recorded)
-  - [ ] `dist/MinhLee-mac.zip` not rebuilt in this pass (see the v1.8.6 follow-up)
-
-- [x] v1.9.0 (2026-11-04): six new day themes (demo, power, cat, hack, sick, award), each opening with a story intro at 08:50 that fires when the player is near a coworker. Desk items: finished desk tasks add up across days and unlock 8 items on the 3D desk, with a collection screen in the pause menu. Details: `docs/changelog.md` v1.9.0, `docs/spec/noi-dung-bat-ngo.md` §3.2 and AC-75 to AC-77, `docs/spec/bang-nhiem-vu.md` §9 and AC-78 to AC-80, `docs/product-guide.md`
-  - [x] `DAY_THEMES` (six themes with `intro`), `UNLOCKS`, `awardWork()`, `showUnlocks()`, `nextUnlockLine()`, `showCollection()`, `buildDeskItems()` in `index.html`
-  - [x] Headless Chrome: intro fires near a coworker; unlock thresholds; 8 desk items built
-  - [x] Offline copies, netlify, and app resources contain the v1.9.0 code (grep check in the doc pass)
-  - [ ] Look at the 8 desk items in 3D (shapes not reviewed)
-  - [ ] Test the intro on a real device and in Safari or Firefox; check the far-away skip and the 11:20 cut-off (not recorded)
-  - [ ] Full-day headless run covering the six new themes and all 18 intro options (AC-76, AC-77)
-  - [ ] Set `CFBundleShortVersionString` to 1.9.0 and rebuild `dist/MinhLee-mac.zip` (see Follow-ups, v1.8.6 item)
-  - [ ] Docs: `docs/product-guide.md`, `docs/spec/*`, `docs/glossary.md` updated. `CLAUDE.md` not touched (user choice)
-
 ## In progress
 
 - [~] Text pass: more natural Vietnamese wording in the content pools (`p1_data.js`), no logic change. Another agent is working on it. Noted in `docs/changelog.md` v1.9.0
@@ -56,7 +43,7 @@ Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`.
 
 - [x] (v1.10.0, closed 2026-11-04) Anh Bảo's shirt colour is not a defect. The red-and-white striped shirt (`pattern: 'redwhite'`, `index.html` line 481) is intentional, per the user's explicit request for this release. The solid polo of the first brief is not used. The look is recorded in `docs/spec/dong-nghiep.md` §8
 - [x] (v1.10.0, closed 2026-11-04) Nguyên–Chị Thảo duo scripts (`nguyen`→`thao`, `index.html` `DUOS`) never played. Fixed in `npcAmbient()`: a sofa-seated Nguyên may start a visit, to Chị Thảo only, who must be seated at `desk:work`. Headless: 6 of 6 runs. Not tested on a real device
-- [x] (v1.10.0, closed 2026-11-04) The arrival toast now reads `😴 Nguyên hiếm hoi lên công ty hôm nay, đang ở pantry!` (`index.html`, `processTimeEvents()`)
+- [x] (v1.10.0, closed 2026-11-04) The arrival toast was reworded; later removed entirely in v1.11.0 at the user's request (`index.html`, `processTimeEvents()`)
 - [ ] (v1.8.4) Not tested on a real phone. Check the lying coworker's name tag and speech bubble (Nguyên on the daybed) in portrait and landscape, under the top bar and in the notch or safe-area zone
 - [x] (v1.8.4, closed 2026-11-04) The ambient on-screen gate in `tryNpcSay()` (`index.html`, `Bubbles.onScreen(n.pos.x, root.y + 1.8, n.pos.z)`) still tests the standing point at the coworker's position, not `npcAnchor()`. For a lying coworker the gate can pass while the bubble anchor is off screen (the bubble is then hidden), or block a bubble that would be visible. Found by reading the code, not reproduced. Decide whether the gate should use `npcHead(n)`. Not changed in v1.8.4 (scope: anchors only) **Fixed:** `Bubbles.onScreen()` now gets `npcAnchor(n, …, false)`, the same point as the bubble. Not reproduced in a browser; checked by reading the code.
 - [ ] (v1.7.0) Root cause of the "no graphics" reports after sharing is not identified. v1.7.0 adds detection and fallbacks but does not fix a known cause. Ask the reporters for browser, version, device, and whether the page was opened inside an app. Check whether `index.html` or `index-offline.html` was used
@@ -95,10 +82,16 @@ Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`.
 
 ## Follow-ups
 
+v1.11.0 (office layout: desk 13, Tùng, Nguyên at desk 8):
+
+- [ ] (v1.11.0) Tune the spacing and pathing of desk 13 (x −4.4, lower row next to Thông's desk 9). Check walks to its visit point (−2.9, 5.83) and past `COLUMNS[1]` (x −1.77), and that the chairs do not clip the desks
+- [ ] (v1.11.0) Full-day playtest: how often Trung visits Nguyên at his desk (40% per attempt, the v1.10.0 figure), whether Nguyên's single nap (30–50 min after lunch) feels right, and whether the two of them sit at the right-hand table without overlap
+- [ ] (v1.11.0) `CLAUDE.md` is stale. Its Editing section still says desks 0–12 and "Nguyên desk null". The doc-keeper does not edit `CLAUDE.md`. Update it by hand
+
 v1.10.0 (mid-day save, Nguyên, Anh Bảo):
 
 - [ ] (v1.10.0) Export and import of the save (download and upload of the `Store` JSON). Storage is per origin and device: the file path, Netlify, GitHub Pages, the Mac app, and each browser keep separate saves. Open follow-up from the user's request
-- [ ] (v1.10.0) Tune the nap: length (30–50 min) and start (55–80 min after lunch starts). Set by simulation only. Check that the sofa share feels right in play
+- [ ] (v1.10.0) Tune the nap: length (30–50 min) and start (55–80 min after lunch starts). Set by simulation only. Check that the sofa share feels right in play (obsolete as of v1.11.0: Nguyên works at his desk, not on a sofa. Nap tuning is still open)
 - [ ] (v1.10.0) Native-speaker review of Nguyên's new lines ("Chị Thảo ơi, nay có ai mời nước không?", the 10:35 quirk, the two `nguyen`→`thao` scripts, the two `trung`→`nguyen` scripts)
 - [ ] (v1.10.0) Anh Bảo's look: check it by eye against the reference photo and on a real device at the default camera distance (Vừa)
 - [ ] (v1.10.0) Tune the stripe thickness of Anh Bảo's shirt. `patternMat('redwhite')` draws 8 px red bands with 8 px off-white gaps on a 64 px texture. Check by eye at the default camera distance and adjust the band height if it reads too busy
@@ -106,7 +99,7 @@ v1.10.0 (mid-day save, Nguyên, Anh Bảo):
 - [ ] (v1.10.0) Confirm the four copies are identical apart from the importmap and comment lines (`diff index.html index-offline.html`; `dist/netlify/index.html` and `dist/MinhLee.app/Contents/Resources/index.html` by diff). Only the grep check was run in the doc pass
 - [ ] (v1.10.0) `tools/macapp/Info.plist` `CFBundleShortVersionString` is still 1.8.5. Set it to 1.10.0 and rebuild `dist/MinhLee-mac.zip` with `tools/build-mac-app.sh`
 - [ ] (v1.10.0) Tune the 40% chance that Trung visits Nguyên (`npcAmbient()`, `index.html` line ~1734). Headless only: 1 of 6 short runs. Playtest a full day and check how often the visit happens
-- [ ] (v1.10.0) `npcAmbient()` pushes Nguyên into `duoC` twice (once by the `filter`, once explicitly), so he has double weight among the duo partners. Decide whether that is intended, then keep it or change it
+- [x] (v1.10.0, resolved v1.11.0) `npcAmbient()` pushed Nguyên into `duoC` twice (once by the `filter`, once explicitly), so he has double weight among the duo partners. Resolved in v1.11.0: `cands` excludes Nguyên for Trung, and the 40% gate adds him once
 
 Diary intro (v1.7.2):
 

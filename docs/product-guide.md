@@ -60,8 +60,8 @@ You can also leave early from the front door after 16:00. If you leave before 17
 - **Notice board** (right-hand wall, next to the front door): read the notes posted there. They may be office gossip, or news about App Dating.
 - **Filing cabinet** (bottom right): where the document favor is fetched.
 - **Printer** (left wall): may jam during the afternoon event. On those days, Nam is the one standing at it.
-- **Daybed** (back wall, next to the pantry): Nguyên takes one short nap here after lunch, on the days he comes into the office. The rest of the day he works from a pantry sofa. You can walk around it.
-- **Desks**: your desk is the yellow one at the bottom left. Nine coworkers share two long tables, one on the left and one on the right, and sit facing each other across them. Four more coworkers have single desks in the bottom row. Nguyên works remotely and has no desk. Some coworkers wander over to chat at a colleague's desk during the day.
+- **Daybed** (back wall, next to the pantry): Nguyên takes one short nap here after lunch, on the days he comes into the office. The rest of the day he works at his desk on the right-hand table. You can walk around it.
+- **Desks**: your desk is the yellow one at the bottom left. Nine coworkers share two long tables, one on the left and one on the right, and sit facing each other across them. Five more coworkers have single desks in the bottom row, to the right of your desk. Nguyên works remotely. When he is in, he sits on the right-hand table, next to Chú 7. Some coworkers wander over to chat at a colleague's desk during the day. Trung sometimes stops by Nguyên's desk to talk about his designs.
 
 ### Your desk and its items
 
@@ -193,7 +193,7 @@ Each day is saved to your diary when it ends. The diary keeps the most recent 15
 | Chị Ba (An) | | Business Support (helps with product research: runs user surveys, writes reports, and checks the numbers) | Strict in a fun way, and careful with numbers. Asks you for help with survey results and reports. Playfully gives colleagues a light shoulder punch (it is a joke). When she gets up from her desk, she sometimes grumbles that the "bánh tét" guy is nowhere to be found, and Chú 7 may answer from behind his cup of tea. This happens more often on busy days. She has a golden cat named Nghệ, and she and Chủ tịt tease each other about whose cat is better, all in fun |
 | Anh Bảo | | Product | The oldest in the office. Asks "vì sao" (why) a lot. Likes connecting people. Currently weighing a Dating-app matching suggestion feature against fixing a login bug |
 | Thông | Bamboo | R&D | Cheerful and enthusiastic about new ideas. Talks about real estate, land, and investing, and always wants a backup plan |
-| Nguyên | | Designer (works remotely) | Relaxed. Often works from home, and comes into the office on about half of the days. When he is in, he works from a pantry sofa and takes a short nap on the daybed after lunch |
+| Nguyên | | Designer (works remotely) | Relaxed. Often works from home, and comes into the office on about half of the days. When he is in, he works at his desk on the right-hand table and takes a short nap on the daybed after lunch |
 
 Most coworkers call each other by their first names. A few are called by a title: Anh Bảo, Chủ tịt, and Chị Ba.
 
@@ -300,7 +300,7 @@ It is a teasing nickname. Chị Ba uses it for Chú 7, the QC coworker. It is a 
 The game is in Vietnamese only.
 
 **Why isn't Nguyên in the office?**
-He often works from home. He comes into the office on about half of the days. When he does, a short message appears shortly after he arrives. He works from a pantry sofa, with one short nap on the daybed after lunch.
+He often works from home. He comes into the office on about half of the days. When he does, a short message appears shortly after he arrives. He works at his desk on the right-hand table, with one short nap on the daybed after lunch.
 
 **Where do I see everything I need to do today?**
 Tap the goal box at the top of the screen, or press P. The pause menu shows the day's milestones and small tasks. Press **▶ Tiếp tục** to go back.

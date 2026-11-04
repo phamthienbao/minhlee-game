@@ -10,7 +10,7 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **Hồ sơ đồng nghiệp** — A coworker profile: name, role, desk, look, habits, stats, dialogue. Section 2 of `index.html`.
 
-**Bàn (desk index)** — The seat number (0–11) a coworker is assigned to. *(Outdated as of v1.0.2: range is 0–12.)* *(v1.2.0: Nguyên has no desk, `desk: null`.)* *(Outdated as of v1.3.0: desks 0–8 are the two long tables, 9–12 the lower row. See `docs/spec/van-phong-layout.md` §3.)*
+**Bàn (desk index)** — The seat number (0–11) a coworker is assigned to. *(Outdated as of v1.0.2: range is 0–12.)* *(v1.2.0: Nguyên has no desk, `desk: null`.)* *(Outdated as of v1.3.0: desks 0–8 are the two long tables, 9–12 the lower row. See `docs/spec/van-phong-layout.md` §3.)* *(Outdated as of v1.11.0: 14 desks, indexes 0–13. Desk 13 is in the lower row next to Thông and is Tùng's. Nguyên has desk 8, so no coworker has `desk: null`.)*
 
 **Mốc (milestone)** — A named time window in the day with a goal hint (e.g. "Họp ngắn" at 10:00). Defined in `MS`.
 
@@ -94,7 +94,7 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **visitAnim** — Optional profile field: the animation the visitor plays at the start of a visit. Only Chị Ba sets it (`punch`).
 
-**Điểm tiếp cận (approach point, `seat.ax` / `seat.az`)** — *(needs definition)* The spot in front of a seat where a visitor stands. Used when the visited coworker has no desk (Nguyên, v1.10.0). Added v1.10.0.
+**Điểm tiếp cận (approach point, `seat.ax` / `seat.az`)** — *(needs definition)* The spot in front of a seat where a visitor stands. Used when the visited coworker has no desk (Nguyên, v1.10.0). Added v1.10.0. *(Outdated as of v1.11.0: no coworker has no desk, so visitors use `DESKS[n].visit`. The approach point is still used for sofa and daybed seats.)*
 
 **Thói quen (quirk)** — A coworker's scheduled line or action around a set time (`quirks`). Fires once per day.
 
@@ -192,7 +192,7 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **Xưng hô (address terms)** — How coworkers address each other in lines. Mostly first names. The special cases are in `docs/spec/dong-nghiep.md` §2.
 
-**Nguyên** — The remote developer, 14th entry in `NPC_PROFILES`, with no desk. Role "Developer (làm từ xa)" is tentative. Comes into the office on about 3 days in 10 and rests on the pantry daybed. Added in v1.2.0. *(Corrected 2026-11-04: role is Designer, not tentative. Comes into the office on about half of the days. No gender is recorded.)*
+**Nguyên** — The remote developer, 14th entry in `NPC_PROFILES`, with no desk. Role "Developer (làm từ xa)" is tentative. Comes into the office on about 3 days in 10 and rests on the pantry daybed. Added in v1.2.0. *(Corrected 2026-11-04: role is Designer, not tentative. Comes into the office on about half of the days. No gender is recorded.)* *(Outdated as of v1.11.0: has desk 8, the south row of the right-hand long table, Tùng's former seat. He works there except in the nap window.)*
 
 **Làm từ xa (remote work)** — Working from home. A coworker with `habits.attendance` below 1 is in the office only on that share of days.
 
@@ -200,7 +200,7 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **LOUNGE_SEAT** — Code constant for the daybed seat (`lie: true`). Only one coworker uses it.
 
-**habits.lounge** — Profile flag. When `true`, the coworker's default idle goal is the daybed instead of a desk. *(Outdated as of v1.10.0: outside the nap window the idle goal is a pantry sofa seat, `goalSofa()`. See `docs/spec/dong-nghiep.md` §3.)*
+**habits.lounge** — Profile flag. When `true`, the coworker's default idle goal is the daybed instead of a desk. *(Outdated as of v1.10.0: outside the nap window the idle goal is a pantry sofa seat, `goalSofa()`. See `docs/spec/dong-nghiep.md` §3.)* *(Outdated as of v1.11.0: outside the nap window the idle goal is the coworker's desk (`desk:work`). The sofa branch runs only with no desk, which nobody has now. The flag also limits visits to Chị Thảo.)*
 
 **habits.attendance** — Profile number from 0 to 1: the chance that the coworker comes into the office on a given day. Missing means always in.
 
@@ -230,9 +230,11 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **LONG_TABLES** — *(needs definition)*
 
-**DESKS** — *(needs definition)*
+**DESKS** — *(needs definition)* *(v1.11.0: 14 entries, indexes 0–13.)*
 
-**Bàn riêng hàng dưới (lower row)** — *(needs definition)*
+**addOwnAt(x)** — *(needs definition)* Section 5 helper in `index.html` that adds a lower-row own desk at the given x, with z `planZ(651)`. Used for desk 13 (`addOwnAt(-4.4)`, Tùng). Added v1.11.0. See `docs/spec/van-phong-layout.md` §3.
+
+**Bàn riêng hàng dưới (lower row)** — *(needs definition)* *(v1.11.0: five desks, indexes 9–13.)*
 
 **PLAYER_DESK / Bàn của bạn (player desk)** — *(needs definition)*
 
@@ -274,7 +276,7 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **Nhân Quả (cat name)** — The name of Chủ tịt's cat, in the cat lines and the surprises `cat` and `thanhmeo`. Added v1.4.2. *(needs definition)*
 
-**Tùng** — Mobile Dev coworker at desk 8. Often invites people out for a light after-work drink and loves dares. Added v1.4.0 personality. *(Definition is factual; curation pending.)*
+**Tùng** — Mobile Dev coworker at desk 8. Often invites people out for a light after-work drink and loves dares. Added v1.4.0 personality. *(Definition is factual; curation pending.)* *(Outdated as of v1.11.0: desk 13, lower row next to Thông. Desk 8 went to Nguyên.)*
 
 **Mèo bông (cat plush)** — Stuffed cat on Chủ tịt's desk (seat index 1 in `buildOffice()`). Added v1.4.2. *(needs definition)*
 
@@ -475,7 +477,7 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **nap (`times.nap`)** — *(needs definition)* Nguyên's one short sleep window of the day, 30–50 min, starting 55–80 min after his lunch starts. In that window he lies on the daybed. Added v1.10.0. See `docs/spec/dong-nghiep.md` §3.
 
-**goalSofa()** — *(needs definition)* Gives a coworker with `habits.lounge` a free `SOFA_SEATS` seat to work from (pose `type`). Falls back to `goalLounge()` when all seats are taken. Added v1.10.0.
+**goalSofa()** — *(needs definition)* Gives a coworker with `habits.lounge` a free `SOFA_SEATS` seat to work from (pose `type`). Falls back to `goalLounge()` when all seats are taken. Added v1.10.0. *(Note v1.11.0: the code falls back to `goalDesk(n, 'eat')`, not `goalLounge()`. It is called only from the lunch branch with `habits.lunch: 'sofa'`, which no coworker uses now.)*
 
 **hairStyle `swept`** — *(needs definition)* Men's short hair style, drawn by `detailHair()`. Used by Anh Bảo from v1.10.0 in place of `style: 'fringe'`. See `docs/spec/dong-nghiep.md` §8.
 

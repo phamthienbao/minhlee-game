@@ -376,7 +376,7 @@ const NPC_PROFILES = [
     quirks: [{ at: '12:40', say: '(lén xem video game trong giờ nghỉ trưa)', anim: null, ctx: 'eat' }],
     note: { high: 'Mai rủ nhau chơi game giờ nghỉ trưa nha {anh}! 🎮', low: 'Mai em sẽ đỡ buồn ngủ hơn, chắc vậy ạ.' } },
 
-  { id: 'tung', name: 'Tùng', role: 'Mobile Dev', desk: 8,
+  { id: 'tung', name: 'Tùng', role: 'Mobile Dev', desk: 13,
     look: { skin: 0xf0d2b4, hair: 0x15130f, shirt: 0xece8f6, style: 'fringe', glasses: false, smile: true, detail: true, neck: 'crew', neckColor: 0xd9d4e6 },
     traits: ['hay rủ nhậu', 'thích thách thức, trò chơi thử thách vui', 'hòa đồng'], stats: { outgoing: 0.8, focus: 0.55, team: 0.9 },
     habits: { arrive: '08:20', coffee: 'morning', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 50,
@@ -510,14 +510,14 @@ const NPC_PROFILES = [
     quirks: [{ at: '09:42', say: 'Kiểm tra lại phương án dự phòng trước khi họp… à mà tuần sau có lô đất đấu giá nữa!', anim: 'check' }],
     note: { high: 'Cảm ơn bạn đã ủng hộ hôm nay! Cuối tuần mình rủ bạn đi xem đất, có phương án B luôn!', low: 'Mai mình sẽ chuẩn bị kỹ hơn… bàn thêm chuyện nhà đất với bạn nhé!' } },
 
-  { id: 'nguyen', name: 'Nguyên', role: 'Designer', desk: null,
+  { id: 'nguyen', name: 'Nguyên', role: 'Designer', desk: 8,
     look: { skin: 0xf3d3bb, hair: 0x15110f, shirt: 0x1b1b1d, style: 'fringe', glasses: false, detail: true, neck: 'crew', neckColor: 0x2a2a2d },
-    traits: ['rất ít lên công ty', 'lên là nằm ở pantry', 'chill'], stats: { outgoing: 0.3, focus: 0.3, team: 0.4 },
+    traits: ['rất ít lên công ty', 'lên thì ngồi chỗ cũ của Tùng, trưa ghé pantry ngủ một lát', 'chill'], stats: { outgoing: 0.3, focus: 0.3, team: 0.4 },
     habits: { arrive: '10:15', coffee: 'morning', lunch: 'pantry', leave: '17:00', joinsMeeting: false, lounge: true, attendance: 0.5 }, relation: 35,
     taste: { warm: 2, joke: 2, work: 0 },
-    say: { greet: ['Ơ {ten}… mình mới lên công ty, để mình nằm chút nhé.', 'Chào… (ngáp) Pantry hôm nay mát quá.'],
+    say: { greet: ['Ơ {ten}… mình mới lên công ty, ngồi chỗ cũ của Tùng nha.', 'Chào… (ngáp) Công ty mát hơn ở nhà thiệt.'],
       idle: ['Zzz… à không, mình đang nghĩ.', 'Cho mình thêm năm phút nữa…'],
-      chat: ['Làm ở nhà sướng, mà lên công ty mới có pantry.', 'Mình nằm ở đây là để giữ chỗ cho mọi người thôi.'],
+      chat: ['Làm ở nhà sướng, mà lên công ty mới có pantry.', 'Chỗ cũ của Tùng ngồi êm lắm, mình ké hoài.'],
       pantry: ['Cà phê sữa đá… cho mình thêm cái gối nữa.', 'Pantry là nhà thứ hai của mình.', 'Chị Thảo ơi, nay có ai mời nước không?'],
       deep: 'Mình ít lên vì ở nhà vẽ yên tĩnh hơn. Lên đây là để nhớ mọi người thôi.' },
     reply: { great: ['Ôi, nghe vậy mình tỉnh ngủ hẳn!', 'Hôm nay lên công ty đúng là đáng.'], ok: ['Ừ ừ, nghe nhẹ nhàng đó.', 'Được, mình ghi nhận… sau khi chợp mắt.'], meh: ['Hơi nhiều việc… để mình nằm nghĩ thêm.', 'Ờ… mình cân nhắc sau giấc ngủ trưa.'] },
@@ -881,6 +881,8 @@ addLong(770, true, LONG_TABLES[1]);  addLong(875, true, LONG_TABLES[1]); addLong
 addLong(820, false, LONG_TABLES[1]); addLong(960, false, LONG_TABLES[1]);     // 7 An (Chú 7), 8 Tùng
 const addOwn = (px) => { const x = planX(px), z = planZ(651); DESKS.push({ kind: 'own', x, z, seat: { cx: x, cz: z + 1.12, yaw: Math.PI, ax: x, az: z + 2.15 }, visit: { x: x + 1.5, z: z + 1.1 } }); };
 addOwn(295); addOwn(752); addOwn(887); addOwn(1022);                           // 9 Thông, 10 An nữ (Chị Ba), 11 Thảo, 12 Yến
+const addOwnAt = (x) => { const z = planZ(651); DESKS.push({ kind: 'own', x, z, seat: { cx: x, cz: z + 1.12, yaw: Math.PI, ax: x, az: z + 2.15 }, visit: { x: x + 1.5, z: z + 1.1 } }); };
+addOwnAt(-4.4);                                                                  // 13 Tùng (bàn mới, kế bàn Thông)
 const PLAYER_DESK = { kind: 'own', x: -10.2, z: planZ(651), seat: { cx: -10.2, cz: planZ(651) + 1.12, yaw: Math.PI, ax: -10.2, az: planZ(651) + 2.15 } };   // bàn người chơi: bên trái Thông
 const COLUMNS = [{ x: planX(582.5), z: planZ(357.5), w: 1.0, d: 1.06 }, { x: planX(521), z: planZ(641), w: 0.94, d: 1.0 }];                           // 2 cột trong sơ đồ
 
@@ -1564,6 +1566,7 @@ function decideGoal(n, m) {
   if (n.p.habits.lounge) {
     const nap = T_.nap;
     if (nap && m >= nap[0] && m < nap[1]) return goalLounge(n);                       // giờ ngủ trưa ngắn
+    if (n.p.desk != null) return goalDesk(n, 'work');                                // có bàn riêng (ngồi chỗ cũ của Tùng): ngồi bàn làm việc
     const i = n.sofa >= 0 && sofaOwner[n.sofa] === n.id ? n.sofa : sofaOwner.findIndex((x) => x === null);     // còn lại: ngồi sofa làm việc trên laptop
     if (i < 0) return goalLounge(n);
     sofaOwner[i] = n.id; n.sofa = i; return { id: 'sofa:' + i, x: SOFA_SEATS[i].cx, z: SOFA_SEATS[i].cz, yaw: SOFA_SEATS[i].yaw, anim: 'type', seat: SOFA_SEATS[i] };
@@ -1729,9 +1732,9 @@ function npcAmbient(n, dt, m, dP, now) {
       n.visitCool = rand(20, 50); const hrs = [[T('09:05'), T('09:50')], [T('13:35'), T('14:45')], [T('15:40'), T('16:50')]];
       const free = hrs.some(([a, b]) => m >= a && m < b), active = NPCS.filter((x) => x.visit).length;
       if (free && active < 2 && Math.random() < p.stats.outgoing * 0.8 * D.theme.visit) {
-        const cands = NPCS.filter((x) => x !== n && x.state === 'seated' && x.goal && x.goal.id === 'desk:work' && !x.frozen && now > x.hostUntil + 5 && (!n.p.habits.lounge || x.id === 'thao'));
+        const cands = NPCS.filter((x) => x !== n && x.state === 'seated' && x.goal && x.goal.id === 'desk:work' && !x.frozen && now > x.hostUntil + 5 && (!n.p.habits.lounge || x.id === 'thao') && !(n.id === 'trung' && x.id === 'nguyen'));
         const ngy = npcById('nguyen');                                                    // thỉnh thoảng Trung sang chỗ Nguyên góp ý về design
-        if (n.id === 'trung' && ngy && ngy.state === 'seated' && ngy.goal && /^(sofa|lounge)/.test(ngy.goal.id) && !ngy.frozen && !ngy.visit && Math.random() < 0.4) cands.push(ngy);
+        if (n.id === 'trung' && ngy && ngy.state === 'seated' && ngy.goal && /^(sofa|lounge|desk)/.test(ngy.goal.id) && !ngy.frozen && !ngy.visit && Math.random() < 0.4) cands.push(ngy);
         const duoC = cands.filter((x) => DUOS.some((d) => (d.a === n.id && d.b === x.id) || (d.b === n.id && d.a === x.id)));
         if (cands.length) { const partner = duoC.length && Math.random() < 0.7 ? pick(duoC) : pick(cands); n.visit = { partner: partner.id, until: m + 12, stage: 0, t: 0 }; }
       }
@@ -2395,7 +2398,6 @@ function processTimeEvents(prev, now) {
   const treat = (t, msg, en) => { if (!cross(t)) return; const n = npcById('thanh'); if (!n || n.state === 'hidden') return; addEnergy(en); addMood(3); changeAff('thanh', 2); addMoment(msg); toast('🧋 ' + msg); { const g = n.goal ? n.goal.id : ''; tryNpcSay(n, g.startsWith('pantry') ? 'Nước em pha sẵn rồi nè, mọi người ra lấy nhé!' : g.startsWith('desk') ? 'Em vừa đặt đồ uống cho cả nhà, lát giao tới nha!' : 'Em mời cả nhà nè, đừng ngại!', 1); } Sfx.chime(); };
   treat(T('11:05'), 'Chủ tịt mua nước mời cả phòng.', 8); treat(T('14:10'), 'Chủ tịt mua đồ ăn vặt cho mọi người.', 8);
   D.theme.treats.forEach(([t, msg]) => treat(T(t), msg, 8));
-  const ng = npcById('nguyen'); if (ng && ng.times.arrive < 99999 && cross(ng.times.arrive + 8)) toast('😴 Nguyên hiếm hoi lên công ty hôm nay, đang ở pantry!');
   if (cross(T('17:00'))) toast('🌇 Hết giờ làm rồi. Ra cửa chính để về nhé!');
   const ms = currentMilestone(now); if (ms.id !== D.lastMs) { if (D.lastMs) toast(`🕘 ${fmtTime(now)} · ${ms.name}`); D.lastMs = ms.id; }
 }
