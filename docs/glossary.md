@@ -646,3 +646,25 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 **Chia phòng (room sharding)** — *(needs definition)* A possible future change: split members into rooms of about 10 to 20 people, one channel each. Not built. See `docs/spec/thay-nhau.md` §6.
 
 **Durable Objects** — *(needs definition)* Cloudflare's per-object state service. A possible future host for the position relay (with Cloudflare Workers). Not built. See `docs/spec/thay-nhau.md` §6.
+
+**Hộp thư công ty (company mailbox)** — *(needs definition)* The in-game mailbox for signed-in members. Phase A (v2.2.0-alpha, commit `fa7ebf7`): ✉ button with unread badge, toast, read-only inbox, and 🟢 on online members' name tags. Built on tables and polling, not Realtime. See `docs/spec/hop-thu-cong-ty.md`.
+
+**Bảng online (online table)** — *(needs definition)* The table `online(char_id, last_seen)`: one row per member, written while the member's tab is visible. A member is online if the row is less than 3 minutes old. Added v2.2.0-alpha. See `docs/spec/hop-thu-cong-ty.md` §4.1.
+
+**Bảng messages (messages table)** — *(needs definition)* The table of mailbox rows (chat, task, note). Each row has a sender, a recipient, a body of 1 to 300 characters, and a read time. Added v2.2.0-alpha. See `docs/spec/hop-thu-cong-ty.md` §4.2.
+
+**Loại tin: chat, task, note (message kind)** — *(needs definition)* The `kind` of a mailbox row: `chat` (plain message), `task` (a job given to another member, with a due day and a done flag), `note` (a sticky note of nagging, left on the assignee's desk, written by the assignee's client). Added v2.2.0-alpha. See `docs/spec/hop-thu-cong-ty.md` §4.2. Not the same as the in-game work mini-games (`tasks_total`).
+
+**Ghi online (online write)** — *(needs definition)* The upsert of the member's own `online` row. Due when more than 55 s have passed since the last write. The poll runs every 25 s, so the write happens about every 75 s. Not the same as the position heartbeat (`Nhịp báo sống`). Added v2.2.0-alpha. See `docs/spec/hop-thu-cong-ty.md` §5, §7.
+
+**Hàm my_char() (my_char function)** — *(needs definition)* The SQL function that returns the signed-in member's `char_id` from `progress`. The RLS rules of `online` and `messages` use it. Added v2.2.0-alpha. See `docs/sql/hop-thu.sql`.
+
+**Chấm xanh 🟢 (online dot)** — *(needs definition)* The green dot after the name on an NPC label whose character is online (not the member's own). Added v2.2.0-alpha. See `docs/spec/hop-thu-cong-ty.md` §6.
+
+**Huy hiệu chưa đọc (unread badge)** — *(needs definition)* The red circle with a count on the ✉ button: incoming messages not yet opened in the inbox. Shows "9+" above 9. Added v2.2.0-alpha. See `docs/spec/hop-thu-cong-ty.md` §6.
+
+**Lùi thời gian khi lỗi (error backoff)** — *(needs definition)* After each failed mailbox read or write, the next try waits 25 s × 2^n (n up to 4): 50 s, 100 s, 200 s, then 300 s. Success resets it. Added v2.2.0-alpha. See `docs/spec/hop-thu-cong-ty.md` §5.
+
+**Khối MSG (MSG block)** — *(needs definition)* The mailbox code in `index.html`, between the `RT` block and `newDayState()`: the `MSG` state object and `msgStart()`, `msgStop()`, `msgTick()`, `msgOpenInbox()` and related functions. Added v2.2.0-alpha. See `docs/spec/hop-thu-cong-ty.md` §3.
+
+**Nút Nói chuyện nổi (floating talk button)** — *(needs definition)* The large action button (`#act`) when the nearest target is a coworker: it floats above that coworker's head, above the name tag, kept on screen and above the joystick area. Spot actions keep the bottom-right corner. Added v2.2.0-alpha (uncommitted). See `docs/spec/mot-ngay-o-cong-ty.md` §4.2 and AC-125.

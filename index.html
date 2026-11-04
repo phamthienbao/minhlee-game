@@ -28,7 +28,7 @@ button{cursor:pointer;border:0}
 .spacer{flex:1}
 .ibtn{width:44px;height:44px;border-radius:14px;background:rgba(255,250,242,.92);font-size:20px;box-shadow:0 2px 8px rgba(80,50,20,.15)}
 .ibtn.on{background:var(--accent2);color:#fff}
-.ibtn{position:relative}.ibtn .dot{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:#d62828;color:#fff;font:700 11px/18px system-ui,sans-serif;text-align:center;font-style:normal}
+.ibtn{position:relative}#b-mail{font-size:28px;line-height:1}.ibtn .dot{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:#d62828;color:#fff;font:700 11px/18px system-ui,sans-serif;text-align:center;font-style:normal}
 .mrow{padding:8px 10px;border-radius:10px;background:rgba(255,250,242,.7);margin:6px 0;text-align:left;font-size:14px}.mrow.new{outline:2px solid var(--accent2)}.mrow small{opacity:.65;display:block}
 .hud-obj{position:absolute;top:calc(max(8px,env(safe-area-inset-top)) + 54px);left:8px;right:8px;pointer-events:none!important;display:flex;flex-direction:column;gap:5px;align-items:flex-start}
 .obj{background:#fffaf2;border:2px solid var(--accent);border-left-width:7px;border-radius:14px;padding:8px 12px;font-size:16px;font-weight:600;line-height:1.35;max-width:min(94vw,540px);box-shadow:0 4px 14px rgba(120,60,30,.28);pointer-events:auto;cursor:pointer}
@@ -50,6 +50,7 @@ button{cursor:pointer;border:0}
 #stick{position:absolute;left:18px;bottom:calc(24px + env(safe-area-inset-bottom));width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.35);border:2px solid rgba(255,255,255,.8);touch-action:none;box-shadow:0 4px 14px rgba(80,50,20,.2)}
 #knob{position:absolute;left:50%;top:50%;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;background:rgba(224,122,95,.9);box-shadow:0 3px 8px rgba(80,50,20,.3)}
 #act{position:absolute;right:14px;bottom:calc(30px + env(safe-area-inset-bottom));min-width:170px;max-width:60vw;min-height:78px;border-radius:40px;padding:10px 22px 10px 16px;background:var(--accent);color:#fff;box-shadow:0 8px 20px rgba(160,70,40,.45);display:flex;align-items:center;gap:12px;text-align:left;animation:pulse 1.6s ease-in-out infinite}
+#act.float{right:auto;bottom:auto;left:0;top:0;min-width:0;max-width:none;min-height:56px;padding:8px 18px 8px 12px;gap:10px;border-radius:32px;white-space:nowrap}#act.float .ai{font-size:28px}#act.float b{font-size:16px}#act.float small{font-size:12px}
 #act .ai{font-size:34px;line-height:1}
 #act b{display:block;font-size:18px}
 #act small{display:block;font-size:13px;opacity:.92}
@@ -163,7 +164,7 @@ window.__bootTimer=setTimeout(function(){
     <div class="chip" id="hud-who">Bạn</div>
     <div class="chip clock" id="hud-clock">08:30</div>
     <div class="spacer"></div>
-    <button class="ibtn hidden" id="b-mail" aria-label="Hộp thư">✉<i class="dot hidden" id="mail-dot">0</i></button>
+    <button class="ibtn hidden" id="b-mail" aria-label="Hộp thư">📬<i class="dot hidden" id="mail-dot">0</i></button>
     <button class="ibtn" id="b-cam" aria-label="Đổi góc nhìn">🎥</button>
     <button class="ibtn" id="b-fast" aria-label="Tua nhanh">⏩</button>
     <button class="ibtn" id="b-mute" aria-label="Bật/tắt tiếng">🔊</button>
@@ -2063,6 +2064,18 @@ function computeNearest() {
   }
   return best;
 }
+const _actV = new THREE.Vector3();
+function placeActButton() {                                           // nút "Nói chuyện" nổi trên đầu nhân vật (trên bảng tên), các điểm khác vẫn ở góc dưới bên phải
+  const btn = $('#act');
+  const unfloat = () => { btn.classList.remove('float'); btn.style.left = ''; btn.style.top = ''; };          // trả nút về góc dưới bên phải (phải xóa left/top, nếu không nút bị kéo giãn)
+  if (btn.classList.contains('hidden') || !nearest || nearest.kind !== 'npc' || LITE) { unfloat(); return; }
+  const n = nearest.n; _actV.set(n.pos.x, n.ch.root.position.y + (isLying(n) ? 1.6 : 2.55), n.pos.z).project(camera);
+  if (_actV.z > 1) { unfloat(); return; }
+  btn.classList.add('float');
+  const W = innerWidth, H = innerHeight, w = btn.offsetWidth || 150, hh = btn.offsetHeight || 56;
+  const x = clamp((_actV.x * 0.5 + 0.5) * W - w / 2, 8, W - w - 8), y = clamp((-_actV.y * 0.5 + 0.5) * H - hh, 120, H - hh - 90);
+  btn.style.left = x.toFixed(1) + 'px'; btn.style.top = y.toFixed(1) + 'px';
+}
 function updateActButton(force) {
   const btn = $('#act');
   const visible = G.mode === 'play' && !P.lock;
@@ -2819,7 +2832,7 @@ async function msgTick() {
     MSG.online = new Set((o.data || []).map((r) => r.char_id)); MSG.items = m.data || [];
     const mine = MSG.items.filter((x) => x.to_char === MEMBER.char && !x.read_at); MSG.unread = mine.length;
     const fresh = mine.filter((x) => !MSG.seen.has(x.id)); mine.forEach((x) => MSG.seen.add(x.id));
-    if (MSG.primed && fresh.length && G.mode === 'play') toast(`✉ ${charName(fresh[0].from_char)}: ${fresh[0].body.slice(0, 40)}${fresh[0].body.length > 40 ? '…' : ''}`, 3500);
+    if (MSG.primed && fresh.length && G.mode === 'play') toast(`📬 ${charName(fresh[0].from_char)}: ${fresh[0].body.slice(0, 40)}${fresh[0].body.length > 40 ? '…' : ''}`, 3500);
     MSG.primed = true; MSG.fails = 0; msgSetBadge(); msgApplyOnline();
   } catch (e) {
     MSG.fails = Math.min(MSG.fails + 1, 4); MSG.failedAt = Date.now();
@@ -2828,8 +2841,9 @@ async function msgTick() {
 }
 function msgStart() {
   if (MSG.timer || !CLOUD.client || !MEMBER) return;
-  MSG.primed = false; MSG.fails = 0; MSG.failedAt = 0; MSG.beatT = 0; msgSetBadge(); msgTick();
+  MSG.primed = false; MSG.fails = 0; MSG.failedAt = 0; MSG.beatT = 0;
   MSG.timer = setInterval(msgTick, 25000); document.addEventListener('visibilitychange', msgOnVisible);
+  msgSetBadge(); msgTick();                                          // nút ✉ hiện ngay khi đã đăng nhập, kể cả khi lần hỏi đầu lỗi
 }
 function msgOnVisible() { if (!document.hidden) msgTick(); }
 function msgStop() {
@@ -2842,7 +2856,7 @@ async function msgOpenInbox() {
     const inc = x.to_char === MEMBER.char, who = inc ? `${charName(x.from_char)} → bạn` : `bạn → ${charName(x.to_char)}`, tag = x.kind === 'task' ? '📌 Việc: ' : x.kind === 'note' ? '📝 Giấy nhớ: ' : '';
     return h('div', { class: 'mrow' + (inc && !x.read_at ? ' new' : '') }, h('small', {}, `${who} · ${new Date(x.created_at).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' })}`), tag + x.body);
   });
-  Modal.open(h('h2', {}, '✉ Hộp thư'), rows.length ? h('div', {}, ...rows) : h('p', { class: 'sub' }, 'Chưa có tin nào. (Soạn tin và giao việc sẽ có ở bản sau.)'), h('button', { class: 'btn', onclick: () => Modal.close() }, 'Đóng'));
+  Modal.open(h('h2', {}, '📬 Hộp thư'), rows.length ? h('div', {}, ...rows) : h('p', { class: 'sub' }, 'Chưa có tin nào. (Soạn tin và giao việc sẽ có ở bản sau.)'), h('button', { class: 'btn', onclick: () => Modal.close() }, 'Đóng'));
   if (!unread.length) return;
   try {
     const { error } = await CLOUD.client.from('messages').update({ read_at: new Date().toISOString() }).in('id', unread.map((x) => x.id)).is('read_at', null); if (error) throw error;
@@ -3031,7 +3045,7 @@ function update(dt) {
   separateCharacters();
   if (P.walked > 1.2) tutorialAdvance('moved');
   if (!LITE) updateCamera(dt, false);
-  if (G.mode === 'play' && !LITE) updateActButton(false); else if (G.mode !== 'play') { /* nút ẩn khi đang hội thoại */ }
+  if (G.mode === 'play' && !LITE) { updateActButton(false); placeActButton(); } else if (G.mode !== 'play') { /* nút ẩn khi đang hội thoại */ }
   if (deskTag) { deskTag.on = G.mode === 'play' && !LITE && !P.lock && D.tasks < CFG.MAX_TASKS && Math.hypot(P.pos.x - PLAYER_DESK.sx, P.pos.z - PLAYER_DESK.sz) < 10; deskTag.alpha = 1; }
   hudT += dt; if (hudT > 0.25) { hudT = 0; updateHud(); }
   liteT += dt; if (liteT > 0.8) { liteT = 0; if (LITE) refreshLite(); }

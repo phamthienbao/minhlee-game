@@ -1,6 +1,6 @@
 # Hộp thư công ty (giai đoạn A: ai đang online và hỏi tin mới)
 
-Trạng thái: Giai đoạn A đã viết trong `index.html` (khối `MSG`, v2.2.0-alpha, 2026-11-04), **chưa commit**. Chưa chạy trên Supabase thật: chủ dự án phải chạy `docs/sql/hop-thu.sql` một lần trước khi tính năng hoạt động. Chỉ kiểm tra bằng headless Chrome với máy khách Supabase giả lập. Giai đoạn B đến F chưa làm (§8). Tóm tắt và vị trí trong kế hoạch: `docs/spec/nhieu-nguoi-choi.md` §13.
+Trạng thái: Giai đoạn A đã viết trong `index.html` (khối `MSG`, v2.2.0-alpha, 2026-11-04), **đã commit và đẩy lên `origin/main`** (`fa7ebf7`). Chạy trên Supabase thật: chủ dự án đã chạy `docs/sql/hop-thu.sql` (bản đã sửa quyền `update` trên cả bảng `online`, §4.4) và xác nhận luồng cơ bản (huy hiệu, toast, hộp thư) ngày 2026-11-04. Chấm 🟢 với hai tài khoản thật chưa kiểm tra. Trước đó chỉ kiểm tra bằng headless Chrome với máy khách Supabase giả lập. Giai đoạn B đến F chưa làm (§8). Tóm tắt và vị trí trong kế hoạch: `docs/spec/nhieu-nguoi-choi.md` §13.
 
 Phạm vi giai đoạn A: thành viên đã đăng nhập (sau `?login`) thấy ai đang online, thấy huy hiệu tin chưa đọc, và mở hộp thư để đọc. Chưa có soạn tin, chưa có việc giao, chưa có chat. Tin chỉ xuất hiện khi bảng `messages` có dữ liệu (ví dụ chủ dự án thêm bằng bảng điều khiển để thử). Guest không dùng tính năng này.
 
@@ -23,10 +23,10 @@ Trong dự án này, bảng mới không tự được cấp quyền. File SQL �
 | `msgStop()` | `index.html`, khối `MSG` | Dừng bộ hẹn giờ, bỏ lắng nghe tab, xóa dữ liệu hộp thư trong bộ nhớ, ẩn huy hiệu. Gọi trong `memberLogout()` và `cloudConflict()`, sau `rtStop()` |
 | `msgTick()` | `index.html`, khối `MSG` | Một lần hỏi: ghi online (khi đến hạn), đọc `online` và `messages`, cập nhật huy hiệu, toast, chấm xanh. Lỗi: lùi dần, ghi `dlog` |
 | `msgOnVisible()` | `index.html`, khối `MSG` | Khi tab hiện lại, gọi `msgTick()` ngay |
-| `msgSetBadge()` | `index.html`, khối `MSG` | Hiện hoặc ẩn nút ✉ và chấm đỏ số tin chưa đọc |
+| `msgSetBadge()` | `index.html`, khối `MSG` | Hiện hoặc ẩn nút 📬 và chấm đỏ số tin chưa đọc. Nút hiện ngay khi đã đăng nhập, kể cả khi lần hỏi đầu lỗi (`msgStart()` đặt bộ hẹn giờ trước) |
 | `msgApplyOnline()` | `index.html`, khối `MSG` | Thêm " 🟢" sau tên trên nhãn NPC của nhân vật đang online (trừ chính mình) |
-| `msgOpenInbox()` | `index.html`, khối `MSG` | Mở popup "✉ Hộp thư", rồi đánh dấu tin gửi đến chưa đọc là đã đọc |
-| `#b-mail`, `#mail-dot` | `index.html`, HUD | Nút ✉ ở thanh trên, bên phải, trước nút 🎥. Chấm đỏ có số tin chưa đọc |
+| `msgOpenInbox()` | `index.html`, khối `MSG` | Mở popup "📬 Hộp thư", rồi đánh dấu tin gửi đến chưa đọc là đã đọc |
+| `#b-mail`, `#mail-dot` | `index.html`, HUD | Nút 📬 (emoji, cỡ 28 px) ở thanh trên, bên phải, trước nút 🎥. Chấm đỏ có số tin chưa đọc |
 | `docs/sql/hop-thu.sql` | `docs/sql/` | Hàm `my_char()`, bảng `online` và `messages`, chỉ mục, RLS, quyền |
 
 ## 4. Dữ liệu
@@ -65,10 +65,12 @@ Trả về `char_id` trong bảng `progress` của người đang đăng nhập 
 
 | Bảng | Đọc | Ghi |
 |---|---|---|
-| `online` | Mọi thành viên đã đăng nhập | Thêm và sửa `last_seen`, chỉ với dòng có `char_id` của mình |
+| `online` | Mọi thành viên đã đăng nhập | Thêm và sửa dòng (`last_seen` và `char_id`, vì upsert ghi cả hai), chỉ với dòng có `char_id` của mình |
 | `messages` | Chỉ tin mình gửi hoặc mình nhận | Thêm: `chat` và `task` chỉ dưới tên mình. `note`: chỉ khi mình là người nhận (máy người nhận ghi thay người giao, vì người giao có thể đang offline). Sửa `done`, `done_at`, `read_at`: khi mình là người gửi hoặc người nhận |
 
 Quyền ở tầng dữ liệu không phân biệt cột. Người gửi cũng sửa được `done` (xem §7, giới hạn). Giai đoạn B cần siết lại.
+
+**Lỗi đã sửa (2026-11-04):** bản đầu chỉ cấp `grant update (last_seen) on public.online`. Upsert ghi cả `char_id`, nên máy chủ thật trả lỗi 403 / 42501 "permission denied for table online" khi ghi online. Bản sửa: `grant update on public.online to authenticated` (cả bảng). RLS vẫn chỉ cho sửa dòng có `char_id` của mình. Bài kiểm thử giả lập đã bỏ sót lỗi này; chủ dự án phát hiện trong console trình duyệt.
 
 ## 5. Luồng hoạt động
 
@@ -78,7 +80,7 @@ Quyền ở tầng dữ liệu không phân biệt cột. Người gửi cũng s
 | Hỏi định kỳ | Mỗi 25 giây, chỉ khi tab đang hiện. Khi tab hiện lại, hỏi ngay |
 | Ghi online | Lần hỏi kế tiếp ghi `online` (upsert) nếu đã quá 55 giây từ lần ghi trước. Kiểm tra chạy theo nhịp 25 giây, nên thực tế ghi khoảng mỗi 75 giây (§7) |
 | Đọc dữ liệu | `online` (dòng trong 3 phút gần nhất), và `messages` (tối đa 100 dòng, mới nhất trước) |
-| Tin mới | Tin gửi đến mình, chưa đọc, chưa thấy ở lần hỏi trước. Toast 3,5 giây "✉ <tên>: <40 ký tự đầu>…", chỉ khi đang chơi. Lần hỏi đầu tiên sau đăng nhập không có toast, để không báo lại tin cũ |
+| Tin mới | Tin gửi đến mình, chưa đọc, chưa thấy ở lần hỏi trước. Toast 3,5 giây "📬 <tên>: <40 ký tự đầu>…", chỉ khi đang chơi. Lần hỏi đầu tiên sau đăng nhập không có toast, để không báo lại tin cũ |
 | Đánh dấu đã đọc | Mở hộp thư: mọi tin gửi đến chưa đọc được gắn `read_at`. Không có tin chưa đọc thì không gửi yêu cầu |
 | Lỗi | Ghi `dlog` (chỉ khi chạy trên localhost hoặc có `?debug`). Sau lỗi thứ n, chờ 25 giây × 2^n trước khi hỏi lại: 50 giây, 100 giây, 200 giây, tối đa 300 giây (5 phút). Thành công thì đặt lại về 0. Không hiện thông báo cho người chơi |
 | Dừng | Đăng xuất, hoặc xung đột "đang được mở ở nơi khác": dừng hỏi, bỏ lắng nghe tab, xóa dữ liệu trong bộ nhớ, ẩn huy hiệu và chấm xanh |
@@ -87,9 +89,9 @@ Quyền ở tầng dữ liệu không phân biệt cột. Người gửi cũng s
 
 ## 6. Giao diện
 
-- **Nút ✉** (`#b-mail`): hiện khi thành viên đã đăng nhập và hộp thư đang chạy. Chấm đỏ hiện số tin chưa đọc (trên 9 hiện "9+", bằng 0 thì ẩn). Chỉ bấm được ở chế độ chơi.
+- **Nút 📬** (`#b-mail`, emoji cỡ 28 px): hiện ngay khi thành viên đã đăng nhập, kể cả khi lần hỏi đầu lỗi. Chấm đỏ hiện số tin chưa đọc (trên 9 hiện "9+", bằng 0 thì ẩn). Chỉ bấm được ở chế độ chơi. Đã thử 💬 nhưng bị loại: giống nút "Nói chuyện" (`docs/spec/mot-ngay-o-cong-ty.md` §4.2).
 - **Chấm 🟢** sau tên trên nhãn NPC: nhân vật đang online (trừ chính mình). Nhãn của người thật đang hiện trong `RT.peers` (giai đoạn 2) chưa có chấm này (§7).
-- **Popup "✉ Hộp thư"**: 30 tin mới nhất. Mỗi dòng ghi "<người gửi> → bạn" hoặc "bạn → <người nhận>", thời gian, và nội dung. Tin `task` có tiền tố "📌 Việc: ", tin `note` có "📝 Giấy nhớ: ". Tin gửi đến chưa đọc có viền sáng. Khi chưa có tin: "Chưa có tin nào. (Soạn tin và giao việc sẽ có ở bản sau.)". Nút "Đóng". Chỉ đọc.
+- **Popup "📬 Hộp thư"**: 30 tin mới nhất. Mỗi dòng ghi "<người gửi> → bạn" hoặc "bạn → <người nhận>", thời gian, và nội dung. Tin `task` có tiền tố "📌 Việc: ", tin `note` có "📝 Giấy nhớ: ". Tin gửi đến chưa đọc có viền sáng. Khi chưa có tin: "Chưa có tin nào. (Soạn tin và giao việc sẽ có ở bản sau.)". Nút "Đóng". Chỉ đọc.
 - **Toast**: như §5.
 - **Văn bản**: luôn hiển thị dưới dạng chữ. Hàm `h()` tạo nút chữ bằng text node (không dùng innerHTML), và `toast()` dùng `textContent`. Đã kiểm tra với tin chứa HTML (mock): hiện đúng dạng chữ.
 
@@ -97,7 +99,7 @@ Quyền ở tầng dữ liệu không phân biệt cột. Người gửi cũng s
 
 - **Nhịp ghi online**: thực tế khoảng 75 giây, không phải 55 giây như thiết kế. Nguyên nhân: kiểm tra chạy theo nhịp 25 giây và chỉ ghi khi đã quá 55 giây. Cửa sổ 3 phút vẫn đủ. Chủ dự án quyết định có đổi ngưỡng không.
 - **Tab ẩn hoặc máy ngủ**: không ghi online, nên sau khoảng 3 phút người khác thấy ngoại tuyến.
-- **Chưa chạy SQL**: nếu chưa chạy `docs/sql/hop-thu.sql`, nút ✉ vẫn hiện, hộp thư báo "Chưa có tin nào", không có chấm xanh, và lỗi chỉ có trong nhật ký gỡ lỗi.
+- **Chưa chạy SQL**: nếu chưa chạy `docs/sql/hop-thu.sql` (ví dụ ở máy chủ khác), nút 📬 vẫn hiện, hộp thư báo "Chưa có tin nào", không có chấm xanh, và lỗi chỉ có trong nhật ký gỡ lỗi.
 - **Số lượng tin**: huy hiệu và toast chỉ tính 100 tin mới nhất. Tin cũ hơn chưa đọc không được đếm.
 - **Nhãn người thật**: chấm 🟢 không hiện trên nhãn của người thật (`rtPeer()`, giai đoạn 2).
 - **RLS không phân biệt cột**: người gửi cũng sửa được `done` và `read_at` (§4.4). Chấp nhận cho giai đoạn A vì chưa có việc giao. Giai đoạn B phải siết lại.
@@ -122,9 +124,9 @@ Theo quyết định với chủ dự án (2026-11-04). Các giai đoạn này c
 
 | ID | Tiêu chí | Trạng thái |
 |---|---|---|
-| AC-M59 | `docs/sql/hop-thu.sql` chạy không lỗi trong SQL Editor (chạy một lần) | Not done (chủ dự án) |
+| AC-M59 | `docs/sql/hop-thu.sql` chạy không lỗi trong SQL Editor (chạy một lần) | Verified by owner (2026-11-04), with the corrected `online` grant (§4.4) |
 | AC-M60 | Chấm 🟢 hiện trên nhãn NPC của người đang online | Verified (mocked client, headless Chrome, 2026-11-04). Real server: not verified |
-| AC-M61 | Tin mới hiện huy hiệu và toast. Mở hộp thư đánh dấu đã đọc | Verified (mocked client, 2026-11-04). Real server: not verified |
+| AC-M61 | Tin mới hiện huy hiệu và toast. Mở hộp thư đánh dấu đã đọc | Verified (mocked client, 2026-11-04). Real server: verified by owner (2026-11-04), huy hiệu, toast và hộp thư |
 | AC-M62 | Lỗi liên tiếp: chờ 50 s, 100 s, 200 s, tối đa 300 s. Thành công thì đặt lại | Verified (mocked client, 2026-11-04) |
 | AC-M63 | Đăng xuất và xung đột: dừng hỏi, xóa huy hiệu và chấm xanh | Verified (mocked client, 2026-11-04) |
 | AC-M64 | Tin chứa HTML hiện dạng chữ | Verified (mocked client, 2026-11-04) |

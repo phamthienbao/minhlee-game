@@ -1,6 +1,6 @@
 # Thấy nhau: người chơi thật thấy nhau (multiplayer giai đoạn 2)
 
-Trạng thái: Phiên bản đầu đã triển khai (v2.2.0-alpha, 2026-11-04), chưa commit. Tần suất gửi đã giảm trước khi commit, sau khi đối chiếu hạn mức tin Realtime của gói Supabase Free (§6). Chỉ kiểm tra bằng headless Chrome với kênh giả lập. Chưa kiểm tra với Supabase Realtime thật hoặc hai trình duyệt thật. Tóm tắt và kế hoạch chung: `docs/spec/nhieu-nguoi-choi.md` §4, §5, §12.
+Trạng thái: Phiên bản đầu đã triển khai (v2.2.0-alpha, 2026-11-04, commit `fa7ebf7`, đã đẩy lên `origin/main`). Tần suất gửi đã giảm trước khi commit, sau khi đối chiếu hạn mức tin Realtime của gói Supabase Free (§6). Chỉ kiểm tra bằng headless Chrome với kênh giả lập. Chưa kiểm tra với Supabase Realtime thật hoặc hai trình duyệt thật. Tóm tắt và kế hoạch chung: `docs/spec/nhieu-nguoi-choi.md` §4, §5, §12.
 
 Phạm vi: thành viên đã đăng nhập thấy vị trí và tư thế của thành viên khác đang online, dưới dạng nhân vật tương ứng. Chưa có: chat, đồng hồ chung, NPC dùng chung, giao việc.
 

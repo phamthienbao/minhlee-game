@@ -57,6 +57,7 @@ create policy messages_update on public.messages for update to authenticated
 -- 3) Quyền (dự án này không tự cấp quyền cho bảng mới)
 grant usage on schema public to authenticated;
 grant select, insert on public.online to authenticated;
-grant update (last_seen) on public.online to authenticated;
+-- upsert (thêm, nếu đã có thì cập nhật) ghi cả char_id nên cần quyền update cả bảng; RLS vẫn chỉ cho sửa dòng của chính mình
+grant update on public.online to authenticated;
 grant select, insert on public.messages to authenticated;
 grant update (done, done_at, read_at) on public.messages to authenticated;

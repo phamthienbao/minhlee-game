@@ -1,6 +1,6 @@
 # Chế độ nhiều người chơi (Supabase)
 
-Trạng thái: Giai đoạn 1 đã triển khai (v2.0.0-alpha, 2026-11-04; sửa v2.0.1-alpha). Chủ dự án đã thử đăng nhập thật và lưu lên máy chủ thành công (2026-11-04, sau khi cấp quyền bảng, §6.1). Đăng nhập bằng email và mật khẩu thay cho link email: v2.1.0-alpha (`docs/spec/dang-nhap-cong-ty.md`, tóm tắt §10). Từ v2.1.0-alpha, màn đăng nhập chỉ hiện khi cờ `loginEnabled` bật. Giai đoạn 2 (thấy nhau) có phiên bản đầu từ v2.2.0-alpha, chưa commit (`docs/spec/thay-nhau.md`, tóm tắt §12). Giai đoạn 3 đến 6 chưa bắt đầu. Chi tiết triển khai giai đoạn 1: §9. Tài liệu này ghi các quyết định của chủ dự án để các phiên làm việc sau không phải hỏi lại.
+Trạng thái: Giai đoạn 1 đã triển khai (v2.0.0-alpha, 2026-11-04; sửa v2.0.1-alpha). Chủ dự án đã thử đăng nhập thật và lưu lên máy chủ thành công (2026-11-04, sau khi cấp quyền bảng, §6.1). Đăng nhập bằng email và mật khẩu thay cho link email: v2.1.0-alpha (`docs/spec/dang-nhap-cong-ty.md`, tóm tắt §10). Từ v2.1.0-alpha, màn đăng nhập chỉ hiện khi cờ `loginEnabled` bật. Giai đoạn 2 (thấy nhau) có phiên bản đầu từ v2.2.0-alpha (commit `fa7ebf7`, đã đẩy lên `origin/main`; `docs/spec/thay-nhau.md`, tóm tắt §12). Hộp thư công ty giai đoạn A (không dùng Realtime) có từ v2.2.0-alpha (commit `fa7ebf7`, đã đẩy lên `origin/main`; `docs/spec/hop-thu-cong-ty.md`, tóm tắt §13). Giai đoạn 3 đến 6 chưa bắt đầu. Chi tiết triển khai giai đoạn 1: §9. Tài liệu này ghi các quyết định của chủ dự án để các phiên làm việc sau không phải hỏi lại.
 
 ## 1. Mục tiêu
 
@@ -46,10 +46,10 @@ Nhân viên MinhLee (tối đa 14 người, đúng 14 nhân vật hiện có) đ
 ## 5. Các giai đoạn
 
 1. **Đăng nhập và lưu trên server** — *Đã triển khai. Đăng nhập thật và lưu lên server đã được chủ dự án xác nhận (2026-11-04).* Đăng nhập, gắn nhân vật theo email, lưu tiến độ lên `progress`, chế độ Guest. Game đơn lẻ vẫn chạy. Thành viên ngồi đúng bàn của nhân vật mình, và được gọi theo cách riêng (v2.0.1-alpha). Chi tiết: §9.
-2. **Thấy nhau** — *Phiên bản đầu đã triển khai (v2.2.0-alpha, 2026-11-04, chưa commit). Chưa kiểm tra với Realtime thật hoặc hai trình duyệt thật.* Presence và vị trí người chơi thật; NPC của người đang online bị ẩn, người chơi hiển thị bằng nhân vật tương ứng. Chi tiết: `docs/spec/thay-nhau.md`, §12.
+2. **Thấy nhau** — *Phiên bản đầu đã triển khai (v2.2.0-alpha, 2026-11-04, commit `fa7ebf7`). Chưa kiểm tra với Realtime thật hoặc hai trình duyệt thật.* Presence và vị trí người chơi thật; NPC của người đang online bị ẩn, người chơi hiển thị bằng nhân vật tương ứng. Chi tiết: `docs/spec/thay-nhau.md`, §12.
 3. **Đồng hồ và NPC dùng chung**: giờ chung, máy chủ NPC, sự kiện cùng lúc (mời nước, họp, tan ca).
 4. **Việc theo bộ phận và chỉ số công ty**: kho việc riêng theo bộ phận, chỉ số chung tăng khi hoàn thành.
-5. **Chat, giao việc giữa người, khen và càm ràm**: chọn nhanh hoặc tự gõ; máy tự chọn khi không gõ.
+5. **Chat, giao việc giữa người, khen và càm ràm**: chọn nhanh hoặc tự gõ; máy tự chọn khi không gõ. Giai đoạn A của hộp thư đã có (§13). Phần còn lại chia thành giai đoạn B đến F: `docs/spec/hop-thu-cong-ty.md` §8.
 6. **Hoàn thiện và thử với người thật**: mất kết nối, vào giữa ngày, lỗi mạng.
 
 ## 6. Việc cần chuẩn bị (chủ dự án)
@@ -86,6 +86,7 @@ Từ v2.0.1-alpha, khi gặp lỗi 42501 hoặc thông báo chứa "permission d
 - NPC có thể hơi giật hoặc lệch giữa các máy khi dùng máy chủ NPC.
 - Dự án Supabase miễn phí bị tạm dừng nếu 1 tuần không hoạt động. Khi tạm dừng, đăng nhập và lưu tiến độ không hoạt động cho đến khi dự án được khôi phục trên bảng điều khiển Supabase. Chơi Guest không bị ảnh hưởng (lưu trên máy).
 - Gói Free giới hạn 2 000 000 tin nhắn Realtime mỗi tháng và 200 kết nối đồng thời (bảng điều khiển, 2026-11-04). Từ v2.2.0-alpha, tần suất gửi vị trí được giảm để nằm trong hạn mức (công thức và bảng số: `docs/spec/thay-nhau.md` §6). Chưa đo bằng Supabase thật.
+- Hộp thư giai đoạn A không dùng Realtime: máy khách hỏi bảng mỗi 25 giây khi tab đang hiện. Lượng yêu cầu REST chưa đo (`docs/spec/hop-thu-cong-ty.md` §5).
 - Nhiệm vụ cá nhân, việc theo bộ phận và hậu quả của việc quên cần cân bằng sau khi chơi thử với người thật.
 
 ## 8. Câu hỏi còn mở
@@ -185,3 +186,9 @@ Lý do: chủ dự án mở hai tab cùng một tài khoản (một link cũ, m�
 Chi tiết (kênh, Presence, gói `pos`, hiển thị, NPC ẩn, tiêu chí AC-M40 đến AC-M53): `docs/spec/thay-nhau.md`.
 
 Tóm tắt: thành viên đã đăng nhập vào kênh Realtime chung `office` (bắt đầu trong `cloudEnter()`, dừng trong `memberLogout()` và `cloudConflict()`). Vị trí gửi khoảng 3 lần mỗi giây khi đổi, cộng nhịp 10 s khi đứng yên, và không gửi khi đứng một mình. Số tin và hạn mức: `docs/spec/thay-nhau.md` §6. Người thật hiện bằng nhân vật của họ, NPC của họ bị ẩn đến hết ngày. Guest không tham gia. Chưa có chat, đồng hồ chung hay NPC dùng chung.
+
+## 13. Hộp thư công ty, giai đoạn A (v2.2.0-alpha, 2026-11-04, commit `fa7ebf7`)
+
+Chi tiết (bảng, luồng, giới hạn, tiêu chí AC-M59 đến AC-M69): `docs/spec/hop-thu-cong-ty.md`.
+
+Tóm tắt: thành viên đã đăng nhập thấy ai đang online (chấm 🟢 trên nhãn NPC), có nút 📬 với huy hiệu tin chưa đọc, và đọc hộp thư (chỉ đọc). Dữ liệu nằm trong hai bảng `online` và `messages`, không dùng Realtime, để giữ trong hạn mức. SQL: `docs/sql/hop-thu.sql`, chủ dự án đã chạy (2026-11-04, bản đã sửa quyền `update` trên `online`). Luồng cơ bản (huy hiệu, toast, hộp thư) đã kiểm tra trên máy chủ thật. Chấm 🟢 với hai tài khoản thật chưa kiểm tra.

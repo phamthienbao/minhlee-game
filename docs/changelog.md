@@ -4,11 +4,11 @@ All notable changes to "Một Ngày Ở MinhLee" (formerly "Một Ngày Ở Côn
 
 ## v2.2.0-alpha — 2026-11-04
 
-Multiplayer stage 2, first version: members see each other. A logged-in member's character is drawn for the other members who are online, and that character's NPC is hidden on the viewing machine. Spec: `docs/spec/thay-nhau.md` (channel, payloads, rules, acceptance rows AC-M40 to AC-M53); summary in `docs/spec/nhieu-nguoi-choi.md` §12. Not committed yet. Verified only in headless Chrome with a mocked channel; not tested against the real Supabase Realtime service or with two real browsers.
+Multiplayer stage 2, first version: members see each other. A logged-in member's character is drawn for the other members who are online, and that character's NPC is hidden on the viewing machine. Spec: `docs/spec/thay-nhau.md` (channel, payloads, rules, acceptance rows AC-M40 to AC-M53); summary in `docs/spec/nhieu-nguoi-choi.md` §12. Committed and pushed as `fa7ebf7` (2026-11-04). Verified only in headless Chrome with a mocked channel; not tested against the real Supabase Realtime service or with two real browsers.
 
 Amended before the commit (same v2.2.0-alpha entry, not a new release): the send rate was lowered after the owner checked the Supabase Free-plan Realtime quota (2 000 000 messages a month, each broadcast counts 1 when sent plus 1 per receiver). Changes: nothing is sent when alone, a joining person gets our position at once, send timer 200 ms to 330 ms, heartbeat 2.5 s to 10 s, silence timeout 8 s to 25 s. Numbers: `docs/spec/thay-nhau.md` §6.
 
-Also in this unreleased entry (not a new release): company mailbox, phase A. Members see who is online, see an unread badge, and read an inbox. It polls tables and does not use Realtime, to save the Free-plan Realtime quota. Spec: `docs/spec/hop-thu-cong-ty.md` (acceptance rows AC-M59 to AC-M69); summary in `docs/spec/nhieu-nguoi-choi.md` §13. It needs `docs/sql/hop-thu.sql`, which the owner has not run yet. Not committed. Verified only with a mocked Supabase client.
+Also in this unreleased entry (not a new release): company mailbox, phase A. Members see who is online, see an unread badge, and read an inbox. It polls tables and does not use Realtime, to save the Free-plan Realtime quota. Spec: `docs/spec/hop-thu-cong-ty.md` (acceptance rows AC-M59 to AC-M69); summary in `docs/spec/nhieu-nguoi-choi.md` §13. It needs `docs/sql/hop-thu.sql`, which the owner has not run yet. Committed and pushed as `fa7ebf7`. Verified only with a mocked Supabase client.
 
 ### Added
 
@@ -22,13 +22,13 @@ Also in this unreleased entry (not a new release): company mailbox, phase A. Mem
   - `rtStop()`: stops the timer, removes all remote characters, sets the count to 0, and removes the channel.
   - `RT.others`: the number of other members online, counted from Presence on `sync` and on `leave` (own key ignored). If reading the presence state fails, it is logged with `dlog` and set to 1. `rtSend()` sends nothing while it is 0.
 - The `pos` handler validates the payload (string id, finite x and z) and drops bad packets. The Presence `leave` handler takes the key as given.
-- Mailbox: `docs/sql/hop-thu.sql` (new, run once in the Supabase SQL Editor, safe to re-run). It adds `public.my_char()` (security definer, returns the signed-in member's `char_id` from `progress`), tables `public.online(char_id, last_seen)` and `public.messages` (kinds `chat`, `task`, `note`; `body` 1 to 300 characters; `due`; `done` and `done_at`; `read_at`; `ref`; at most one note per task through a partial unique index), indexes, RLS policies, and explicit grants to `authenticated`.
+- Mailbox: `docs/sql/hop-thu.sql` (new, run once in the Supabase SQL Editor, safe to re-run). It adds `public.my_char()` (security definer, returns the signed-in member's `char_id` from `progress`), tables `public.online(char_id, last_seen)` and `public.messages` (kinds `chat`, `task`, `note`; `body` 1 to 300 characters; `due`; `done` and `done_at`; `read_at`; `ref`; at most one note per task through a partial unique index), indexes, RLS policies, and explicit grants to `authenticated` (`online`: `update` on the whole table, see Fixed).
 - Mailbox: block `MSG` in `index.html`, before `newDayState()` and after `RT`: `msgStart()`, `msgStop()`, `msgTick()`, `msgOnVisible()`, `msgSetBadge()`, `msgApplyOnline()`, `msgOpenInbox()`, and the constants `MSG` and `charName()`.
 - Mailbox polling: every 25 s, only while the tab is visible, plus a poll when the tab becomes visible again. Each poll reads `online` (rows from the last 3 minutes) and `messages` (latest 100, newest first). A heartbeat upsert to `online` is due when more than 55 s have passed since the last one (in practice about every 75 s, see Known limits). No Realtime is used.
 - Mailbox error handling: after each failure the next poll waits 25 s × 2^n, with n capped at 4 (50 s, 100 s, 200 s, then 300 s). Success resets the count. Errors are logged with `dlog` only, with no player-facing message.
-- Mailbox HUD: a ✉ button `#b-mail` before the camera button, with a red unread badge `#mail-dot` (shows "9+" above 9). Shown to signed-in members only, and clickable in play mode only.
-- Mailbox toast: "✉ <name>: <first 40 characters>…" for new unread incoming messages, 3.5 s, play mode only. The first poll after sign-in shows no toast.
-- Mailbox inbox "✉ Hộp thư": the latest 30 messages, unread incoming ones outlined, with the prefixes "📌 Việc: " for tasks and "📝 Giấy nhớ: " for notes. Read-only. Opening it sets `read_at` on all unread incoming messages.
+- Mailbox HUD: a 📬 button `#b-mail` (emoji, 28 px) before the camera button, with a red unread badge `#mail-dot` (shows "9+" above 9). Shown as soon as a member is signed in, even if the first poll fails (`msgStart()` sets the timer before `msgSetBadge()`), and clickable in play mode only. 💬 was tried and rejected: it looks like the Talk button.
+- Mailbox toast: "📬 <name>: <first 40 characters>…" for new unread incoming messages, 3.5 s, play mode only. The first poll after sign-in shows no toast.
+- Mailbox inbox "📬 Hộp thư": the latest 30 messages, unread incoming ones outlined, with the prefixes "📌 Việc: " for tasks and "📝 Giấy nhớ: " for notes. Read-only. Opening it sets `read_at` on all unread incoming messages.
 - Mailbox online dot: " 🟢" after the name on the NPC label of each online member (`msgApplyOnline()`).
 
 ### Changed
@@ -42,6 +42,14 @@ Also in this unreleased entry (not a new release): company mailbox, phase A. Mem
 - Presence `join` of another member resets `RT.last` and `RT.lastSent`, so the next send carries our position at once (the newcomer does not wait for the 10 s heartbeat). The join handler does not recount; the count comes from the `sync` event.
 - Send and quota tuning (before commit): timer 200 ms to 330 ms (about 3 Hz, was about 5 Hz), heartbeat 2.5 s to 10 s, peer silence timeout 8 s to 25 s, nothing sent when alone.
 
+- Mailbox button icon: ✉ (text glyph) to 📬 (emoji, 28 px). The toast and the inbox title use 📬 too. 💬 was rejected because it matches the Talk button.
+- Mailbox button visibility: `msgStart()` now sets the poll timer before the first `msgSetBadge()` and `msgTick()` call, so the button shows at once after sign-in, even if the first poll fails.
+- Talk action button: when the nearest target is a coworker, `#act` floats above that coworker's head instead of the bottom-right corner. New function `placeActButton()` (next to `computeNearest()` / `updateActButton()`, called from `update()` after `updateActButton(false)`), new CSS class `#act.float`. The button sits above the name tag (2.55 m above the root, 1.6 m for a lying coworker), is clamped to the screen with 8 px margins, is at least 120 px from the top, and stays 90 px above the bottom (above the joystick area). If the head is behind the camera (`z > 1`), the button goes back to the corner. Spot actions (desk, pantry, and others) keep the corner. Lite mode keeps the fixed button. Spec: `docs/spec/mot-ngay-o-cong-ty.md` §4.2, AC-125.
+
+### Fixed
+
+- `docs/sql/hop-thu.sql`: `grant update (last_seen) on public.online` changed to `grant update on public.online to authenticated` (whole table). The upsert also writes `char_id`, so the column-only grant failed on the real server with 403 / 42501 "permission denied for table online" on every online write. Found in the owner's browser console; the mocked-client test had missed it. RLS still limits each member to rows with their own `char_id`. The owner ran the fixed file on 2026-11-04.
+
 ### Known limits
 
 - The channel is public (`private` is not set). The spec in `docs/spec/nhieu-nguoi-choi.md` §4 asked for a private channel. Decision open, see `docs/spec/thay-nhau.md` §6.
@@ -51,7 +59,7 @@ Also in this unreleased entry (not a new release): company mailbox, phase A. Mem
 - Message volume (estimate, not measured): 5 members moving non-stop is about 76 messages a second (about 7.3 hours of the 2 000 000 monthly quota). 14 moving is about 594 a second. Formula and the idle figures: `docs/spec/thay-nhau.md` §6. The owner's own estimate of about 20 hours for 5 members matches roughly one-third moving time; the owner is asked to confirm the assumption.
 - Free-plan pause: a Supabase Free project pauses after 1 week without activity. Sign-in and cloud save stop until it is restored. Guest is not affected. Recorded in `docs/spec/nhieu-nguoi-choi.md` §7.
 - Two tabs of one account share the same Presence key. Not tested.
-- Mailbox, not run against the real server. Until the owner runs `docs/sql/hop-thu.sql`, the ✉ button still shows, the inbox stays empty, and the errors appear only in the debug log.
+- Mailbox on the real server: the owner ran the SQL and checked the basic flow on 2026-11-04 (unread badge, toast, inbox). Not checked yet: the online dot and RLS with two real accounts (AC-M60, AC-M65, AC-M68). Without the SQL run, the 📬 button still shows, the inbox stays empty, and the errors appear only in the debug log.
 - Mailbox heartbeat: the code writes `online` about every 75 s, not the designed 55 s, because the check runs on the 25 s poll and needs more than 55 s to have passed. The 3-minute window still covers it. Open: change the threshold or accept (`docs/spec/hop-thu-cong-ty.md` §7).
 - Mailbox: a hidden tab or a sleeping machine writes no heartbeat, so the member shows as offline after about 3 minutes.
 - Mailbox: unread count and toasts use the latest 100 messages only.
@@ -63,14 +71,15 @@ Also in this unreleased entry (not a new release): company mailbox, phase A. Mem
 ### Internal
 
 - Spec: new `docs/spec/thay-nhau.md`. `docs/spec/nhieu-nguoi-choi.md` status, §4 Realtime (plan and what was built), §5 stage 2, and new §12 summary.
-- `docs/handoff.md` §1, §4, §6 (stage 2 first version done, stage 3 next, stage 2 not committed).
+- `docs/handoff.md` §1, §4, §6 (stage 2 first version done, stage 3 next; stage 2 and mailbox phase A committed as `fa7ebf7`).
 - `docs/tasks.md`: v2.2.0-alpha entries and follow-ups. Closed items moved to `docs/archive/tasks-done-2026-11.md`.
 - `docs/glossary.md`: realtime terms (presence, broadcast, peer, heartbeat, `RT` block, `rtStart()` and related functions). Amended: new terms `RT.others`, realtime message quota, project pause, room sharding, Durable Objects. Numbers in the broadcast, heartbeat and silence entries corrected in place.
 - `docs/handoff.md` and `docs/spec/nhieu-nguoi-choi.md` §4, §7, §12: rates and timeouts updated; Supabase Free-plan facts added.
+- `docs/spec/mot-ngay-o-cong-ty.md` §4.2 (talk button placement) and AC-125. `docs/spec/hop-thu-cong-ty.md` §4.4 (grant fix), §6 (📬), AC-M59 and AC-M61 status. `docs/glossary.md`: new term for the floating talk button.
 - Local `CLAUDE.md` (gitignored) status and docs pointer.
 - No secrets, keys, project URL, emails, or passwords were written to the docs.
 - Mailbox: new `docs/spec/hop-thu-cong-ty.md` (Vietnamese): components, tables, RLS and grants, polling flow, interface, limits, acceptance rows AC-M59 to AC-M69, and planned phases B to F.
-- Mailbox: new `docs/sql/hop-thu.sql` (not run yet). It is the only SQL file in `docs/sql/`.
+- Mailbox: new `docs/sql/hop-thu.sql`, run by the owner on 2026-11-04 (with the corrected grant). It is the only SQL file in `docs/sql/`.
 - `docs/spec/nhieu-nguoi-choi.md`: status line, §5 stage 5 pointer to the mailbox phases, §7 risk line on REST request volume, new §13 summary.
 - `docs/tasks.md` (Done line, follow-ups, Blocked heading), `docs/handoff.md` §4, §5, §6, `docs/glossary.md` (mailbox terms, placeholders for definition).
 - Local `CLAUDE.md` (gitignored): layout tree and status.
@@ -100,7 +109,11 @@ Mailbox phase A (headless Chrome, mocked Supabase client, 2026-11-04):
 
 Code read only: polling only while the tab is visible, and toasts only in play mode (AC-M66, AC-M67).
 
-Not verified: the real server and the SQL run (AC-M59), RLS between two accounts (AC-M65), two real accounts (AC-M68), real request counts (AC-M69).
+Real server (owner, 2026-11-04): SQL run (AC-M59) and the basic flow (AC-M61: unread badge, toast, inbox). Found and fixed on the way: the `online` grant (see Fixed).
+
+Not verified: the online dot and RLS between two accounts (AC-M60, AC-M65, AC-M68), real request counts (AC-M69).
+
+Floating Talk button: headless Chrome, button rect read only (no screenshot). Not checked on a phone or touch input (AC-125, AC-17).
 
 ## v2.1.0-alpha — 2026-11-04
 
