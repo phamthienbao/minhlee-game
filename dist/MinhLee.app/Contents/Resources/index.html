@@ -2336,10 +2336,11 @@ function resumeSession() {
 function showWelcomeBack() {
   const d = Store.get(), sess = validSession();
   if (!d.days && !sess) return;
+  $('#title').classList.add('hidden');                          // ẩn form đặt tên: người chơi cũ chỉ thấy popup Tiếp tục / Chơi mới
   const who = d.name ? `Chào mừng ${d.name} quay lại!` : 'Chào mừng bạn quay lại!';
   const info = sess ? `Ngày làm thứ ${d.days + 1} đang dở lúc ${fmtTime(sess.minute)}. Bạn có thể làm tiếp đúng chỗ đã dừng.` : `Bạn đã làm ở MinhLee ${d.days} ngày. Ngày mới đang chờ bạn.`;
   const askNew = () => Modal.open(h('h2', {}, 'Chơi mới?'), h('p', { class: 'sub' }, 'Toàn bộ tên, nhân vật, nhật ký, mức thân thiết và đồ đã mở khóa sẽ bị xóa khỏi thiết bị này, rồi bạn bắt đầu lại từ ngày đầu tiên.'),
-    h('button', { class: 'btn', onclick: () => { Modal.close(false); Store.clear(); Object.keys(AFF).forEach((k) => delete AFF[k]); refreshTitle(); toast('Đã xóa dữ liệu. Hãy đặt tên và bắt đầu nhé!', 3000); } }, '🗑 Xóa hết và chơi mới'),
+    h('button', { class: 'btn', onclick: () => { Modal.close(false); Store.clear(); Object.keys(AFF).forEach((k) => delete AFF[k]); refreshTitle(); $('#title').classList.remove('hidden'); toast('Đã xóa dữ liệu. Hãy đặt tên và bắt đầu nhé!', 3000); } }, '🗑 Xóa hết và chơi mới'),
     h('button', { class: 'btn alt', onclick: () => { Modal.close(false); G.mode = 'title'; showWelcomeBack(); } }, 'Thôi, quay lại'));
   Modal.open(h('h2', {}, who), h('p', { class: 'sub' }, info),
     h('button', { class: 'btn', onclick: () => { Modal.close(false); G.mode = 'title'; Sfx.init(); Sfx.setMuted(!Store.get().settings.sound); rebuildPlayer(); if (!resumeSession()) startDay(); } }, sess ? '▶ Tiếp tục ngày đang dở' : '▶ Tiếp tục chơi'),

@@ -8,6 +8,13 @@ Legend: `[x]` done, `[ ]` todo, `[~]` in progress, `[!]` blocked.
 
 Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`. Done entries v1.8.2 to v1.8.6 were moved there in the v1.9.3 pass. Done entries v1.9.1 to v1.9.4 were moved there in the v1.10.0 pass.
 
+- [x] v1.10.1 (2026-11-04): welcome-back popup hides the title screen's name and gender form while it is open, so returning players see only "▶ Tiếp tục" and "🆕 Chơi mới". The form returns only after the confirmed reset. Reason: players could miss the small "Tiếp tục" button. Details: `docs/changelog.md` v1.10.1, `docs/spec/the-gioi-lien-tuc.md` §11.5, AC-84
+  - [x] `showWelcomeBack()` (`index.html` section 14): adds `hidden` to `#title` on open, unhides it after `Store.clear()` in "Xóa hết và chơi mới". "Thôi, quay lại" keeps it hidden
+  - [x] Headless Chrome: `#title` hidden during the popup, kept hidden after back, shown after reset, fresh player sees no popup
+  - [ ] Real browser and phone check of the popup (not tested outside headless Chrome)
+  - [ ] `dist/MinhLee-mac.zip` not rebuilt in this pass (see v1.10.0 follow-up)
+  - [x] Docs: changelog, `docs/spec/the-gioi-lien-tuc.md` §11.5, `docs/spec/mot-ngay-o-cong-ty.md` AC-84, `docs/product-guide.md`
+
 - [x] v1.10.0 (2026-11-04): mid-day save and resume (closing the tab no longer restarts the day), welcome-back popup on boot (continue, new game with confirmation, or back), Anh Bảo's look (black polo collar, white cuffs, swept hair, red-and-white striped shirt), Nguyên sleeps less (one nap after lunch, otherwise works on a pantry sofa) and can visit Chị Thảo from the sofa, so his two `nguyen`→`thao` duo scripts play (21 in total). Trung also visits Nguyên (40% per visit attempt, two `trung`→`nguyen` scripts), so the total is 23 scripts for 19 pairs. Details: `docs/changelog.md` v1.10.0, `docs/spec/the-gioi-lien-tuc.md` §11
   - [x] `saveSession()`, `validSession()`, `resumeSession()`, `#btn-resume`, `Store.session` (`session: null` in the `endDay` patch, `exitToTitle`, and start-over) in `index.html` section 14 and the title code
   - [x] `showWelcomeBack()` (section 14, called from `init()`): the popup, the "Chơi mới?" confirmation, and "Thôi, quay lại". Spec `docs/spec/the-gioi-lien-tuc.md` §11.5, AC-84

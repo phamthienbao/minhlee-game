@@ -2,6 +2,20 @@
 
 All notable changes to "Một Ngày Ở MinhLee" (formerly "Một Ngày Ở Công Ty", renamed in v1.0.3). Newest first. Entries are appended, never rewritten.
 
+## v1.10.1 — 2026-11-04
+
+The welcome-back popup now hides the title screen's name and gender form. Returning players see only the popup, so the "▶ Tiếp tục" choice is the first thing they meet. The reason was that players could miss the small "Tiếp tục" button on the name screen.
+
+### Changed
+
+- `showWelcomeBack()` (`index.html` section 14) adds `hidden` to `#title` while the popup is open. The name, gender, and avatar form stays hidden through "Thôi, quay lại".
+- "🆕 Chơi mới" then "🗑 Xóa hết và chơi mới" calls `Store.clear()` and only then unhides `#title`, so the name form appears after the reset.
+- First-time players (no data and no session) still skip the popup and see the name form as before. No change to save keys or fields.
+
+### Verification
+
+- Headless Chrome only (2026-11-04): `#title` hidden while the popup is open, still hidden after "Thôi, quay lại", shown after the confirmed reset, and a fresh player sees no popup. Not tested on a real browser or phone.
+
 ## v1.10.0 — 2026-11-04
 
 Mid-day save and resume: closing the tab during a workday no longer restarts that day. A welcome-back popup opens on boot when saved data exists, with continue, new game, and a confirmed reset. Anh Bảo's white lower hem is removed, and he gets a black polo collar, white cuffs, short sleeves, a men's swept haircut, and a red-and-white striped shirt (set by the user's explicit request, so the solid polo of the first brief is not used). Nguyên sleeps much less: one short nap after lunch, otherwise he works from a pantry sofa, and from the sofa he can now visit Chị Thảo, so his two duo scripts play. Trung now sometimes visits Nguyên (sofa or daybed) to talk about the design, with two new `trung`→`nguyen` scripts. Save key `mot-ngay-o-cong-ty.v1` and its existing fields are unchanged. The new `session` field is added beside them, with no migration needed.

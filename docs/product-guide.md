@@ -171,7 +171,8 @@ Each day is saved to your diary when it ends. The diary keeps the most recent 15
 - When you come back, the title screen shows **▶ Tiếp tục ngày đang dở** (Continue the day in progress) with the time it stopped.
 - **Welcome back:** when you open the game and you have played before, a window says **"Chào mừng … quay lại!"** (Welcome back). It tells you if a day is still in progress and at what time.
   - **▶ Tiếp tục ngày đang dở** (Continue the day in progress) picks up where you stopped. If no day is in progress, the button reads **▶ Tiếp tục chơi** (Keep playing) and starts your next day.
-  - **🆕 Chơi mới** (New game) asks you to confirm first. **🗑 Xóa hết và chơi mới** (Delete everything and start over) erases your name, diary, closeness with coworkers, and unlocked items on this device. **Thôi, quay lại** (Never mind) goes back to the welcome window.
+  - While the welcome window is open, the name and gender form is hidden, so the choices above are the only thing you see.
+  - **🆕 Chơi mới** (New game) asks you to confirm first. **🗑 Xóa hết và chơi mới** (Delete everything and start over) erases your name, diary, closeness with coworkers, and unlocked items on this device, and then shows the name form again. **Thôi, quay lại** (Never mind) goes back to the welcome window, with the name form still hidden.
   - The first time you play, there is no welcome window. You go straight to typing your name.
 - Each save belongs to one device and one browser. A copy of the game opened from a file, from a web address, or in the Mac app keeps its own save. There is no way to move a save to another device yet.
 

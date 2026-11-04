@@ -130,9 +130,11 @@ Not saved: open cards and modals, a conversation in progress, speech bubbles, ac
 
 Criteria AC-81 to AC-84 are in `docs/spec/mot-ngay-o-cong-ty.md` §3.
 
-### 11.5 Welcome-back popup (v1.10.0)
+### 11.5 Welcome-back popup (v1.10.0, title form hidden in v1.10.1)
 
 `init()` calls `showWelcomeBack()` (`index.html` section 14) after boot. It opens only when there is saved data (`Store.days > 0` or `validSession()`). A first-time player with no data sees the name screen directly. It also reopens when the player picks "Thôi, quay lại".
+
+While the popup is open, `showWelcomeBack()` adds `hidden` to `#title`, so the name, gender, and avatar form is not visible. The form is revealed (`#title` unhidden) only after "🗑 Xóa hết và chơi mới" has cleared the save. "Thôi, quay lại" keeps it hidden.
 
 | Element | Text or rule | Code |
 |---|---|---|
@@ -146,4 +148,4 @@ Criteria AC-81 to AC-84 are in `docs/spec/mot-ngay-o-cong-ty.md` §3.
 
 The confirmation says that the name, character, diary, closeness, and unlocked items are erased from this device. The title-screen buttons `#btn-resume` and `#btn-start` remain and are not replaced by the popup.
 
-Verified in headless Chrome only (2026-11-04): popup text and buttons, continue at 13:10 with 1 task, "Thôi, quay lại" keeps the data, clear leads to 0 days. Not tested across a real browser restart or on a real device (`docs/tasks.md`).
+Verified in headless Chrome only (2026-11-04): popup text and buttons, continue at 13:10 with 1 task, "Thôi, quay lại" keeps the data, clear leads to 0 days. v1.10.1: `#title` hidden during the popup, kept hidden after "Thôi, quay lại", shown after the confirmed reset, no popup for a fresh player. Not tested across a real browser restart or on a real device (`docs/tasks.md`).
