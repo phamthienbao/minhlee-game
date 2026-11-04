@@ -571,7 +571,7 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **RLS (row-level security)** — *(needs definition)* Supabase/Postgres rule that limits each signed-in user to their own rows in `roster` and `progress`. Added v2.0.0-alpha.
 
-**Lưu lên máy chủ (cloud save)** — *(needs definition)* Saving a member's progress to `progress`. Debounced 3 seconds after a change, retried every 15 seconds on failure, and flushed on sign-out and when the page is hidden (`cloudPush()`, `cloudFlush()`). Added v2.0.0-alpha.
+**Lưu lên máy chủ (cloud save)** — *(needs definition)* Saving a member's progress to `progress`. Debounced 3 seconds after a change, retried every 15 seconds on failure, and flushed on sign-out and when the page is hidden (`cloudPush()`, `cloudFlush()`). Added v2.0.0-alpha. *(Outdated as of v2.1.0-alpha: the debounce is now 2 seconds, the write is conditional on `updated_at`, and the page-hide save uses `cloudFlushNow()` with keepalive. See `docs/spec/nhieu-nguoi-choi.md` §11.)*
 
 **`Store.useCloud()` / `Store.useLocal()`** — *(needs definition)* Switch the save backend in `Store`. `useCloud` sends writes to the server (member). `useLocal` restores the guest save from `localStorage` (after sign-out). Added v2.0.0-alpha.
 
@@ -606,3 +606,15 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 **`cloudBoot()`** — *(needs definition)* Boot function in the sign-in block of `index.html`. Shows or hides `#btn-login` from `loginEnabled`. With the flag off it shows the Guest welcome and never loads supabase-js. Added v2.0.0-alpha; the flag check added v2.1.0-alpha. See `docs/spec/dang-nhap-cong-ty.md` §4.
 
 **`friendlyAuthError(e)`** — *(needs definition)* Function in the sign-in block of `index.html` that maps Supabase auth errors to Vietnamese messages for the sign-in form. Added v2.1.0-alpha. See `docs/spec/dang-nhap-cong-ty.md` §1.
+
+**`CLOUD.version`** — *(needs definition)* Field of `CLOUD` in `index.html` (sign-in block). The `updated_at` of the member's `progress` row as last read or written. Set by `cloudApply()` at sign-in, then replaced by the value the server returns after each successful write in `cloudFlush()`. Used as the condition of the next write, so a row changed by another tab or device is detected. Added v2.1.0-alpha. See `docs/spec/nhieu-nguoi-choi.md` §11. *(Keepalive saves set it to the value sent, not the value returned. See the known defects in `docs/tasks.md`.)* *(Note 2026-11-04: fixed. Keepalive saves now also change it only from the value the server returns.)*
+
+**`cloudConflict()`** — *(needs definition)* Function in `index.html` (sign-in block). Called when a conditional write updates zero rows, meaning another tab or device wrote first. Sets `CLOUD.conflict`, stops all saves, and opens the modal "⚠ Tài khoản đang được mở ở nơi khác" with "🔄 Tải lại trang". Added v2.1.0-alpha. See `docs/spec/nhieu-nguoi-choi.md` §11 and `docs/spec/dang-nhap-cong-ty.md` §6.
+
+**`cloudFlushNow()`** — *(needs definition)* Function in `index.html` (sign-in block). Sends the member's progress with a `fetch` PATCH and `keepalive: true` on `pagehide` and when the tab becomes hidden, so the request can finish after the page closes. Bodies over about 60 000 characters fall back to `cloudFlush()`. Added v2.1.0-alpha. See `docs/spec/nhieu-nguoi-choi.md` §11. *(Note 2026-11-04: the limit counts bytes, not characters. While `CLOUD.busy` is set, the call returns early and keeps `CLOUD.dirty`.)*
+
+**keepalive** — *(needs definition)* The `fetch` option `keepalive: true`. The browser keeps a request alive after its page has started to close. The body limit is about 64 KB. Used by `cloudFlushNow()`. Added v2.1.0-alpha. Not yet checked on a real tab close (AC-M36 in `docs/spec/dang-nhap-cong-ty.md`).
+
+**Tài khoản đang được mở ở nơi khác (account open elsewhere)** — *(needs definition)* The modal shown by `cloudConflict()` when another tab or device has saved newer progress for the same account. Its button "🔄 Tải lại trang" reloads the page. The rule for players: one open window per account. Added v2.1.0-alpha. See `docs/spec/nhieu-nguoi-choi.md` §11.
+
+**Cách gọi anh Bảo (address canon)** — Everyone calls Bảo "anh" in dialogue (`docs/spec/dong-nghiep.md` §2). When the player is the member Bảo (`MEMBER_CALL === 'anh Bảo'`), `fill()` changes "bạn" / "Bạn" in NPC lines to "anh" / "Anh", except in "các bạn", "những bạn", "bạn bè", and "bạn thân". Added v2.1.0-alpha. *(Definition is factual; curation pending.)*

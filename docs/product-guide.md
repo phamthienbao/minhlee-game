@@ -33,11 +33,13 @@ Company members can sign in with their company email and a password. Your admini
 What changes when you are signed in:
 
 - **You are one of the coworkers.** Your name, gender, and look come from that coworker. That coworker is not in the office in your game, because you take their place. Your character never gives you a job, and does not ask you about the missing document.
-- **Your progress is kept on the server.** Your days, finished jobs, unlocked desk items, how close you are with each coworker, your diary, and the day in progress are saved there. Changes are sent about 3 seconds after you make them. If the connection drops, the game tries again. A short message appears if the save is delayed.
+- **Your progress is kept on the server.** Your days, finished jobs, unlocked desk items, how close you are with each coworker, your diary, and the day in progress are saved there. Changes are sent about 2 seconds after you make them, and also when you switch to another tab or close the window. If the connection drops, the game tries again. A short message appears if the save is delayed.
 - **You sit at your own character's desk** in the office, and the items you unlock appear on that desk. After you log out, your guest desk at the bottom left of the office is shown again.
 - **Coworkers call you by your character's name.** For example, Anh Bảo is "anh Bảo", Chị Ba is "chị Ba", Chú 7 is "chú 7", and Chủ tịt is "Chủ tịt". Everyone else uses the character's name. Your own name on the screen stays the real name.
 - **Your guest save on this device is not changed** by the days you play while signed in.
 - The title screen's name and gender form is not shown. The welcome window replaces it.
+
+**One window at a time.** Open the game in only one browser tab or on one device for each company account. If you sign in to the same account in a second tab or on a second device, that newer window keeps your progress. The older window then shows **"⚠ Tài khoản đang được mở ở nơi khác"** (This account is open somewhere else) the next time it tries to save, usually within a few seconds of your next move. From that moment it stops saving, so it cannot overwrite the newer progress. Changes you make in that window are not saved. Close it, or press **🔄 Tải lại trang** (Reload the page) to load the latest progress from the server. Guest play in another tab does not affect your account.
 
 **Log out:** in the welcome window, press **🚪 Đăng xuất** (Log out). The game saves your last changes first. Then it goes back to the sign-in screen, and your guest save on this device is shown again, exactly as you left it.
 
@@ -347,6 +349,18 @@ The game keeps your changes and tries again every 15 seconds. You can keep playi
 **I see "⚠ Máy chủ chưa cấp quyền lưu tiến độ" (The server is not yet allowed to save progress).**
 The game server is not set up to save player progress yet. This is a setup problem, not something you did. Tell the person who runs the game, and ask them to check the server permissions. The game keeps trying every 15 seconds, and the message appears at most once a minute. Keep the game open until the save works. Changes made while the save is failing can be lost if you close the page first. Once the server is set up, the message stops and your progress is saved as usual.
 
+**I see "⚠ Tài khoản đang được mở ở nơi khác" (This account is open somewhere else).**
+Your account was opened in another tab or on another device, and that one saved newer progress. This window has stopped saving so the two do not overwrite each other. Close the other windows of the same account, then press **🔄 Tải lại trang** (Reload the page) in the window you keep. Keep playing in only one window at a time.
+
+**My welcome window says 0 days, but I had a day in progress.**
+A day is counted only when it ends, and a finished job is counted only when it is done. So during your first day, 0 days is correct. The day in progress is saved too. Look for **▶ Tiếp tục ngày đang dở** (Continue the day in progress) on the welcome window. If it is missing and the game starts a fresh morning, another window of the same account probably saved after you. Close the other windows, then reload the game page in the one you keep.
+
+**The welcome window has a line starting with "☁ Đã tải từ máy chủ" and a note in brackets ("chẩn đoán").**
+This is a temporary note for the people checking the server saves. It shows what the server sent: days, finished jobs, unlocked items, and the day in progress. You can ignore it. If something looks wrong, tell the person who runs the game. The note will be removed later.
+
+**I see "⚠ Không khôi phục được ngày đang dở nên đã bắt đầu một ngày mới" (Could not restore the day in progress, so a new day has started).**
+The game could not read the day you had in progress, so it started a new day. Your finished days and jobs are kept. Tell the person who runs the game what you did just before the message.
+
 **Why don't I see the 3D office?**
 Your browser or device may not show 3D graphics. The title screen then shows a short reason, and the game uses a simple list of places and people to interact with instead. The game still works. To try the 3D office again:
 
@@ -378,7 +392,7 @@ Tap the **🎥** button at the top right. It cycles through close (Gần), mediu
 The layout adjusts to the screen. Try rotating your device or reloading the page.
 
 **What do coworkers call me?**
-The name you typed on the title screen. If you left it empty, they call you "bạn". Their wording also follows the gender you picked (Nam, Nữ, or Không nêu). If you signed in as a coworker, they call you by that character's name (for example "anh Bảo" or "chị Ba"), see **Signing in**.
+The name you typed on the title screen. If you left it empty, they call you "bạn". Their wording also follows the gender you picked (Nam, Nữ, or Không nêu). If you signed in as a coworker, they call you by that character's name (for example "anh Bảo" or "chị Ba"), see **Signing in**. If you are the coworker Bảo, the lines that would say "bạn" to you say "anh" instead.
 
 **I want to start over.**
 Use **Xóa dữ liệu** (Delete data) on the title screen. This removes all saved progress.

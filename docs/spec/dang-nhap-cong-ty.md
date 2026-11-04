@@ -2,7 +2,7 @@
 
 Trạng thái: đã triển khai trong `index.html` (v2.1.0-alpha, 2026-11-04). Chỉ hiện với người đã bật cờ `loginEnabled` (§4). Phạm vi: đăng nhập bằng email công ty và mật khẩu do quản trị viên tạo. Bối cảnh giai đoạn 1 (bảng dữ liệu, nhận nhân vật, lưu tiến độ): `docs/spec/nhieu-nguoi-choi.md` §4, §9.
 
-Lịch sử trong cùng bản v2.1.0-alpha: link email (v2.0.x) đã bỏ. Luồng "Lần đầu hoặc quên mật khẩu?", email khôi phục và màn tạo mật khẩu đã thêm rồi bỏ trong ngày, nên không còn trong mã nguồn (§6).
+Lịch sử trong cùng bản v2.1.0-alpha: link email (v2.0.x) đã bỏ. Luồng "Lần đầu hoặc quên mật khẩu?", email khôi phục và màn tạo mật khẩu đã thêm rồi bỏ trong ngày, nên không còn trong mã nguồn (§5, AC-M24 đến AC-M27).
 
 ## 1. Luồng đăng nhập
 
@@ -83,3 +83,20 @@ Ghi chú:
 | AC-M30 | Cờ tắt: nút ẩn, không có client Supabase, màn đầu là form tên (chưa có tiến độ) | Verified (headless Chrome, 2026-11-04): enabled=false, nút ẩn, form tên hiện, không có client |
 | AC-M31 | Cờ bật qua `?login`: enabled=true, nút hiện, client được tạo | Verified (headless Chrome, 2026-11-04) |
 | AC-M32 | `?login=off` tắt lại cờ trong trình duyệt thật | Not verified |
+| AC-M33 | Hai tab cùng tài khoản (giả lập): khi tab kia ghi làm đổi hàng trên máy chủ, tab này phát hiện, hiện popup "Tài khoản đang được mở ở nơi khác" và ngừng ghi (§6, `nhieu-nguoi-choi.md` §11) | Verified with a simulated second tab and a mocked server (headless Chrome, 2026-11-04). Two real windows: not verified (follow-up in `docs/tasks.md`) |
+| AC-M34 | Đăng nhập sau cùng giữ quyền: nơi vừa đăng nhập ghi ngay, nơi cũ bị khóa ở lần ghi kế tiếp; "🔄 Tải lại trang" đọc dữ liệu mới nhất | Lock after a changed version: verified with mocked server (headless Chrome, 2026-11-04). Login write and reload path: code read only. Real server: not verified |
+| AC-M35 | Máy chủ thật: bộ lọc `updated_at` khớp (giá trị lưu và giá trị gửi giống nhau đến mili giây); `claim_character()` trả về `updated_at` | Not verified. Nếu không trả về `updated_at`, kiểm tra xung đột bị bỏ qua |
+| AC-M36 | Đóng hoặc ẩn tab: keepalive PATCH đến máy chủ (tab thật đóng) | URL, header và thân yêu cầu kiểm bằng mock (2026-11-04). Tab thật: not verified |
+| AC-M37 | Ngày dở giữa ngày (ví dụ 11:35) qua vòng JSON giữ nguyên và tiếp tục đúng giờ | Verified with mocked data (headless Chrome, 2026-11-04). Máy chủ thật: not verified |
+| AC-M38 | `resumeSession()` lỗi: hiện "⚠ Không khôi phục được ngày đang dở…" và bắt đầu ngày mới | Code read only (2026-11-04). Not played |
+| AC-M39 | Mạng lỗi lúc keepalive: không tạo popup xung đột giả ở lần lưu sau | Code fixed (2026-11-04): `CLOUD.version` chỉ đổi theo `updated_at` máy chủ xác nhận. Mạng lỗi thật: not verified |
+
+## 6. Lưu tiến độ và một nơi hoạt động (phía đăng nhập, v2.1.0-alpha)
+
+Cơ chế đầy đủ (phiên bản ghi, ghi có điều kiện, keepalive, giới hạn đã biết): `docs/spec/nhieu-nguoi-choi.md` §11. Tiêu chí: AC-M33 đến AC-M39 (§5).
+
+- Quy tắc cho người chơi: chỉ mở một tab hoặc một thiết bị cho mỗi tài khoản. Hai nơi cùng mở thì một nơi bị khóa và hiện popup "Tài khoản đang được mở ở nơi khác".
+- Đăng nhập là lúc giành quyền: `cloudEnter()` ghi ngay sau khi nhận nhân vật, nên nơi vừa đăng nhập thắng. Nơi cũ bị khóa ở lần ghi kế tiếp.
+- Xung đột phát hiện lúc tab ẩn (`cloudFlushNow()`) cũng mở popup, giống lúc tab hiện (`cloudConflict()`).
+- Tab Guest không đọc và không ghi máy chủ, nên không gây xung đột.
+- Đăng xuất (`memberLogout()`) lưu nốt trước khi gọi `signOut`. Tab đã bị khóa không lưu được nữa.

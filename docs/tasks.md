@@ -1,6 +1,6 @@
 # Tasks
 
-Last updated: 2026-11-04 (v2.1.0-alpha, password sign-in for admin-created accounts behind the `loginEnabled` flag, multiplayer stage 1)
+Last updated: 2026-11-04 (v2.1.0-alpha, password sign-in for admin-created accounts behind the `loginEnabled` flag, multiplayer stage 1, cloud-save hardening). **Read first:** `docs/handoff.md` (next-conversation handoff: state, how to work, decisions made, next steps), then this file.
 
 Legend: `[x]` done, `[ ]` todo, `[~]` in progress, `[!]` blocked.
 
@@ -10,6 +10,7 @@ Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`.
 
 - [x] v2.1.0-alpha (2026-11-04): password sign-in for admin-created accounts, hidden behind the `loginEnabled` flag (`?login`). Email link, recovery and create-password flows added and removed the same day. Details: `docs/changelog.md` v2.1.0-alpha. Spec: `docs/spec/dang-nhap-cong-ty.md`
   - [x] Code (`index.html`): `showLogin`, `cloudEnter`, `cloudBoot`, `friendlyAuthError`, `loginEnabled`. Docs: changelog, both spec files, product guide, glossary. Checks and open items: Follow-ups, v2.1.0-alpha
+  - [x] Cloud-save hardening (2026-11-04, same release, after the owner's two-tab test): one open place per account (`CLOUD.version`, conditional write, `cloudConflict()`), save on close (`cloudFlushNow()`, keepalive), debounce 2 s, diagnostic note, resume-failure warning. Code in `index.html`; docs: `docs/spec/nhieu-nguoi-choi.md` §11, changelog, product guide, glossary. Open items: Known defects and Follow-ups, v2.1.0-alpha
 
 ## In progress
 
@@ -29,6 +30,8 @@ Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`.
 - [ ] Docs: `docs/spec/mot-ngay-o-cong-ty.md` section 4.4 labels the Thạnh gingham look "v1.1.1", but this release is v1.1.0. Confirm which release shipped the look and fix the label. The changelog entry for v1.1.0 mentions it with this open question.
 - [ ] (v1.2.0) `index.html` section 2 header comment (around line 240) does not describe `desk: null`, `habits.lounge`, or `habits.attendance`. Update when `index.html` is next edited. Not changed in v1.2.0 (docs-only pass).
 - [ ] (v1.2.0) Chị Ba's line in surprise `dammhaam` uses the real name: "Chị xin lỗi anh Thạnh!". Confirm it is intended, or change it to the in-game name convention (`docs/spec/dong-nghiep.md` §2).
+- [x] (v2.1.0-alpha, fixed 2026-11-04) Sign-in path skips the UI refresh. In `cloudEnter()` (`index.html` ~line 2715), `CLOUD.dirty = true; cloudFlush();` ended in a `//` comment that also held `history.replaceState(...)`, `rebuildPlayer()`, and `refreshTitle()`. Fixed: those statements now sit on their own line and run after sign-in. Checked with headless Chrome and mocks; not yet on the real server
+- [x] (v2.1.0-alpha, fixed 2026-11-04) Save-path gaps in cloud save (`docs/spec/nhieu-nguoi-choi.md` §11). Fixed in `index.html`: (a) `cloudFlushNow()` calls `cloudConflict()` when the server confirms zero rows, so the modal opens while the tab is hidden; (b) `CLOUD.version` changes only from the `updated_at` the server returns (`Prefer: return=representation`); (c) the 60 000 limit counts bytes (`TextEncoder`); (d) `cloudFlushNow()` while `CLOUD.busy` returns early and keeps `CLOUD.dirty`, and `CLOUD.busy` is set while a keepalive is in flight. Checked with headless Chrome and mocks; not yet on the real server. Zero-row path in `cloudFlush()` (conflict modal, no retry) is unchanged
 
 ## Open questions
 
@@ -49,15 +52,19 @@ v2.1.0-alpha (password sign-in, login flag). Acceptance rows are in `docs/spec/d
 - [ ] (v2.1.0-alpha) Create the 14 accounts in the dashboard (Auto Confirm, password chosen by the administrator, given in private), each with its `roster` row. Keep passwords out of the repo, the docs, and shared chats
 - [ ] (v2.1.0-alpha) Optional: password change from inside the game. Not planned for the alpha. Decide whether it is needed before launch
 - [ ] (v2.1.0-alpha) When the realtime tests are done: remove the flag (set `loginEnabled` to true, so the sign-in button shows for everyone) and announce it to the players. Then update the admin/tester note in `docs/product-guide.md`
+- [ ] (v2.1.0-alpha) Real two-tab test (AC-M33, AC-M34): two real windows on one account. The later sign-in must take ownership, and the earlier tab must show the conflict modal and stop saving. Then press "🔄 Tải lại trang" and check the latest data. Also check save on close with keepalive (AC-M36)
+- [ ] (v2.1.0-alpha) Confirm by query that `claim_character()` returns `updated_at`. Without it `CLOUD.version` is null and the conflict check is skipped. Also confirm the stored `updated_at` equals the millisecond ISO value sent (AC-M35)
+- [ ] (v2.1.0-alpha) After the owner confirms the save is right, remove the diagnostic lines ("☁ Đã tải từ máy chủ", "(chẩn đoán …)") from `showWelcomeBack()` and `CLOUD.loaded` from `cloudApply()`. Then close this item
+- [ ] (v2.1.0-alpha) Decide on a guest→account migration button. A guest with local progress who signs in gets only the server row, and the local guest save is not moved. Decide whether to offer a one-time copy
 
 v2.0.1-alpha (multiplayer stage 1 fixes). Acceptance rows are in spec §9.3:
 
 - [ ] (v2.0.1-alpha) Desk checks (AC-M18, AC-M19): screenshot the item rotation on a north-side long-table desk, and check the other 10 characters' desks (only Bảo, Toàn, Phú, Thảo were checked)
-- [ ] (v2.0.1-alpha) Address check in play (AC-M20): `{ten}` as "anh Bảo", "chị Ba", "chú 7", "Chủ tịt". Native review of the lowercase start ("anh Bảo ơi…") and of `{anh}`/`{Anh}` for female members (`thao`, `yen`, `an3`)
+- [ ] (v2.0.1-alpha) Address check in play (AC-M20): `{ten}` as "anh Bảo", "chị Ba", "chú 7", "Chủ tịt". Native review of the lowercase start ("anh Bảo ơi…") and of `{anh}`/`{Anh}` for female members (`thao`, `yen`, `an3`). Also (v2.1.0-alpha, 2026-11-04): per-speaker pronouns. `fill()` turns "bạn" into "anh" only for the member Bảo, and NPCs still say "mình" to him where "em" is expected (`docs/spec/dong-nghiep.md` §2). Native review and play-test of the address change and the Chủ tịt order item and duo `bao`–`tung` text (code read only, not played)
 - [ ] (v2.0.1-alpha) Add a `?debug` hint for testers: save errors are logged with `dlog` (localhost or `?debug` only). Decide where the hint goes (`docs/deploy.md` or the tester message) and write it
 - [ ] (v2.0.1-alpha) Create and test the other 13 accounts: each invited email needs its `roster` row and a `progress` row from `claim_character()`. Only the owner's account has signed in. Any new public table needs the grants in spec §6.1. The account step for each login is in `docs/spec/dang-nhap-cong-ty.md` §3
 - [ ] (v2.0.0-alpha) Confirm the server by query (AC-M10). The owner's login gave the right character, but the `progress` columns, the `roster` columns, the body of `claim_character()`, and RLS (own row only) are not re-checked
-- [~] (v2.0.0-alpha) Save and restore (AC-M11): saving works (owner, 2026-11-04). Open: reload after closing the browser, a dropped connection mid-day for the retry toast and the 15 s retry, and the new 42501 toast text
+- [~] (v2.0.0-alpha) Save and restore (AC-M11): saving works (owner, 2026-11-04). Open: reload after closing the browser, a dropped connection mid-day for the retry toast and the 15 s retry, and the new 42501 toast text. Save on close and the two-tab conflict: see the v2.1.0-alpha follow-ups
 - [ ] (v2.0.0-alpha) Popup visuals on desktop and phone (AC-M12). Dynamic import over the CDN in a real browser (AC-M13), and the Guest fallback when the Supabase script cannot load (AC-M8)
 - [ ] (v2.0.0-alpha) Offline builds are out of date (AC-M14). Decide when to rebuild `index-offline.html` and `dist/`. Check whether `tools/build-offline.py` fails on the two-entry importmap. `CLAUDE.md` asks for a rebuild after every edit, which this release does not follow
 - [ ] (v2.0.0-alpha) Stage 2 (see the spec §5). Before it starts, settle the open questions in `docs/spec/nhieu-nguoi-choi.md` §8, especially whether Guest plays alone (§8 Q1)
@@ -153,15 +160,9 @@ Verification gaps:
 - [ ] (v1.2.0) Hand-check the new duos Thảo–Yến and Hiện–Anh Bảo (visit, lines, bubbles)
 - [ ] (v1.2.0) Native-speaker review of the address conventions, Hiện's rewritten lines, and the rewritten Nam and Chị Ba–Nam lines
 - [ ] (v1.2.0) Record the previous coordinates of the two relocated pantry spots, if they are needed for reference. Not recorded in v1.2.0
-- [ ] Test on a real phone: touch joystick, tap action button, drag-to-rotate, safe-area layout, orientation change
-- [ ] Test real touch input (not emulated) on a touch device
-- [ ] Test audio output on real devices, including mute toggle and audio unlock on first tap
-- [ ] Test on Safari, Firefox, and Android Chrome (only headless Chrome was run)
-- [ ] Hand-test the 🎥 camera button (cycle Gần / Vừa / Xa, and that the choice persists after reload). Checked only through the harness and screenshots
-- [ ] Hand-test the camera framing on a portrait phone (FOV 58, look-ahead 1.3 m, pitch 0.6–1.4). Checked only in headless Chrome
-- [ ] Hand-test Chị Ba's punch animation (quirk at 09:12 and visit opener). Checked only through the harness and screenshots
-- [ ] Hand-test Thạnh's treat events at 11:05 and 14:10 (energy and mood change, toast, diary moment). Checked only through the harness and screenshots
-- [ ] Hand-test Thạnh's 13:20 meditation quirk (eyes closed, line appears, no animation)
+- [ ] Test on a real phone and real touch input (not emulated): touch joystick, tap action button, drag-to-rotate, safe-area layout, orientation change. Test audio output on real devices, including the mute toggle and audio unlock on first tap. Test on Safari, Firefox, and Android Chrome (only headless Chrome was run)
+- [ ] Hand-test the 🎥 camera button (cycle Gần / Vừa / Xa, and that the choice persists after reload) and the camera framing on a portrait phone (FOV 58, look-ahead 1.3 m, pitch 0.6–1.4). Checked only through the harness, screenshots, and headless Chrome
+- [ ] Hand-test in a real browser: Chị Ba's punch animation (quirk at 09:12 and visit opener), Thạnh's treat events at 11:05 and 14:10 (energy and mood change, toast, diary moment), and Thạnh's 13:20 meditation quirk (eyes closed, line appears, no animation). Checked only through the harness and screenshots
 - [ ] Visually check the title, north-wall "MinhLee" sign, and front-door "MinhLee" mat in a browser (text readable, not clipped). Checked in source only
 - [ ] (v1.4.1) Visually check the Phú, Nam, and Anh Bảo looks on a real device at the default camera distance (Vừa). Checked only in isolated headless-Chrome close-ups. Check the thin rect glasses and the plaid shirt
 - [ ] (v1.8.5, partly closed in v1.8.6) Looks not yet built from a photo: Hiện. Toàn and Thông were updated from photos in v1.8.6. Bảo's look is still an approximation from a verbal description. Ask the user for photos before replacing these looks
@@ -177,8 +178,7 @@ Verification gaps:
 - [ ] (v1.3.0) Check that the decorative items (plants, windows, posters, wall clock, calendar, logo) do not clash with the new layout. Positions are from v1.2.0
 - [ ] (v1.3.0) Confirm the new pacing by hand: 55-minute lunch, 16-minute coffee windows, and 1.9 walk speed. Not measured in a long run
 - [ ] (v1.3.0) Confirm the birthday fix over a 65-day cycle (for example, a save with a set day count): Nguyên's birthday fires on `dn % 65 = 55` when he is in the office, and the cake pick never names a remote coworker. Not run
-- [ ] Check diary and data reset flows (AC-14 in `docs/spec/mot-ngay-o-cong-ty.md`), not recorded in the headless run
-- [ ] Check title-screen name and gender paths: empty name (NPCs say "bạn"), each gender option (anh / chị / anh/chị) in rendered lines. Not separately recorded
+- [ ] Check diary and data reset flows (AC-14 in `docs/spec/mot-ngay-o-cong-ty.md`), not recorded in the headless run. Check title-screen name and gender paths: empty name (NPCs say "bạn"), each gender option (anh / chị / anh/chị) in rendered lines. Not separately recorded
 - [ ] (v1.1.0) Interrupted day: quit or reload in the middle of a day and confirm the unfinished day is not saved to the diary. Not tested
 - [ ] (v1.1.0) Load a v1.0.3 save under v1.1.0 (no `world`, `recentEv`, `lastTheme`; diary entries without `label`, `theme`, `badges`, `world`). Open the diary and start a day. Not recorded
 - [ ] (v1.1.0) Source-only items that need a hand check in a browser: title button label, rain light and rain sound, notice-board world line, version in the summary, Monday meeting card, duo lines and the visit animation, badge chips. Not recorded

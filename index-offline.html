@@ -247,6 +247,7 @@ let MEMBER_CALL = '';                                            // cách mọi 
 function fill(t) {
   if (typeof t !== 'string' || t.indexOf('{') < 0) return t;
   const d = (typeof Store !== 'undefined') ? Store.get() : {}, a = d.gender === 'nam' ? 'anh' : d.gender === 'nu' ? 'chị' : 'anh/chị';
+  if (MEMBER_CALL === 'anh Bảo') t = t.replace(/(?<!các |Các |những |Những )\bbạn\b(?! bè| thân)/g, 'anh').replace(/(?<!các |Các |những |Những )\bBạn\b(?! bè| thân)/g, 'Anh');       // Anh Bảo lớn tuổi nhất: ai cũng gọi là anh
   return t.replace(/\{ten\}/g, MEMBER_CALL || d.name || 'bạn').replace(/\{anh\}/g, a).replace(/\{Anh\}/g, a[0].toUpperCase() + a.slice(1));
 }
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -587,7 +588,7 @@ ORDER_SETS.push(
 );
 ORDER_SETS.push(
   { from: 'thanh', q: 'Việc nào gấp nhất thì chạm trước.', items: [['Nhắc nhóm: bản release chốt chưa?', 'Hôm nay 11:00', 0], ['Kiểm tra doanh thu app Dating tuần này', 'Hôm nay 16:00', 1], ['Xem hệ thống có lỗi (bug) gì mới không', 'Ngày mai', 2], ['Nghiên cứu tính năng đối thủ vừa ra', 'Tuần sau', 3]] },
-  { from: 'thanh', q: 'Việc nào gấp nhất thì chạm trước.', items: [['Kiểm tra doanh thu hôm nay', 'Hôm nay 10:00', 0], ['Hỏi Yến còn bug nào chưa sửa', 'Hôm nay 15:00', 1], ['Nhắc Bảo chốt ghi chú phát hành', 'Ngày mai', 2], ['Đọc nghiên cứu về app hẹn hò khác', 'Tuần sau', 3]] },
+  { from: 'thanh', q: 'Việc nào gấp nhất thì chạm trước.', items: [['Kiểm tra doanh thu hôm nay', 'Hôm nay 10:00', 0], ['Hỏi Yến còn bug nào chưa sửa', 'Hôm nay 15:00', 1], ['Nhắc anh Bảo chốt ghi chú phát hành', 'Ngày mai', 2], ['Đọc nghiên cứu về app hẹn hò khác', 'Tuần sau', 3]] },
   { from: 'nam', q: 'Việc nào gấp nhất thì chạm trước.', items: [['Sửa app văng khi xoay màn hình', 'Hôm nay 11:00', 0], ['Gửi bản build thử cho Yến', 'Chiều nay', 1], ['Làm màn hình chọn sở thích', 'Thứ Năm', 2], ['Dọn mấy dòng code cũ', 'Tuần sau', 3]] },
   { from: 'phu', q: 'Việc nào gấp nhất thì chạm trước.', items: [['Kiểm tra máy chủ chạy chậm', 'Hôm nay 11:00', 0], ['Sao lưu dữ liệu', 'Hôm nay 17:00', 1], ['Đổi mật khẩu quản trị', 'Ngày mai', 2], ['Dọn dữ liệu trùng', 'Tuần sau', 3]] },
   { from: 'trung', q: 'Việc nào gấp nhất thì chạm trước.', items: [['Sửa API đăng nhập trả chậm', 'Hôm nay 12:00', 0], ['Dọn hàng đợi thông báo bị kẹt', 'Hôm nay 17:00', 1], ['Viết tài liệu cho API mới', 'Thứ Sáu', 2], ['Gom số liệu cho báo cáo tháng', 'Cuối tháng', 3]] },
@@ -812,7 +813,7 @@ const DUOS = [
   { a: 'thanh', b: 'thong', lines: [['thanh', 'Anh Thông ơi, đầu tư nhà đất phải biết nhân quả: làm điều thiện thì đất mới lành, em nói vậy thôi.'], ['thong', 'Chủ tịt nói cũng đúng. Nhưng em vẫn phải coi quy hoạch kỹ trước.'], ['thanh', 'Quy hoạch là duyên, tâm an là gốc.'], ['thong', 'Dạ, em thiền năm phút rồi đi coi quy hoạch tiếp ạ.']] },
   { a: 'trung', b: 'yen', lines: [['yen', 'Trung, cái lỗi này là sao? Dev nói không phải lỗi hả?'], ['trung', 'Em nói thiệt, nó là tính năng. Để em giải thích…'], ['yen', 'Giải thích hai chữ thôi, là sao?'], ['trung', 'Em nói thiệt, là… tính năng chưa được mô tả.']] },
   { a: 'hien', b: 'toan', lines: [['hien', 'Anh Toàn ơi, tối qua anh leo rank không?'], ['toan', '…Có.'], ['hien', 'Lên hạng không anh?'], ['toan', '…Lên.'], ['hien', 'Trời ơi, hôm nay anh Toàn nói hẳn hai chữ liền!']] },
-  { a: 'bao', b: 'tung', lines: [['bao', 'Tùng, bản app tuần sau kịp không? Mình cần chốt tính năng ghép đôi.'], ['tung', 'Anh Bảo ơi, kịp, nhưng cần sửa lỗi đăng nhập trước. Mình chia việc nhé.'], ['bao', 'Ok, mình ưu tiên lại. Cảm ơn Tùng!']] },
+  { a: 'bao', b: 'tung', lines: [['bao', 'Tùng, bản app tuần sau kịp không? Anh cần chốt tính năng ghép đôi.'], ['tung', 'Anh Bảo ơi, kịp, nhưng cần sửa lỗi đăng nhập trước. Em chia việc nhé.'], ['bao', 'Ok, anh ưu tiên lại. Cảm ơn Tùng!']] },
   { a: 'thao', b: 'thanh', lines: [['thao', 'Chủ tịt ơi, tháng này Chủ tịt đi trễ tám lần rồi đó nha.'], ['thanh', 'Nhân quả mà chị… lần sau em sẽ cố. Em mời cả phòng trà sữa bù nha.'], ['thao', 'Vậy hả… thôi lần này tha. Mà đừng quên nha!']] },
   { a: 'an7', b: 'thong', lines: [['an7', 'Thông ơi, uống trà không? Ô long mới, tỉnh táo hơn ngồi tính đất.'], ['thong', 'Trà này có nguồn gốc rõ ràng chưa? Để mình kiểm tra đã.'], ['an7', 'Trà thì cứ uống, lo xa quá thành lo… trà.'], ['thong', 'Được rồi, mình uống thử. Nhưng có phương án B nếu đắng.']] },
 ];
@@ -2576,7 +2577,7 @@ function resumeSession() {
     Sfx.rain(D.theme.id === 'rain'); applyTimeOfDay(D.minute); if (!LITE) updateCamera(0, true); setBars(); updateHud();
     toast('▶ Đã quay lại ngày đang dở · ' + fmtTime(D.minute), 3200);
     return true;
-  } catch (e) { dlog('[resumeSession] Không khôi phục được ngày đang dở, bắt đầu ngày mới:', e, e && e.stack); Store.patch({ session: null }); return false; }
+  } catch (e) { dlog('[resumeSession] Không khôi phục được ngày đang dở, bắt đầu ngày mới:', e, e && e.stack); G.resumeFailed = true; Store.patch({ session: null }); return false; }
 }
 /* Mở lại game đã có dữ liệu: hỏi Tiếp tục hay Chơi mới, thay vì luôn dừng ở màn hình đặt tên */
 function showWelcomeBack() {
@@ -2585,18 +2586,19 @@ function showWelcomeBack() {
   $('#title').classList.add('hidden');                          // ẩn form đặt tên: người chơi cũ chỉ thấy popup Tiếp tục / Chơi mới
   const who = MEMBER ? `Chào ${d.name}!` : d.name ? `Chào mừng ${d.name} quay lại!` : 'Chào mừng bạn quay lại!';
   const info = sess ? `Ngày làm thứ ${d.days + 1} đang dở lúc ${fmtTime(sess.minute)}. Bạn có thể làm tiếp đúng chỗ đã dừng.` : `Bạn đã làm ở MinhLee ${d.days} ngày. Ngày mới đang chờ bạn.`;
+  const L = CLOUD.loaded || {}, cloudNote = MEMBER ? `\n☁ Đã tải từ máy chủ: ${d.days} ngày, ${d.tasksTotal || 0} việc, ${(d.unlocked || []).length} đồ mở khóa.\n(chẩn đoán: ngày dở = ${L.sessionType}${L.sess ? ` v${L.sess.v} ngày ${L.sess.day} phút ${L.sess.minute}` : ''}; hợp lệ = ${sess ? 'có' : 'không'}; cột: ${L.rowKeys})` : '';
   const askNew = () => Modal.open(h('h2', {}, 'Chơi mới?'), h('p', { class: 'sub' }, 'Toàn bộ tên, nhân vật, nhật ký, mức thân thiết và đồ đã mở khóa sẽ bị xóa khỏi thiết bị này, rồi bạn bắt đầu lại từ ngày đầu tiên.'),
     h('button', { class: 'btn', onclick: () => { Modal.close(false); Store.clear(); Object.keys(AFF).forEach((k) => delete AFF[k]); refreshTitle(); $('#title').classList.remove('hidden'); toast('Đã xóa dữ liệu. Hãy đặt tên và bắt đầu nhé!', 3000); } }, '🗑 Xóa hết và chơi mới'),
     h('button', { class: 'btn alt', onclick: () => { Modal.close(false); G.mode = 'title'; showWelcomeBack(); } }, 'Thôi, quay lại'));
-  Modal.open(h('h2', {}, who), h('p', { class: 'sub' }, info),
-    h('button', { class: 'btn', onclick: () => { Modal.close(false); G.mode = 'title'; Sfx.init(); Sfx.setMuted(!Store.get().settings.sound); rebuildPlayer(); if (!resumeSession()) startDay(); } }, sess ? '▶ Tiếp tục ngày đang dở' : '▶ Tiếp tục chơi'),
+  Modal.open(h('h2', {}, who), h('p', { class: 'sub', style: 'white-space:pre-line' }, info + cloudNote),
+    h('button', { class: 'btn', onclick: () => { Modal.close(false); G.mode = 'title'; Sfx.init(); Sfx.setMuted(!Store.get().settings.sound); rebuildPlayer(); if (!resumeSession()) { startDay(); if (G.resumeFailed) { G.resumeFailed = false; toast('⚠ Không khôi phục được ngày đang dở nên đã bắt đầu một ngày mới.', 6500); } } } }, sess ? '▶ Tiếp tục ngày đang dở' : '▶ Tiếp tục chơi'),
     MEMBER ? h('button', { class: 'btn alt', onclick: () => { Modal.close(false); G.mode = 'title'; memberLogout(); } }, '🚪 Đăng xuất')
       : h('button', { class: 'btn alt', onclick: () => { Modal.close(false); G.mode = 'title'; askNew(); } }, '🆕 Chơi mới'));
 }
 /* ============ ĐĂNG NHẬP & LƯU TRÊN SUPABASE (nhiều người chơi, giai đoạn 1) ============ */
 const MEMBER_CALLS = { bao: 'anh Bảo', an3: 'chị Ba', an7: 'chú 7', thanh: 'Chủ tịt' };         // người khác gọi họ thế nào (còn lại gọi tên nhân vật)
 let MEMBER = null;                                                   // {char} khi đã đăng nhập bằng email công ty và nhận nhân vật theo email
-const CLOUD = { client: null, user: null, timer: null, dirty: false, failedAt: 0 };
+const CLOUD = { client: null, user: null, token: null, timer: null, dirty: false, failedAt: 0, version: null, busy: false, conflict: false };
 // Đăng nhập công ty đang ẩn với mọi người: chỉ bật trên trình duyệt đã mở trang với ?login (nhớ lại lần sau), tắt bằng ?login=off
 const loginEnabled = (() => {
   try { const q = new URLSearchParams(location.search); if (q.has('login')) { if (q.get('login') === 'off') localStorage.removeItem('mot-ngay.dev'); else localStorage.setItem('mot-ngay.dev', '1'); } return localStorage.getItem('mot-ngay.dev') === '1'; }
@@ -2618,7 +2620,9 @@ async function cloudInit() {
   try {
     const mod = await import('@supabase/supabase-js');
     CLOUD.client = mod.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
+    CLOUD.client.auth.onAuthStateChange((ev, sess) => { if (sess) CLOUD.token = sess.access_token; });       // luôn giữ mã truy cập mới nhất để lưu được cả lúc đóng tab
     const { data, error } = await CLOUD.client.auth.getSession(); if (error) throw error;
+    if (data.session) CLOUD.token = data.session.access_token;
     return data.session;
   } catch (e) { dlog('[cloudInit] Không kết nối được Supabase (vẫn chơi Guest được):', e, e && e.stack); CLOUD.client = null; return null; }
 }
@@ -2630,21 +2634,52 @@ function cloudApply(row) {
   const d = row.data || {};
   Store.useCloud(cloudPush);
   Store.replace({ ...d, settings: { sound: true, tutorial: false, cam: 1, ...(d.settings || {}) }, name: p.real || p.name, gender: CHAR_GENDER[p.id] || 'nam', avatar: 0, days: row.days || 0, tasksTotal: row.tasks_total || 0, unlocked: row.unlocked || [], affinity: row.affinity || {}, diary: row.diary || [], session: row.session || null });
+  CLOUD.version = row.updated_at || null; CLOUD.conflict = false;
+  CLOUD.loaded = { rowKeys: Object.keys(row).join(','), sessionType: row.session === null ? 'null' : typeof row.session, sess: row.session && typeof row.session === 'object' ? { v: row.session.v, day: row.session.day, minute: Math.round(row.session.minute) } : null, days: row.days };
   MEMBER = { char: p.id }; MEMBER_CALL = MEMBER_CALLS[p.id] || p.name; applyPlayerDesk(p); Object.keys(AFF).forEach((k) => delete AFF[k]); Object.entries(Store.get().affinity).forEach(([k, v]) => { AFF[k] = v; });
 }
-function cloudPush() { CLOUD.dirty = true; clearTimeout(CLOUD.timer); CLOUD.timer = setTimeout(cloudFlush, 3000); }
+function cloudPush() { CLOUD.dirty = true; clearTimeout(CLOUD.timer); CLOUD.timer = setTimeout(cloudFlush, 2000); }
+function cloudPayload() {
+  const d = Store.get();
+  return { days: d.days, tasks_total: d.tasksTotal || 0, unlocked: d.unlocked || [], affinity: d.affinity || {}, diary: d.diary || [], session: d.session || null, data: { world: d.world, recentEv: d.recentEv, lastTheme: d.lastTheme, settings: d.settings }, updated_at: new Date().toISOString() };
+}
+function cloudConflict() {                                         // một tab/thiết bị khác đã ghi tiến độ: dừng lưu để không ghi đè
+  if (CLOUD.conflict) return; CLOUD.conflict = true; CLOUD.dirty = false; clearTimeout(CLOUD.timer);
+  Modal.open(h('h2', {}, '⚠ Tài khoản đang được mở ở nơi khác'), h('p', { class: 'sub' }, 'Tiến độ của bạn vừa được cập nhật từ một tab hoặc thiết bị khác. Để không ghi đè mất dữ liệu, hãy tải lại trang để tiếp tục với dữ liệu mới nhất. (Chỉ nên mở một nơi cho mỗi tài khoản.)'),
+    h('button', { class: 'btn', onclick: () => location.reload() }, '🔄 Tải lại trang'));
+}
 async function cloudFlush() {
-  if (!CLOUD.client || !MEMBER || !CLOUD.user || !CLOUD.dirty) return; CLOUD.dirty = false; const d = Store.get();
+  if (!CLOUD.client || !MEMBER || !CLOUD.user || !CLOUD.dirty || CLOUD.conflict) return;
+  if (CLOUD.busy) { clearTimeout(CLOUD.timer); CLOUD.timer = setTimeout(cloudFlush, 500); return; }
+  CLOUD.busy = true; CLOUD.dirty = false; const payload = cloudPayload();
   try {
-    const { error } = await CLOUD.client.from('progress').update({ days: d.days, tasks_total: d.tasksTotal || 0, unlocked: d.unlocked || [], affinity: d.affinity || {}, diary: d.diary || [], session: d.session || null,
-      data: { world: d.world, recentEv: d.recentEv, lastTheme: d.lastTheme, settings: d.settings }, updated_at: new Date().toISOString() }).eq('user_id', CLOUD.user.id);
-    if (error) throw error;
+    let q = CLOUD.client.from('progress').update(payload).eq('user_id', CLOUD.user.id);
+    if (CLOUD.version) q = q.eq('updated_at', CLOUD.version);                                  // chỉ ghi nếu chưa ai khác ghi sau lần đọc/ghi trước của mình
+    const { data, error } = await q.select('updated_at'); if (error) throw error;
+    if (!data || !data.length) { dlog('[cloudFlush] Phiên bản trên máy chủ đã đổi: có nơi khác đang dùng tài khoản này.'); cloudConflict(); return; }
+    CLOUD.version = data[0].updated_at;
   } catch (e) {
     CLOUD.dirty = true; dlog('[cloudFlush] Chưa lưu được lên máy chủ, sẽ thử lại:', e, e && e.stack);
     const noPerm = e && (e.code === '42501' || /permission denied/i.test(String(e.message || '')));
     if (Date.now() - CLOUD.failedAt > 60000) { CLOUD.failedAt = Date.now(); toast(noPerm ? '⚠ Máy chủ chưa cấp quyền lưu tiến độ. Hãy báo quản trị viên kiểm tra.' : '⚠ Chưa lưu được lên máy chủ, game sẽ tự thử lại.', 4200); }
     clearTimeout(CLOUD.timer); CLOUD.timer = setTimeout(cloudFlush, 15000);
-  }
+  } finally { CLOUD.busy = false; }
+}
+// Lưu ngay khi đóng tab / chuyển tab: dùng fetch keepalive để yêu cầu vẫn được gửi đi dù trang đang đóng
+function cloudFlushNow() {
+  if (!CLOUD.client || !MEMBER || !CLOUD.user || !CLOUD.token || CLOUD.conflict) return;
+  if (CLOUD.busy) return;                                           // đang có lần lưu khác chạy: giữ nguyên "dirty", lần lưu đó/lần sau sẽ gửi tiếp
+  try {
+    const body = JSON.stringify(cloudPayload());
+    if (new TextEncoder().encode(body).length > 60000) { clearTimeout(CLOUD.timer); CLOUD.dirty = true; cloudFlush(); return; }      // keepalive giới hạn ~64KB (tính theo byte): quá lớn thì dùng cách thường
+    clearTimeout(CLOUD.timer); CLOUD.dirty = false; CLOUD.busy = true;
+    const ver = CLOUD.version ? `&updated_at=eq.${encodeURIComponent(CLOUD.version)}` : '';
+    fetch(`${SUPABASE_URL}/rest/v1/progress?user_id=eq.${CLOUD.user.id}${ver}`, { method: 'PATCH', keepalive: true, headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + CLOUD.token, 'Content-Type': 'application/json', Prefer: 'return=representation' }, body })
+      .then((r) => { if (!r.ok) { CLOUD.dirty = true; dlog('[cloudFlushNow] Máy chủ trả lỗi', r.status); return null; } return r.json(); })
+      .then((rows) => { if (!Array.isArray(rows)) return; if (!rows.length) { dlog('[cloudFlushNow] Có nơi khác đã ghi tiến độ.'); cloudConflict(); } else CLOUD.version = rows[0].updated_at; })   // chỉ nhận phiên bản mới khi máy chủ xác nhận
+      .catch((e) => { CLOUD.dirty = true; dlog('[cloudFlushNow] Không gửi được:', e, e && e.stack); })
+      .finally(() => { CLOUD.busy = false; });
+  } catch (e) { CLOUD.busy = false; CLOUD.dirty = true; dlog('[cloudFlushNow] Lỗi chuẩn bị dữ liệu:', e, e && e.stack); }
 }
 const AUTH_INPUT_STYLE = 'width:100%;padding:12px 14px;border:2px solid var(--line);border-radius:12px;font-size:16px;margin:6px 0;background:#fff;color:var(--ink)';
 function showLogin(msg) {
@@ -2675,7 +2710,10 @@ async function memberLogout() {
 }
 async function cloudEnter(sess) {                                   // vào game với một phiên đăng nhập hợp lệ
   try {
-    CLOUD.user = sess.user; const row = await cloudClaim(); cloudApply(row); if (location.hash) history.replaceState(null, '', location.pathname + location.search); rebuildPlayer(); refreshTitle();
+    CLOUD.user = sess.user; CLOUD.token = sess.access_token || CLOUD.token; const row = await cloudClaim(); cloudApply(row);
+    // đăng nhập sau cùng giữ quyền: ghi ngay để nơi đang mở cũ bị khóa, tránh hai nơi ghi đè nhau
+    CLOUD.dirty = true; cloudFlush();
+    if (location.hash) history.replaceState(null, '', location.pathname + location.search); rebuildPlayer(); refreshTitle();
     showWelcomeBack();
   } catch (e) {
     dlog('[cloudEnter] Không nhận được nhân vật cho tài khoản này:', e, e && e.stack);
@@ -2941,8 +2979,8 @@ function init() {
   buildOffice(); buildNav(); createNpcs(); rebuildPlayer(); buildSpots(); setupInput(); resize();
   deskTag = Bubbles.makeTag('💻 Bàn của bạn', (o) => { o.x = PLAYER_DESK.sx; o.y = 1.55; o.z = PLAYER_DESK.sz; }); deskTag.el.style.background = 'var(--accent)'; deskTag.clampX = true;
   listen(window, 'resize', resize); listen(window, 'orientationchange', () => setTimeout(resize, 150));
-  listen(document, 'visibilitychange', () => { if (document.hidden) { saveSession(); cloudFlush(); if (G.mode === 'play') pauseGame(); Sfx.suspend(); } else if (G.mode !== 'paused') Sfx.resume(); });
-  listen(window, 'pagehide', (e) => { saveSession(); cloudFlush(); if (!e.persisted) cleanupGame(); });
+  listen(document, 'visibilitychange', () => { if (document.hidden) { saveSession(); cloudFlushNow(); if (G.mode === 'play') pauseGame(); Sfx.suspend(); } else if (G.mode !== 'paused') Sfx.resume(); });
+  listen(window, 'pagehide', (e) => { saveSession(); cloudFlushNow(); if (!e.persisted) cleanupGame(); });
   // nút HUD
   $('#act').addEventListener('click', () => { if (INPUT.onAct) INPUT.onAct(); });
   $('#hud-obj').addEventListener('click', () => { Sfx.click(); if (G.mode === 'play') pauseGame(); });
@@ -2961,7 +2999,7 @@ function init() {
   });
   $('#btn-resume').addEventListener('click', () => {
     Sfx.init(); Sfx.setMuted(!Store.get().settings.sound);
-    const name = $('#in-name').value.trim().slice(0, 16); Store.patch({ name }); rebuildPlayer(); if (!resumeSession()) startDay();
+    const name = $('#in-name').value.trim().slice(0, 16); Store.patch({ name }); rebuildPlayer(); if (!resumeSession()) { startDay(); if (G.resumeFailed) { G.resumeFailed = false; toast('⚠ Không khôi phục được ngày đang dở nên đã bắt đầu một ngày mới.', 6500); } }
   });
   $('#btn-login').addEventListener('click', () => { Sfx.init(); Sfx.click(); setGuestPref(false); G.mode = 'title'; showLogin(); });
   $('#btn-diary').addEventListener('click', () => { Sfx.init(); Sfx.click(); showDiary(); });

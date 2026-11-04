@@ -4,7 +4,7 @@ All notable changes to "Một Ngày Ở MinhLee" (formerly "Một Ngày Ở Côn
 
 ## v2.1.0-alpha — 2026-11-04
 
-Multiplayer stage 1, password sign-in. Members sign in with a company email and a password that the administrator creates in the Supabase dashboard and gives them in private. The email sign-in link is gone. There are no sign-in emails and no SMTP setup. The sign-in screen is hidden from regular visitors behind the `loginEnabled` flag. Spec: `docs/spec/dang-nhap-cong-ty.md` (login, flag, accounts); summary in `docs/spec/nhieu-nguoi-choi.md` §10.
+Multiplayer stage 1, password sign-in. Members sign in with a company email and a password that the administrator creates in the Supabase dashboard and gives them in private. The email sign-in link is gone. There are no sign-in emails and no SMTP setup. The sign-in screen is hidden from regular visitors behind the `loginEnabled` flag. Spec: `docs/spec/dang-nhap-cong-ty.md` (login, flag, accounts); summary in `docs/spec/nhieu-nguoi-choi.md` §10. Cloud-save hardening, added the same day after the owner's real tests on 2026-11-04 (one open place per account, save on close, row check): see Added, Changed, and Fixed below, and `docs/spec/nhieu-nguoi-choi.md` §11.
 
 ### Added
 
@@ -15,13 +15,28 @@ Multiplayer stage 1, password sign-in. Members sign in with a company email and 
 - `AUTH_INPUT_STYLE` constant for the sign-in inputs.
 - Spec: `docs/spec/dang-nhap-cong-ty.md` (flow, admin account setup, flag, acceptance rows AC-M22 to AC-M32). Product guide: sign-in steps, FAQ, and a short admin/tester note on the flag. Glossary: `loginEnabled`, `mot-ngay.dev`, `Auto Confirm`.
 
+- Cloud-save hardening (`index.html`, sign-in block after section 14):
+  - `cloudFlushNow()`: saves the member's progress on `pagehide` and when the tab becomes hidden (`visibilitychange`). It sends `fetch` PATCH to `progress` with `keepalive: true`, headers `apikey` and `Authorization: Bearer` (token from `CLOUD.token`, kept fresh by `onAuthStateChange`), and `Prefer: return=representation`. A body over 60 000 bytes (UTF-8, counted with `TextEncoder`) goes through `cloudFlush()` instead.
+  - `CLOUD.version` and `cloudConflict()`: optimistic concurrency with the row's `updated_at`. Set from the row read at sign-in (`cloudApply()`), then replaced by the value returned after each successful write. If a conditional write updates zero rows, `cloudConflict()` sets `CLOUD.conflict`, stops all writes (including keepalive), and opens the modal "⚠ Tài khoản đang được mở ở nơi khác" with "🔄 Tải lại trang".
+  - `cloudEnter()` marks the state dirty and writes once right after the character is claimed, so the most recent sign-in takes ownership.
+  - Diagnostic lines in the welcome popup for members (`showWelcomeBack()`): "☁ Đã tải từ máy chủ: N ngày, M việc, K đồ mở khóa." and "(chẩn đoán: …)", both read from `CLOUD.loaded` (set in `cloudApply()`: row keys, session type, saved day, minute, days). Temporary. Remove once the owner confirms the save is right.
+  - `G.resumeFailed`, set in the catch of `resumeSession()`. Both continue handlers then show "⚠ Không khôi phục được ngày đang dở nên đã bắt đầu một ngày mới." and start a new day.
+
 ### Changed
 
+- Cloud save debounce is 2 seconds (was 3 seconds). `cloudPush()` sets it.
+- `cloudFlush()` writes with `.update(payload).eq('user_id', …).eq('updated_at', CLOUD.version).select('updated_at')` when a version is known. Saves are serialised with `CLOUD.busy`: a call during a save is retried after 500 ms. Zero rows is a conflict, not a silent success.
+- `cloudApply(row)` sets `CLOUD.version`, clears `CLOUD.conflict`, and records `CLOUD.loaded`.
+- `visibilitychange` (hidden) and `pagehide` call `cloudFlushNow()`, not the debounced save.
 - The sign-in screen no longer sends a magic link. The `signInWithOtp` call is removed from the UI. Accounts are created by the administrator, with a password chosen by the administrator.
 - Wrong credentials now show "Email hoặc mật khẩu chưa đúng. Hãy hỏi quản trị viên nếu bạn chưa có mật khẩu." An unconfirmed account shows "Tài khoản chưa được kích hoạt. Hãy nhờ quản trị viên kiểm tra."
 - `cloudBoot()` toggles `#btn-login` from `loginEnabled` and returns early to `showWelcomeBack()` when the flag is off.
 - Account setup (dashboard only, no code): Authentication → Users → Add user → Create new user, with Auto Confirm. A forgotten password is reset by the administrator in the dashboard. No SMTP, no email templates, and no emails are needed.
 - Glossary: "Đăng nhập công ty", "Link đăng nhập", and `cloudEnter(sess)` are flagged as outdated. Their original text is kept.
+- Address terms for the member Bảo (`fill()`, `index.html` section 1): when the player is the member Bảo (`MEMBER_CALL === 'anh Bảo'`), the pronoun "bạn" / "Bạn" in NPC lines becomes "anh" / "Anh". It is not changed in "các bạn", "những bạn", "bạn bè", or "bạn thân". NPC self-reference "mình" and the other pronouns are unchanged. Address canon: everyone calls Bảo "anh" (`docs/spec/dong-nghiep.md` §2).
+- Text fixes (address canon, `index.html`):
+  - Chủ tịt's order item (`ORDER_SETS`, `thanh`): "Nhắc anh Bảo chốt ghi chú phát hành".
+  - Duo `bao`–`tung` (`DUOS`): Tùng says "Em chia việc nhé", and Bảo says "Anh cần chốt…" and "Anh ưu tiên lại".
 
 ### Removed
 
@@ -34,11 +49,29 @@ Removed later on the same day, before any player used the alpha. Listed so that 
 - The `pwSet` flag. `cloudFlush()` no longer writes it into `progress.data`. An old `pwSet` value in a saved row is not read by the game.
 - The email-template, SMTP, and Site URL / Redirect URL steps for sign-in emails (`docs/spec/dang-nhap-cong-ty.md` §3 keeps only the account steps).
 
+### Fixed
+
+- Two tabs (or devices) signed in to one account overwrote each other's progress, last writer wins. Reported by the owner on 2026-11-04: after sign-in the game showed "Bạn đã làm 0 ngày" and a fresh Monday morning, although the server row held a mid-day save (day 1, minute 695). An old tab without `?login` and a newer one were both signed in and both saved every few seconds. This is the most likely cause, not yet reproduced on the real server. Fixed by the conditional write and the conflict stop above.
+- Changes made just before a tab closed could be lost, because the save after `pagehide` was debounced and not sent at once. Now sent with keepalive (`cloudFlushNow()`).
+- A failed resume (`resumeSession()` throws) silently started a new day. The player now sees the warning above.
+- Sign-in skipped the UI refresh: in `cloudEnter()` a `//` comment ended on the same line as `cloudFlush()`, so `history.replaceState(...)`, `rebuildPlayer()`, and `refreshTitle()` never ran after a password sign-in. The member's look was not rebuilt and the hash was not cleared. The statements now sit on their own line and run. Found in review on 2026-11-04 (`docs/tasks.md`, Known defects).
+- A conflict found while the tab was hidden only set `CLOUD.conflict`, so saves stopped with no message. `cloudFlushNow()` now calls `cloudConflict()` when the server confirms zero updated rows, and the modal opens.
+- A failed keepalive advanced `CLOUD.version` to a value the server never stored, which could show a false "opened elsewhere" on the next save. `CLOUD.version` now changes only from the `updated_at` the server returns (`Prefer: return=representation`).
+- The 60 000 limit in `cloudFlushNow()` counted characters (`body.length`). It now counts bytes (`new TextEncoder().encode(body).length`), so Vietnamese text is measured correctly.
+- `cloudFlushNow()` while `CLOUD.busy` cleared `CLOUD.dirty` and returned without sending, so the last changes waited for the next change. It now returns early and keeps `CLOUD.dirty`, so the next flush sends them. `CLOUD.busy` is also set while a keepalive request is in flight, so a second flush cannot start with a stale version.
+
 ### Internal
 
 - Spec split: the login detail moved from `docs/spec/nhieu-nguoi-choi.md` §10 to `docs/spec/dang-nhap-cong-ty.md`, and §10 is now a summary. This keeps both files under 200 lines.
 - `docs/tasks.md`: follow-ups for email templates, SMTP, and the recovery test removed. Added: flag removal after the realtime tests, and the optional in-game password change.
 - No secrets, keys, project URLs, emails, or passwords were written to the docs.
+- Cloud-save docs: `docs/spec/nhieu-nguoi-choi.md` §9.1 row and new §11; `docs/spec/dang-nhap-cong-ty.md` new §6 and acceptance rows AC-M33 to AC-M39; `docs/product-guide.md` (one window at a time, the conflict message, "0 days" with a day in progress, the diagnostic note, the resume warning); glossary terms `CLOUD.version`, `cloudConflict()`, `cloudFlushNow()`, `keepalive`, and the account-open-elsewhere modal, plus an outdated flag on the cloud-save entry; `docs/tasks.md` follow-ups.
+
+### Docs
+
+- `docs/handoff.md` (new, 2026-11-04): a handoff for the next conversation. It covers the project state, how to work, the decisions already made, and the next steps. It is listed first in the `docs/tasks.md` header. Not a changelog source; kept as written.
+- Address terms: `docs/spec/dong-nghiep.md` §2 (canon and the member substitution), `docs/glossary.md` (new term), `docs/product-guide.md` (name section).
+- Cloud-save fixes: `docs/spec/nhieu-nguoi-choi.md` §11 (rules table, known-limits note removed), `docs/spec/dang-nhap-cong-ty.md` §6 and AC-M39, `docs/glossary.md` (`CLOUD.version`, `cloudFlushNow()`, `keepalive` notes), `docs/tasks.md` (Known defects closed, Follow-ups).
 
 ### Verification
 
@@ -49,12 +82,23 @@ Verified (2026-11-04):
 - Real server probe: a wrong password returns 400 `invalid_credentials` (AC-M25).
 - Headless Chrome, flag off (no `?login`): `loginEnabled` is false, `#btn-login` is hidden, the title screen with the name form is visible, and no cloud client is created (AC-M30).
 - Headless Chrome, `?login`: `loginEnabled` is true, `#btn-login` is visible, and the cloud client is created (AC-M31).
+- Headless Chrome with mocks (cloud save, 2026-11-04): a realistic full-day save at 11:35 survives a JSON round trip with keys sorted, and resumes at 11:35 (AC-M37).
+- The keepalive PATCH is built with the right URL, headers, and body (AC-M36, request only).
+- A simulated second tab changes the server version: the first tab stops writing and shows the conflict modal (AC-M33).
+- Version bookkeeping: `CLOUD.version` is updated after each successful write.
+- Headless Chrome with mocks, after the fixes above: after `cloudEnter` the hash is cleared, the member's look is rebuilt, and the welcome popup shows.
+- A second keepalive while `CLOUD.busy` is ignored and keeps `CLOUD.dirty`. After the server confirms, `CLOUD.version` takes the server value and `CLOUD.busy` clears.
+- An empty server response to a keepalive opens the conflict modal.
 
 Not verified:
 
 - A real password sign-in against the server, and the next sign-in going straight to the welcome popup (AC-M28).
 - `?login=off` turning the flag off again in a real browser (AC-M32).
 - The friendly messages for real network and rate-limit errors (AC-M29, code read only).
+- The conditional write on `updated_at` against the real server. The stored timestamp is assumed to equal the value sent (AC-M35). `claim_character()` returning `updated_at` is also unchecked (AC-M35).
+- Keepalive on a real tab close (AC-M36). The conflict modal between two real tabs (AC-M33).
+- The resume-failure warning (AC-M38, code read only).
+- The address change and the three text lines (`fill()`, `ORDER_SETS`, `DUOS`): code read only, not played in the game.
 
 ### Known limits
 
@@ -63,6 +107,8 @@ Not verified:
 - The other 13 accounts are not yet created or tested (`docs/tasks.md`).
 - The "same password" and "weak password" branches of `friendlyAuthError` cannot be reached from the sign-in screen.
 - The Mac app and the offline build still have no sign-in or cloud save, as in v2.0.0-alpha.
+- The one-window rule is enforced only by the version check. An old window stops only when it next writes, so a window that makes no change is not stopped.
+- NPC pronouns toward the member Bảo: only "bạn" becomes "anh" (`fill()`). NPCs still say "mình" to him where "em" is expected, and the other pronouns are unchanged. Needs per-speaker work (`docs/tasks.md`, Follow-ups).
 
 ## v2.0.1-alpha — 2026-11-04
 

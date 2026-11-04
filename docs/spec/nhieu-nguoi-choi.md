@@ -108,7 +108,7 @@ Phạm vi: đăng nhập bằng email, nhận nhân vật theo email, lưu tiế
 | Áp dụng nhân vật | `cloudApply(row)` | Tên = tên thật của nhân vật. Giới tính lấy từ `CHAR_GENDER`. Ngoại hình = ngoại hình của NPC (`rebuildPlayer`). NPC của chính nhân vật đó có `times.arrive = 99999` mỗi ngày (`startDay()`). Gọi `applyPlayerDesk(p)` và đặt `MEMBER_CALL` (v2.0.1-alpha) |
 | Bàn của thành viên | `applyPlayerDesk(profile)` (mục 5) | Sao chép `DESKS[profile.desk]` vào `PLAYER_DESK`: `kind`, `x`, `z`, `seat`, `north`, và `sx`/`sz` (tâm mặt bàn; bàn dài: `sx` = x ghế, `sz` = z bàn ± 0,5). Đưa điểm làm việc `SPOTS[0]` về điểm trước ghế (lệch 0,4 m). Dựng lại đồ trên bàn (`buildDeskItems()`, quay π khi ghế ở phía bắc bàn dài). Với `desk: null` (Nguyên) hoặc khi gọi với `null`: khôi phục bàn khách ở góc dưới bên trái, cạnh bàn Thông. v2.0.1-alpha |
 | Cách gọi thành viên | `MEMBER_CALL` (mục 1), `MEMBER_CALLS` (khối đăng nhập, sau mục 14) | `fill()` dùng `MEMBER_CALL` cho `{ten}`. `bao` → "anh Bảo", `an3` → "chị Ba", `an7` → "chú 7", `thanh` → "Chủ tịt", còn lại → tên nhân vật. Xóa khi đăng xuất. `Store.name` vẫn là tên thật (HUD, nhật ký). v2.0.1-alpha |
-| Lưu dữ liệu thành viên | `Store.useCloud(cloudPush)`, `cloudPush()`, `cloudFlush()` | Mọi `Store.patch` và `Store.setting` gọi `cloudPush()`: debounce 3 giây, rồi cập nhật hàng `progress`. Lỗi: thử lại sau 15 giây, thông báo nhẹ tối đa một lần mỗi phút. Lỗi quyền (42501, "permission denied"): thông báo riêng, xem §6.1. Lưu thêm khi `pagehide` và `visibilitychange` |
+| Lưu dữ liệu thành viên | `Store.useCloud(cloudPush)`, `cloudPush()`, `cloudFlush()`, `cloudFlushNow()` | Mọi `Store.patch` và `Store.setting` gọi `cloudPush()`: debounce 2 giây (v2.1.0-alpha; trước là 3 giây), rồi ghi hàng `progress` có điều kiện theo `updated_at`. Lỗi: thử lại sau 15 giây, thông báo nhẹ tối đa một lần mỗi phút. Lỗi quyền (42501, "permission denied"): thông báo riêng, xem §6.1. Khi `pagehide` và khi tab ẩn: `cloudFlushNow()` (keepalive). Một nơi hoạt động: §11 |
 | Đăng xuất | `memberLogout()` | Lưu nốt, `signOut`, `Store.useLocal()` khôi phục dữ liệu Guest trên máy, `applyPlayerDesk(null)`, xóa `MEMBER_CALL` |
 | Màn đăng nhập | `showLogin()` | Ô email, ô mật khẩu, "Đăng nhập", "🎮 Chơi Guest". Chỉ hiện khi `loginEnabled` bật. Từ v2.1.0-alpha, thay link email (v2.0.x). Chi tiết: `docs/spec/dang-nhap-cong-ty.md`. Nút Guest ghi `localStorage['mot-ngay.guest'] = '1'` |
 | Popup chào | `showWelcomeBack()` | Thành viên: "Chào <tên>!" với "▶ Tiếp tục" và "🚪 Đăng xuất". Không hiện form đặt tên, kể cả sau "Về màn hình chính" |
@@ -156,3 +156,24 @@ Phạm vi: đăng nhập bằng email, nhận nhân vật theo email, lưu tiế
 Chi tiết (luồng, thông báo lỗi, tạo tài khoản, cờ `loginEnabled`, tiêu chí AC-M22 đến AC-M32): `docs/spec/dang-nhap-cong-ty.md`.
 
 Tóm tắt: email công ty và mật khẩu do quản trị viên tạo trong bảng điều khiển Supabase (Auto Confirm). Không gửi email nào. Luồng "quên mật khẩu", email khôi phục và màn tạo mật khẩu đã bỏ trong cùng bản v2.1.0-alpha. Màn đăng nhập và nút "🔑 Đăng nhập công ty" chỉ hiện khi cờ `loginEnabled` bật (trình duyệt đã mở game với `?login`).
+
+## 11. Lưu tiến độ và một nơi hoạt động (v2.1.0-alpha, 2026-11-04)
+
+Chi tiết phía đăng nhập và tiêu chí: `docs/spec/dang-nhap-cong-ty.md` §6 và AC-M33 đến AC-M39.
+
+Lý do: chủ dự án mở hai tab cùng một tài khoản (một link cũ, một link có `?login`). Cả hai đã đăng nhập và mỗi tab ghi tiến độ của mình vài giây một lần, nên bên ghi sau cùng thắng. Hệ quả: sau đăng nhập, game báo "0 ngày" và quay về buổi sáng thứ Hai, dù hàng máy chủ có ngày dở (ngày 1, phút 695). Đây là nguyên nhân có khả năng nhất, chưa tái hiện trên máy chủ thật.
+
+| Quy tắc | Cách làm | Hàm |
+|---|---|---|
+| Một nơi hoạt động | Mỗi tài khoản chỉ mở ở một tab hoặc thiết bị. Đăng nhập sau cùng giữ quyền ghi | `cloudEnter()` |
+| Phiên bản ghi | `CLOUD.version` = `updated_at` đọc lúc đăng nhập, sau mỗi lần ghi thành công thì bằng giá trị máy chủ trả về. Keepalive cũng chỉ đổi khi máy chủ xác nhận; gửi lỗi thì giữ nguyên | `cloudApply()`, `cloudFlush()`, `cloudFlushNow()` |
+| Ghi có điều kiện | Chỉ ghi nếu `updated_at` trên máy chủ vẫn bằng `CLOUD.version`. Không có hàng nào được cập nhật = xung đột | `cloudFlush()` |
+| Xung đột | Đặt `CLOUD.conflict`, dừng mọi lần ghi (kể cả keepalive). Popup "⚠ Tài khoản đang được mở ở nơi khác", nút "🔄 Tải lại trang". Cũng mở popup khi phát hiện lúc tab ẩn (`cloudFlushNow()`) | `cloudConflict()` |
+| Ghi ngay sau đăng nhập | Đánh dấu dữ liệu đã đổi rồi ghi một lần, để nơi vừa đăng nhập giành quyền | `cloudEnter()` |
+| Lưu khi đóng hoặc ẩn tab | `fetch` PATCH với `keepalive: true`, header `apikey`, `Authorization: Bearer` (mã truy cập giữ mới bởi `onAuthStateChange`), `Prefer: return=representation`. Thân trên 60 000 byte (UTF-8, đếm bằng `TextEncoder`) thì dùng `cloudFlush()` thường. Đang có lần ghi (`CLOUD.busy`, kể cả keepalive đang gửi) thì không gửi, giữ `CLOUD.dirty` | `cloudFlushNow()` |
+| Lưu nối tiếp | Một lần ghi tại một thời điểm (`CLOUD.busy`). Guest không gọi máy chủ | `cloudFlush()` |
+
+- Ngày dở với "0 ngày" là bình thường: `days` và `tasks_total` chỉ tăng khi kết thúc ngày hoặc hoàn thành việc.
+- Khôi phục: nếu `resumeSession()` lỗi, `G.resumeFailed` được đặt và nút tiếp tục hiện "⚠ Không khôi phục được ngày đang dở nên đã bắt đầu một ngày mới."
+- Chẩn đoán (tạm thời): popup chào của thành viên thêm dòng "☁ Đã tải từ máy chủ: …" và dòng "(chẩn đoán: …)" đọc từ `CLOUD.loaded` (đặt trong `cloudApply()`). Gỡ khi chủ dự án xác nhận.
+- Đã sửa (2026-11-04, cùng bản v2.1.0-alpha): `cloudEnter()` chạy `rebuildPlayer()` và `refreshTitle()` sau đăng nhập bằng mật khẩu; xung đột lúc tab ẩn mở popup; `CLOUD.version` chỉ đổi theo máy chủ xác nhận; giới hạn 60 000 đếm theo byte; `cloudFlushNow()` khi đang bận giữ `CLOUD.dirty`. Chi tiết: `docs/changelog.md` v2.1.0-alpha, `docs/tasks.md` (Known defects). Chưa kiểm tra trên máy chủ thật (AC-M33 đến AC-M36).
