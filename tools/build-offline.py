@@ -14,7 +14,7 @@ SRC, OUT = ROOT / 'index.html', ROOT / 'index-offline.html'
 CACHE = ROOT / 'tools' / 'three.module.min.js'
 
 html = SRC.read_text(encoding='utf-8')
-m = re.search(r'<script type="importmap">\{"imports":\{"three":"https://cdn\.jsdelivr\.net/npm/three@([0-9.]+)/build/three\.module\.js"\}\}</script>', html)
+m = re.search(r'<script type="importmap">\{"imports":\{"three":"https://cdn\.jsdelivr\.net/npm/three@([0-9.]+)/build/three\.module\.js"(,"@supabase/supabase-js":"[^"]+")?\}\}</script>', html)
 if not m:
     sys.exit('Không tìm thấy importmap Three.js trong index.html')
 version = m.group(1)
@@ -25,6 +25,6 @@ if not CACHE.exists() or CACHE.read_text(encoding='utf-8', errors='ignore').find
 lib = CACHE.read_bytes()
 data_url = 'data:text/javascript;base64,' + base64.b64encode(lib).decode('ascii')
 new = ('<!-- Bản offline: Three.js ' + version + ' (MIT License, © Three.js Authors) được nhúng sẵn, không cần mạng. -->\n'
-       '<script type="importmap">{"imports":{"three":"' + data_url + '"}}</script>')
+       '<script type="importmap">{"imports":{"three":"' + data_url + '"' + (m.group(2) or '') + '}}</script>')      # Supabase (đăng nhập) vẫn nạp từ CDN, cần mạng khi đăng nhập
 OUT.write_text(html.replace(m.group(0), new, 1), encoding='utf-8')
 print('Đã tạo', OUT, f'({OUT.stat().st_size // 1024} KB)')

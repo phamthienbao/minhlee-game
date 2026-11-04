@@ -2,6 +2,8 @@
 
 Status: v1.8.5 (2026-11-04). `index-offline.html`, `dist/MinhLee.app`, and `dist/netlify/index.html` are rebuilt from the v1.8.5 `index.html` and are byte-identical; the app's Info.plist reads 1.8.5 (§8).
 
+**Out of date since v2.0.0-alpha (2026-11-04):** `index.html` now has a second importmap entry (`@supabase/supabase-js`), and `index-offline.html` and `dist/` were not rebuilt on purpose (owner's decision). `tools/build-offline.py` may fail on the two-entry importmap and is not checked. The offline copy and the Mac app do not include sign-in or cloud save. See `docs/spec/nhieu-nguoi-choi.md` §9 and `docs/tasks.md`.
+
 ## 1. Goal
 
 Let the game be shared and played with no internet connection and no web hosting: by file, USB stick, or intranet share. `index.html` (CDN) stays the primary source. `index-offline.html` is a generated copy for offline use.

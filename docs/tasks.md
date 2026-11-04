@@ -1,18 +1,18 @@
 # Tasks
 
-Last updated: 2026-11-04 (v1.16.0, workday ends at 18:00 with a farewell scene)
+Last updated: 2026-11-04 (v2.0.0-alpha, multiplayer stage 1: sign-in and cloud save, not yet tested with a real login)
 
 Legend: `[x]` done, `[ ]` todo, `[~]` in progress, `[!]` blocked.
 
 ## Done
 
-Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`. Done entries v1.8.2 to v1.8.6 were moved there in the v1.9.3 pass. Done entries v1.9.1 to v1.9.4 were moved there in the v1.10.0 pass. Done entries v1.9.0 and v1.9.5 were moved there in the v1.11.0 pass. Done entries v1.11.0 and v1.12.0 were moved there in the v1.14.0 pass. Done entries v1.10.0 and v1.10.1 were moved there in the v1.13.0 pass. Done entries v1.13.0 and v1.14.0 were moved there in the v1.15.0 pass. The v1.15.0 Done entry and the closed `[x]` items of the other sections were moved there in the v1.16.0 pass.
+Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`. Done entries v1.8.2 to v1.8.6 were moved there in the v1.9.3 pass. Done entries v1.9.1 to v1.9.4 were moved there in the v1.10.0 pass. Done entries v1.9.0 and v1.9.5 were moved there in the v1.11.0 pass. Done entries v1.11.0 and v1.12.0 were moved there in the v1.14.0 pass. Done entries v1.10.0 and v1.10.1 were moved there in the v1.13.0 pass. Done entries v1.13.0 and v1.14.0 were moved there in the v1.15.0 pass. The v1.15.0 Done entry and the closed `[x]` items of the other sections were moved there in the v1.16.0 pass. The v1.16.0 Done entry was moved there in the v2.0.0-alpha pass.
 
-- [x] v1.16.0 (2026-11-04): the workday ends at 18:00 (was 17:30), followed by a farewell scene. `CFG.END` is 18:00 and `CFG.FAREWELL` 40. The camera orbits, coworkers leave one by one with a goodbye line, Chủ tịt leaves last, Toàn stays until 7 pm, then the end card. Details: `docs/changelog.md` v1.16.0, `docs/spec/tan-ca-18-gio.md`, AC-117 to AC-124
-  - [x] Code (`index.html`): `CFG.END` and `CFG.FAREWELL`, leave times (`habits.leave`), `startFarewell()`, `endFarewell()`, `farewellEndText()`, `FAREWELL_LINES`, `TOD` 18:40 keyframe, `wrap` milestone at 17:30, Tùng's quirk at 17:35
-  - [x] Headless Chrome (reported by requester): scene entered; 13 coworkers left in order (Chủ tịt last); Toàn still seated; end card at about 18:32. Not re-run in the doc pass
-  - [ ] Not verified: the scene in a screenshot or video, the camera distance after the restore, touch and real devices, native review of the goodbye lines. See Follow-ups, v1.16.0
-  - [x] Docs: changelog, `docs/spec/tan-ca-18-gio.md` (new), `docs/spec/mot-ngay-o-cong-ty.md`, `docs/spec/ngoi-lam-viec.md`, `docs/spec/dong-nghiep.md`, `docs/spec/bang-nhiem-vu.md`, `docs/spec/the-gioi-lien-tuc.md`, `docs/spec/noi-dung-bat-ngo.md`, `docs/product-guide.md`, `docs/glossary.md`
+- [x] v2.0.0-alpha (2026-11-04): multiplayer stage 1, sign-in and cloud save. Guest play unchanged. Spec: `docs/spec/nhieu-nguoi-choi.md` §9. Details: `docs/changelog.md` v2.0.0-alpha
+  - [x] Code (`index.html`): Supabase constants, lazy import of `@supabase/supabase-js@2.45.4`, cloud block (`cloudBoot`, `cloudClaim`, `cloudApply`, `cloudPush`, `cloudFlush`, `showLogin`, `memberLogout`), `Store` backend switch, member NPC hidden, login and welcome popups
+  - [x] Server (owner, Supabase dashboard, not in repo): tables, `claim_character()`, RLS, signups off, 14 invited emails, custom SMTP, Site URL and Redirect URL. Reported by the owner, not re-checked
+  - [x] Checks: syntax; project probes; supabase-js calls from Node; headless Chrome with a mocked member. Not verified: see Follow-ups, v2.0.0-alpha
+  - [x] Docs: changelog, `docs/spec/nhieu-nguoi-choi.md`, `docs/spec/mot-ngay-o-cong-ty.md`, `docs/spec/phan-phoi-offline.md`, `docs/product-guide.md`, `docs/glossary.md`
 
 ## In progress
 
@@ -20,6 +20,7 @@ Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`.
 
 ## Known defects
 
+- [x] (v2.0.0-alpha, fixed 2026-11-04) Member reset: `Store.clear()` now returns without doing anything while a cloud backend is set (a signed-in member cannot wipe their data from inside the game; `dlog` records the skipped call), so the next `cloudFlush()` can no longer overwrite the server row with defaults. Guest reset is unchanged. Verified in headless Chrome (member: days 5 / tasks 7 kept, nothing pushed; guest: cleared). Not done: a deliberate "reset my progress" for members, if ever wanted.
 - [ ] (v1.8.4) Not tested on a real phone. Check the lying coworker's name tag and speech bubble (Nguyên on the daybed) in portrait and landscape, under the top bar and in the notch or safe-area zone
 - [ ] (v1.7.0) Root cause of the "no graphics" reports after sharing is not identified. v1.7.0 adds detection and fallbacks but does not fix a known cause. Ask the reporters for browser, version, device, and whether the page was opened inside an app. Check whether `index.html` or `index-offline.html` was used
 - [ ] (v1.7.0) Players said they could open the game in Safari afterwards. The cause is not identified. Record which browser, file, and app they used
@@ -35,6 +36,7 @@ Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`.
 
 ## Open questions
 
+- [ ] (v2.0.0-alpha) Choosing Guest is remembered (`localStorage['mot-ngay.guest']`), so the next start skips the sign-in screen and only "🔑 Đăng nhập công ty" on the title screen leads to sign-in. Confirm this is wanted, or show the sign-in screen again on start
 - [ ] (v1.7.1) Should Chị Ba's stand-up line also fire on a "pressure" event? The brief said "when she stands up from her seat or feels pressure". The code triggers `say.stand` only when a seated coworker stands up (`setGoal()`). "Áp lực quá!" is one of its three variants. No pressure event exists. Confirm the current trigger, or name the event to add
 - [ ] (v1.2.0) Toàn's age tier is still unspecified. Specify it before Toàn's address terms are changed.
 - [ ] (v1.3.1) Yến's nickname "Én Pink" (`nick` in `NPC_PROFILES`, `docs/spec/dong-nghiep.md`, `docs/product-guide.md`) no longer matches her black top (v1.3.1; was pink). Cosmetic. Decide whether to keep the nickname, change it, or change the top back. Not changed in v1.3.1 (`index.html` was read-only)
@@ -44,6 +46,15 @@ Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`.
 - [ ] (v1.4.3) Confirm the younger-coworker list used for Chủ tịt's address style. Hiện is stated as the youngest. Chú 7, Trung, and Nguyên are assumed younger. Nam (same age as Chủ tịt) gets the humble style. Confirm or correct (`docs/spec/dong-nghiep.md` §2)
 
 ## Follow-ups
+
+v2.0.0-alpha (multiplayer stage 1, sign-in and cloud save). Spec §9.3 lists the acceptance criteria:
+
+- [ ] (v2.0.0-alpha) Real login test (AC-M9): request a link with a real invited email, open it, return to the game, and confirm the member welcome popup and the character (name, gender, look). Check the popups visually on desktop and phone (AC-M12)
+- [ ] (v2.0.0-alpha) Confirm the server setup by query (AC-M10), since the earlier probe found no `progress` table or `claim_character` yet. Check column names (the code writes `days`, `tasks_total`, `unlocked`, `affinity`, `diary`, `session`, `data`, `updated_at`), the `roster` columns, the body of `claim_character()`, and that RLS lets a member read and update only their own row
+- [ ] (v2.0.0-alpha) Save to the real server (AC-M11): play, reload, and confirm the restore. Test a dropped connection mid-day for the retry toast and the 15 s retry
+- [ ] (v2.0.0-alpha) Dynamic import over the CDN in a real browser (AC-M13), and the Guest fallback when the Supabase script cannot load (AC-M8)
+- [ ] (v2.0.0-alpha) Offline builds are out of date (AC-M14). Decide when to rebuild `index-offline.html` and `dist/`. Check whether `tools/build-offline.py` fails on the two-entry importmap. `CLAUDE.md` asks for a rebuild after every edit, which this release does not follow
+- [ ] (v2.0.0-alpha) Stage 2 (see the spec §5). Before it starts, settle the open questions in `docs/spec/nhieu-nguoi-choi.md` §8, especially whether Guest plays alone (§8 Q1)
 
 v1.16.0 (workday ends at 18:00, farewell scene):
 

@@ -2,6 +2,56 @@
 
 All notable changes to "Một Ngày Ở MinhLee" (formerly "Một Ngày Ở Công Ty", renamed in v1.0.3). Newest first. Entries are appended, never rewritten.
 
+## v2.0.0-alpha — 2026-11-04
+
+Stage 1 of multiplayer: company sign-in by email link (Supabase), a character claimed by email, and server save for signed-in members. Guest play is unchanged and still runs in the browser. Not yet tested with a real sign-in. Spec: `docs/spec/nhieu-nguoi-choi.md` §9.
+
+### Added
+
+- Supabase settings in `index.html`, next to `CHAR_GENDER`: `SUPABASE_URL` and `SUPABASE_KEY` (the publishable key). The key is public by design, and row-level security protects the data. No secret or service_role key is in the repo.
+- importmap entry `@supabase/supabase-js` → `https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm`. Loaded lazily with `await import()` in `cloudInit()`. If the CDN fails, the game runs as Guest.
+- Cloud block in `index.html` (section 14, before `cloudBoot`): `MEMBER` (`{char}` when signed in), `CLOUD` (client, user, debounce timer, dirty flag, failure time), `cloudInit()`, `cloudClaim()` (RPC `claim_character`), `cloudApply(row)`, `cloudPush()`, `cloudFlush()`, `showLogin(msg)`, `memberLogout()`, `cloudBoot()`.
+- Title button `btn-login` ("🔑 Đăng nhập công ty") opens `showLogin()`.
+- Login screen (`showLogin()`): email field and "✉️ Gửi link đăng nhập" (`signInWithOtp`, `shouldCreateUser: false`, `emailRedirectTo` = site origin and path). The link only works over http(s), not `file://`. "🎮 Chơi Guest (nhân viên mới)" sets `localStorage['mot-ngay.guest'] = '1'`.
+- Member welcome popup in `showWelcomeBack()`: "Chào <tên>!" with "▶ Tiếp tục" and "🚪 Đăng xuất". It replaces the name form, including after "Về màn hình chính".
+- `Store.useCloud(fn)`, `Store.useLocal()` and `Store.replace(o)` in section 3. When a backend is set, `persist()` calls it and does not write `localStorage`.
+- Server objects expected by the client (created in the Supabase dashboard by the project owner, not in the repo): tables `roster(email, char_id, dept)` and `progress(user_id, char_id, days, tasks_total, unlocked, affinity, diary, session, data, updated_at)`, and function `claim_character()`. Intended RLS: own row only, update limited to `progress` columns.
+
+### Changed
+
+- `Store.patch()` and `Store.setting()` route through `cloudPush()` for members. Writes are debounced 3 s, then `cloudFlush()` updates the member's `progress` row with `days`, `tasks_total`, `unlocked`, `affinity`, `diary`, `session`, and `data` (`world`, `recentEv`, `lastTheme`, `settings`).
+- `cloudFlush()` retries every 15 s after a failure. A warning toast shows at most once a minute (`CLOUD.failedAt`). It also runs on `pagehide`, `visibilitychange`, and before sign-out.
+- `cloudApply(row)` sets the player's name to the character's real name, gender from `CHAR_GENDER`, and look from the NPC (`rebuildPlayer()`).
+- `startDay()`: the member's own NPC gets `times.arrive = 99999`, so it is not in the office that day.
+- `newWork()`: a member's own character is never chosen as a work assigner.
+- `newDayState()`: `DOC_QUESTS` is filtered so the member's own character is never the document asker.
+- `cloudBoot()` on start: a saved session goes through claim and apply. No session and not Guest shows the login screen. Guest, or a missing client, shows the welcome window as before. If claim fails, the user is signed out and the login screen shows a message asking them to contact the administrator.
+- `memberLogout()` flushes pending saves, calls `signOut`, restores the Guest save with `Store.useLocal()`, and returns to the login screen.
+- Member welcome popup has no "🆕 Chơi mới" button. Only "🚪 Đăng xuất" is shown.
+- Docs: `docs/spec/nhieu-nguoi-choi.md` (status, §4 `progress` columns, §5 stage 1, §6 status, new §9 with acceptance criteria), `docs/spec/mot-ngay-o-cong-ty.md` (network, persistence and out-of-scope rows), `docs/spec/phan-phoi-offline.md` (out-of-date note), `docs/product-guide.md` (new "Signing in" section, saving, reset, FAQ), `docs/glossary.md` (new terms with placeholder definitions), `docs/tasks.md`.
+
+### Verification
+
+Verified (2026-11-04):
+
+- `index.html` syntax check.
+- Live project probes: project reachable; email provider enabled; OTP for an unknown email rejected with "Signups not allowed for otp". At probe time `progress` and `claim_character` were not found, because the SQL had not yet been run. The owner reports the setup is now done. Not re-checked.
+- The supabase-js 2.45.4 calls used by the code were checked from Node against the live project.
+- Headless Chrome with a mocked server and a mocked member (name Phú): days, tasks, unlocked items, affinity and world restored; member writes did not touch `localStorage`; Phú's NPC was hidden; Phú was never assigned a job by his own character; Guest data was intact after logout.
+
+Not verified: a real email sign-in and magic-link return; `claim_character()` against the real server; saving to the real `progress` table; the dynamic import over the CDN in a real browser; the sign-in and welcome popups visually; Guest fallback when the CDN fails.
+
+### Known limits
+
+- Member reset (`Store.clear()`, used by "🗑 Xóa dữ liệu" and "🗑 Xóa hết và chơi mới"): `clear()` resets the in-memory save to defaults and removes the `localStorage` key. The backend stays set, so the next `cloudFlush()` may write the defaults to the member's `progress` row. Read from code, not reproduced. See `docs/tasks.md`, Known defects.
+- Stage 1 is single-player for members. The other 13 coworkers are still NPCs for every player. Shared office, presence, and chat are stages 2 to 5.
+
+### Internal
+
+- `index-offline.html`, `dist/MinhLee.app`, and `dist/netlify/index.html` were not rebuilt, by the owner's decision. The importmap now has two entries, so `tools/build-offline.py` may fail on it. This was not checked. The offline copy and the Mac app do not have sign-in or cloud save.
+- No SQL, migrations, or project secrets are in the repo. No real email address is written in the docs.
+- `CLAUDE.md` and `index.html` were not edited in this docs pass. `CLAUDE.md` still says v1.8.5 in its Status line and does not list `docs/spec/nhieu-nguoi-choi.md`. Those need a manual update.
+
 ## v1.16.0 — 2026-11-04
 
 The workday now ends at 18:00 instead of 17:30. At 18:00 a farewell scene starts: the camera orbits the office, coworkers say goodbye and leave one by one, Toàn stays late, and then the end-of-day card appears. A full day takes about 456 real seconds at normal speed (was 432).

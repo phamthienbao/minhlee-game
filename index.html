@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#f9d3b4">
 <title>Một Ngày Ở MinhLee</title>
 <!-- Three.js qua CDN (cần mạng lần đầu để tải thư viện; sau đó chơi hoàn toàn ngoại tuyến) -->
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","@supabase/supabase-js":"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm"}}</script>
 <style>
 :root{--bg:#fbf1e1;--ink:#3b2f2a;--accent:#e07a5f;--accent2:#3aa6a0;--card:#fffaf2;--line:#ead9c0;--soft:#f6e6cf;--shadow:0 10px 28px rgba(80,50,20,.22);
  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
@@ -195,6 +195,7 @@ window.__bootTimer=setTimeout(function(){
     <button class="btn hidden" id="btn-resume">▶ Tiếp tục ngày đang dở</button>
     <button class="btn" id="btn-start" disabled>Đang tải thư viện 3D…</button>
     <div class="row">
+      <button class="btn alt" id="btn-login">🔑 Đăng nhập công ty</button>
       <button class="btn alt" id="btn-diary">📖 Nhật ký ngày làm</button>
       <button class="btn alt" id="btn-clear">🗑 Xóa dữ liệu</button>
     </div>
@@ -265,6 +266,9 @@ function h(tag, props = {}, ...kids) {                                          
   return el;
 }
 
+// Kết nối Supabase (khóa "publishable" là khóa công khai, an toàn khi để trong game; dữ liệu được bảo vệ bằng RLS phía server)
+const SUPABASE_URL = 'https://kfwuzlxwtwnxcxqlqref.supabase.co', SUPABASE_KEY = 'sb_publishable_AREeczegWdCyIHEPYkqcOw_9yO9zBhE';
+const CHAR_GENDER = { thao: 'nu', yen: 'nu', an3: 'nu' };                           // giới tính của các nhân vật nữ (còn lại là nam), dùng cho cách xưng hô {anh}
 const CFG = { SURPRISE_NEAR: 4.2,
   START: T('08:30'), END: T('18:00'), FAREWELL: 40,
   SPEED: 1.25,            // phút trong game trôi qua mỗi giây thực (≈ 7 phút cho cả ngày)
@@ -874,24 +878,34 @@ const GOSSIP_END = ['Chưa ai biết chuyện này kết thúc thế nào.', 'C�
 const Store = (() => {
   const KEY = 'mot-ngay-o-cong-ty.v1';
   const defaults = () => ({ name: '', gender: 'khac', avatar: 0, days: 0, world: { users: 12 }, recentEv: [], lastTheme: '', diary: [], affinity: {}, settings: { sound: true, tutorial: true, cam: 1 } });
-  let data = defaults();
-  try {
-    const raw = localStorage.getItem(KEY);
-    if (raw) { const o = JSON.parse(raw); data = { ...defaults(), ...o, settings: { ...defaults().settings, ...(o.settings || {}) } }; }
-    data.diary = Array.isArray(data.diary) ? data.diary.filter((e) => e && Array.isArray(e.talked) && Array.isArray(e.moments)) : [];
-    if (!data.affinity || typeof data.affinity !== 'object') data.affinity = {};
-    if (!data.world || typeof data.world.users !== 'number') data.world = { users: 12 };
-    if (!Array.isArray(data.recentEv)) data.recentEv = [];
-  } catch (e) { dlog('[Store.load] Không đọc được dữ liệu đã lưu, dùng mặc định:', e, e && e.stack); }
+  let data = defaults(), backend = null;                    // backend: hàm lưu lên máy chủ khi đã đăng nhập (khi đó không ghi localStorage)
+  const normalize = (o) => {
+    const d = { ...defaults(), ...o, settings: { ...defaults().settings, ...(o.settings || {}) } };
+    d.diary = Array.isArray(d.diary) ? d.diary.filter((e) => e && Array.isArray(e.talked) && Array.isArray(e.moments)) : [];
+    if (!d.affinity || typeof d.affinity !== 'object') d.affinity = {};
+    if (!d.world || typeof d.world.users !== 'number') d.world = { users: 12 };
+    if (!Array.isArray(d.recentEv)) d.recentEv = [];
+    return d;
+  };
+  const loadLocal = () => {
+    try { const raw = localStorage.getItem(KEY); return normalize(raw ? JSON.parse(raw) : {}); }
+    catch (e) { dlog('[Store.load] Không đọc được dữ liệu đã lưu, dùng mặc định:', e, e && e.stack); return defaults(); }
+  };
+  data = loadLocal();
   function persist() {
+    if (backend) { try { backend(data); } catch (e) { dlog('[Store.persist] Lỗi gửi dữ liệu lên máy chủ:', e, e && e.stack); } return; }
     try { localStorage.setItem(KEY, JSON.stringify(data)); }
     catch (e) { dlog('[Store.persist] Không ghi được localStorage (game vẫn chạy, chỉ không lưu):', e, e && e.stack); }
   }
   return {
     get: () => data,
     patch(part) { data = { ...data, ...part }; persist(); },
+    useCloud(fn) { backend = fn; },                         // đăng nhập: dữ liệu đi lên máy chủ, không lẫn với dữ liệu Guest trong trình duyệt
+    useLocal() { backend = null; data = loadLocal(); },     // đăng xuất: quay về dữ liệu Guest
+    replace(o) { data = normalize(o); },
     setting(k, v) { data = { ...data, settings: { ...data.settings, [k]: v } }; persist(); },
     clear() {
+      if (backend) { dlog('[Store.clear] Bỏ qua: tài khoản đã đăng nhập không được xóa dữ liệu từ trong game (tránh ghi đè tiến độ trên máy chủ).'); return; }
       try { localStorage.removeItem(KEY); } catch (e) { dlog('[Store.clear] Lỗi xóa dữ liệu:', e, e && e.stack); }
       data = defaults();
     },
@@ -2103,7 +2117,7 @@ function resumeGame() { Modal.close(false); G.mode = 'play'; Sfx.resume(); }
 const SPOTS = [];     // các điểm tương tác cố định
 const HOST_ID = 'thanh', HOSTN = 'Chủ tịt';
 const whoOf = (n) => ({ name: n.p.name, role: [n.p.real, n.p.nick && `“${n.p.nick}”`, n.p.role].filter(Boolean).join(' · '), color: n.p.look.shirt, emoji: moodFace(n.mood) });
-const youWho = () => ({ name: Store.get().name || 'Bạn', role: '', color: AVATARS[Store.get().avatar]?.shirt ?? 0xe07a5f, emoji: '🧑' });
+const youWho = () => ({ name: Store.get().name || 'Bạn', role: '', color: MEMBER ? (NPC_PROFILES.find((p) => p.id === MEMBER.char) || { look: { shirt: 0xe07a5f } }).look.shirt : AVATARS[Store.get().avatar]?.shirt ?? 0xe07a5f, emoji: '🧑' });
 const meSay = (text) => Bubbles.say('me', (o) => { o.x = P.pos.x; o.y = P.ch.root.position.y + 1.9; o.z = P.pos.z; }, text, { me: true, ms: 3200, prio: 2 });
 function changeAff(id, d) { AFF[id] = clamp((AFF[id] ?? 40) + d, 0, 100); }
 function addMoment(t) { if (!D.moments.includes(t) && D.moments.length < 14) D.moments.push(t); }
@@ -2247,7 +2261,7 @@ function meetingActivity() {
 // --- Làm việc tại bàn: một đồng nghiệp nhờ bạn một việc nhỏ; tiến độ được giữ khi bấm Tạm dừng ---
 const workTitle = (kind) => (kind === 'sort' ? 'Ghép ghi chú vào đúng nhóm' : 'Xếp việc theo thứ tự cần làm');
 function newWork(kind) {
-  const sets = kind === 'sort' ? SORT_SETS : ORDER_SETS, here = sets.map((x, i) => i).filter((i) => { const a = npcById(sets[i].from); return a && a.times.arrive < 99999; }), pool = here.length ? here : sets.map((x, i) => i), set = pool[(Math.random() * pool.length) | 0], n = kind === 'sort' ? sets[set].notes.length : sets[set].items.length;
+  const sets = kind === 'sort' ? SORT_SETS : ORDER_SETS, here = sets.map((x, i) => i).filter((i) => { const a = npcById(sets[i].from); return a && a.times.arrive < 99999 && !(MEMBER && a.id === MEMBER.char); }), pool = here.length ? here : sets.map((x, i) => i), set = pool[(Math.random() * pool.length) | 0], n = kind === 'sort' ? sets[set].notes.length : sets[set].items.length;
   return { kind, set, from: sets[set].from, order: shuffle([...Array(n).keys()]), done: [], next: 0, elapsed: 0, wrong: 0 };
 }
 const workSetOf = (w) => (w.kind === 'sort' ? SORT_SETS : ORDER_SETS)[w.set];
@@ -2555,21 +2569,98 @@ function resumeSession() {
 /* Mở lại game đã có dữ liệu: hỏi Tiếp tục hay Chơi mới, thay vì luôn dừng ở màn hình đặt tên */
 function showWelcomeBack() {
   const d = Store.get(), sess = validSession();
-  if (!d.days && !sess) return;
+  if (!MEMBER && !d.days && !sess) return;
   $('#title').classList.add('hidden');                          // ẩn form đặt tên: người chơi cũ chỉ thấy popup Tiếp tục / Chơi mới
-  const who = d.name ? `Chào mừng ${d.name} quay lại!` : 'Chào mừng bạn quay lại!';
+  const who = MEMBER ? `Chào ${d.name}!` : d.name ? `Chào mừng ${d.name} quay lại!` : 'Chào mừng bạn quay lại!';
   const info = sess ? `Ngày làm thứ ${d.days + 1} đang dở lúc ${fmtTime(sess.minute)}. Bạn có thể làm tiếp đúng chỗ đã dừng.` : `Bạn đã làm ở MinhLee ${d.days} ngày. Ngày mới đang chờ bạn.`;
   const askNew = () => Modal.open(h('h2', {}, 'Chơi mới?'), h('p', { class: 'sub' }, 'Toàn bộ tên, nhân vật, nhật ký, mức thân thiết và đồ đã mở khóa sẽ bị xóa khỏi thiết bị này, rồi bạn bắt đầu lại từ ngày đầu tiên.'),
     h('button', { class: 'btn', onclick: () => { Modal.close(false); Store.clear(); Object.keys(AFF).forEach((k) => delete AFF[k]); refreshTitle(); $('#title').classList.remove('hidden'); toast('Đã xóa dữ liệu. Hãy đặt tên và bắt đầu nhé!', 3000); } }, '🗑 Xóa hết và chơi mới'),
     h('button', { class: 'btn alt', onclick: () => { Modal.close(false); G.mode = 'title'; showWelcomeBack(); } }, 'Thôi, quay lại'));
   Modal.open(h('h2', {}, who), h('p', { class: 'sub' }, info),
     h('button', { class: 'btn', onclick: () => { Modal.close(false); G.mode = 'title'; Sfx.init(); Sfx.setMuted(!Store.get().settings.sound); rebuildPlayer(); if (!resumeSession()) startDay(); } }, sess ? '▶ Tiếp tục ngày đang dở' : '▶ Tiếp tục chơi'),
-    h('button', { class: 'btn alt', onclick: () => { Modal.close(false); G.mode = 'title'; askNew(); } }, '🆕 Chơi mới'));
+    MEMBER ? h('button', { class: 'btn alt', onclick: () => { Modal.close(false); G.mode = 'title'; memberLogout(); } }, '🚪 Đăng xuất')
+      : h('button', { class: 'btn alt', onclick: () => { Modal.close(false); G.mode = 'title'; askNew(); } }, '🆕 Chơi mới'));
+}
+/* ============ ĐĂNG NHẬP & LƯU TRÊN SUPABASE (nhiều người chơi, giai đoạn 1) ============ */
+let MEMBER = null;                                                   // {char} khi đã đăng nhập bằng email công ty và nhận nhân vật theo email
+const CLOUD = { client: null, user: null, timer: null, dirty: false, failedAt: 0 };
+const guestPref = () => { try { return localStorage.getItem('mot-ngay.guest') === '1'; } catch (e) { return false; } };
+const setGuestPref = (v) => { try { v ? localStorage.setItem('mot-ngay.guest', '1') : localStorage.removeItem('mot-ngay.guest'); } catch (e) { dlog('[setGuestPref]', e); } };
+function friendlyAuthError(e) {
+  const m = String((e && e.message) || e || '').toLowerCase();
+  if (m.includes('signups not allowed') || m.includes('not allowed') || m.includes('not found')) return 'Email này chưa được mời vào game. Hãy nhờ quản trị viên thêm email của bạn.';
+  if (m.includes('rate') || m.includes('too many') || m.includes('seconds')) return 'Gửi quá nhiều lần rồi, hãy đợi vài phút rồi thử lại.';
+  if (m.includes('fetch') || m.includes('network') || m.includes('failed')) return 'Không kết nối được. Hãy kiểm tra mạng rồi thử lại.';
+  return 'Không gửi được link đăng nhập. Hãy kiểm tra email rồi thử lại.';
+}
+async function cloudInit() {
+  try {
+    const mod = await import('@supabase/supabase-js');
+    CLOUD.client = mod.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
+    const { data, error } = await CLOUD.client.auth.getSession(); if (error) throw error;
+    return data.session;
+  } catch (e) { dlog('[cloudInit] Không kết nối được Supabase (vẫn chơi Guest được):', e, e && e.stack); CLOUD.client = null; return null; }
+}
+async function cloudClaim() {                                        // nhận nhân vật theo email (hàm claim_character trên server)
+  const { data, error } = await CLOUD.client.rpc('claim_character'); if (error) throw error; return data;
+}
+function cloudApply(row) {
+  const p = NPC_PROFILES.find((x) => x.id === row.char_id); if (!p) throw new Error('Nhân vật không hợp lệ: ' + row.char_id);
+  const d = row.data || {};
+  Store.useCloud(cloudPush);
+  Store.replace({ ...d, settings: { sound: true, tutorial: false, cam: 1, ...(d.settings || {}) }, name: p.real || p.name, gender: CHAR_GENDER[p.id] || 'nam', avatar: 0, days: row.days || 0, tasksTotal: row.tasks_total || 0, unlocked: row.unlocked || [], affinity: row.affinity || {}, diary: row.diary || [], session: row.session || null });
+  MEMBER = { char: p.id }; Object.keys(AFF).forEach((k) => delete AFF[k]); Object.entries(Store.get().affinity).forEach(([k, v]) => { AFF[k] = v; });
+}
+function cloudPush() { CLOUD.dirty = true; clearTimeout(CLOUD.timer); CLOUD.timer = setTimeout(cloudFlush, 3000); }
+async function cloudFlush() {
+  if (!CLOUD.client || !MEMBER || !CLOUD.user || !CLOUD.dirty) return; CLOUD.dirty = false; const d = Store.get();
+  try {
+    const { error } = await CLOUD.client.from('progress').update({ days: d.days, tasks_total: d.tasksTotal || 0, unlocked: d.unlocked || [], affinity: d.affinity || {}, diary: d.diary || [], session: d.session || null,
+      data: { world: d.world, recentEv: d.recentEv, lastTheme: d.lastTheme, settings: d.settings }, updated_at: new Date().toISOString() }).eq('user_id', CLOUD.user.id);
+    if (error) throw error;
+  } catch (e) {
+    CLOUD.dirty = true; dlog('[cloudFlush] Chưa lưu được lên máy chủ, sẽ thử lại:', e, e && e.stack);
+    if (Date.now() - CLOUD.failedAt > 60000) { CLOUD.failedAt = Date.now(); toast('⚠ Chưa lưu được lên máy chủ, game sẽ tự thử lại.', 3500); }
+    clearTimeout(CLOUD.timer); CLOUD.timer = setTimeout(cloudFlush, 15000);
+  }
+}
+function showLogin(msg) {
+  $('#title').classList.add('hidden');
+  const web = /^https?:/.test(location.protocol);
+  const note = h('p', { class: 'sub' }, msg || (web ? 'Nhập email công ty để chơi đúng vai nhân vật của bạn. Nhân vật chưa có ai đăng nhập sẽ do máy điều khiển.' : 'Đăng nhập chỉ dùng được khi mở game qua đường link web (không mở file trực tiếp). Bạn vẫn chơi Guest được.'));
+  const input = h('input', { type: 'email', placeholder: 'email công ty', autocomplete: 'email', style: 'width:100%;padding:12px 14px;border:2px solid var(--line);border-radius:12px;font-size:16px;margin:8px 0;background:#fff;color:var(--ink)' });
+  const send = h('button', { class: 'btn', onclick: async () => {
+    const email = input.value.trim().toLowerCase();
+    if (!/^\S+@\S+\.\S+$/.test(email)) { note.textContent = 'Email chưa đúng, hãy nhập lại.'; return; }
+    if (!CLOUD.client || !web) { note.textContent = 'Chưa kết nối được máy chủ. Hãy kiểm tra mạng và mở game qua đường link web, hoặc chơi Guest.'; return; }
+    send.disabled = true;
+    try {
+      const { error } = await CLOUD.client.auth.signInWithOtp({ email, options: { shouldCreateUser: false, emailRedirectTo: location.origin + location.pathname } }); if (error) throw error;
+      note.textContent = `Đã gửi link tới ${email}. Mở email và bấm vào link để vào game (mở link trên chính máy này).`;
+    } catch (err) { dlog('[showLogin] Không gửi được link đăng nhập:', err, err && err.stack); note.textContent = friendlyAuthError(err); }
+    send.disabled = false;
+  } }, '✉️ Gửi link đăng nhập');
+  Modal.open(h('h2', {}, '🔑 Đăng nhập công ty'), note, input, send,
+    h('button', { class: 'btn alt', onclick: () => { Modal.close(false); G.mode = 'title'; setGuestPref(true); $('#title').classList.remove('hidden'); refreshTitle(); showWelcomeBack(); } }, '🎮 Chơi Guest (nhân viên mới)'));
+}
+async function memberLogout() {
+  clearTimeout(CLOUD.timer); await cloudFlush();
+  try { await CLOUD.client.auth.signOut(); } catch (e) { dlog('[memberLogout] signOut lỗi:', e, e && e.stack); }
+  MEMBER = null; CLOUD.user = null; Store.useLocal(); Object.keys(AFF).forEach((k) => delete AFF[k]); Object.entries(Store.get().affinity || {}).forEach(([k, v]) => { AFF[k] = v; });
+  refreshTitle(); showLogin();
+}
+async function cloudBoot() {
+  const sess = await cloudInit();
+  if (sess) {
+    try { CLOUD.user = sess.user; const row = await cloudClaim(); cloudApply(row); if (location.hash) history.replaceState(null, '', location.pathname + location.search); rebuildPlayer(); refreshTitle(); showWelcomeBack(); return; }
+    catch (e) { dlog('[cloudBoot] Không nhận được nhân vật cho tài khoản này:', e, e && e.stack); try { await CLOUD.client.auth.signOut(); } catch (e2) { dlog('[cloudBoot] signOut lỗi:', e2); } CLOUD.user = null; showLogin('Tài khoản này chưa được gán nhân vật hoặc chưa kết nối được máy chủ. Hãy nhờ quản trị viên kiểm tra email của bạn.'); return; }
+  }
+  if (CLOUD.client && !guestPref()) showLogin(); else showWelcomeBack();
 }
 function newDayState() {
   const dn = Store.get().days + 1, bonus = G.bonus || { mood: 0, energy: 0 }; G.bonus = null;
   D = { minute: CFG.START, tasks: 0, energy: clamp(80 + bonus.energy, 0, 100), mood: clamp(60 + bonus.mood, 0, 100), talked: new Set(), greeted: new Set(), deskDone: new Set(), deepDone: new Set(), pantryWith: new Set(), moments: [],
-    flags: { meeting: false, break: false, lunch: false, party: false, printer: false }, quest: { def: pick(DOC_QUESTS), stage: 0 }, stats: { greets: 0, chats: 0, pantry: 0, meeting: 0, help: 0, rest: 0 },
+    flags: { meeting: false, break: false, lunch: false, party: false, printer: false }, quest: { def: pick(DOC_QUESTS.filter((q) => !(MEMBER && q.npc === MEMBER.char))), stage: 0 }, stats: { greets: 0, chats: 0, pantry: 0, meeting: 0, help: 0, rest: 0 },
     work: null, meetTopic: calInfo(dn).wd === 0 ? mondayTopic(dn) : pick(MEETING_TOPICS), theme: pickTheme(dn), surprises: [], noteLeft: null, noticeIdx: 0, aff0: { ...AFF }, ended: false, lastMs: '', meetMissed: false, warned: false };
 }
 function setCamPreset(i, announce = true) {
@@ -2580,6 +2671,7 @@ function startDay() {
   Card.hide(); Modal.close(false); Bubbles.clear(); hudCache = {};
   newDayState();
   NPCS.forEach((n) => { resetNpcDay(n); n.tag.on = false; });
+  if (MEMBER) { const me = npcById(MEMBER.char); if (me) me.times.arrive = 99999; }          // người chơi thay thế NPC của chính mình
   spotOwner.fill(null); sofaOwner.fill(null);
   const host = npcById(HOST_ID); [host, ...shuffle(NPCS.filter((n) => n !== host && n.p.habits.joinsMeeting))].slice(0, 8).forEach((n, i) => { n.attends = true; n.meetSeat = i; });
   EVENT.cake = null; EVENT.printer = null; EVENT.printerNpc = null; EVENT.treat = null;
@@ -2603,6 +2695,7 @@ function exitToTitle() {
   Store.patch({ session: null });
   Sfx.rain(false); if (deskTag) deskTag.on = false; Card.hide(); Modal.close(false); Bubbles.clear(); G.mode = 'title'; $('#hud').classList.add('hidden'); $('#lite').classList.add('hidden'); $('#tut').classList.add('hidden');
   NPCS.forEach((n) => { n.tag.on = false; }); $('#title').classList.remove('hidden'); refreshTitle(); Sfx.resume();
+  if (MEMBER) showWelcomeBack();                                  // đã đăng nhập: chỉ hiện popup Tiếp tục / Đăng xuất, không hiện form đặt tên
 }
 function skipTo(target) {
   const prev = D.minute; D.minute = Math.max(prev, target); snapNpcsToSchedule(D.minute); processTimeEvents(prev, D.minute); applyTimeOfDay(D.minute); toast(`⏭ Đã chuyển tới ${fmtTime(D.minute)}`);
@@ -2770,7 +2863,8 @@ function resize() {
 }
 function rebuildPlayer() {
   if (P.ch) { scene.remove(P.ch.root); }
-  const a = AVATARS[Store.get().avatar] || AVATARS[0]; P.ch = buildCharacter({ skin: a.skin, hair: a.hair, shirt: a.shirt, style: a.style, glasses: false }, true); scene.add(P.ch.root);
+  const a = AVATARS[Store.get().avatar] || AVATARS[0], mp = MEMBER ? NPC_PROFILES.find((p) => p.id === MEMBER.char) : null;
+  P.ch = buildCharacter(mp ? mp.look : { skin: a.skin, hair: a.hair, shirt: a.shirt, style: a.style, glasses: false }, true); scene.add(P.ch.root);          // đã đăng nhập: dùng đúng ngoại hình nhân vật của mình
 }
 // Màn hình chào
 function refreshTitle() {
@@ -2814,8 +2908,8 @@ function init() {
   buildOffice(); buildNav(); createNpcs(); rebuildPlayer(); buildSpots(); setupInput(); resize();
   deskTag = Bubbles.makeTag('💻 Bàn của bạn', (o) => { o.x = PLAYER_DESK.x; o.y = 1.55; o.z = PLAYER_DESK.z; }); deskTag.el.style.background = 'var(--accent)'; deskTag.clampX = true;
   listen(window, 'resize', resize); listen(window, 'orientationchange', () => setTimeout(resize, 150));
-  listen(document, 'visibilitychange', () => { if (document.hidden) { saveSession(); if (G.mode === 'play') pauseGame(); Sfx.suspend(); } else if (G.mode !== 'paused') Sfx.resume(); });
-  listen(window, 'pagehide', (e) => { saveSession(); if (!e.persisted) cleanupGame(); });
+  listen(document, 'visibilitychange', () => { if (document.hidden) { saveSession(); cloudFlush(); if (G.mode === 'play') pauseGame(); Sfx.suspend(); } else if (G.mode !== 'paused') Sfx.resume(); });
+  listen(window, 'pagehide', (e) => { saveSession(); cloudFlush(); if (!e.persisted) cleanupGame(); });
   // nút HUD
   $('#act').addEventListener('click', () => { if (INPUT.onAct) INPUT.onAct(); });
   $('#hud-obj').addEventListener('click', () => { Sfx.click(); if (G.mode === 'play') pauseGame(); });
@@ -2836,6 +2930,7 @@ function init() {
     Sfx.init(); Sfx.setMuted(!Store.get().settings.sound);
     const name = $('#in-name').value.trim().slice(0, 16); Store.patch({ name }); rebuildPlayer(); if (!resumeSession()) startDay();
   });
+  $('#btn-login').addEventListener('click', () => { Sfx.init(); Sfx.click(); setGuestPref(false); G.mode = 'title'; showLogin(); });
   $('#btn-diary').addEventListener('click', () => { Sfx.init(); Sfx.click(); showDiary(); });
   const lb = $('#btn-lite'); lb.textContent = LITE_WHY === 'user' ? '🎮 Thử lại chế độ 3D' : '🧩 Không thấy hình? Dùng chế độ đơn giản';
   lb.addEventListener('click', () => { Store.setting('lite', LITE_WHY !== 'user'); const u = new URL(location.href); u.searchParams.delete('lite'); location.replace(u.toString()); });
@@ -2843,7 +2938,7 @@ function init() {
   $('#btn-clear').addEventListener('click', () => confirmBox('Tên, nhân vật, nhật ký và mức thân thiết sẽ bị xóa khỏi thiết bị này.', 'Xóa dữ liệu', () => { Store.clear(); Object.keys(AFF).forEach((k) => delete AFF[k]); refreshTitle(); toast('Đã xóa dữ liệu đã lưu.'); }));
   Object.entries(Store.get().affinity || {}).forEach(([k, v]) => { AFF[k] = v; });
   const sb = $('#btn-start'); sb.disabled = false; refreshTitle();
-  window.__gameReady = true; clearTimeout(window.__bootTimer); $('#boot-error').classList.add('hidden'); showWelcomeBack();
+  window.__gameReady = true; clearTimeout(window.__bootTimer); $('#boot-error').classList.add('hidden'); cloudBoot();
   if (LITE) setInterval(() => { try { update(0.1); } catch (e) { dlog('[lite loop]', e, e && e.stack); } }, 100); else rafId = requestAnimationFrame(frame);
 }
 try { init(); } catch (e) { dlog('[init] Lỗi khởi tạo:', e, e && e.stack); const b = $('#boot-error'); b.classList.remove('hidden'); b.textContent = 'Có lỗi khi khởi động game. Hãy thử tải lại trang.'; }

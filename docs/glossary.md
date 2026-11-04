@@ -550,3 +550,27 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 **habits.leave** — *(needs definition)* Profile field: the coworker's leave time. Each day `resetNpcDay()` adds a random −3 to +5 minutes. Set to 18:00 for most coworkers, 18:12 for Chủ tịt, and 19:00 for Toàn in v1.16.0. Added v1.16.0.
 
 **Toàn ở lại (Toàn stays late)** — *(needs definition)* Toàn's `habits.leave` is 19:00, so he is still seated when the farewell scene ends. The end card then says he stays until 7 pm. Added v1.16.0.
+
+**Đăng nhập công ty (company sign-in)** — *(needs definition)* Sign-in with a company email from the title screen button "🔑 Đăng nhập công ty". Sends a one-time link. Added v2.0.0-alpha. See `docs/spec/nhieu-nguoi-choi.md` §9.
+
+**Guest (chế độ khách)** — *(needs definition)* Playing without signing in. The save stays in the browser on this device (`localStorage`). Chosen with "🎮 Chơi Guest (nhân viên mới)". Added v2.0.0-alpha.
+
+**Thành viên (member)** — *(needs definition)* A player signed in with a company email. Plays as one coworker, and the save is kept on the server. `MEMBER` in `index.html`. Added v2.0.0-alpha.
+
+**Link đăng nhập (sign-in link)** — *(needs definition)* The email link sent by `signInWithOtp` (`shouldCreateUser: false`). Opening it returns to the game's web address and starts the session. Added v2.0.0-alpha.
+
+**`roster`** — *(needs definition)* Server table that maps each company email to one character (`char_id`) and department. Read by `claim_character()`. Added v2.0.0-alpha.
+
+**`progress`** — *(needs definition)* Server table with one row per member: days, tasks, unlocked items, affinity, diary, day in progress, and `data` (world, recent events, last theme, settings). Written by `cloudFlush()`. Added v2.0.0-alpha.
+
+**`claim_character()`** — *(needs definition)* Server function called after sign-in. Maps the signed-in email to a character through `roster` and creates the `progress` row if it does not exist. Added v2.0.0-alpha.
+
+**Nhân vật đăng nhập (claimed character)** — *(needs definition)* The coworker that a member plays. The coworker's NPC is hidden each day (`times.arrive = 99999`). Added v2.0.0-alpha.
+
+**Khóa publishable (publishable key)** — *(needs definition)* The public Supabase key in `SUPABASE_KEY` in `index.html`. It is public by design; row-level security protects the data. Not the secret or service_role key, which must never be in the code. Added v2.0.0-alpha.
+
+**RLS (row-level security)** — *(needs definition)* Supabase/Postgres rule that limits each signed-in user to their own rows in `roster` and `progress`. Added v2.0.0-alpha.
+
+**Lưu lên máy chủ (cloud save)** — *(needs definition)* Saving a member's progress to `progress`. Debounced 3 seconds after a change, retried every 15 seconds on failure, and flushed on sign-out and when the page is hidden (`cloudPush()`, `cloudFlush()`). Added v2.0.0-alpha.
+
+**`Store.useCloud()` / `Store.useLocal()`** — *(needs definition)* Switch the save backend in `Store`. `useCloud` sends writes to the server (member). `useLocal` restores the guest save from `localStorage` (after sign-out). Added v2.0.0-alpha.

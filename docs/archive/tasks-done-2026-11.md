@@ -466,3 +466,11 @@ Moved verbatim from `docs/tasks.md` to keep that file under 300 lines. The v1.15
 - [x] (v1.8.3, accepted as-is 2026-11-04) Boot-error text: tip ① is "mở bằng Safari, hoặc cập nhật Chrome lên bản mới nhất", placed first after the lead-in "Game chưa khởi động được. Bạn thử:". Accepted as-is
 - [x] (v1.8.6, Toàn's polo collar closed 2026-11-04 in v1.9.4) Photo gaps: Toàn's collar is now modelled as a navy `collar` (Thảo's wavy hair closed in v1.9.2). No desk-3 plant pot was found in the code. Confirm with the user whether that is acceptable or needs a new style
 - [x] (v1.9.2, closed 2026-11-04 in v1.9.4) Next batch: all remaining coworkers are on `look.detail`. Anh Bảo's look is still an approximation (see the v1.4.1 item)
+
+## Moved from docs/tasks.md in the v2.0.0-alpha pass (v1.16.0 done entry)
+
+- [x] v1.16.0 (2026-11-04): the workday ends at 18:00 (was 17:30), followed by a farewell scene. `CFG.END` is 18:00 and `CFG.FAREWELL` 40. The camera orbits, coworkers leave one by one with a goodbye line, Chủ tịt leaves last, Toàn stays until 7 pm, then the end card. Details: `docs/changelog.md` v1.16.0, `docs/spec/tan-ca-18-gio.md`, AC-117 to AC-124
+  - [x] Code (`index.html`): `CFG.END` and `CFG.FAREWELL`, leave times (`habits.leave`), `startFarewell()`, `endFarewell()`, `farewellEndText()`, `FAREWELL_LINES`, `TOD` 18:40 keyframe, `wrap` milestone at 17:30, Tùng's quirk at 17:35
+  - [x] Headless Chrome (reported by requester): scene entered; 13 coworkers left in order (Chủ tịt last); Toàn still seated; end card at about 18:32. Not re-run in the doc pass
+  - [ ] Not verified: the scene in a screenshot or video, the camera distance after the restore, touch and real devices, native review of the goodbye lines. See Follow-ups, v1.16.0
+  - [x] Docs: changelog, `docs/spec/tan-ca-18-gio.md` (new), `docs/spec/mot-ngay-o-cong-ty.md`, `docs/spec/ngoi-lam-viec.md`, `docs/spec/dong-nghiep.md`, `docs/spec/bang-nhiem-vu.md`, `docs/spec/the-gioi-lien-tuc.md`, `docs/spec/noi-dung-bat-ngo.md`, `docs/product-guide.md`, `docs/glossary.md`

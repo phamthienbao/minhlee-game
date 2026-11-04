@@ -12,9 +12,9 @@ A solo, offline-playable, Vietnamese-language office-day simulation. The player 
 |---|---|
 | Delivery | Single file: `index.html`. Optional generated copy `index-offline.html` (see `docs/spec/phan-phoi-offline.md`). Optional macOS app `dist/MinhLee.app` (`docs/spec/phan-phoi-offline.md` §8). No bundler, no package manager. |
 | Rendering | Three.js 0.160.0 loaded via an import map from `https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js` (`index.html`), or inlined as a data URL (`index-offline.html`). |
-| Network | `index.html`: required on first load to fetch Three.js. `index-offline.html`: no network at all. Gameplay makes no network calls. |
+| Network | `index.html`: required on first load to fetch Three.js. `index-offline.html`: no network at all. Guest gameplay makes no network calls. Signed-in members use Supabase for sign-in and save (v2.0.0-alpha, see `docs/spec/nhieu-nguoi-choi.md`). |
 | Audio | Web Audio API only, synthesized in code. No audio files. |
-| Persistence | `localStorage` only, key `mot-ngay-o-cong-ty.v1`. Holds player data, the world state (`world`, `recentEv`, `lastTheme`), and the day in progress (`session`, v1.10.0). No accounts, no server. |
+| Persistence | Guest: `localStorage` only, key `mot-ngay-o-cong-ty.v1`. Holds player data, the world state (`world`, `recentEv`, `lastTheme`), and the day in progress (`session`, v1.10.0). Signed-in members: the `progress` row on Supabase instead, and `localStorage` is not written (v2.0.0-alpha, `docs/spec/nhieu-nguoi-choi.md` §9). |
 | Language | UI text and all dialogue in Vietnamese. |
 | Art | Low-poly 3D built from primitives; chibi-style characters. |
 | Fiction | All characters, MinhLee, and its products (including App Dating) are fictional. |
@@ -183,7 +183,7 @@ On load, the diary is filtered to well-formed entries and `affinity` is reset to
 
 ## 7. Out of scope
 
-- Multiplayer, accounts, cloud save, analytics.
+- Multiplayer (stage 2 onward), analytics. Accounts and cloud save for individual members were added in v2.0.0-alpha as stage 1 of `docs/spec/nhieu-nguoi-choi.md`.
 - Win/lose conditions or scoring.
 - Localization beyond Vietnamese.
 - Build tooling, minification, service worker.

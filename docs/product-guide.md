@@ -2,7 +2,7 @@
 
 *One Day at MinhLee* is a calm, one-person game. You play a new employee at MinhLee, a small company that builds mobile apps and games. Its best-known product is the dating app, **App Dating**. Each day is one ordinary workday in the office with 14 coworkers. The days follow on from each other, Monday to Friday, week after week, and the game has no end. (MinhLee, App Dating, and everyone in the game are fictional.) Nothing is timed against you, there is no way to lose, and there is no score. You decide how to spend each day: finish a task, have a chat, join the meeting, take a break, or just walk around.
 
-The game is in Vietnamese and runs in your web browser. It works offline after it has loaded once.
+The game is in Vietnamese and runs in your web browser. You can play it as a **guest** on your own device, or sign in with a company email to play as one of the coworkers and keep your progress on the server (see **Signing in** below). A guest game works offline after it has loaded once. Signing in needs an internet connection.
 
 ## Getting started
 
@@ -18,7 +18,29 @@ If you leave the name empty, coworkers simply call you "bạn" (you).
 
 After your first day, the title screen button reads **"▶ Tiếp tục"** (Continue). It shows the weekday and week of the next day, for example "Thứ Ba, tuần 1".
 
-Your progress is saved only on this device. No account is needed. The Mac app keeps its own save, separate from your web browser. Your day in progress is saved too, so you can carry on after closing the game (see **Saving your day** below).
+If you play as a guest, your progress is saved only on this device, and no account is needed. The Mac app keeps its own save, separate from your web browser. Your day in progress is saved too, so you can carry on after closing the game (see **Saving your day** below). If you sign in with a company email, your progress is saved on the server instead (see **Signing in**).
+
+## Signing in
+
+Company members can sign in with their company email. This is a preview (alpha) and has not yet been tested with real sign-ins.
+
+1. On the title screen, press **🔑 Đăng nhập công ty** (Company sign-in).
+2. Type your company email and press **✉️ Gửi link đăng nhập** (Send sign-in link).
+3. Open the email from the game and press the link. The link works only when the game is opened from its web address. It does not work when the game file is opened directly from your computer.
+4. The game opens with your coworker's character. A welcome window says **"Chào <tên>!"** (Hello, <name>!). Press **▶ Tiếp tục** (Continue).
+
+What changes when you are signed in:
+
+- **You are one of the coworkers.** Your name, gender, and look come from that coworker. That coworker is not in the office in your game, because you take their place. Your character never gives you a job, and does not ask you about the missing document.
+- **Your progress is kept on the server.** Your days, finished jobs, unlocked desk items, how close you are with each coworker, your diary, and the day in progress are saved there. Changes are sent about 3 seconds after you make them. If the connection drops, the game tries again. A short message appears if the save is delayed.
+- **Your guest save on this device is not changed** by the days you play while signed in.
+- The title screen's name and gender form is not shown. The welcome window replaces it.
+
+**Log out:** in the welcome window, press **🚪 Đăng xuất** (Log out). The game saves your last changes first. Then it goes back to the sign-in screen, and your guest save on this device is shown again, exactly as you left it.
+
+**Playing as a guest:** on the sign-in screen, press **🎮 Chơi Guest (nhân viên mới)** (Play as a guest, new employee). The game then keeps you as a guest. The next time you open the game, it opens your guest save directly. To sign in later, press **🔑 Đăng nhập công ty** on the title screen.
+
+**Reset for signed-in players:** please do not use **🗑 Xóa dữ liệu** (Delete data) while signed in. What it does to your saved progress on the server is still being checked. See the FAQ.
 
 ## Controls
 
@@ -201,7 +223,7 @@ Each day is saved to your diary when it ends. The diary keeps the most recent 15
 
 - **Diary** (📖 *Nhật ký ngày làm*): available from the title screen, the pause menu, and the end-of-day summary. It lists each day, and at the bottom shows how close you are with each coworker.
 - **What the diary says at the top**: during a workday, it tells you which day you are on and that today is written in the diary at the end of the day. Outside a workday (on the title screen or after the summary), it tells you how many days you have worked, or that no day has been recorded yet.
-- **Reset** (🗑 *Xóa dữ liệu*): on the title screen or at the bottom of the diary. This deletes your name, gender choice, avatar, diary, camera view, coworker closeness, and the App Dating user count and version. It cannot be undone.
+- **Reset** (🗑 *Xóa dữ liệu*): on the title screen or at the bottom of the diary. This deletes your name, gender choice, avatar, diary, camera view, coworker closeness, and the App Dating user count and version on this device. It cannot be undone. Signed-in players: see **Reset for signed-in players** under **Signing in**.
 - **Replay the tutorial**: from the pause menu, choose "Xem lại hướng dẫn".
 
 ### Saving your day
@@ -215,7 +237,8 @@ Each day is saved to your diary when it ends. The diary keeps the most recent 15
   - While the welcome window is open, the name and gender form is hidden, so the choices above are the only thing you see.
   - **🆕 Chơi mới** (New game) asks you to confirm first. **🗑 Xóa hết và chơi mới** (Delete everything and start over) erases your name, diary, closeness with coworkers, and unlocked items on this device, and then shows the name form again. **Thôi, quay lại** (Never mind) goes back to the welcome window, with the name form still hidden.
   - The first time you play, there is no welcome window. You go straight to typing your name.
-- Each save belongs to one device and one browser. A copy of the game opened from a file, from a web address, or in the Mac app keeps its own save. There is no way to move a save to another device yet.
+- Each guest save belongs to one device and one browser. A copy of the game opened from a file, from a web address, or in the Mac app keeps its own save. There is no way to move a guest save to another device yet.
+- A signed-in save is kept on the server. It follows your company account, so it can be opened on another device after you sign in there. Your guest save on each device stays separate.
 
 ## The coworkers
 
@@ -269,7 +292,7 @@ Go back to that coworker and choose **🔁 Hỏi lại: cần lấy gì nhỉ?**
 No. There is no failure state and no score. The goal is to have a pleasant day.
 
 **Do I need an internet connection?**
-If you open `index.html`, you need one the first time, so the 3D library can download. After that, the game works offline. If you open `index-offline.html`, you never need one.
+If you open `index.html`, you need one the first time, so the 3D library can download. After that, the guest game works offline. If you open `index-offline.html`, you never need one for the guest game. Signing in always needs an internet connection. If the sign-in part cannot load, you can still play as a guest.
 
 **Is MinhLee a real company? What is App Dating?**
 No. MinhLee, its coworkers, and App Dating exist only inside the game. The office, the sign, and the coworkers are all made up.
@@ -284,7 +307,16 @@ Ask the person who sent it to send the file again. If you trust the file, open t
 Not as an app. On Windows, open `index-offline.html` in a web browser, as described above.
 
 **Is my data sent anywhere?**
-No. Your progress is saved only in your browser on this device. Nothing is uploaded.
+Guest play: no. Your progress is saved only in your browser on this device, and nothing is uploaded. Signed-in play: your progress is saved on the game's server, linked to your company account. See **Signing in**.
+
+**I did not get the sign-in email. What do I do?**
+Check your spam or junk folder, and check that you typed the company email correctly. Only invited company emails can sign in. If it still does not arrive, ask the person who runs the game to check your invitation.
+
+**I signed in, but the game says my account is not linked to a character.**
+The company email is not yet linked to a coworker. Ask the person who runs the game to check it. You are signed out, and the sign-in screen shows the message again.
+
+**I see "Chưa lưu được lên máy chủ" (Could not save to the server yet).**
+The game keeps your changes and tries again every 15 seconds. You can keep playing. If the message stays for a long time, check your internet connection.
 
 **Why don't I see the 3D office?**
 Your browser or device may not show 3D graphics. The title screen then shows a short reason, and the game uses a simple list of places and people to interact with instead. The game still works. To try the 3D office again:
