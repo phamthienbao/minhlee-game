@@ -1,6 +1,6 @@
 # Spec: Nội dung đa dạng (surprises, duos, day themes, badges)
 
-Status: v1.8.5 (2026-11-04). No content change in v1.8.5; the Nam–Thạnh scripts (v1.8.1, v1.8.2) and the random script pick per visit are in §2.
+Status: v1.8.7 (2026-11-04). Surprise trigger changed in v1.8.7 (§1, AC-40): a surprise waits for the player to stand near the related coworker instead of popping up at its time. Narration uses "anh" (not "ông") for Chủ tịt in three `SURPRISES` strings. The Nam–Thạnh scripts (v1.8.1, v1.8.2) and the random script pick per visit are in §2.
 
 ## 1. Daily surprises
 
@@ -8,7 +8,9 @@ Status: v1.8.5 (2026-11-04). No content change in v1.8.5; the Nam–Thạnh scri
 - The day has 4 time windows: 09:05–09:40, 11:15–11:55, 13:40–14:25, and 16:05–16:40. Each surprise uses one randomly chosen window, at a random minute inside it. Windows are sorted by time.
 - Events are drawn from `SURPRISES` (18 events plus the gift box, 19 entries). Events not in `recentEv` are drawn first. No event repeats within one day.
 - Firing runs in `tickClock()`. Only one surprise fires at a time, only in `play` mode, and only when no card or dialog holds the player (`!P.lock`).
-- If the related coworker is hidden (not in the office), the surprise waits. After 90 game-minutes it is dropped silently. A dropped surprise is still written to `recentEv` when the day ends, though the player never saw it. Known edge case, see `docs/tasks.md`.
+- Trigger (v1.8.7). After its scheduled time `sp.t` has passed, a surprise waits until the player is within `CFG.SURPRISE_NEAR` (4.2 m) of the related coworker (`ev.npc`). A surprise with no `npc` fires when any visible coworker is within 4.2 m. A hidden coworker (not in the office) never counts as near. The distance is measured from the player to the coworker's position (`P.pos` to `n.pos`).
+- Skip (v1.8.7). If the trigger has not happened within 150 game-minutes after `sp.t`, or after 17:10 (`CFG.END - 20`), whichever comes first, the surprise is marked fired and skipped for the day. Nothing is shown. A skipped surprise is still written to `recentEv` when the day ends, though the player never saw it. Known edge case, see `docs/tasks.md`.
+- Before v1.8.7 the surprise fired at its scheduled time regardless of distance, and was skipped only when the related coworker was hidden (after 90 game-minutes).
 - Each surprise shows a card with 3 options. Each option shows a result card, then applies effects: `mood`, `energy`, `aff` (per-coworker affinity), and `moment` (a diary line). Effects go through `applyFx()`.
 - Surprises fired in a day feed the "Bạn của những điều bất ngờ" badge (3 or more in one day, see section 4).
 
@@ -128,7 +130,7 @@ Status legend as in `docs/spec/mot-ngay-o-cong-ty.md` section 3.
 | AC-37 | Each day has 3 surprises (4 on busy days), one per time window, with no event repeated within the day. | Partly verified (all 18 entries exercised in the v1.4.0 harness; per-day count not recorded) |
 | AC-38 | Every surprise shows 3 options. Each option shows a result card and applies its effects. No raw placeholders appear. | Verified (v1.4.2 headless harness: all 19 surprises x 3 options exercised, no raw placeholders, no JS errors. v1.4.3 re-run: all 19 x 3 again, no JS errors. Earlier: v1.4.0 run, 18 surprises) |
 | AC-39 | The mystery gift box shows 3 boxes, and each box gives an outcome. | Verified (every gift box exercised in the 12-day run) |
-| AC-40 | A surprise whose coworker is hidden waits, then drops after 90 game-minutes. | Not recorded (source only) |
+| AC-40 | A surprise waits after its time until the player is within 4.2 m of the related coworker (any visible coworker if none). It is skipped if not reached within 150 game-minutes or by 17:10. Far from the coworker: not fired. Near: fired. | Verified (v1.8.7, headless Chrome only: far not fired, near fired) |
 | AC-41 | The 15 duo pairs play their scripted lines when those pairs visit each other. | Partly verified (v1.4.0 harness: all duo and surprise ids valid, before `thanhmeo` and the Chủ tịt–Hiện duo were added in v1.4.2. Scripted lines not recorded as played. v1.4.3 re-run: 15 duos run, no JS errors) |
 | AC-42 | All 5 day themes appear. The emoji shows after the clock. The rain day shows grey light and plays the rain sound. | Partly verified (themes varied in the 12-day run; rain light and sound not recorded; audio not tested) |
 | AC-43 | Milk-tea days add Chủ tịt's (Thạnh's) treats at 09:55 and 16:00. | Not recorded (source only) |

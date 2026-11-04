@@ -2,6 +2,33 @@
 
 All notable changes to "Một Ngày Ở MinhLee" (formerly "Một Ngày Ở Công Ty", renamed in v1.0.3). Newest first. Entries are appended, never rewritten.
 
+## v1.8.7 — 2026-11-04
+
+Surprise events no longer pop up at their scheduled time from anywhere. After the scheduled time, a surprise waits until the player stands within 4.2 m of the coworker it involves. If that does not happen in time, the surprise is skipped for the day. Three narration strings now call Chủ tịt "anh" instead of "ông". No change to schedule, attendance, layout, save format, or the save key.
+
+### Changed
+
+- `index.html`, `tickClock()` (section 14): the surprise loop now has a proximity gate. For each due surprise (`D.minute >= sp.t`, not yet `fired`):
+  - Skip: if `D.minute > Math.min(sp.t + 150, CFG.END - 20)`, the surprise is marked `fired` and not shown. That is 150 game-minutes after `sp.t`, or 17:10, whichever comes first.
+  - Trigger: `near(n)` requires `n.state !== 'hidden'` and a distance under `CFG.SURPRISE_NEAR` (4.2 m) between `n.pos` and `P.pos`. If `ev.npc` is set, only that coworker counts (`npcById(ev.npc)`). If not, any visible coworker counts (`NPCS.some(near)`).
+  - The loop still runs only in `play` mode and when `!P.lock`, one surprise per tick.
+  - Before this release the trigger was the scheduled time alone (distance ignored). A surprise was skipped only when its coworker was hidden, after 90 game-minutes.
+- `index.html`, `SURPRISES` (variety block): three narration strings now call Chủ tịt "anh" instead of "ông". Vietnamese wording not reviewed by a native speaker.
+- Spec: `docs/spec/noi-dung-bat-ngo.md` §1 (trigger and skip rules) and AC-40.
+
+### Verification
+
+- Headless Chrome only: a surprise with the player far from the related coworker did not fire. The same surprise fired once the player was near. Not run on a real phone or any other browser.
+
+### Build and artifacts
+
+- `index-offline.html`, `dist/netlify/index.html`, and `dist/MinhLee.app/Contents/Resources/index.html` contain the v1.8.7 proximity code (checked by grep in the doc pass).
+- `tools/macapp/Info.plist` and `dist/MinhLee.app/Contents/Info.plist` still read `CFBundleShortVersionString` 1.8.5. Not changed in this pass (docs only). See `docs/tasks.md`.
+
+### Docs
+
+- `docs/spec/noi-dung-bat-ngo.md` (status, §1 trigger and skip, AC-40), `docs/product-guide.md` (Surprises section), `docs/glossary.md`, `docs/tasks.md` (v1.7.0 to v1.8.1 Done entries moved to `docs/archive/tasks-done-2026-11.md`).
+
 ## v1.8.6 — 2026-11-04
 
 The desk task is reworked around a requester: a coworker asks for the task, the card says what to do and how long it takes, and progress is kept when the player pauses. The two mini-games get a "how to" box, a progress bar, group descriptions, and a hint after two wrong answers. A world label marks the player's desk. Three coworkers get looks based on user photos. No change to schedule, attendance, layout, save format, or the save key.

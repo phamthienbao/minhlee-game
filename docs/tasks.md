@@ -6,7 +6,13 @@ Legend: `[x]` done, `[ ]` todo, `[~]` in progress, `[!]` blocked.
 
 ## Done
 
-Items for v1.0.0 to v1.6.1 are archived in `docs/archive/tasks-done-2026-11.md`.
+Items for v1.0.0 to v1.8.1 are archived in `docs/archive/tasks-done-2026-11.md`.
+
+- [x] v1.8.7 (2026-11-04): surprise events wait for the player to stand within 4.2 m of the related coworker after their scheduled time, and are skipped after 150 game-minutes or at 17:10. Three narration strings call Chủ tịt "anh" instead of "ông". Details: `docs/changelog.md` v1.8.7, `docs/spec/noi-dung-bat-ngo.md` §1 and AC-40, `docs/product-guide.md` (Surprises)
+  - [x] `tickClock()` proximity gate and skip rule (`CFG.SURPRISE_NEAR`, `sp.t + 150`, `CFG.END - 20`), `near()` check for `ev.npc` or any visible coworker
+  - [x] Headless-Chrome check: far from the coworker, not fired; near, fired (reported by the requester; not re-run in the doc pass)
+  - [x] Offline copies and netlify and app resources contain the v1.8.7 code (grep check in the doc pass; byte-identity not checked)
+  - [x] Docs: `CLAUDE.md` not touched (user choice), `docs/changelog.md`, `docs/spec/noi-dung-bat-ngo.md`, `docs/product-guide.md`, `docs/glossary.md`, `docs/tasks.md`
 
 - [x] v1.8.6 (2026-11-04): desk task reworked around a requester (work card, progress kept on pause, mini-game help and hints, requester reaction), "💻 Bàn của bạn" desk label, photo-based looks for Thông, Thảo, Toàn. Details: `docs/changelog.md` v1.8.6, `docs/spec/mot-ngay-o-cong-ty.md` AC-71 to AC-73 and §4.4, `docs/spec/bang-nhiem-vu.md` §2, §3.4
   - [x] Work card (`workActivity()`): requester, briefing (`workBrief()`), "about 30–60 seconds", "no score, no penalty"; "▶ Bắt đầu làm" / "▶ Làm tiếp"; "Để lát nữa (không mất gì)"
@@ -50,44 +56,6 @@ Items for v1.0.0 to v1.6.1 are archived in `docs/archive/tasks-done-2026-11.md`.
   - [x] `index-offline.html`, `dist/MinhLee.app`, `dist/netlify/index.html` rebuilt. The three are byte-identical and contain the new strings (checked in the doc pass)
   - [x] Docs: `CLAUDE.md`, `docs/spec/dong-nghiep.md`, `docs/spec/noi-dung-bat-ngo.md`, `docs/product-guide.md`, `docs/glossary.md`, `docs/changelog.md`, `docs/tasks.md`
 
-- [x] v1.8.1 (2026-11-04): Nam's "bé Hạnh" teasing nickname for Chủ tịt (Thạnh): playful lines, a playful four-line duo, and the meaning recorded in the docs. Details: `docs/changelog.md` v1.8.1, `docs/spec/dong-nghiep.md` §1–2, `docs/spec/noi-dung-bat-ngo.md` §2
-  - [x] `say.idle` and `say.chat` lines for Nam, a `say.chat` reply for Thạnh, and the playful `nam`–`thanh` duo in `DUOS` (`index.html`, section 2 and the variety block)
-  - [x] "bé Hạnh" meaning recorded in `docs/glossary.md`, `docs/product-guide.md`, `docs/spec/dong-nghiep.md` (confirmed by the product owner, 2026-11-04)
-  - [x] Headless-Chrome full-day run and content id checks, as reported by the requester; static check of `DUOS` and `say.absent` ids in the doc pass
-
-- [x] v1.8.0 (2026-11-04): goal card larger and tappable, mission board in the pause menu (playtest feedback). Details: `docs/changelog.md` v1.8.0, `docs/spec/bang-nhiem-vu.md`
-  - [x] Goal card (`updateHud()`, `.obj` CSS): 🎯 milestone + hint + "Chạm để xem cả bảng nhiệm vụ", 16px, stronger border; tap calls `pauseGame()` (`init()`, `#hud-obj`)
-  - [x] Pause menu mission board (`missionBoard()`, `.qb` CSS) under "▶ Tiếp tục": current goal card, milestone rows with ✅ ▶️ ⏳ ⏭, side tasks from `extraTasks()`
-  - [x] Headless Chrome unit check of the board at 08:30 and 14:50, and of tap-to-open (reported by requester; not re-run in the doc pass)
-  - [x] Screenshots of the pause board and goal card at 500 px width (reported as readable)
-  - [x] macOS app self-test passed on the rebuilt app (reported)
-  - [x] `index-offline.html`, `dist/MinhLee.app`, `dist/netlify/index.html` rebuilt; the three are byte-identical (checked in the doc pass)
-  - [x] Docs: `CLAUDE.md`, `docs/spec/bang-nhiem-vu.md` (new), `docs/spec/mot-ngay-o-cong-ty.md`, `docs/product-guide.md`, `docs/glossary.md`, `docs/changelog.md`, `docs/tasks.md`
-
-- [x] v1.7.2 (2026-11-04): diary intro depends on context (no more "0 ngày làm việc" during day 1). Details: `docs/changelog.md` v1.7.2, `docs/spec/mot-ngay-o-cong-ty.md` §4.2 and AC-27
-  - [x] `showDiary()` (`index.html` section 13): mid-day intro with the workday number and "written at the end of the day", day-1 line when there are no entries, days-worked or "none recorded" line on the title screen and after the day
-  - [x] Headless Chrome unit check of mid-day day 1, mid-day day 2, and the title screen (reported by the requester; not re-run in the doc pass)
-  - [x] `index-offline.html`, `dist/MinhLee.app`, `dist/netlify/index.html` rebuilt (app and netlify copies byte-identical to `index-offline.html`)
-  - [x] Docs: `CLAUDE.md`, `docs/spec/mot-ngay-o-cong-ty.md`, `docs/product-guide.md`, `docs/changelog.md`, `docs/tasks.md`
-
-- [x] v1.7.1 (2026-11-04): Chị Ba's stand-up catchphrase with Chú 7's reply, Nam's lines before Chủ tịt arrives, and generic speech hooks. Details: `docs/changelog.md` v1.7.1, `docs/spec/dong-nghiep.md` §7.5
-  - [x] `say.stand` (3 variants) and `say.standReply` on `an3` (Chị Ba → Chú 7). Chance 55% (90% on `busy`), 60 s cooldown, only when on screen within 9.5 m (`standUpLine()`, `setGoal()`, `index.html` section 9)
-  - [x] Chú 7 chat line about the "bánh tét" nickname (`say.chat`, `an7`)
-  - [x] `say.absent` on `nam` (5 lines, `who: 'thanh'`), timer in `npcAmbient()` (section 9). Stops when Chủ tịt arrives
-  - [x] Headless-Chrome checks (2026-11-04): Nam 2+ lines in the first 50 game minutes while Chủ tịt hidden; Chị Ba line fired 11 of 12 forced attempts on a `busy` day; full-day harness with no JS errors and no collision violations
-  - [x] `index-offline.html`, `dist/MinhLee.app`, `dist/MinhLee-mac.zip`, `dist/netlify/index.html` rebuilt (`tools/build-offline.py`, `tools/build-mac-app.sh`, `tools/prepare-netlify.sh`)
-  - [x] Docs: `CLAUDE.md`, `docs/spec/dong-nghiep.md` (roster rows 7, 10, 11; §2; AC-65, AC-66; §7.5), `docs/product-guide.md`, `docs/glossary.md`, `docs/changelog.md`, `docs/tasks.md`
-
-- [x] v1.7.0 (2026-11-04): browser hardening for "no graphics" reports. Details: `docs/changelog.md` v1.7.0, `docs/spec/tuong-thich-trinh-duyet.md`
-  - [x] Environment check before the module runs: too-old browser (`#env-note`, "Trình duyệt chưa hỗ trợ" button), in-app browser banner ("Mở bằng trình duyệt") (`index.html` `<head>` script)
-  - [x] Renderer creation tries `antialias` on, then off; WebGL failure gives list mode and a title-screen reason (`init()`, `#env-note`)
-  - [x] Title-screen toggle `#btn-lite` (3D ↔ list mode) using `settings.lite` and `?lite`
-  - [x] Runtime fallbacks to list mode with a toast: render watchdog (150th counted frame, 0 draw calls) and context lost for more than 4 s (`frame()`, `webglcontextlost`, `fallbackToLite()`)
-  - [x] Boot-error text lists three things to try (`#boot-error`)
-  - [x] Headless Chrome: 3D full-day run, `?lite` run, mid-game `fallbackToLite()` run
-  - [x] Real Safari 27.0.1 on macOS 27: 3D scene rendered (226 draw calls, 6128 triangles, no errors). Temporary on-page diagnostic only
-  - [x] `index-offline.html`, `dist/MinhLee.app`, `dist/MinhLee-mac.zip` rebuilt. `--selftest` passed again
-  - [x] Docs: `CLAUDE.md`, `docs/spec/tuong-thich-trinh-duyet.md` (new), `docs/spec/phan-phoi-offline.md`, `docs/spec/mot-ngay-o-cong-ty.md`, `docs/deploy.md`, `docs/product-guide.md`, `docs/glossary.md`, `docs/changelog.md`, `docs/tasks.md`
 
 ## In progress
 
@@ -103,7 +71,7 @@ Items for v1.0.0 to v1.6.1 are archived in `docs/archive/tasks-done-2026-11.md`.
 - [ ] Friday milk-tea roll in `pickTheme()` ignores `lastTheme`, so a Thursday milk-tea day can repeat on Friday. Fix by applying the `lastTheme` filter to the Friday roll too. Found by reading the code, not reproduced in the harness.
 - [ ] Weekend bonus (`G.bonus`) is held in memory only. Reloading the page on the weekend screen drops the bonus. Decide whether to persist it in `Store` or accept the loss.
 - [ ] "Tin vui: App Dating" (`dating100k`): the card text uses the live user count, but the diary moment and two option results still say "vượt 100 nghìn lượt tải" (fixed text). Make the wording agree.
-- [ ] A surprise dropped after waiting 90 game-minutes for a hidden coworker is still written to `recentEv` when the day ends, though the player never saw it. Decide whether `recentEv` should record only surprises that were shown.
+- [ ] A surprise skipped (150 game-minutes after its time, or at 17:10, while the player was not near the coworker) is still written to `recentEv` when the day ends, though the player never saw it. Decide whether `recentEv` should record only surprises that were shown. (Wording updated for v1.8.7; the old rule was 90 game-minutes for a hidden coworker.)
 - [ ] Affinity changes from surprise choices are written at once (`saveProgress()`), so they survive an abandoned day while the day record does not. Decide whether that is intended, then document it or change it.
 - [x] (v1.1.2, resolved 2026-11-04 in source) `index.html` section 2 field comment (around line 239) lists `style` values without `'fringe'` and does not mention `mustache`, `glassColor`, or `pattern: 'stripe'`. Update the comment when `index.html` is next edited. Not changed in v1.1.2 (`index.html` was read-only). Checked 2026-11-04: the header now lists `fringe`, `glassColor`, `mustache`, and `pattern` `'stripe'`
 - [ ] Docs: `docs/spec/mot-ngay-o-cong-ty.md` section 4.4 labels the Thạnh gingham look "v1.1.1", but this release is v1.1.0. Confirm which release shipped the look and fix the label. The changelog entry for v1.1.0 mentions it with this open question.
@@ -287,8 +255,14 @@ Desk work and looks (v1.8.6), `docs/spec/mot-ngay-o-cong-ty.md` AC-71 to AC-73, 
 - [ ] (v1.8.6) Check the desk label on a real phone: pinned to a side edge when the desk is off-screen sideways, hidden under the top bar and near the bottom, hidden after 3 tasks
 - [ ] (v1.8.6) Native-speaker review of the new Vietnamese: work card briefings (`workBrief()`), "Cách làm" steps, `SORT_SETS.descs`, hint texts, the morning hint, the reply lines, and "Đang nhờ bạn"
 - [ ] (v1.8.6) Photo gaps: Thảo's "wavy" hair has no matching style (`long` is a flat box). Toàn's polo collar is not modelled. No desk-3 plant pot was found in the code. Confirm with the user whether these are acceptable or need a new style
-- [ ] (v1.8.6) `tools/macapp/Info.plist` and `dist/MinhLee.app/Contents/Info.plist` still read `CFBundleShortVersionString` 1.8.5. Set both to 1.8.6 on the next rebuild (not changed in the docs pass)
+- [ ] (v1.8.6, still open at v1.8.7) `tools/macapp/Info.plist` and `dist/MinhLee.app/Contents/Info.plist` still read `CFBundleShortVersionString` 1.8.5. Set both to 1.8.7 (the current release) on the next macOS rebuild. Not changed in the v1.8.7 docs pass
 - [ ] (v1.8.6) Look-check Thông, Thảo, and Toàn at the default camera distance (Vừa) on a real device. Headless Chrome only
+
+Surprise trigger (v1.8.7), `docs/spec/noi-dung-bat-ngo.md` §1 and AC-40:
+
+- [ ] (v1.8.7) Check the proximity trigger on a real phone (touch movement) and in Safari, Firefox, and Android Chrome. Headless Chrome only (far: not fired; near: fired)
+- [ ] (v1.8.7) Playtest the 4.2 m radius and the 150-game-minute window (and the 17:10 cut-off). Not tuned. Check that players do not miss most surprises, and that the no-npc surprises (`wifi`, `gift`) feel right
+- [ ] (v1.8.7) Native-speaker review of the three narration strings changed from "ông" to "anh" for Chủ tịt in `SURPRISES`
 
 ## Blocked
 

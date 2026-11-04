@@ -88,8 +88,10 @@ Missing a milestone does not end the game or count against you. Close the menu w
 
 ### Surprises
 
-- Each day, **3 surprises** happen at random times. On busy days there are 4. A card pops up with **3 choices**. Each choice has its own result, and changes your mood, your energy, or how close you are with someone.
-- Some surprises involve one particular coworker. If that person is out of the office, the surprise may skip.
+- Each day, **3 surprises** are planned for random times. On busy days there are 4. A card pops up with **3 choices**. Each choice has its own result, and changes your mood, your energy, or how close you are with someone.
+- A surprise does not pop up from wherever you are. Once its time comes, it waits until you **walk up close to the coworker involved**, within a few steps of them. Then the card appears. If the surprise has no particular coworker, walk near any coworker who is in the office.
+- If you do not get close to the right person in time, the surprise is skipped for that day. It waits up to 2½ hours on the clock, and never past 5:10 pm. Nothing is shown when a surprise is skipped.
+- Some surprises involve one particular coworker. If that person is out of the office, that surprise will not come up.
 - Sometimes a **mystery gift box** turns up. Pick one of the three boxes to see what is inside.
 - The same surprise does not come back on the next day.
 

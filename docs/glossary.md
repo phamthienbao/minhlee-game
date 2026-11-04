@@ -419,3 +419,7 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 **Người nhờ (requester)** — *(needs definition)* The coworker who asks the player for a desk task, stored as `from` in `SORT_SETS` and `ORDER_SETS`: `bao` (Anh Bảo) or `an3` (Chị Ba). The work card shows them with the role "Đang nhờ bạn". On completion they gain +3 affinity and send a reply card. Added v1.8.6.
 
 **Nhãn Bàn của bạn (desk label, `deskTag`)** — *(needs definition)* The yellow "💻 Bàn của bạn" label above the player's desk, built with `Bubbles.makeTag()` in `init()`. Its horizontal position is clamped to the screen edges to show the direction of the desk. Hidden in list mode, while sitting, after the three daily tasks, and when away from the desk. Added v1.8.6.
+
+**Khoảng cách gần bất ngờ (surprise proximity)** — *(needs definition)* The 4.2 m distance (`CFG.SURPRISE_NEAR`) the player must stand from the related coworker, after a surprise's time, for the surprise to fire. Added v1.8.7.
+
+**Bỏ qua bất ngờ (skipped surprise)** — *(needs definition)* A surprise not triggered within 150 game-minutes after its time, or by 17:10. It is skipped for the day with nothing shown. Added v1.8.7.

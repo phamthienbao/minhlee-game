@@ -204,3 +204,44 @@ Moved from `docs/tasks.md` on 2026-11-04 to keep that file under 300 lines. Entr
   - [x] Universal binary checked with `lipo -info` (x86_64 arm64). Signature checked with `codesign --verify --deep --strict`. `dist/MinhLee.app/Contents/Resources/index.html` is byte-identical to `index-offline.html`
   - [x] Yến's greeting `say.greet[1]` ("Trời ơi cái mặt này! Mới sáng ra đã… là sao?") now tagged `@am`. A `@pm` greeting added as `say.greet[3]`. Closes the v1.4.4 known issue (afternoon leak). Text change in `index.html` (section 2, Yến)
   - [x] Docs: `CLAUDE.md`, `docs/deploy.md` (option 4), `docs/spec/phan-phoi-offline.md` (§8), `docs/spec/dong-nghiep.md`, `docs/spec/mot-ngay-o-cong-ty.md`, `docs/product-guide.md`, `docs/glossary.md`, `docs/changelog.md`, `docs/tasks.md`, `docs/archive/tasks-done-2026-11.md` (new)
+
+## Done (v1.7.0 to v1.8.1, moved from tasks.md in v1.8.7)
+
+- [x] v1.8.1 (2026-11-04): Nam's "bé Hạnh" teasing nickname for Chủ tịt (Thạnh): playful lines, a playful four-line duo, and the meaning recorded in the docs. Details: `docs/changelog.md` v1.8.1, `docs/spec/dong-nghiep.md` §1–2, `docs/spec/noi-dung-bat-ngo.md` §2
+  - [x] `say.idle` and `say.chat` lines for Nam, a `say.chat` reply for Thạnh, and the playful `nam`–`thanh` duo in `DUOS` (`index.html`, section 2 and the variety block)
+  - [x] "bé Hạnh" meaning recorded in `docs/glossary.md`, `docs/product-guide.md`, `docs/spec/dong-nghiep.md` (confirmed by the product owner, 2026-11-04)
+  - [x] Headless-Chrome full-day run and content id checks, as reported by the requester; static check of `DUOS` and `say.absent` ids in the doc pass
+
+- [x] v1.8.0 (2026-11-04): goal card larger and tappable, mission board in the pause menu (playtest feedback). Details: `docs/changelog.md` v1.8.0, `docs/spec/bang-nhiem-vu.md`
+  - [x] Goal card (`updateHud()`, `.obj` CSS): 🎯 milestone + hint + "Chạm để xem cả bảng nhiệm vụ", 16px, stronger border; tap calls `pauseGame()` (`init()`, `#hud-obj`)
+  - [x] Pause menu mission board (`missionBoard()`, `.qb` CSS) under "▶ Tiếp tục": current goal card, milestone rows with ✅ ▶️ ⏳ ⏭, side tasks from `extraTasks()`
+  - [x] Headless Chrome unit check of the board at 08:30 and 14:50, and of tap-to-open (reported by requester; not re-run in the doc pass)
+  - [x] Screenshots of the pause board and goal card at 500 px width (reported as readable)
+  - [x] macOS app self-test passed on the rebuilt app (reported)
+  - [x] `index-offline.html`, `dist/MinhLee.app`, `dist/netlify/index.html` rebuilt; the three are byte-identical (checked in the doc pass)
+  - [x] Docs: `CLAUDE.md`, `docs/spec/bang-nhiem-vu.md` (new), `docs/spec/mot-ngay-o-cong-ty.md`, `docs/product-guide.md`, `docs/glossary.md`, `docs/changelog.md`, `docs/tasks.md`
+
+- [x] v1.7.2 (2026-11-04): diary intro depends on context (no more "0 ngày làm việc" during day 1). Details: `docs/changelog.md` v1.7.2, `docs/spec/mot-ngay-o-cong-ty.md` §4.2 and AC-27
+  - [x] `showDiary()` (`index.html` section 13): mid-day intro with the workday number and "written at the end of the day", day-1 line when there are no entries, days-worked or "none recorded" line on the title screen and after the day
+  - [x] Headless Chrome unit check of mid-day day 1, mid-day day 2, and the title screen (reported by the requester; not re-run in the doc pass)
+  - [x] `index-offline.html`, `dist/MinhLee.app`, `dist/netlify/index.html` rebuilt (app and netlify copies byte-identical to `index-offline.html`)
+  - [x] Docs: `CLAUDE.md`, `docs/spec/mot-ngay-o-cong-ty.md`, `docs/product-guide.md`, `docs/changelog.md`, `docs/tasks.md`
+
+- [x] v1.7.1 (2026-11-04): Chị Ba's stand-up catchphrase with Chú 7's reply, Nam's lines before Chủ tịt arrives, and generic speech hooks. Details: `docs/changelog.md` v1.7.1, `docs/spec/dong-nghiep.md` §7.5
+  - [x] `say.stand` (3 variants) and `say.standReply` on `an3` (Chị Ba → Chú 7). Chance 55% (90% on `busy`), 60 s cooldown, only when on screen within 9.5 m (`standUpLine()`, `setGoal()`, `index.html` section 9)
+  - [x] Chú 7 chat line about the "bánh tét" nickname (`say.chat`, `an7`)
+  - [x] `say.absent` on `nam` (5 lines, `who: 'thanh'`), timer in `npcAmbient()` (section 9). Stops when Chủ tịt arrives
+  - [x] Headless-Chrome checks (2026-11-04): Nam 2+ lines in the first 50 game minutes while Chủ tịt hidden; Chị Ba line fired 11 of 12 forced attempts on a `busy` day; full-day harness with no JS errors and no collision violations
+  - [x] `index-offline.html`, `dist/MinhLee.app`, `dist/MinhLee-mac.zip`, `dist/netlify/index.html` rebuilt (`tools/build-offline.py`, `tools/build-mac-app.sh`, `tools/prepare-netlify.sh`)
+  - [x] Docs: `CLAUDE.md`, `docs/spec/dong-nghiep.md` (roster rows 7, 10, 11; §2; AC-65, AC-66; §7.5), `docs/product-guide.md`, `docs/glossary.md`, `docs/changelog.md`, `docs/tasks.md`
+
+- [x] v1.7.0 (2026-11-04): browser hardening for "no graphics" reports. Details: `docs/changelog.md` v1.7.0, `docs/spec/tuong-thich-trinh-duyet.md`
+  - [x] Environment check before the module runs: too-old browser (`#env-note`, "Trình duyệt chưa hỗ trợ" button), in-app browser banner ("Mở bằng trình duyệt") (`index.html` `<head>` script)
+  - [x] Renderer creation tries `antialias` on, then off; WebGL failure gives list mode and a title-screen reason (`init()`, `#env-note`)
+  - [x] Title-screen toggle `#btn-lite` (3D ↔ list mode) using `settings.lite` and `?lite`
+  - [x] Runtime fallbacks to list mode with a toast: render watchdog (150th counted frame, 0 draw calls) and context lost for more than 4 s (`frame()`, `webglcontextlost`, `fallbackToLite()`)
+  - [x] Boot-error text lists three things to try (`#boot-error`)
+  - [x] Headless Chrome: 3D full-day run, `?lite` run, mid-game `fallbackToLite()` run
+  - [x] Real Safari 27.0.1 on macOS 27: 3D scene rendered (226 draw calls, 6128 triangles, no errors). Temporary on-page diagnostic only
+  - [x] `index-offline.html`, `dist/MinhLee.app`, `dist/MinhLee-mac.zip` rebuilt. `--selftest` passed again
+  - [x] Docs: `CLAUDE.md`, `docs/spec/tuong-thich-trinh-duyet.md` (new), `docs/spec/phan-phoi-offline.md`, `docs/spec/mot-ngay-o-cong-ty.md`, `docs/deploy.md`, `docs/product-guide.md`, `docs/glossary.md`, `docs/changelog.md`, `docs/tasks.md`

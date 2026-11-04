@@ -260,7 +260,7 @@ function h(tag, props = {}, ...kids) {                                          
   return el;
 }
 
-const CFG = {
+const CFG = { SURPRISE_NEAR: 4.2,
   START: T('08:30'), END: T('17:30'),
   SPEED: 1.25,            // phút trong game trôi qua mỗi giây thực (≈ 7 phút cho cả ngày)
   FAST: 4,                // hệ số khi bấm tua nhanh
@@ -2185,11 +2185,13 @@ function tickClock(dt) {
   const prev = D.minute, rate = CFG.SPEED * (G.fast ? CFG.FAST : 1);
   D.minute = Math.min(CFG.END, D.minute + dt * rate); addEnergy(-(D.minute - prev) * 0.04 * D.theme.decay);
   processTimeEvents(prev, D.minute); applyTimeOfDay(D.minute);
-  if (G.mode === 'play' && !P.lock) {            // sự kiện bất ngờ: mỗi lần bật một chuyện, chờ người liên quan đến công ty
+  if (G.mode === 'play' && !P.lock) {            // sự kiện bất ngờ: đến giờ vẫn chờ, chỉ bật khi bạn đứng gần người liên quan
+    const near = (n) => n && n.state !== 'hidden' && Math.hypot(n.pos.x - P.pos.x, n.pos.z - P.pos.z) < CFG.SURPRISE_NEAR;
     for (const sp of D.surprises) {
       if (sp.fired || D.minute < sp.t) continue;
+      if (D.minute > Math.min(sp.t + 150, CFG.END - 20)) { sp.fired = true; continue; }     // chờ quá lâu thì bỏ qua, không làm phiền cuối ngày
       const rel = sp.ev.npc ? npcById(sp.ev.npc) : null;
-      if (rel && rel.state === 'hidden') { if (D.minute > sp.t + 90) sp.fired = true; continue; }
+      if (!(rel ? near(rel) : NPCS.some(near))) continue;
       sp.fired = true; fireSurprise(sp.ev); break;
     }
   }
