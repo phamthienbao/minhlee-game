@@ -1,25 +1,18 @@
 # Tasks
 
-Last updated: 2026-11-04 (v1.14.0, sit-and-work time-lapse and end-of-day reaction)
+Last updated: 2026-11-04 (v1.16.0, workday ends at 18:00 with a farewell scene)
 
 Legend: `[x]` done, `[ ]` todo, `[~]` in progress, `[!]` blocked.
 
 ## Done
 
-Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`. Done entries v1.8.2 to v1.8.6 were moved there in the v1.9.3 pass. Done entries v1.9.1 to v1.9.4 were moved there in the v1.10.0 pass. Done entries v1.9.0 and v1.9.5 were moved there in the v1.11.0 pass. Done entries v1.11.0 and v1.12.0 were moved there in the v1.14.0 pass. Done entries v1.10.0 and v1.10.1 were moved there in the v1.13.0 pass.
+Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`. Done entries v1.8.2 to v1.8.6 were moved there in the v1.9.3 pass. Done entries v1.9.1 to v1.9.4 were moved there in the v1.10.0 pass. Done entries v1.9.0 and v1.9.5 were moved there in the v1.11.0 pass. Done entries v1.11.0 and v1.12.0 were moved there in the v1.14.0 pass. Done entries v1.10.0 and v1.10.1 were moved there in the v1.13.0 pass. Done entries v1.13.0 and v1.14.0 were moved there in the v1.15.0 pass. The v1.15.0 Done entry and the closed `[x]` items of the other sections were moved there in the v1.16.0 pass.
 
-- [x] v1.14.0 (2026-11-04): sit-and-work time-lapse at the desk, and an end-of-day reaction when fewer than 2 desk tasks are done. Yến and Thảo now assign desk tasks. Spec: `docs/spec/ngoi-lam-viec.md`
-  - [x] `startTimelapse()`, `endTimelapse()`, `workNag()`, `workBrief()` (section 11). Timelapse branch of `update()` and `endDay()` (section 14). `WORK_QUOTA`, `WORK_NAG`, `WORK_VOICE`, and the new `SORT_SETS` and `ORDER_SETS` entries (variety block)
-  - [x] Headless Chrome (reported by requester): menu order, mode switch, overlay, clock 15 game min in 3 s, yaw orbit, tap restores camera and menu, auto-stop at 09:00, four assigners' reactions, no-reaction case
-  - [ ] Not tested on touch, over a full real-time day, or with a screenshot of the orbit. See Follow-ups, v1.14.0
-  - [x] Docs: changelog, `docs/spec/ngoi-lam-viec.md` (new), `docs/spec/mot-ngay-o-cong-ty.md`, `docs/spec/dong-nghiep.md`, `docs/product-guide.md`, `docs/glossary.md`
-  - [ ] Chủ tịt and Nam's reaction lines are not reachable (`docs/spec/ngoi-lam-viec.md` §3.5). See Follow-ups, v1.14.0
-
-- [x] v1.13.0 (2026-11-04): document quest without hints, and "Rớt mạng" wording. The cabinet card, the afternoon hint, and the mission row no longer name the document. "🔁 Hỏi lại" in the asker's talk menu repeats the ask at stage 2. A wrong pick brings the asker's reaction in their own voice (`WRONG_DOC`, 5 askers, 2–3 lines each). Yến and Thảo are new askers. `DOC_QUESTS` has 5 entries and `DOC_NAMES` 6. The `wifi` surprise is retitled "Rớt mạng" (3 strings changed). Details: `docs/changelog.md` v1.13.0, `docs/spec/nhiem-vu-tai-lieu.md`, AC-95 to AC-99
-  - [x] `DOC_QUESTS`, `WRONG_DOC`, `DOC_NAMES`, and the `wifi` surprise (variety block, between sections 2 and 3). `afternoonHint()` and `extraTasks()` (section 10). `startTalk()`, `questAsk()`, `cabinetFlow()` (section 11)
-  - [x] Headless Chrome (reported by requester): all 5 askers give a personality line that names the needed document, no hint text, correct pick completes at stage 3
-  - [ ] Not tested over a full day or on a real device. "🔁 Hỏi lại" and the 5-button cabinet were not recorded in the headless run. Wording not native-reviewed. See Follow-ups, v1.13.0
-  - [x] Docs: changelog, `docs/spec/nhiem-vu-tai-lieu.md` (new), `docs/spec/mot-ngay-o-cong-ty.md`, `docs/spec/bang-nhiem-vu.md`, `docs/spec/dong-nghiep.md` (§7.7; §8 moved to `docs/spec/ngoai-hinh-dong-nghiep.md`), `docs/spec/noi-dung-bat-ngo.md`, `docs/product-guide.md`, `docs/glossary.md`
+- [x] v1.16.0 (2026-11-04): the workday ends at 18:00 (was 17:30), followed by a farewell scene. `CFG.END` is 18:00 and `CFG.FAREWELL` 40. The camera orbits, coworkers leave one by one with a goodbye line, Chủ tịt leaves last, Toàn stays until 7 pm, then the end card. Details: `docs/changelog.md` v1.16.0, `docs/spec/tan-ca-18-gio.md`, AC-117 to AC-124
+  - [x] Code (`index.html`): `CFG.END` and `CFG.FAREWELL`, leave times (`habits.leave`), `startFarewell()`, `endFarewell()`, `farewellEndText()`, `FAREWELL_LINES`, `TOD` 18:40 keyframe, `wrap` milestone at 17:30, Tùng's quirk at 17:35
+  - [x] Headless Chrome (reported by requester): scene entered; 13 coworkers left in order (Chủ tịt last); Toàn still seated; end card at about 18:32. Not re-run in the doc pass
+  - [ ] Not verified: the scene in a screenshot or video, the camera distance after the restore, touch and real devices, native review of the goodbye lines. See Follow-ups, v1.16.0
+  - [x] Docs: changelog, `docs/spec/tan-ca-18-gio.md` (new), `docs/spec/mot-ngay-o-cong-ty.md`, `docs/spec/ngoi-lam-viec.md`, `docs/spec/dong-nghiep.md`, `docs/spec/bang-nhiem-vu.md`, `docs/spec/the-gioi-lien-tuc.md`, `docs/spec/noi-dung-bat-ngo.md`, `docs/product-guide.md`, `docs/glossary.md`
 
 ## In progress
 
@@ -27,57 +20,59 @@ Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`.
 
 ## Known defects
 
-- [x] (v1.10.0, closed 2026-11-04) Anh Bảo's shirt colour is not a defect. The red-and-white striped shirt (`pattern: 'redwhite'`, `index.html` line 481) is intentional, per the user's explicit request for this release. The solid polo of the first brief is not used. The look is recorded in `docs/spec/dong-nghiep.md` §8
-- [x] (v1.10.0, closed 2026-11-04) Nguyên–Chị Thảo duo scripts (`nguyen`→`thao`, `index.html` `DUOS`) never played. Fixed in `npcAmbient()`: a sofa-seated Nguyên may start a visit, to Chị Thảo only, who must be seated at `desk:work`. Headless: 6 of 6 runs. Not tested on a real device
-- [x] (v1.10.0, closed 2026-11-04) The arrival toast was reworded; later removed entirely in v1.11.0 at the user's request (`index.html`, `processTimeEvents()`)
 - [ ] (v1.8.4) Not tested on a real phone. Check the lying coworker's name tag and speech bubble (Nguyên on the daybed) in portrait and landscape, under the top bar and in the notch or safe-area zone
-- [x] (v1.8.4, closed 2026-11-04) The ambient on-screen gate in `tryNpcSay()` (`index.html`, `Bubbles.onScreen(n.pos.x, root.y + 1.8, n.pos.z)`) still tests the standing point at the coworker's position, not `npcAnchor()`. For a lying coworker the gate can pass while the bubble anchor is off screen (the bubble is then hidden), or block a bubble that would be visible. Found by reading the code, not reproduced. Decide whether the gate should use `npcHead(n)`. Not changed in v1.8.4 (scope: anchors only) **Fixed:** `Bubbles.onScreen()` now gets `npcAnchor(n, …, false)`, the same point as the bubble. Not reproduced in a browser; checked by reading the code.
 - [ ] (v1.7.0) Root cause of the "no graphics" reports after sharing is not identified. v1.7.0 adds detection and fallbacks but does not fix a known cause. Ask the reporters for browser, version, device, and whether the page was opened inside an app. Check whether `index.html` or `index-offline.html` was used
 - [ ] (v1.7.0) Players said they could open the game in Safari afterwards. The cause is not identified. Record which browser, file, and app they used
 - [ ] Investigate transient NPC overlap samples: one in thousands of checks in the v1.0.3 harness run, and several in the long run of the v1.1.0 12-day harness run. All were transient, not sustained. Confirm they resolve on their own and are not a regression, for example by logging the two NPCs involved on a repeat harness run. Known minor issue for v1.1.0.
 - [ ] Friday milk-tea roll in `pickTheme()` ignores `lastTheme`, so a Thursday milk-tea day can repeat on Friday. Fix by applying the `lastTheme` filter to the Friday roll too. Found by reading the code, not reproduced in the harness.
 - [ ] Weekend bonus (`G.bonus`) is held in memory only. Reloading the page on the weekend screen drops the bonus. Decide whether to persist it in `Store` or accept the loss.
 - [ ] "Tin vui: App Dating" (`dating100k`): the card text uses the live user count, but the diary moment and two option results still say "vượt 100 nghìn lượt tải" (fixed text). Make the wording agree.
-- [ ] A surprise skipped (150 game-minutes after its time, or at 17:10, while the player was not near the coworker) is still written to `recentEv` when the day ends, though the player never saw it. Decide whether `recentEv` should record only surprises that were shown. (Wording updated for v1.8.7; the old rule was 90 game-minutes for a hidden coworker.)
+- [ ] A surprise skipped (150 game-minutes after its time, or at 17:40 (17:10 before v1.16.0), while the player was not near the coworker) is still written to `recentEv` when the day ends, though the player never saw it. Decide whether `recentEv` should record only surprises that were shown. (Wording updated for v1.8.7; the old rule was 90 game-minutes for a hidden coworker.)
 - [ ] Affinity changes from surprise choices are written at once (`saveProgress()`), so they survive an abandoned day while the day record does not. Decide whether that is intended, then document it or change it.
-- [x] (v1.1.2, resolved 2026-11-04 in source) `index.html` section 2 field comment (around line 239) lists `style` values without `'fringe'` and does not mention `mustache`, `glassColor`, or `pattern: 'stripe'`. Update the comment when `index.html` is next edited. Not changed in v1.1.2 (`index.html` was read-only). Checked 2026-11-04: the header now lists `fringe`, `glassColor`, `mustache`, and `pattern` `'stripe'`
 - [ ] Docs: `docs/spec/mot-ngay-o-cong-ty.md` section 4.4 labels the Thạnh gingham look "v1.1.1", but this release is v1.1.0. Confirm which release shipped the look and fix the label. The changelog entry for v1.1.0 mentions it with this open question.
-- [x] (v1.2.0, fixed v1.3.0) Nguyên's birthday never fired. His offset `(13 × 5 + 3) % 65` = 3 equalled Chủ tịt's offset, and `NPCS.find()` returned Chủ tịt first. Fixed: offset is `(index × 4 + 3) % 65`, unique per coworker (Nguyên = 55). `docs/spec/the-gioi-lien-tuc.md` §7 and AC-35 updated. Not yet confirmed over a 65-day run (see Follow-ups).
-- [x] (v1.2.0, fixed v1.3.0) The random cake party in `startDay()` could pick Nguyên on a remote day. The pick is now `NPCS.filter(n.id !== 'thao' && n.times.arrive < 99999)`, so remote coworkers are excluded. Found by reading the code, not reproduced.
 - [ ] (v1.2.0) `index.html` section 2 header comment (around line 240) does not describe `desk: null`, `habits.lounge`, or `habits.attendance`. Update when `index.html` is next edited. Not changed in v1.2.0 (docs-only pass).
 - [ ] (v1.2.0) Chị Ba's line in surprise `dammhaam` uses the real name: "Chị xin lỗi anh Thạnh!". Confirm it is intended, or change it to the in-game name convention (`docs/spec/dong-nghiep.md` §2).
-- [x] `{{anh}}` defect in Nam's greeting, fixed in v1.0.2 (see Done).
-- [x] (v1.4.3, resolved in source 2026-11-04, v1.4.4) Surprise `dating100k`, option 1 now reads "Em mời trà sữa!"
-- [x] (v1.4.4, closed v1.6.0) Yến's greeting `say.greet[1]` ("Mới sáng ra đã… là sao?") is now tagged `@am`, and a `@pm` greeting was added. Source check only (`index.html` line 402)
 
 ## Open questions
 
-- [x] (resolved 2026-11-04, v1.8.1, per the user) Who is "bé Hạnh"? Nam's teasing nickname for Chủ tịt (Thạnh). Serious work talk uses "Thạnh". Was: who or what is "bé Hạnh"? It appears in 3 of Nam's `say.absent` lines ("Nhớ bé Hạnh ghê…", "Nhớ bé Hạnh… với cả ly trà sữa của Chủ tịt nữa"). The game does not explain it, so the answer is recorded only in `docs/spec/dong-nghiep.md` §1–2 and the glossary (annotated v1.8.1). Whether to explain it in the game itself is still open
 - [ ] (v1.7.1) Should Chị Ba's stand-up line also fire on a "pressure" event? The brief said "when she stands up from her seat or feels pressure". The code triggers `say.stand` only when a seated coworker stands up (`setGoal()`). "Áp lực quá!" is one of its three variants. No pressure event exists. Confirm the current trigger, or name the event to add
-- [x] (closed 2026-11-04) Nguyên's role is `Designer` (confirmed). No gender is recorded: none was stated, so the "assumed male" note is removed. `role` in `NPC_PROFILES`, the product guide, and the glossary are updated.
-- [x] (closed 2026-11-04) Nam is the same age as Chủ tịt and Chị Ba. His lines are peer-level (mình / bạn). Recorded in `docs/spec/dong-nghiep.md` §2.
 - [ ] (v1.2.0) Toàn's age tier is still unspecified. Specify it before Toàn's address terms are changed.
-- [x] (closed 2026-11-04) Spelling confirmed: "Chủ tịt", not "Chủ tịch". No code or text change needed.
-- [x] (closed 2026-11-04) Reading confirmed: Anh Bảo is the oldest and is called "Anh Bảo". Chị Ba calls Chủ tịt "anh".
 - [ ] (v1.3.1) Yến's nickname "Én Pink" (`nick` in `NPC_PROFILES`, `docs/spec/dong-nghiep.md`, `docs/product-guide.md`) no longer matches her black top (v1.3.1; was pink). Cosmetic. Decide whether to keep the nickname, change it, or change the top back. Not changed in v1.3.1 (`index.html` was read-only)
 - [ ] (v1.3.0) Confirm the two assumptions that are not in the floor plan: the player desk at the bottom left (left of Thông, `PLAYER_DESK`), and the meeting room at the top centre (`MEET_ROOM`). The daybed, sofa, printer, and notice board positions also follow the brief, not the SVG. See `docs/spec/van-phong-layout.md` §6
 - [ ] (2026-11-04) Confirm the conversation card contents. The code shows the name, the job-title line (real name and nickname when present), affinity hearts, a status sentence, and the coworker's line. The brief said "status and the character's line" only. Docs follow the code. Decide whether the name header and hearts stay.
-- [x] (v1.4.0, closed 2026-11-04 in v1.4.3) Duo `an7`–`thong` (Chú 7 and Thông): the backup and worry lines are removed. Rewritten to the tea persona ("Thông ơi, uống trà không? Ô long mới…")
-- [ ] (v1.4.0) Tone review of the "nhậu" content (after-work drinks, kept light). Covers Tùng's greetings, chats, note, the 16:50 quirk, duos `tung`–`phu` and `thao`–`tung`, and Tùng's dare surprise `tungthach`. The intent is light and wholesome. The user is asked to confirm the tone
+- [ ] (v1.4.0) Tone review of the "nhậu" content (after-work drinks, kept light). Covers Tùng's greetings, chats, note, the 17:35 quirk (16:50 before v1.16.0), duos `tung`–`phu` and `thao`–`tung`, and Tùng's dare surprise `tungthach`. The intent is light and wholesome. The user is asked to confirm the tone
 - [ ] (v1.4.3) Confirm the younger-coworker list used for Chủ tịt's address style. Hiện is stated as the youngest. Chú 7, Trung, and Nguyên are assumed younger. Nam (same age as Chủ tịt) gets the humble style. Confirm or correct (`docs/spec/dong-nghiep.md` §2)
 
 ## Follow-ups
 
+v1.16.0 (workday ends at 18:00, farewell scene):
+
+- [ ] (v1.16.0) View the farewell scene in a browser (screenshot or short video): the orbit, the goodbye bubbles, Toàn's line at 18:03, and the end card. Check the framing at the default preset (Vừa), and that the restored distance equals the preset (the headless run restored 10.5). `docs/spec/tan-ca-18-gio.md` §8
+- [ ] (v1.16.0) Toàn's 19:00 leave is never visible in play, because the scene ends at 18:40. Decide whether it should show, or stay hidden on purpose
+- [ ] (v1.16.0) Save during the scene: `Store.session` is written every 5 s, so a reload resumes at about 18:xx and runs the end of the scene again. `D.fwDone` is not saved. Decide whether to skip saves in `farewell` mode. `docs/spec/tan-ca-18-gio.md` §9
+- [ ] (v1.16.0) Remaining "17:30" wording: the docs were swept in this pass. In `index.html`, the 17:30 uses (`TOD` light, `wrap`, the "half an hour left" toast, `periodGreet()`, desk-chat window) are intended. Check the sign and the on-screen text by eye
+- [ ] (v1.16.0) Early-leave confirm and surprise skip moved from 17:10 to 17:40 (`CFG.END - 20`), so the door leaves without a confirm card from 17:40. Check that this is wanted, and playtest it. Also decide whether the window should be its own constant
+- [ ] (v1.16.0) The `wrap` milestone is never ⏭ in play (`docs/spec/bang-nhiem-vu.md` §3.2). Decide whether it should show ✅ when the day ends
+- [ ] (v1.16.0) Native-speaker review of the 14 goodbye lines (`FAREWELL_LINES`), including Chủ tịt's and Toàn's
+- [ ] (v1.16.0) Touch test: the scene on a phone or tablet, the end-card button, and that no control stays locked after the scene
+- [ ] (v1.16.0) Full real-time day: about 456 seconds from 08:30 to 18:00 at normal speed, then the nag, note card, and summary order. Not recorded
+
+v1.15.0 (every coworker assigns desk work):
+
+- [ ] (v1.15.0) Native-speaker review of about 40 new strings: the sort and order sets, the 10 work voices, and the 10 reaction lines. `docs/spec/ngoi-lam-viec.md` §5
+- [ ] (v1.15.0) Balance of Chủ tịt's two order sets. He is picked for an order task 2 times in 15 sets, more than anyone else. Check that it does not feel too common. `docs/spec/ngoi-lam-viec.md` §3.4
+- [ ] (v1.15.0) Hint wording. The order hint `q` reads "hạn chót gần nhất" in the four older sets and "gấp nhất" in the new ones. Pick one wording and update the sets. `docs/spec/ngoi-lam-viec.md` §5
+- [ ] (v1.15.0) Play every new set to completion in a browser, and run one full day to see the end-of-day reactions of the new assigners (not recorded)
+
 v1.14.0 (sit-and-work time-lapse, end-of-day reaction):
 
-- [ ] (v1.14.0) Chủ tịt and Nam reaction lines (`WORK_NAG.thanh`, `WORK_NAG.nam`) are never shown: no set assigns work from them. Decide: give one of them a set, or remove the lines. `docs/spec/ngoi-lam-viec.md` §3.5
 - [ ] (v1.14.0) "No penalty" wording. The text "không tính điểm, không bị phạt gì" is not in `index.html` (checked 2026-11-04). The docs that still said "no penalty" (`docs/spec/mot-ngay-o-cong-ty.md` AC-71, `docs/product-guide.md` 9:00 row) are updated. Confirm the in-game briefing needs no penalty line
 - [ ] (v1.14.0) Tune `WORK_QUOTA` (2) and the losses (affinity −1 to −3, mood −1 to −5). Playtest how often the reaction fires over a week
 - [ ] (v1.14.0) View the camera orbit in a screenshot (target (0, 0.5), distance 13, pitch 0.85). Check the framing at the default preset and after the restore
 - [ ] (v1.14.0) Touch test: the overlay tap on a phone or tablet, and the time-lapse over the HUD. Check the Space and Enter keys on a keyboard-only setup
-- [ ] (v1.14.0) Full real-time day (about 108 seconds of time-lapse) and the 17:30 chain: time-lapse stops, then the reaction, the note card, and the summary
+- [ ] (v1.14.0) Full real-time day (about 114 seconds of time-lapse at 08:30 to 18:00) and the end-of-day chain: time-lapse stops, then (v1.16.0) the farewell scene, the reaction, the note card, and the summary
 - [ ] (v1.14.0) "▶ Bắt đầu làm" after a time-lapse calls `playerSit()` while the player is still seated. Check the sit-down animation and that the mini-game starts cleanly (code reading only)
-- [ ] (v1.14.0) Early leave ("Có, mình về thôi" before 17:10) also runs the reaction. Decide whether that is wanted
+- [ ] (v1.14.0) Early leave ("Có, mình về thôi" before 17:40; 17:10 before v1.16.0) also runs the reaction. Decide whether that is wanted
 - [ ] (v1.14.0) Anh Bảo has no `WORK_VOICE` entry (generic lines). Decide whether he needs his own voice
 - [ ] (v1.14.0) Native-speaker review: the nag lines, the Yến and Thảo sets and voice lines
 - [ ] (v1.14.0) `CLAUDE.md` is stale. Its Status says v1.8.5, the Docs list has no `docs/spec/ngoi-lam-viec.md`, and the Editing section has no time-lapse pointer. Update by hand (doc-keeper does not edit `CLAUDE.md`)
@@ -153,11 +148,8 @@ Verification gaps:
 - [ ] Hand-test Thạnh's 13:20 meditation quirk (eyes closed, line appears, no animation)
 - [ ] Visually check the title, north-wall "MinhLee" sign, and front-door "MinhLee" mat in a browser (text readable, not clipped). Checked in source only
 - [ ] (v1.4.1) Visually check the Phú, Nam, and Anh Bảo looks on a real device at the default camera distance (Vừa). Checked only in isolated headless-Chrome close-ups. Check the thin rect glasses and the plaid shirt
-- [x] (v1.4.1, closed in v1.9.5 by eye) Anh Bảo's look was an approximation from a written brief. Re-matched to the user's photo in v1.9.5. Side-by-side likeness check still open (v1.9.5 item)
 - [ ] (v1.8.5, partly closed in v1.8.6) Looks not yet built from a photo: Hiện. Toàn and Thông were updated from photos in v1.8.6. Bảo's look is still an approximation from a verbal description. Ask the user for photos before replacing these looks
 - [ ] (v1.8.5) Visually check Nguyên's new look (black side fringe, black top, no glasses) on a real device at the default camera distance (Vừa). Checked only in a headless-Chrome screenshot on the daybed
-- [x] (v1.8.5, closed 2026-11-04) Macintosh app version: `tools/macapp/Info.plist` and `dist/MinhLee.app/Contents/Info.plist` read `CFBundleShortVersionString` 1.8.5
-- [x] (v1.8.5, closed 2026-11-04) Changelog entries for v1.8.1 and v1.8.4 exist (they were out of order and were reordered; no numbers skipped)
 - [ ] (v1.3.1) Visually check the Yến, Chị Ba, and Thảo looks on a real device. Checked only in headless-Chrome screenshots. Check the Yến and Chị Ba glasses at the default camera distance (Vừa)
 - [ ] Visually check Thạnh's custom look (v1.1.1: short hair, rect glasses, round face, wide smile, gingham shirt) on a real device. Checked only in a headless-Chrome screenshot
 - [ ] (v1.1.2) Visually check Trung, Tùng, and Chú 7 looks on a real device. Checked only in headless-Chrome screenshots
@@ -215,14 +207,13 @@ Nam and Chủ tịt (v1.8.1 and v1.8.2), `docs/spec/dong-nghiep.md` §1–2 and 
 - [ ] (v1.8.1) Native-speaker review of the "bé Hạnh" teasing lines (`say.idle`, `say.chat`, the playful duo). Vietnamese wording not reviewed by a native speaker
 - [ ] (v1.8.2) Hand-check in a real browser: Nam–Thạnh visits (both scripts appear over several days, bubbles, visit end). Checked only in the headless harness
 - [ ] (v1.8.2) Measure the random script pick over a longer run (the split between the two Nam–Thạnh scripts is not recorded)
-- [x] (v1.8.1, closed 2026-11-04) The changelog v1.8.1 entry exists (it was out of order and is now between v1.8.2 and v1.8.0)
 
 Goal card and mission board (v1.8.0), `docs/spec/bang-nhiem-vu.md` §7:
 
 - [ ] (v1.8.0) Not tested on a real phone. Check the goal card's tap target, the 16px text, and its position under the top bar and notch (safe area), in portrait and landscape (MB-6)
 - [ ] (v1.8.0) Wording of the goal card, the mission board, and "Đã qua, không sao cả, ngày vẫn tiếp tục" not reviewed by a native Vietnamese speaker (MB-7)
 - [ ] (v1.8.0) The goal card is a `div` with a click handler, not a button. It cannot be reached with Tab or opened with Enter or Space. Decide whether to add `role="button"`, `tabindex="0"`, and a key handler. P, Esc, and ⏸ already pause
-- [ ] (v1.8.0) The 17:00 "Kết thúc ngày" milestone never shows ⏭ (its `done()` is always false). Decide whether it should show ✅ when the player leaves
+- [ ] (v1.8.0) The "Kết thúc ngày" (`wrap`) milestone, 17:30 since v1.16.0 (17:00 before), never shows ⏭ (its `done()` is always false). Decide whether it should show ✅ when the player leaves
 
 macOS app (v1.6.0), `docs/spec/phan-phoi-offline.md` §8:
 
@@ -236,7 +227,6 @@ macOS app (v1.6.0), `docs/spec/phan-phoi-offline.md` §8:
 - [ ] (v1.6.0) Keyboard play inside the app not tested by hand (the self-test clicked the start button only)
 - [ ] (v1.6.0) Not recorded: Edit > Paste into the name field, Toàn màn hình (Ctrl+Cmd+F), Tải lại game (Cmd+R), closing the window quits the app, and the load-failure alert. Check each by hand
 - [ ] (v1.6.0) Gatekeeper steps not tested on a second Mac (`docs/deploy.md` option 4)
-- [x] (v1.6.0, closed in v1.8.5) `tools/macapp/Info.plist` `CFBundleShortVersionString` now reads 1.8.5 (it read 1.6.0 at v1.7.0 and 1.8.0 through v1.8.4). `CFBundleVersion` is still 1 by design
 - [ ] (v1.6.0) `tools/macapp/main.swift`: the comment on `mediaTypesRequiringUserActionForPlayback = []` says audio starts after the first tap. An empty list lets media play without a user gesture. Check the real behavior, then fix the comment or the setting
 - [ ] (v1.6.0) `--selftest` (and its `print` calls) is compiled into the release binary. Decide whether to gate it behind `#if DEBUG`
 - [ ] (v1.6.0) The app keeps its own save in its WebKit storage, separate from browser saves. Not tested whether it shares a save with `index-offline.html` in a browser (cf. AC-O8)
@@ -256,13 +246,11 @@ Compatibility (v1.7.0), `docs/spec/tuong-thich-trinh-duyet.md`:
 - [ ] (v1.7.0) Decide whether to build a classic (non-module) bundle for browsers below the module and import-map minimums. Optional follow-up
 - [ ] (v1.7.0) The render watchdog checks one frame only (the 150th counted frame). Decide whether it should check continuously
 - [ ] (v1.7.0) On a slow connection, `#boot-error` appears 10 s after load if Three.js has not loaded yet, and hides once the game starts. Check this on a slow network, so players are not told to fix a connection that is only slow
-- [x] (v1.7.0, closed v1.8.3) `tools/prepare-netlify.sh` writes `dist/netlify/index.html` (a copy of the offline file). Now described in `docs/deploy.md` option 2 (checked in the doc pass)
 
 Help text (v1.8.3), `docs/spec/tuong-thich-trinh-duyet.md` §3 and §5 (CP-12 to CP-14):
 
 - [ ] (v1.8.3) Hand-check every help message on the real affected machines: Safari on iPhone and Mac, updated Chrome on Android and Windows, an in-app browser (Zalo, Messenger) on a real phone, and Chrome with hardware acceleration off (CP-14)
 - [ ] (v1.8.3) Native-speaker review of the new suggestion wording: too-old message, in-app banner, boot-error text, WebGL title note, switch toast, and list-mode note. Vietnamese wording not reviewed by a native speaker
-- [x] (v1.8.3, accepted as-is 2026-11-04) Boot-error text: tip ① is "mở bằng Safari, hoặc cập nhật Chrome lên bản mới nhất", placed first after the lead-in "Game chưa khởi động được. Bạn thử:". Accepted as-is
 - [ ] (v1.8.3) Check whether the Safari / Chrome suggestion helps the "no graphics" reports. The cause is still unidentified (see Known defects, v1.7.0)
 - [ ] (v1.8.3) Re-run the headless Chrome check (WebGL creation forced to fail: title note, toast, list-mode note, boot-error text) on the next release. The v1.8.3 run is recorded only as reported by the requester
 
@@ -273,21 +261,19 @@ Desk work and looks (v1.8.6), `docs/spec/mot-ngay-o-cong-ty.md` AC-71 to AC-73, 
 - [ ] (v1.8.6) Decide whether `D.work` should survive a reload or quit. It lives in memory (`D`), so an unfinished task is lost, the same as the rest of the day
 - [ ] (v1.8.6) Check the desk label on a real phone: pinned to a side edge when the desk is off-screen sideways, hidden under the top bar and near the bottom, hidden after 3 tasks
 - [ ] (v1.8.6) Native-speaker review of the new Vietnamese: work card briefings (`workBrief()`), "Cách làm" steps, `SORT_SETS.descs`, hint texts, the morning hint, the reply lines, and "Đang nhờ bạn"
-- [x] (v1.8.6, Toàn's polo collar closed 2026-11-04 in v1.9.4) Photo gaps: Toàn's collar is now modelled as a navy `collar` (Thảo's wavy hair closed in v1.9.2). No desk-3 plant pot was found in the code. Confirm with the user whether that is acceptable or needs a new style
 - [ ] (v1.8.6, still open at v1.8.7) `tools/macapp/Info.plist` and `dist/MinhLee.app/Contents/Info.plist` still read `CFBundleShortVersionString` 1.8.5. Set both to 1.8.7 (the current release) on the next macOS rebuild. Not changed in the v1.8.7 docs pass
 - [ ] (v1.8.6) Look-check Thông, Thảo, and Toàn at the default camera distance (Vừa) on a real device. Headless Chrome only
 
 Surprise trigger (v1.8.7), `docs/spec/noi-dung-bat-ngo.md` §1 and AC-40:
 
 - [ ] (v1.8.7) Check the proximity trigger on a real phone (touch movement) and in Safari, Firefox, and Android Chrome. Headless Chrome only (far: not fired; near: fired)
-- [ ] (v1.8.7) Playtest the 4.2 m radius and the 150-game-minute window (and the 17:10 cut-off). Not tuned. Check that players do not miss most surprises, and that the no-npc surprises (`wifi`, `gift`) feel right
+- [ ] (v1.8.7) Playtest the 4.2 m radius and the 150-game-minute window (and the 17:40 cut-off, 17:10 before v1.16.0). Not tuned. Check that players do not miss most surprises, and that the no-npc surprises (`wifi`, `gift`) feel right
 - [ ] (v1.8.7) Native-speaker review of the three narration strings changed from "ông" to "anh" for Chủ tịt in `SURPRISES`
 
 Detailed looks (v1.9.2), `docs/spec/dong-nghiep.md` §8:
 
 - [ ] (v1.9.2) Look-check Thạnh, Phú, Thảo, Yến, and Thông at the default camera distance (Vừa) on a real device. Headless Chrome lineup only
 - [ ] (v1.9.2) Likeness check of the five detailed looks against the reference photos, side by side. Yến, Thạnh, and Phú were re-matched by eye in v1.9.3; Thảo and Thông not re-checked
-- [x] (v1.9.2, closed 2026-11-04 in v1.9.4) Next batch: all remaining coworkers are on `look.detail`. Anh Bảo's look is still an approximation (see the v1.4.1 item)
 - [ ] (v1.9.4) Likeness check against the reference photos, side by side, for Trung, Toàn, Hiện, Tùng, Nam, Chú 7, Chị Ba, Anh Bảo, and Nguyên. Their looks were upgraded without a photo re-check. Some may need colour or shape changes
 - [ ] (v1.9.4) Look-check all nine on a real device at the default camera distance (Vừa). Headless Chrome lineup only. Check Chị Ba's glasses and Hiện's round glasses, which are the most visible changes
 - [ ] (v1.9.4) Confirm Chị Ba's gruff, flat mouth (no smile) against her reference photo. It was set from the description, not re-checked

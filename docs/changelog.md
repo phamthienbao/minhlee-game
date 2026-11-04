@@ -2,6 +2,94 @@
 
 All notable changes to "Một Ngày Ở MinhLee" (formerly "Một Ngày Ở Công Ty", renamed in v1.0.3). Newest first. Entries are appended, never rewritten.
 
+## v1.16.0 — 2026-11-04
+
+The workday now ends at 18:00 instead of 17:30. At 18:00 a farewell scene starts: the camera orbits the office, coworkers say goodbye and leave one by one, Toàn stays late, and then the end-of-day card appears. A full day takes about 456 real seconds at normal speed (was 432).
+
+### Added
+
+- Farewell scene in `index.html` section 14: `startFarewell()`, `endFarewell()`, `farewellEndText()`, the `farewell` mode (`G.mode = 'farewell'`, saved camera in `G.fw`), and the farewell branch of `update()`. `tickClock()` starts it when `D.minute >= CFG.END` and the day has not ended (`D.ended`). If the scene already ran that day (`D.fwDone`), `tickClock()` shows the end card instead. Spec: `docs/spec/tan-ca-18-gio.md`, AC-117 to AC-124.
+- `CFG.FAREWELL = 40` (section 1): game-minutes the clock may run past `CFG.END` during the scene. `tickClock()` caps the clock at `CFG.END + CFG.FAREWELL` (18:40) while `G.fw` is set.
+- `FAREWELL_LINES` (variety block, before `UNLOCKS`): one goodbye line per coworker (14 entries). Each coworker says its line once, when its goal becomes `leave`. Toàn says his line at 18:03 if he is seated (`G.fw.toanSaid`).
+- Light keyframe at 18:40 in `TOD` (dusk): `sun` 0x8a78b0 (intensity 0.7), `hs` 0xb0a8d8, `hg` 0x8a7a78, `hi` 0.85, `bg` 0x4f4a72, `win` 0xffd9a0.
+- Toast at 17:30 in `processTimeEvents()`: "🌇 Còn nửa tiếng nữa là tan ca. Đến 6 giờ cả văn phòng sẽ ra về!"
+- Glossary terms (`docs/glossary.md`): Tan ca, farewell mode, `CFG.END`, `CFG.FAREWELL`, `FAREWELL_LINES`, `habits.leave`, Toàn ở lại.
+
+### Changed
+
+- `CFG.END` 17:30 → 18:00 (`index.html`, section 1). The day runs 08:30 to 18:00. `applyTimeOfDay()` uses the new `CFG.END` for the sun arc.
+- `habits.leave` for every coworker is 18:00 (`resetNpcDay()` adds `rand(-3, 5)` minutes), except Chủ tịt at 18:12 (he leaves last among those who go) and Toàn at 19:00 (he stays after the scene). Nguyên (was 17:00) and Chị Ba (was 17:15) are now 18:00.
+- Milestone `wrap` (`MS`, section 10): starts at 17:30 (was 17:00). Hint: "Sắp hết giờ rồi! Đúng 6 giờ cả văn phòng tan ca. Nhớ để lại lời nhắn trước khi về nhé."
+- `periodGreet()` (section 9): "Chiều rồi" until 17:30, then "Sắp tan làm rồi".
+- Desk-chat option "💼 Trao đổi công việc" in `startTalk()` (section 12): shown from 09:00 until 17:30.
+- Tùng's quirk "Sắp tan làm rồi! Ai đi nhậu giơ tay!" (`ctx: 'any'`) moved from 16:50 to 17:35.
+- Early-leave confirm at the front door (section 11, "Ra về" spot): the confirm card shows before `CFG.END - 20` (17:40, was 17:10). From 17:40 the door calls `endDay()` directly.
+- Surprise skip cut-off in `tickClock()`: `Math.min(sp.t + 150, CFG.END - 20)`, so 17:40 (was 17:10). Changes the skip rule in `docs/spec/noi-dung-bat-ngo.md` §1 and AC-40.
+- Docs: `docs/spec/mot-ngay-o-cong-ty.md` (goal, clock, modes, AC-3, AC-6, AC-117 to AC-124 row), `docs/spec/ngoi-lam-viec.md` (§1, §2.3, §2.4, §3.2, AC-106, AC-114), `docs/spec/dong-nghiep.md` (status, Tùng quirk, Nguyên leave time), `docs/spec/bang-nhiem-vu.md` (§3.2, §7, status), `docs/spec/the-gioi-lien-tuc.md` (ending row), `docs/spec/noi-dung-bat-ngo.md` (§1, AC-40), `docs/spec/tan-ca-18-gio.md` (new), `docs/product-guide.md` (day length, time table, "The farewell scene at 6 pm", FAQ "What happens at 6 pm?"), `docs/glossary.md` (outdated flags on "Ngày làm" and "Bỏ qua bất ngờ"), `docs/tasks.md`. Closed `[x]` items and the v1.15.0 Done entry moved to `docs/archive/tasks-done-2026-11.md` to keep `docs/tasks.md` under 300 lines.
+
+### Verification
+
+- Headless Chrome simulation (reported by the requester, not in the repo): the scene started at 18:00. 13 coworkers left in this order: nguyen, thao, nam, yen, hien, an7, an3, thong, bao, trung, tung, phu, thanh (Chủ tịt last). Toàn stayed seated. The scene ended and the end card appeared at about 18:32. The camera was restored (distance 10.5, equal to the saved value, not compared with the preset). The mode returned to `play`, then `dialog` for the card.
+- Not recorded: a screenshot or video of the scene, touch and real devices, native-speaker review of `FAREWELL_LINES`, and the text of the end card when everyone has left, which was not checked separately.
+
+### Known limits
+
+- `Store.session` is written every 5 s during the scene. A reload resumes at about 18:xx and runs the end of the scene again. `validSession()` accepts only minutes below 18:01 (`S.minute < CFG.END + 1`).
+- `D.fwDone` is not saved, so after a reload at 18:00 or later the scene can play again.
+- Toàn's 19:00 leave is never visible in play, because the scene ends at 18:40 at the latest.
+- The `wrap` milestone is never ⏭ in play: its "next milestone" check uses 18:01, which only the scene reaches, when the mission board cannot be opened.
+
+### Internal
+
+- `index-offline.html` matches `index.html`. The diff shows only the importmap line and the offline comment line.
+- Not a git repository in this session, so this entry was written from the requester's change summary and a read of `index.html`, not from `git log --stat`.
+- `CLAUDE.md` and `index.html` were not edited in this docs pass. `CLAUDE.md` still reads "v1.8.5" in its Status line, and its Docs list has no `docs/spec/tan-ca-18-gio.md` entry. Those need a manual update.
+
+## v1.15.0 — 2026-11-04
+
+Every coworker now assigns desk work. Before, only Anh Bảo, Chị Ba, Yến, and Thảo did. Each of the other ten has at least one sort set and one order set, plus a work voice and an end-of-day reaction line. Chủ tịt also gets a second order set. The reaction lines for Chủ tịt and Nam, which were never shown in v1.14.0, can now appear.
+
+### Added
+
+- Ten sort sets in `SORT_SETS` (`index.html`, variety block between sections 2 and 3), one each for `thanh`, `nam`, `phu`, `trung`, `toan`, `hien`, `tung`, `an7`, `thong`, and `nguyen`. Each has 3 projects, 3 descriptions, and 6 notes with a valid group index. `SORT_SETS` now has 14 sets, one per coworker.
+- Ten order sets in `ORDER_SETS`, one each for the same ten coworkers, with 4 items each and the deadline text. A second order set for `thanh` (Chủ tịt) is added, so `ORDER_SETS` has 15 sets. The hint `q` of the new sets reads "Việc nào gấp nhất thì chạm trước."; the four older sets read "Việc nào có hạn chót gần nhất thì chạm trước." (see `docs/tasks.md` follow-ups).
+- Themes by person:
+  - Chủ tịt (`thanh`): product research on competitors and user feedback, "release đã chốt chưa", revenue check, system bug check, humble "Dạ {anh} xếp giúp em…" with a karma joke.
+  - Nam (`nam`): mobile bugs and screens, waiting for design, "khìn khìn".
+  - Phú (`phu`): servers, data and security, "mình xui lắm".
+  - Trung (`trung`): API, background jobs and reports, "Em nói thiệt".
+  - Toàn (`toan`): notifications, storage and testing, very short quiet lines.
+  - Hiện (`hien`): mini games, art and learning, polite "Dạ {anh}…".
+  - Tùng (`tung`): challenges, Friday drinks and app screens, "tui thách bạn".
+  - Chú 7 (`an7`): manual and automated testing, bug reports, and tea.
+  - Thông (`thong`): R&D, "phương án B", long-term plan.
+  - Nguyên (`nguyen`): dark mode palette, icons and sketches, sleepy chill. His order set has "Chỉnh lại nút theo ý Trung", which ties to the Trung–Nguyên design joke.
+- `WORK_VOICE` (assignment line in each person's voice, sort and order) for the same ten coworkers. Anh Bảo has no entry and uses the generic line.
+- `WORK_NAG` (end-of-day reaction, `aff` and `mood` losses of 1 to 2, one or two lines) for the same ten coworkers. All 14 coworkers now have an entry.
+
+### Changed
+
+- `newWork(kind)` (section 11) only picks sets whose assigner is coming to the office today (`times.arrive < 99999`). Remote Nguyên is not assigned on remote days. If no set qualifies, it falls back to all sets.
+- `workNag(next)` (section 11) says "<name> nhắn tin hỏi bạn" instead of "<name> ghé qua bàn bạn" when the assigner is not in the office (`n.state === 'hidden'`).
+- `workBrief()` (section 11) runs the voice through `fill()`, so `{anh}` and `{Anh}` are replaced in the new lines.
+- Docs: `docs/spec/ngoi-lam-viec.md` §3.3 and §3.4 list all 14 assigners, and §3.5 "known gap" is replaced by a reachability note. AC-115 is partly verified and AC-116 (every coworker assigns, remote Nguyên excluded) is added. `docs/spec/mot-ngay-o-cong-ty.md` (status, AC table, sort-set bullet) and `docs/spec/dong-nghiep.md` (status) point to the new list. `docs/product-guide.md` has a "Who can ask you for a job" section and a FAQ entry. `docs/glossary.md` has dated notes on `WORK_NAG`, `WORK_VOICE`, and "Người nhờ".
+
+### Fixed
+
+- The v1.14.0 known gap is closed: `WORK_NAG.thanh` and `WORK_NAG.nam` were never read because no set had `from: 'thanh'` or `'nam'`. Both are now reachable.
+
+### Verification
+
+- Headless Chrome, reported by the requester (not in the repo): every coworker has a sort set, an order set, a voice line and a nag line. Structure checks pass: 3 groups, 3 descriptions, 6 notes with a valid group index per sort set, and 4 items per order set. The `bao` order set uses non-sequential ranks by design.
+- 400 random draws gave 14 distinct assigners. The Chủ tịt and Nguyên briefs show their own voice. An absent Nguyên was never assigned in 300 draws. The mini-game opens for a new set.
+- Not recorded: playing every new set to completion, native-speaker review of the new wording (about 40 strings), and a full-day run.
+
+### Internal
+
+- `index-offline.html` matches `index.html` (the diff shows only the importmap line and the offline comment).
+- Not a git repository in this session, so the changelog was written from the requester's change summary, not from `git log --stat`.
+- `CLAUDE.md` and `index.html` were not edited in this docs pass.
+
 ## v1.14.0 — 2026-11-04
 
 Sit-and-work time-lapse at the player's desk, and an unfinished-work reaction at day end. When the player finishes fewer than 2 desk tasks, the coworker who gave the work comes by before the note card. Two more coworkers, Yến and Thảo, can now assign desk tasks.

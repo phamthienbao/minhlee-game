@@ -4,7 +4,7 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **Một Ngày Ở Công Ty** — The game's title, meaning "One Day at the Office". *(Outdated as of v1.0.3: renamed to "Một Ngày Ở MinhLee". Kept for history.)*
 
-**Ngày làm** — A single work day in the game, from 08:30 to 17:30 in game time.
+**Ngày làm** — A single work day in the game, from 08:30 to 17:30 in game time. *(Outdated as of v1.16.0: the workday now runs from 08:30 to 18:00, then the farewell scene. See `docs/spec/tan-ca-18-gio.md`.)*
 
 **Đồng nghiệp (NPC)** — One of the 12 computer-controlled coworkers. Defined by an entry in `NPC_PROFILES`. *(Outdated as of v1.0.2: there are 13 coworkers, including Thông.)* *(Outdated as of v1.2.0: there are 14 coworkers, including Nguyên.)*
 
@@ -420,13 +420,13 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **Đầu việc (desk task item)** — *(needs definition)* One small job at the player's desk, numbered "Đầu việc nhỏ số N/3" on the work card. Up to `CFG.MAX_TASKS` (3) per day. Two kinds: sort notes into project groups (`sort`), or put items in deadline order (`order`). Takes about 30–60 seconds, with no score and no penalty. Added v1.8.6.
 
-**Người nhờ (requester)** — *(needs definition)* The coworker who asks the player for a desk task, stored as `from` in `SORT_SETS` and `ORDER_SETS`: `bao` (Anh Bảo) or `an3` (Chị Ba). The work card shows them with the role "Đang nhờ bạn". On completion they gain +3 affinity and send a reply card. Added v1.8.6. Since v1.14.0 `yen` (Yến) and `thao` (Thảo) also request desk tasks, so there are four requesters (`docs/spec/ngoi-lam-viec.md` §3.4).
+**Người nhờ (requester)** — *(needs definition)* The coworker who asks the player for a desk task, stored as `from` in `SORT_SETS` and `ORDER_SETS`: `bao` (Anh Bảo) or `an3` (Chị Ba). The work card shows them with the role "Đang nhờ bạn". On completion they gain +3 affinity and send a reply card. Added v1.8.6. Since v1.14.0 `yen` (Yến) and `thao` (Thảo) also request desk tasks, so there are four requesters (`docs/spec/ngoi-lam-viec.md` §3.4). *(Note 2026-11-04, v1.15.0: all 14 coworkers are requesters. Chủ tịt (`thanh`) has two order sets. A requester who is not in the office that day is not picked, and Nguyên is never picked on a remote day.)*
 
 **Nhãn Bàn của bạn (desk label, `deskTag`)** — *(needs definition)* The yellow "💻 Bàn của bạn" label above the player's desk, built with `Bubbles.makeTag()` in `init()`. Its horizontal position is clamped to the screen edges to show the direction of the desk. Hidden in list mode, while sitting, after the three daily tasks, and when away from the desk. Added v1.8.6.
 
 **Khoảng cách gần bất ngờ (surprise proximity)** — *(needs definition)* The 4.2 m distance (`CFG.SURPRISE_NEAR`) the player must stand from the related coworker, after a surprise's time, for the surprise to fire. Added v1.8.7.
 
-**Bỏ qua bất ngờ (skipped surprise)** — *(needs definition)* A surprise not triggered within 150 game-minutes after its time, or by 17:10. It is skipped for the day with nothing shown. Added v1.8.7.
+**Bỏ qua bất ngờ (skipped surprise)** — *(needs definition)* A surprise not triggered within 150 game-minutes after its time, or by 17:10. *(Outdated as of v1.16.0: the cut-off is now 17:40, `CFG.END - 20`.)* It is skipped for the day with nothing shown. Added v1.8.7.
 
 **Đồng hồ treo tường (wall clock)** — *(needs definition)* The clock on the north wall of the office, whose face shows the in-game time. Redrawn by `drawWallClock()` as the minute changes. Added v1.8.8.
 
@@ -533,6 +533,20 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 
 **Nhắc việc cuối ngày (end-of-day nag, `workNag()`)** — *(needs definition)* The reaction card from the coworker who assigned the desk task, shown in `endDay()` when `D.tasks` is below `WORK_QUOTA`. It costs affinity and mood and then the note card follows. Added v1.14.0. See `docs/spec/ngoi-lam-viec.md` §3.2.
 
-**WORK_NAG** — *(needs definition)* Table in `index.html` (variety block) with, per assigner, `aff`, `mood`, an optional `punch`, and `lines` for the end-of-day reaction. The Chủ tịt and Nam entries are not reachable yet. Added v1.14.0. See `docs/spec/ngoi-lam-viec.md` §3.3 and §3.5.
+**WORK_NAG** — *(needs definition)* Table in `index.html` (variety block) with, per assigner, `aff`, `mood`, an optional `punch`, and `lines` for the end-of-day reaction. The Chủ tịt and Nam entries are not reachable yet. Added v1.14.0. See `docs/spec/ngoi-lam-viec.md` §3.3 and §3.5. *(Note 2026-11-04, v1.15.0: the earlier "not reachable" note no longer applies. All 14 coworkers now have an entry, and each one assigns at least one set, so every line can be shown. Reaction wording is not native-reviewed.)*
 
-**WORK_VOICE** — *(needs definition)* Table in `index.html` with the request text per assigner for sort and order tasks, used by `workBrief()`. Anh Bảo has no entry and uses the generic line. Added v1.14.0. See `docs/spec/ngoi-lam-viec.md` §3.4.
+**WORK_VOICE** — *(needs definition)* Table in `index.html` with the request text per assigner for sort and order tasks, used by `workBrief()`. Anh Bảo has no entry and uses the generic line. Added v1.14.0. See `docs/spec/ngoi-lam-viec.md` §3.4. *(Note 2026-11-04, v1.15.0: entries now cover all 14 coworkers, so the sort and order voices of Chủ tịt, Nam, Phú, Trung, Toàn, Hiện, Tùng, Chú 7, Thông, and Nguyên were added. Anh Bảo still uses the generic line. Wording not native-reviewed.)*
+
+**Tan ca (farewell scene)** — *(needs definition)* The 18:00 scene that ends the workday. The camera orbits the office, coworkers say a goodbye line and leave one by one, then the end-of-day card appears. Started by `startFarewell()` from `tickClock()`, ended by `endFarewell()`. Added v1.16.0. See `docs/spec/tan-ca-18-gio.md`.
+
+**Chế độ tan ca (`farewell` mode)** — *(needs definition)* The `G.mode` value during the farewell scene. Input is locked, and the clock runs to 18:40 at most (`CFG.END + CFG.FAREWELL`). The saved camera is kept in `G.fw`. Added v1.16.0.
+
+**CFG.END (giờ tan làm)** — *(needs definition)* The workday end in section 1 of `index.html`, 18:00 since v1.16.0 (was 17:30). The farewell scene starts when the clock reaches it. Added v1.16.0.
+
+**CFG.FAREWELL** — *(needs definition)* Section 1 constant, 40 game-minutes. How far past `CFG.END` the clock may run during the farewell scene (18:40). Added v1.16.0.
+
+**FAREWELL_LINES** — *(needs definition)* Table in `index.html` (variety block) with one goodbye line per coworker, said once when that coworker starts leaving during the farewell scene. Added v1.16.0. Not native-reviewed.
+
+**habits.leave** — *(needs definition)* Profile field: the coworker's leave time. Each day `resetNpcDay()` adds a random −3 to +5 minutes. Set to 18:00 for most coworkers, 18:12 for Chủ tịt, and 19:00 for Toàn in v1.16.0. Added v1.16.0.
+
+**Toàn ở lại (Toàn stays late)** — *(needs definition)* Toàn's `habits.leave` is 19:00, so he is still seated when the farewell scene ends. The end card then says he stays until 7 pm. Added v1.16.0.

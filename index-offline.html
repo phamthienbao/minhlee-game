@@ -267,7 +267,7 @@ function h(tag, props = {}, ...kids) {                                          
 }
 
 const CFG = { SURPRISE_NEAR: 4.2,
-  START: T('08:30'), END: T('17:30'),
+  START: T('08:30'), END: T('18:00'), FAREWELL: 40,
   SPEED: 1.25,            // phút trong game trôi qua mỗi giây thực (≈ 7 phút cho cả ngày)
   FAST: 4,                // hệ số khi bấm tua nhanh
   PLAYER_SPEED: 3.4, NPC_SPEED: 1.9,
@@ -301,7 +301,7 @@ const NPC_PROFILES = [
   { id: 'thanh', name: 'Chủ tịt', real: 'Thạnh', role: 'Chủ tịt', desk: 1,
     look: { skin: 0xf0cdae, hair: 0x15130f, shirt: 0x2b2b2b, style: 'short', glasses: 'rect', glassColor: 0xc9c5ba, pattern: 'gingham', smile: true, detail: true, teeth: true, hairStyle: 'quiff', neck: 'collar', collar: 'pat:gingham', shortSleeve: true, lip: 0xc4705f },
     traits: ['tốt bụng', 'hay giúp đỡ', 'hay đi trễ', 'hay mời nước, mua đồ ăn', 'mê nhân quả, thiền, tu hành', 'rất thích mèo'], stats: { outgoing: 0.55, focus: 0.55, team: 0.9 },
-    habits: { arrive: '09:20', coffee: 'morning', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 50,
+    habits: { arrive: '09:20', coffee: 'morning', lunch: 'pantry', leave: '18:12', joinsMeeting: true }, relation: 50,
     taste: { warm: 2, joke: 1, work: 1 },
     say: { greet: ['@am Xin lỗi {anh}, em lại trễ rồi! {Anh} {ten} uống gì không, em mua cho.', 'Chào {anh} {ten}! Có gì cần em giúp không {anh}? Giúp người là tích phước mà.', 'Chào {anh} {ten}! {Anh} xem ảnh mèo nhà em chưa? Hôm qua nó ngồi thiền đỉnh lắm!'],
       idle: ['Mọi người ăn gì chưa nhỉ? Để em gọi đồ.', 'Ai cần giúp gì cứ gọi em nhé.', 'Hít thở sâu… ba hơi thôi là bớt căng liền.', 'Mèo nhà em lại đạp rơi ly nước nữa. Nhân quả đó.'],
@@ -317,7 +317,7 @@ const NPC_PROFILES = [
   { id: 'phu', name: 'Phú', nick: 'Siêu nhân may mắn', role: 'Backend Dev', desk: 0,
     look: { skin: 0xe9c39d, hair: 0x15130f, shirt: 0x1c1c1e, style: 'short', glasses: 'rect', glassColor: 0x2a2a2e, round: true, smile: true, detail: true, teeth: true, hairStyle: 'side', neck: 'collar', collar: 0x141416, lip: 0xc0705a },
     traits: ['hay xui xẻo', 'mê đầu tư (toàn lỗ)', 'mê massage'], stats: { outgoing: 0.85, focus: 0.5, team: 0.8 },
-    habits: { arrive: '08:45', coffee: 'both', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 45,
+    habits: { arrive: '08:45', coffee: 'both', lunch: 'pantry', leave: '18:00', joinsMeeting: true }, relation: 45,
     taste: { warm: 1, joke: 2, work: 0 },
     say: { greet: ['Chào {ten}! Mình vừa mua cổ phiếu, mua xong nó tụt liền. Siêu nhân may mắn đây!', 'Ê {ten}, đứng xa mình chút, hôm nay mình xui lắm… mà thôi đứng gần cũng được.'],
       idle: ['Cổ phiếu ơi, hồi sinh đi…', 'Sao mình mua cái nào thì cái đó rớt nhỉ?'],
@@ -334,7 +334,7 @@ const NPC_PROFILES = [
   { id: 'trung', name: 'Trung', role: 'Backend Dev', desk: 4,
     look: { skin: 0xe6c19c, hair: 0x15130f, shirt: 0x4b6163, pattern: 'stripe', style: 'short', glasses: 'rect', glassColor: 0x3a4048, mustache: true },
     traits: ['hay giải thích', 'lươn kiểu vui', 'mê làm ăn, đầu tư', 'hay nói “Em nói thiệt”'], stats: { outgoing: 0.5, focus: 0.95, team: 0.6 },
-    habits: { arrive: '08:10', coffee: 'morning', lunch: 'desk', leave: '17:30', joinsMeeting: true }, relation: 40,
+    habits: { arrive: '08:10', coffee: 'morning', lunch: 'desk', leave: '18:00', joinsMeeting: true }, relation: 40,
     taste: { warm: 1, joke: 2, work: 2 },
     say: { greet: ['@am Em nói thiệt, {ten} đến đúng giờ ghê! Để em giải thích vì sao em đến sớm nha…', 'Em nói thiệt nha {ten}, cái này không phải lỗi của em đâu, là “tính năng chưa được mô tả”!'],
       idle: ['Em nói thiệt, nhìn thì giống lỗi nhưng thật ra là… tính năng.', 'Em nói thiệt, mở thêm một kênh làm ăn nữa là vừa… à, làm việc đã.'],
@@ -350,7 +350,7 @@ const NPC_PROFILES = [
   { id: 'toan', name: 'Toàn', role: 'Backend Dev', desk: 3,
     look: { skin: 0xe6c09a, hair: 0x1c1612, shirt: 0x1f2a5c, style: 'short', glasses: false, round: true, mustache: true, detail: true, hairStyle: 'side', neck: 'collar', collar: 0x1f2a5c },
     traits: ['trầm tính', 'ít nói'], stats: { outgoing: 0.1, focus: 0.9, team: 0.4 },
-    habits: { arrive: '08:50', coffee: 'morning', lunch: 'desk', leave: '17:30', joinsMeeting: true }, relation: 40,
+    habits: { arrive: '08:50', coffee: 'morning', lunch: 'desk', leave: '19:00', joinsMeeting: true }, relation: 40,
     taste: { warm: 2, joke: 1, work: 1 },
     say: { greet: ['…Ừ, chào.', 'Chào.'],
       idle: ['…', '(gõ phím đều đều)'],
@@ -367,7 +367,7 @@ const NPC_PROFILES = [
   { id: 'hien', name: 'Hiện', role: 'Mobile Dev', desk: 5,
     look: { skin: 0xe3b78f, hair: 0x6b4a2b, shirt: 0x7b5ea7, style: 'short', glasses: false, smile: true, detail: true, hairStyle: 'quiff', neck: 'crew', neckColor: 0x654a8c },
     traits: ['nhỏ tuổi nhất', 'thích đùa', 'mê game'], stats: { outgoing: 0.7, focus: 0.55, team: 0.5 },
-    habits: { arrive: '09:00', coffee: 'both', lunch: 'desk', leave: '17:30', joinsMeeting: true }, relation: 40,
+    habits: { arrive: '09:00', coffee: 'both', lunch: 'desk', leave: '18:00', joinsMeeting: true }, relation: 40,
     taste: { warm: 1, joke: 2, work: 0 },
     say: { greet: ['Dạ em chào {anh} {ten}! Nay em lỡ thức khuya cày game, mắt thâm luôn.', 'Yo {anh} {ten}! {Anh} có cần em “debug” cuộc đời không ạ?'],
       idle: ['Commit này mà sai là em đổ cho cache.', 'Một ván nữa thôi… à không, làm việc.'],
@@ -384,7 +384,7 @@ const NPC_PROFILES = [
   { id: 'tung', name: 'Tùng', role: 'Mobile Dev', desk: 13,
     look: { skin: 0xf0d2b4, hair: 0x15130f, shirt: 0xece8f6, style: 'fringe', glasses: false, smile: true, detail: true, neck: 'crew', neckColor: 0xd9d4e6 },
     traits: ['hay rủ nhậu', 'thích thách thức, trò chơi thử thách vui', 'hòa đồng'], stats: { outgoing: 0.8, focus: 0.55, team: 0.9 },
-    habits: { arrive: '08:20', coffee: 'morning', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 50,
+    habits: { arrive: '08:20', coffee: 'morning', lunch: 'pantry', leave: '18:00', joinsMeeting: true }, relation: 50,
     taste: { warm: 1, joke: 2, work: 0 },
     say: { greet: ['Ê {ten}! Tối nay nhậu không? Cả phòng rủ rồi, còn chờ mỗi bạn thôi!', 'Ê {ten}, mình có trò thử thách vui lắm, chơi không?'],
       idle: ['Chiều nay nhậu quán nào ta…', 'Thách ai làm được 20 cái hít đất ngay tại bàn không?'],
@@ -395,12 +395,12 @@ const NPC_PROFILES = [
     request: { ask: 'Mình thách bạn nhé: nói “MinhLee” mười lần liền không vấp. Thành công thì mình mời trà sữa, thua thì bạn mời. Chơi không?',
       options: [['Chơi, nhưng cho mình luyện trước một phút', 'work'], ['Chơi, vui là chính nha!', 'warm'], ['Nâng cược: ai thua phải hát giữa văn phòng 🎤', 'joke']] },
     meeting: { values: ['fun', 'team'], pos: 'Chơi luôn! Nghe vui đó!', neg: 'Hơi ít thử thách nhỉ… mà thôi cũng được.' },
-    quirks: [{ at: '09:25', say: 'Ai thách mình nín thở 20 giây không? Mình chấp!', anim: 'wave' }, { at: '16:50', say: 'Sắp tan làm rồi! Ai đi nhậu giơ tay!', anim: 'wave', ctx: 'any' }],
+    quirks: [{ at: '09:25', say: 'Ai thách mình nín thở 20 giây không? Mình chấp!', anim: 'wave' }, { at: '17:35', say: 'Sắp tan làm rồi! Ai đi nhậu giơ tay!', anim: 'wave', ctx: 'any' }],
     note: { high: 'Tối nay nhậu một chút không? Mình bao! (nhẹ nhàng thôi nha)', low: 'Mai mình thách bạn trò mới nhé. Chuẩn bị tinh thần!' } },
   { id: 'nam', name: 'Nam', role: 'Mobile Dev', desk: 6,
     look: { skin: 0xe8c7a0, hair: 0x15130f, shirt: 0xb02a32, pattern: 'plaid', style: 'fringe', glasses: false, smile: true, teeth: true, detail: true, neck: 'collar', collar: 'pat:plaid' },
     traits: ['vui vẻ', 'hay khìn khìn', 'bằng tuổi Chủ tịt'], stats: { outgoing: 0.8, focus: 0.55, team: 0.85 },
-    habits: { arrive: '08:15', coffee: 'none', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 40,
+    habits: { arrive: '08:15', coffee: 'none', lunch: 'pantry', leave: '18:00', joinsMeeting: true }, relation: 40,
     taste: { warm: 1, joke: 2, work: 0 },
     say: { greet: ['@am Chào {ten}! Khìn khìn, hôm nay đi làm sớm ghê!', 'Ơ {ten} đến rồi! Khìn khìn, cho mình tám chuyện chút nha?'],
       idle: ['Khìn khìn… code chạy rồi hả ta?', 'Khìn khìn, ai lấy mất ly trà sữa của mình rồi?', 'Bé Hạnh mà vô là hết yên bình, khìn khìn!'],
@@ -418,7 +418,7 @@ const NPC_PROFILES = [
   { id: 'thao', name: 'Thảo', nick: 'Bella', role: 'HR', desk: 11,
     look: { skin: 0xf3d2b6, hair: 0x15110f, shirt: 0xe8923a, style: 'wavy', glasses: false, smile: true, detail: true, hairStyle: 'wavy', lashes: true, neck: 'vneck', neckColor: 0xb85f1c, lip: 0xd9657a, earring: 0xf2c14e },
     traits: ['chu đáo', 'hay mang bánh', 'rành quán ăn, quán nước, đồ ngon'], stats: { outgoing: 0.75, focus: 0.6, team: 1 },
-    habits: { arrive: '08:05', coffee: 'both', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 50,
+    habits: { arrive: '08:05', coffee: 'both', lunch: 'pantry', leave: '18:00', joinsMeeting: true }, relation: 50,
     taste: { warm: 2, joke: 1, work: 1 },
     say: { greet: ['@am Chào {ten}! Trưa nay ăn gì chưa? Mình biết quán bún bò mới mở, ngon xỉu luôn!', '@am Sáng nay bạn ăn sáng chưa? Mình mới biết xe bánh mì heo quay ngon nhất khu này nè!', 'Chào {ten}! Dạo này bạn ăn quán nào ngon chưa? Mình có vài địa chỉ hay lắm!'],
       idle: ['Hôm nay ăn quán nào ta… phải chọn cho đúng.', 'Quán đó ngon, mà phải gọi món này, đừng gọi món kia.'],
@@ -434,7 +434,7 @@ const NPC_PROFILES = [
   { id: 'yen', name: 'Yến', nick: 'Én Pink', role: 'QC', desk: 12,
     look: { skin: 0xf2cfb0, hair: 0x8b4526, shirt: 0x1d1d1f, style: 'sleek', glasses: true, glassColor: 0xd9a98f, smile: true, detail: true, teeth: true, hairStyle: 'sleek', part: 'center', lashes: true, lip: 0xe8704f, earring: 0xe0b45a, neck: 'crew', neckColor: 0x2a2a2d },
     traits: ['hơi cọc (kiểu vui)', 'thích khịa', 'cái gì cũng hỏi “Là sao?”'], stats: { outgoing: 0.95, focus: 0.55, team: 0.75 },
-    habits: { arrive: '08:35', coffee: 'both', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 45,
+    habits: { arrive: '08:35', coffee: 'both', lunch: 'pantry', leave: '18:00', joinsMeeting: true }, relation: 45,
     taste: { warm: 1, joke: 2, work: 0 },
     say: { greet: ['@am Ơ, {ten}? Giờ này mới đến hả? Là sao?', '@am Trời ơi cái mặt này! Mới sáng ra đã… là sao?', 'Ê {ten}, nhìn mặt bạn là biết có chuyện! Là sao, kể mình nghe!', '@pm Chiều rồi mà bạn còn tỉnh táo vậy? Là sao, bí quyết là gì?'],
       idle: ['Là sao? Cái nút này sao bấm không ăn?', 'Là sao ta? Ai làm cái này vậy trời!'],
@@ -451,7 +451,7 @@ const NPC_PROFILES = [
   { id: 'an7', name: 'Chú 7', real: 'An', role: 'QC', desk: 7,
     look: { skin: 0xdcb48e, hair: 0x241a12, shirt: 0xf3f0e8, style: 'short', glasses: false, smile: true, detail: true, hairStyle: 'tousled', neck: 'crew', neckColor: 0xdedbd0 },
     traits: ['trẻ tuổi', 'mê uống trà', 'hay khịa Chị Ba'], stats: { outgoing: 0.6, focus: 0.7, team: 0.6 },
-    habits: { arrive: '08:25', coffee: 'afternoon', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 45,
+    habits: { arrive: '08:25', coffee: 'afternoon', lunch: 'pantry', leave: '18:00', joinsMeeting: true }, relation: 45,
     taste: { warm: 1, joke: 2, work: 1 },
     say: { greet: ['Chào {ten}! Trà chưa? Mình có trà ô long mới, thơm lắm.', 'Chào {ten}! Hôm nay Chị Ba chưa đấm ai hả? Mình canh giờ!'],
       idle: ['Trà ô long… chuẩn không cần chỉnh.', 'Cái lỗi này mà để Chị Ba thấy là bị đấm trước, sửa sau.'],
@@ -467,7 +467,7 @@ const NPC_PROFILES = [
   { id: 'an3', name: 'Chị Ba', real: 'An', role: 'Business Support', desk: 10, visitAnim: 'punch',
     look: { skin: 0xf0cdb0, hair: 0x8a5a3c, shirt: 0x202022, style: 'bob', glasses: true, glassColor: 0x1c1c1c, glassThick: true, round: true, detail: true, lashes: true, lip: 0xb8525a, earring: 0xd0d0d0, neck: 'crew', neckColor: 0x2c2c30, browUp: -0.01 },
     traits: ['kỹ tính', 'hỗ trợ nghiên cứu sản phẩm, làm báo cáo', 'thích “đấm” đồng nghiệp (đùa)'], stats: { outgoing: 0.6, focus: 0.85, team: 0.6 },
-    habits: { arrive: '08:00', coffee: 'none', lunch: 'desk', leave: '17:15', joinsMeeting: true }, relation: 40,
+    habits: { arrive: '08:00', coffee: 'none', lunch: 'desk', leave: '18:00', joinsMeeting: true }, relation: 40,
     taste: { warm: 1, joke: 2, work: 1 },
     say: { greet: ['Gì đó? Đứng thẳng lên coi, chị đấm cái cho tỉnh bây giờ!', '@am Sáng sớm chị chạy xong số liệu khảo sát rồi đó. Cần gì thì nói lẹ, chị đang bận. (nắm tay hờ)', 'Cần báo cáo hay số liệu thì nói cho rõ, đừng có “cái đó đó” nha.'],
       idle: ['Lệch có vài phần trăm thôi mà… ai làm ra cái này, chị đấm liền.', 'Ngứa tay quá… à không, ngứa mắt. Cái biểu đồ này nhìn muốn nổi quạu.'],
@@ -485,7 +485,7 @@ const NPC_PROFILES = [
   { id: 'bao', name: 'Anh Bảo', real: 'Bảo', role: 'Product', desk: 2,
     look: { skin: 0xe6c09c, hair: 0x1a1410, shirt: 0xd6322f, pattern: 'redwhite', style: 'short', glasses: 'rect', glassColor: 0xb9bfc4, smile: true, detail: true, hairStyle: 'swept', neck: 'collar', collarStyle: 'polo', collar: 0x1a1a1c, shortSleeve: true, cuff: 0xf4f1ea },
     traits: ['hay hỏi “vì sao”', 'kết nối mọi người'], stats: { outgoing: 0.65, focus: 0.65, team: 0.85 },
-    habits: { arrive: '08:40', coffee: 'both', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 45,
+    habits: { arrive: '08:40', coffee: 'both', lunch: 'pantry', leave: '18:00', joinsMeeting: true }, relation: 45,
     taste: { warm: 1, joke: 1, work: 2 },
     say: { greet: ['Chào {ten}! Mình đang gom yêu cầu cho bản cập nhật mới nè.', 'Ê {ten}, bạn thấy tính năng nào người dùng cần nhất không?'],
       idle: ['Người dùng thật sự muốn gì nhỉ…', 'Backlog dài quá, phải chọn thôi.'],
@@ -501,7 +501,7 @@ const NPC_PROFILES = [
   { id: 'thong', name: 'Thông', nick: 'Bamboo', role: 'R&D (Research & Development)', desk: 9,
     look: { skin: 0xe8c39e, hair: 0x15130f, shirt: 0xf4f4f2, style: 'short', glasses: false, smile: true, detail: true, hairStyle: 'side', neck: 'crew', neckColor: 0xdcdcda },
     traits: ['vui vẻ', 'nhiệt huyết', 'hay lo xa', 'mê bất động sản, nhà đất, đầu tư'], stats: { outgoing: 0.8, focus: 0.7, team: 0.85 },
-    habits: { arrive: '08:35', coffee: 'both', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 45,
+    habits: { arrive: '08:35', coffee: 'both', lunch: 'pantry', leave: '18:00', joinsMeeting: true }, relation: 45,
     taste: { warm: 2, joke: 1, work: 1 },
     say: { greet: ['Chào {ten}! Mình vừa xem một lô đất, giá đang lên! Mà lỡ bong bóng thì sao ta… thôi, có phương án B!', 'Ê {ten}! Khu đó quy hoạch hay lắm, đầu tư là lời! Mà phải coi pháp lý kỹ đã!'],
       idle: ['Nhà đất không bao giờ giảm… à mà lỡ giảm thì sao?', 'Phương án B có rồi, phương án C là mua thêm lô nữa.'],
@@ -518,7 +518,7 @@ const NPC_PROFILES = [
   { id: 'nguyen', name: 'Nguyên', role: 'Designer', desk: 8,
     look: { skin: 0xf3d3bb, hair: 0x15110f, shirt: 0x1b1b1d, style: 'fringe', glasses: false, detail: true, neck: 'crew', neckColor: 0x2a2a2d },
     traits: ['rất ít lên công ty', 'lên thì ngồi chỗ cũ của Tùng, trưa ghé pantry ngủ một lát', 'chill'], stats: { outgoing: 0.3, focus: 0.3, team: 0.4 },
-    habits: { arrive: '10:15', coffee: 'morning', lunch: 'pantry', leave: '17:00', joinsMeeting: false, lounge: true, attendance: 0.5 }, relation: 35,
+    habits: { arrive: '10:15', coffee: 'morning', lunch: 'pantry', leave: '18:00', joinsMeeting: false, lounge: true, attendance: 0.5 }, relation: 35,
     taste: { warm: 2, joke: 2, work: 0 },
     say: { greet: ['Ơ {ten}… mình mới lên công ty, ngồi chỗ cũ của Tùng nha.', 'Chào… (ngáp) Công ty mát hơn ở nhà thiệt.'],
       idle: ['Zzz… à không, mình đang nghĩ.', 'Cho mình thêm năm phút nữa…'],
@@ -560,6 +560,18 @@ SORT_SETS.push(
   { from: 'yen', projects: ['🐞 Lỗi giao diện', '🔌 Lỗi kết nối', '⚡ Lỗi chạy chậm'], descs: ['nút, màu, chữ bị lệch', 'rớt mạng, không gửi được', 'giật, lag, tải lâu'], notes: [['Nút Thích bị lệch', 0], ['Tin nhắn không gửi được khi rớt mạng', 1], ['Màn hình ghép đôi tải lâu', 2], ['Chữ bị cắt ở màn hồ sơ', 0], ['Đăng nhập báo lỗi mạng', 1], ['Cuộn danh sách bị giật', 2]] },
   { from: 'thao', projects: ['🧑‍💼 Tuyển dụng', '🎉 Sự kiện nội bộ', '📚 Đào tạo'], descs: ['phỏng vấn, hồ sơ ứng viên', 'tiệc, sinh nhật, team building', 'khóa học, buổi chia sẻ'], notes: [['Hẹn lịch phỏng vấn thứ Ba', 0], ['Đặt bánh sinh nhật cho cả phòng', 1], ['Soạn tài liệu cho nhân viên mới', 2], ['Đọc hồ sơ ứng viên Designer', 0], ['Chọn quán cho buổi team building', 1], ['Lên lịch buổi chia sẻ cuối tuần', 2]] },
 );
+SORT_SETS.push(
+  { from: 'thanh', projects: ['🔎 Nghiên cứu sản phẩm', '🚀 Release', '📈 Doanh thu & hệ thống'], descs: ['đối thủ, người dùng, ý tưởng', 'bản phát hành, lịch, kiểm tra', 'tiền về, lỗi, hệ thống'], notes: [['Xem đối thủ vừa ra tính năng gì', 0], ['Đọc phản hồi người dùng tuần này', 0], ['Bản release đã gửi duyệt chưa', 1], ['Nhắc cả nhóm chốt ghi chú phát hành', 1], ['Doanh thu tuần này so với tuần trước', 2], ['Hệ thống có báo lỗi lạ nào không', 2]] },
+  { from: 'nam', projects: ['📱 Màn hình mới', '🐞 Lỗi cần sửa', '🎨 Chờ design'], descs: ['giao diện cần làm', 'lỗi trên điện thoại', 'đợi bên thiết kế'], notes: [['Màn hình hồ sơ có ảnh động', 0], ['Màn hình chọn sở thích', 0], ['App văng khi xoay màn hình', 1], ['Nút gửi tin nhắn bấm không ăn', 1], ['Icon mới cho tab Khám phá', 2], ['Bảng màu chế độ tối', 2]] },
+  { from: 'phu', projects: ['🖥 Máy chủ', '🗃 Dữ liệu', '🔐 Bảo mật'], descs: ['server, tốc độ, quá tải', 'sao lưu, dọn dữ liệu', 'tài khoản, mật khẩu'], notes: [['Máy chủ chậm lúc tối', 0], ['Quá tải khi có nhiều người', 0], ['Sao lưu dữ liệu hằng đêm', 1], ['Dọn dữ liệu trùng', 1], ['Đổi mật khẩu quản trị', 2], ['Kiểm tra quyền truy cập', 2]] },
+  { from: 'trung', projects: ['🧩 API', '⚙️ Xử lý nền', '📊 Báo cáo'], descs: ['kết nối app và máy chủ', 'tác vụ chạy ngầm', 'số liệu cho cả nhóm'], notes: [['API đăng nhập trả chậm', 0], ['Thêm API gợi ý ghép đôi', 0], ['Tác vụ gửi thông báo đẩy', 1], ['Dọn hàng đợi bị kẹt', 1], ['Báo cáo thời gian phản hồi', 2], ['Biểu đồ người dùng mỗi giờ', 2]] },
+  { from: 'toan', projects: ['📬 Thông báo', '💾 Lưu trữ', '🧪 Thử nghiệm'], descs: ['nhắc hẹn, giờ yên lặng', 'ảnh, dữ liệu', 'thử khi mạng yếu, nhiều người'], notes: [['Thông báo nhắc buổi hẹn', 0], ['Giờ im lặng ban đêm', 0], ['Lưu ảnh hồ sơ', 1], ['Nén ảnh cho nhẹ', 1], ['Thử với 1000 người dùng', 2], ['Thử khi mạng yếu', 2]] },
+  { from: 'hien', projects: ['🎮 Mini game', '🧸 Hình ảnh', '📖 Học hỏi'], descs: ['trò chơi nhỏ trong app', 'icon, hoạt hình', 'tài liệu em đang đọc'], notes: [['Trò xếp hình ghép đôi', 0], ['Điểm thưởng khi chơi', 0], ['Icon con mèo mới', 1], ['Hoạt hình nút Thích', 1], ['Bài về làm app chạy nhanh', 2], ['Hỏi anh Nam cách chia màn hình', 2]] },
+  { from: 'tung', projects: ['🏁 Thử thách', '🍻 Cuối tuần', '📲 Màn hình app'], descs: ['trò vui trong team', 'tụ tập sau giờ làm', 'giao diện app'], notes: [['Thách đấu trò đoán số', 0], ['Bảng xếp hạng vui của nhóm', 0], ['Chọn quán cho tối thứ Sáu', 1], ['Chốt số người đi', 1], ['Màn hình lịch sử trò chuyện', 2], ['Hiệu ứng khi ghép đôi', 2]] },
+  { from: 'an7', projects: ['🧪 Thử thủ công', '🤖 Thử tự động', '📝 Báo cáo lỗi'], descs: ['bấm thử từng màn hình', 'kịch bản chạy tự động', 'ghi lại lỗi'], notes: [['Thử đăng ký tài khoản mới', 0], ['Thử xoay màn hình', 0], ['Viết kịch bản thử đăng nhập', 1], ['Chạy lại bộ thử đêm qua', 1], ['Ghi lỗi nút Thích', 2], ['Chụp màn hình lỗi gửi cho Yến', 2]] },
+  { from: 'thong', projects: ['🔬 Nghiên cứu', '🧯 Phương án dự phòng', '📅 Kế hoạch dài hạn'], descs: ['thử công nghệ mới', 'phòng khi có sự cố', 'mục tiêu vài tháng tới'], notes: [['Thử gợi ý ghép đôi bằng AI', 0], ['Đọc báo cáo xu hướng app hẹn hò', 0], ['Phương án B nếu máy chủ sập', 1], ['Sao lưu thêm một bản cho chắc', 1], ['Kế hoạch quý sau', 2], ['Danh sách công nghệ cần học', 2]] },
+  { from: 'nguyen', projects: ['🎨 Giao diện', '🖼 Hình ảnh', '✏️ Phác thảo'], descs: ['màu, nút, bố cục', 'icon, minh họa', 'bản vẽ nháp'], notes: [['Bảng màu chế độ tối', 0], ['Khoảng cách giữa các nút', 0], ['Icon tab Khám phá', 1], ['Ảnh minh họa màn chào', 1], ['Nháp màn hình hồ sơ', 2], ['Nháp hoạt hình ghép đôi', 2]] },
+);
 const ORDER_SETS = [
   { from: 'bao', q: 'Việc nào có hạn chót gần nhất thì chạm trước.', items: [['Gửi báo giá cho khách', 'Hôm nay 15:00', 1], ['Chuẩn bị slide họp', 'Ngày mai', 2], ['Dọn lại thư mục tài liệu', 'Cuối tuần', 3], ['Trả lời email của Nam', 'Hôm nay 11:00', 0]] },
   { from: 'an3', q: 'Việc nào có hạn chót gần nhất thì chạm trước.', items: [['Gửi số liệu khảo sát cho Chị Ba', 'Chiều nay', 0], ['Soạn biên bản họp', 'Ngày mai', 1], ['Cập nhật bảng việc nhóm', 'Thứ Sáu', 2], ['Ý tưởng cho dịp cuối năm', 'Tuần sau', 3]] },
@@ -568,11 +580,34 @@ ORDER_SETS.push(
   { from: 'yen', q: 'Việc nào có hạn chót gần nhất thì chạm trước.', items: [['Kiểm lại lỗi đăng nhập trước khi phát hành', 'Hôm nay 16:00', 0], ['Viết báo cáo lỗi tuần này', 'Ngày mai', 1], ['Dọn bảng theo dõi lỗi cũ', 'Thứ Sáu', 2], ['Thử máy điện thoại cũ', 'Tuần sau', 3]] },
   { from: 'thao', q: 'Việc nào có hạn chót gần nhất thì chạm trước.', items: [['Gửi lịch phỏng vấn cho ứng viên', 'Hôm nay 14:00', 0], ['Đặt bánh cho sinh nhật Thứ Sáu', 'Ngày mai', 1], ['Chọn quán cho team building', 'Tuần sau', 2], ['Cập nhật danh sách nhân sự', 'Cuối tháng', 3]] },
 );
+ORDER_SETS.push(
+  { from: 'thanh', q: 'Việc nào gấp nhất thì chạm trước.', items: [['Nhắc nhóm: bản release chốt chưa?', 'Hôm nay 11:00', 0], ['Kiểm tra doanh thu app Dating tuần này', 'Hôm nay 16:00', 1], ['Xem hệ thống có lỗi (bug) gì mới không', 'Ngày mai', 2], ['Nghiên cứu tính năng đối thủ vừa ra', 'Tuần sau', 3]] },
+  { from: 'thanh', q: 'Việc nào gấp nhất thì chạm trước.', items: [['Kiểm tra doanh thu hôm nay', 'Hôm nay 10:00', 0], ['Hỏi Yến còn bug nào chưa sửa', 'Hôm nay 15:00', 1], ['Nhắc Bảo chốt ghi chú phát hành', 'Ngày mai', 2], ['Đọc nghiên cứu về app hẹn hò khác', 'Tuần sau', 3]] },
+  { from: 'nam', q: 'Việc nào gấp nhất thì chạm trước.', items: [['Sửa app văng khi xoay màn hình', 'Hôm nay 11:00', 0], ['Gửi bản build thử cho Yến', 'Chiều nay', 1], ['Làm màn hình chọn sở thích', 'Thứ Năm', 2], ['Dọn mấy dòng code cũ', 'Tuần sau', 3]] },
+  { from: 'phu', q: 'Việc nào gấp nhất thì chạm trước.', items: [['Kiểm tra máy chủ chạy chậm', 'Hôm nay 11:00', 0], ['Sao lưu dữ liệu', 'Hôm nay 17:00', 1], ['Đổi mật khẩu quản trị', 'Ngày mai', 2], ['Dọn dữ liệu trùng', 'Tuần sau', 3]] },
+  { from: 'trung', q: 'Việc nào gấp nhất thì chạm trước.', items: [['Sửa API đăng nhập trả chậm', 'Hôm nay 12:00', 0], ['Dọn hàng đợi thông báo bị kẹt', 'Hôm nay 17:00', 1], ['Viết tài liệu cho API mới', 'Thứ Sáu', 2], ['Gom số liệu cho báo cáo tháng', 'Cuối tháng', 3]] },
+  { from: 'toan', q: 'Việc nào gấp nhất thì chạm trước.', items: [['Sửa lỗi lưu ảnh', 'Hôm nay 14:00', 0], ['Nén ảnh hồ sơ', 'Ngày mai', 1], ['Thử khi mạng yếu', 'Thứ Năm', 2], ['Dọn bản nháp cũ', 'Tuần sau', 3]] },
+  { from: 'hien', q: 'Việc nào gấp nhất thì chạm trước.', items: [['Hỏi lại yêu cầu trò chơi nhỏ', 'Hôm nay 10:00', 0], ['Làm icon con mèo', 'Hôm nay 16:00', 1], ['Đọc tài liệu về app chạy nhanh', 'Ngày mai', 2], ['Viết lại những gì đã học', 'Cuối tuần', 3]] },
+  { from: 'tung', q: 'Việc nào gấp nhất thì chạm trước.', items: [['Sửa hiệu ứng ghép đôi', 'Hôm nay 15:00', 0], ['Làm màn hình lịch sử trò chuyện', 'Ngày mai', 1], ['Chốt quán cho tối thứ Sáu', 'Thứ Năm', 2], ['Nghĩ trò thử thách cho cả nhóm', 'Thứ Sáu', 3]] },
+  { from: 'an7', q: 'Việc nào gấp nhất thì chạm trước.', items: [['Thử lại lỗi đăng nhập', 'Hôm nay 11:00', 0], ['Chạy bộ thử tự động', 'Hôm nay 16:00', 1], ['Ghi lỗi mới vào bảng', 'Ngày mai', 2], ['Pha ấm trà cho cả tổ', 'Lúc nào cũng được', 3]] },
+  { from: 'thong', q: 'Việc nào gấp nhất thì chạm trước.', items: [['Chuẩn bị phương án B cho máy chủ', 'Hôm nay 12:00', 0], ['Thử gợi ý ghép đôi mới', 'Ngày mai', 1], ['Đọc báo cáo xu hướng', 'Thứ Sáu', 2], ['Lập kế hoạch quý sau', 'Tháng sau', 3]] },
+  { from: 'nguyen', q: 'Việc nào gấp nhất thì chạm trước.', items: [['Gửi bản vẽ màn hình hồ sơ', 'Hôm nay 16:00', 0], ['Chỉnh lại nút theo ý Trung', 'Ngày mai', 1], ['Vẽ icon mới', 'Thứ Sáu', 2], ['Dọn thư mục thiết kế', 'Cuối tuần', 3]] },
+);
 // Giọng lời nhờ việc theo tính cách (mặc định dùng câu chung)
 const WORK_VOICE = {
   an3: { sort: 'Em xếp mỗi ghi chú vào đúng nhóm giùm chị, nhanh nhanh nha.', order: 'Em xếp mấy việc này theo thứ tự làm trước – làm sau giùm chị, đừng để chị phải nhắc lần hai.' },
   yen: { sort: 'Ủa, bạn xếp giùm chị mấy cái này vô đúng nhóm nha.', order: 'Bạn xếp giùm chị mấy việc này, cái nào làm trước, cái nào làm sau nha.' },
   thao: { sort: 'Em xếp mỗi ghi chú vào đúng nhóm giúp chị nha. Giúp chị đi, chị mua đồ ăn cho!', order: 'Em xếp mấy việc này theo thứ tự làm trước – làm sau giúp chị nhé. Chị cảm ơn nhiều!' },
+  thanh: { sort: 'Dạ, {anh} xếp giúp em mấy ghi chú này vào đúng nhóm nha. Release sắp tới rồi, làm xong là nhẹ lòng, nhân quả mà.', order: 'Dạ, {anh} xếp giúp em mấy việc này theo thứ tự làm trước nha. Em đang lo bản release với doanh thu tuần này.' },
+  nam: { sort: 'Bạn xếp giúp mình mấy ghi chú này vô đúng nhóm nha. Khìn khìn, cảm ơn bạn!', order: 'Bạn xếp giùm mình mấy việc này, cái nào gấp thì làm trước nha. Khìn khìn.' },
+  phu: { sort: 'Ê, xếp giùm mình mấy cái này vô đúng nhóm nha. Hôm nay mình xui lắm, nhờ bạn cho chắc!', order: 'Bạn xếp giùm mình mấy việc này theo thứ tự nha, để mình khỏi làm sai thứ tự rồi xui thêm.' },
+  trung: { sort: 'Em nói thiệt, mấy cái này xếp đúng nhóm là gọn liền. Bạn giúp mình nha.', order: 'Em nói thiệt, xếp đúng thứ tự thì làm nhanh gấp đôi. Bạn xếp giúp mình mấy việc này nha.' },
+  toan: { sort: 'Bạn xếp giúp mình mấy ghi chú này vào đúng nhóm. Cảm ơn.', order: 'Bạn xếp giúp mình mấy việc này theo thứ tự. Cảm ơn.' },
+  hien: { sort: 'Dạ, {anh} giúp em xếp mấy ghi chú này vào đúng nhóm với ạ. Em cảm ơn {anh}!', order: 'Dạ, {anh} giúp em xếp mấy việc này theo thứ tự làm trước với ạ. Em còn đang học nên sợ xếp sai.' },
+  tung: { sort: 'Ê, xếp mấy cái này vô đúng nhóm đi, xong tui thách bạn một ván nha!', order: 'Xếp giùm tui mấy việc này theo thứ tự đi. Xếp đúng thì tui bao ly nước!' },
+  an7: { sort: 'Bạn xếp giúp mình mấy ghi chú này vào đúng nhóm nha. Mình pha trà rồi, làm xong uống luôn.', order: 'Bạn xếp giúp mình mấy việc này theo thứ tự nha. Xong rồi mình rót trà cho.' },
+  thong: { sort: 'Mấy cái này xếp đúng nhóm giúp mình nha, mình chuẩn bị luôn phương án B nếu lỡ sai!', order: 'Bạn xếp giúp mình mấy việc này theo thứ tự nha. Việc nào gấp thì làm trước, còn lại mình có phương án B.' },
+  nguyen: { sort: 'Ừ… xếp giúp mình mấy cái này vô đúng nhóm nha. Xong mình ngủ… à không, mình vẽ tiếp.', order: 'Xếp giúp mình mấy việc này theo thứ tự nha. Mình nằm nghĩ rồi làm sau.' },
 };
 // Cuối ngày chưa xong việc được giao: người giao việc phản ứng theo tính cách. aff/mood = mức trừ
 const WORK_QUOTA = 2;
@@ -583,6 +618,14 @@ const WORK_NAG = {
   bao: { aff: 1, mood: 2, lines: ['Ủa, việc mình nhờ chưa xong hả bạn? Vì sao vậy, có chỗ nào khó không? Mai mình dời deadline, nhưng nhớ làm trước nha.'] },
   thanh: { aff: 1, mood: 1, lines: ['Dạ… việc chưa xong hả {anh}? Không sao, nhân quả mà. Mai làm tiếp nha, em mua nước cho.'] },
   nam: { aff: 1, mood: 1, lines: ['Khìn khìn… chưa xong hả? Thôi mai mình làm chung nha.'] },
+  phu: { aff: 1, mood: 1, lines: ['Chưa xong hả bạn? Chắc mình xui lây qua bạn rồi… Mai làm nha, đừng lo.'] },
+  trung: { aff: 1, mood: 2, lines: ['Em nói thiệt, việc tồn càng lâu càng lâu đó. Để mình giải thích: dồn qua mai là mai làm gấp đôi. Mai làm sớm nha.'] },
+  toan: { aff: 1, mood: 1, lines: ['…Chưa xong hả. Ừ. Mai làm.'] },
+  hien: { aff: 1, mood: 1, lines: ['Dạ… việc em nhờ chưa xong hả {anh}? Không sao ạ, mai làm cũng được. Em xin lỗi vì nhờ gấp.'] },
+  tung: { aff: 1, mood: 1, lines: ['Chưa xong hả? Vậy mai tui thách bạn làm xong trước 10 giờ, thua là bao ly nước nha!'] },
+  an7: { aff: 1, mood: 1, lines: ['Chưa xong hả? Không sao đâu, mai làm. Mình pha trà cho cả hai nha. Mà đừng kể chị Ba nghe…'] },
+  thong: { aff: 1, mood: 1, lines: ['Ơ, chưa xong hả bạn? Không sao, mình có phương án B rồi: mai làm sớm nha, mình ngồi cạnh nhắc.'] },
+  nguyen: { aff: 1, mood: 1, lines: ['Chưa xong hả… ừ không sao. Mai làm, mình… nằm nghĩ giúp bạn.'] },
 };
 // Nhờ tìm hồ sơ buổi chiều
 const DOC_QUESTS = [
@@ -620,6 +663,23 @@ const FOODS = {
   vitquay: { name: 'vịt quay', emoji: '🦆' },
   takoyaki: { name: 'bánh takoyaki', emoji: '🐙' },
   cavien: { name: 'cá viên chiên', emoji: '🍢' },
+};
+// Lời chào khi ra về lúc 18:00 (hoạt cảnh tan ca): Chủ tịt về cuối cùng, Toàn ở lại làm tới 19:00
+const FAREWELL_LINES = {
+  thanh: 'Cả nhà về cẩn thận nha. Em tắt đèn rồi mới về. Toàn ơi, đừng ở khuya quá nha!',
+  toan: 'Mọi người về cẩn thận. Mình ở lại làm thêm chút, tới bảy giờ.',
+  an3: 'Về thôi! Bực bội quá… thằng bánh tét đâu rồi, đi về!',
+  an7: 'Dạ em về, chị Ba chờ em với!',
+  yen: 'Ủa, tới giờ về rồi hả? Là sao nhanh vậy?',
+  thao: 'Mọi người ăn gì chưa? Chị biết quán ngon trên đường về nè!',
+  tung: 'Ai đi nhậu thì theo tui!',
+  phu: 'Về thôi… mong đường về không kẹt xe, mình hay xui lắm.',
+  thong: 'Về thôi, mình chuẩn bị sẵn phương án B đường về rồi.',
+  trung: 'Em nói thiệt, hôm nay làm vậy là đủ rồi. Về nha.',
+  nam: 'Khìn khìn, mai gặp nha!',
+  hien: 'Dạ, em về trước ạ. Chào mọi người!',
+  bao: 'Về thôi, mai mình tiếp tục backlog nha.',
+  nguyen: 'Mình về nằm… à, về làm tiếp ở nhà.',
 };
 const UNLOCKS = [
   { id: 'mug', need: 1, emoji: '☕', name: 'Cốc cà phê MinhLee', desc: 'Cốc đầu tiên của nhân viên chính thức.', slot: [0.38, 0.28] },
@@ -1184,6 +1244,7 @@ const TOD = [
   { m: T('12:00'), sun: 0xffffff, si: 2.5, hs: 0xffffff, hg: 0xf0e6d2, hi: 1.55, bg: 0x9fd0f0, win: 0xffffff },
   { m: T('15:30'), sun: 0xffe2b8, si: 2.0, hs: 0xfff0d9, hg: 0xe8d0b0, hi: 1.4, bg: 0xc8dcea, win: 0xfff0d8 },
   { m: T('17:30'), sun: 0xff9d5c, si: 1.5, hs: 0xffc9a0, hg: 0xd9a77e, hi: 1.2, bg: 0xf0a878, win: 0xffc79a },
+  { m: T('18:40'), sun: 0x8a78b0, si: 0.7, hs: 0xb0a8d8, hg: 0x8a7a78, hi: 0.85, bg: 0x4f4a72, win: 0xffd9a0 },        // hoàng hôn tắt dần khi mọi người tan ca
 ];
 const _c1 = new THREE.Color(), _c2 = new THREE.Color();
 function applyTimeOfDay(m) {
@@ -1575,7 +1636,7 @@ function updateLock(dt) {
 }
 function updateCamera(dt, snap) {
   const k = snap ? 1 : 1 - Math.exp(-dt * 7);
-  if (G.tl) { CAM.tx = lerp(CAM.tx, 0, k); CAM.tz = lerp(CAM.tz, 0.5, k); }        // chế độ ngồi làm việc: camera quay nhẹ quanh phòng
+  if (G.tl || G.fw) { CAM.tx = lerp(CAM.tx, 0, k); CAM.tz = lerp(CAM.tz, 0.5, k); }        // chế độ ngồi làm việc: camera quay nhẹ quanh phòng
   else { CAM.tx = lerp(CAM.tx, P.pos.x, k); CAM.tz = lerp(CAM.tz, P.pos.z, k); }
   const lx = CAM.tx - Math.sin(CAM.yaw) * 1.3, lz = CAM.tz - Math.cos(CAM.yaw) * 1.3;   // nhìn lệch về phía trước để thấy nơi sắp tới
   const cp = Math.cos(CAM.pitch), sp = Math.sin(CAM.pitch), dx = Math.sin(CAM.yaw) * cp, dz = Math.cos(CAM.yaw) * cp, dy = sp;
@@ -1633,7 +1694,7 @@ function resetNpcDay(n) {
   const remote = hb.attendance != null && Math.random() > hb.attendance;      // làm từ xa: hôm nay không lên công ty
   n.times = { arrive: remote ? 99999 : T(hb.arrive), leave: T(hb.leave) + rand(-3, 5), lunchStart: ls, lunchEnd: ls + 55, coffee: cof };
   if (hb.lounge) { const ns = ls + 55 + rand(0, 25); n.times.nap = [ns, ns + rand(30, 50)]; }          // chỉ nằm ngủ một lúc sau bữa trưa, còn lại ngồi ghế sofa làm việc
-  Object.assign(n, { state: 'hidden', goal: null, path: [], override: null, visit: null, frozen: false, mood: 45 + Math.random() * 25, greetedPlayer: false, attends: false, meetSeat: -1, visitCool: rand(30, 90), joinsTreat: false, treat: null,
+  Object.assign(n, { state: 'hidden', goal: null, path: [], override: null, visit: null, frozen: false, mood: 45 + Math.random() * 25, greetedPlayer: false, attends: false, meetSeat: -1, visitCool: rand(30, 90), joinsTreat: false, treat: null, saidBye: false,
     inviteReady: false, animOverride: null, joinsCake: false, curSeat: null, hostUntil: 0, idleCool: rand(20, 50), standCool: 0, absentCool: rand(5, 12) });
   n.quirkDone.clear(); n.ch.root.visible = false;
   if (AFF[n.id] == null) AFF[n.id] = n.p.relation;
@@ -1936,7 +1997,7 @@ const MS = [
   { id: 'break', from: T('11:00'), name: 'Giải lao', hint: () => 'Ghé pantry (góc trái phía trên), pha đồ uống và trò chuyện.', done: () => D.flags.break },
   { id: 'lunch', from: T('12:00'), name: 'Ăn trưa', hint: () => 'Ăn trưa ở pantry, có thể rủ đồng nghiệp cùng ăn.', done: () => D.flags.lunch },
   { id: 'afternoon', from: T('13:30'), name: 'Buổi chiều', hint: () => afternoonHint(), done: () => D.tasks >= 2 && D.quest.stage >= 3 },
-  { id: 'wrap', from: T('17:00'), name: 'Kết thúc ngày', hint: () => 'Hết giờ rồi! Ra cửa chính (tường bên phải) để về, nhớ để lại lời nhắn nhé.', done: () => false },
+  { id: 'wrap', from: T('17:30'), name: 'Kết thúc ngày', hint: () => 'Sắp hết giờ rồi! Đúng 6 giờ cả văn phòng tan ca. Nhớ để lại lời nhắn trước khi về nhé.', done: () => false },
 ];
 function currentMilestone(m) { let cur = MS[0]; for (const x of MS) if (m >= x.from) cur = x; return cur; }
 function afternoonHint() {
@@ -2059,7 +2120,7 @@ function applyTier(n, tier, first = true) {
   D.talked.add(n.id); if (tier === 'great') addMoment(`${n.p.name} rất vui vì cuộc trò chuyện với bạn.`);
 }
 function replyLine(n, tier) { return pick(n.p.reply[tier]); }
-const periodGreet = (m) => (m < T('11:00') ? 'Chào buổi sáng' : m < T('13:00') ? 'Chào buổi trưa' : m < T('17:00') ? 'Chiều rồi' : 'Sắp tan làm rồi');
+const periodGreet = (m) => (m < T('11:00') ? 'Chào buổi sáng' : m < T('13:00') ? 'Chào buổi trưa' : m < T('17:30') ? 'Chiều rồi' : 'Sắp tan làm rồi');
 
 // --- Trò chuyện với đồng nghiệp ---
 function startTalk(n) {
@@ -2068,7 +2129,7 @@ function startTalk(n) {
   const status = n.state === 'seated' && n.goal && n.goal.id === 'meet' ? 'đang ngồi họp' : n.goal && n.goal.id.startsWith('desk') ? 'đang làm việc ở bàn' : n.goal && n.goal.id.startsWith('pantry') ? 'đang ở pantry' : n.goal && n.goal.id === 'lounge' ? 'đang nằm nghỉ ở pantry' : n.goal && n.goal.id === 'sofa:0' ? 'đang nghỉ ngơi' : 'đang rảnh';
   const intro = aff >= 75 && Math.random() < 0.6 ? pick(FRIEND_GREET) : (n.greetedPlayer || D.greeted.has(n.id) ? lineFor(n, false) : lineFor(n, true));
   ch.push({ label: '👋 Chào hỏi', run: () => greetFlow(n) });
-  const atDesk = n.state === 'seated' && n.goal && n.goal.id.startsWith('desk') && m >= T('09:00') && m < T('17:00');
+  const atDesk = n.state === 'seated' && n.goal && n.goal.id.startsWith('desk') && m >= T('09:00') && m < T('17:30');
   if (atDesk && !D.deskDone.has(n.id)) ch.push({ label: '💼 Trao đổi công việc', hint: 'Họ có chuyện muốn hỏi ý bạn', run: () => deskChat(n) });
   if (D.quest.stage === 1 && D.quest.def.npc === n.id) ch.push({ label: '📎 Hỏi xem họ cần gì', main: true, run: () => questAsk(n) });
   if (D.quest.stage === 2 && D.quest.def.npc === n.id) ch.push({ label: '🔁 Hỏi lại: cần lấy gì nhỉ?', run: () => { const line = fill(D.quest.def.ask); sayNpc(n, line); Card.show({ who: whoOf(n), meta: hearts(AFF[n.id]), text: `“${line}”`, choices: [{ label: 'Ok, mình đi lấy', main: true, run: () => closeCard() }] }); } });
@@ -2187,7 +2248,7 @@ function meetingActivity() {
 // --- Làm việc tại bàn: một đồng nghiệp nhờ bạn một việc nhỏ; tiến độ được giữ khi bấm Tạm dừng ---
 const workTitle = (kind) => (kind === 'sort' ? 'Ghép ghi chú vào đúng nhóm' : 'Xếp việc theo thứ tự cần làm');
 function newWork(kind) {
-  const sets = kind === 'sort' ? SORT_SETS : ORDER_SETS, set = (Math.random() * sets.length) | 0, n = kind === 'sort' ? sets[set].notes.length : sets[set].items.length;
+  const sets = kind === 'sort' ? SORT_SETS : ORDER_SETS, here = sets.map((x, i) => i).filter((i) => { const a = npcById(sets[i].from); return a && a.times.arrive < 99999; }), pool = here.length ? here : sets.map((x, i) => i), set = pool[(Math.random() * pool.length) | 0], n = kind === 'sort' ? sets[set].notes.length : sets[set].items.length;
   return { kind, set, from: sets[set].from, order: shuffle([...Array(n).keys()]), done: [], next: 0, elapsed: 0, wrong: 0 };
 }
 const workSetOf = (w) => (w.kind === 'sort' ? SORT_SETS : ORDER_SETS)[w.set];
@@ -2195,7 +2256,7 @@ const workCount = (w) => (w.kind === 'sort' ? w.done.length : w.next);
 function workProgress(w) { return w.kind === 'sort' ? `đã ghép ${w.done.length}/${w.order.length} ghi chú` : `đã xếp ${w.next}/${w.order.length} việc`; }
 function workBrief(w) {                                   // lời nhờ của đồng nghiệp: nói rõ ai nhờ, nhờ gì, làm thế nào là xong
   const n = npcById(w.from), nm = n ? n.p.name : 'Đồng nghiệp';
-  const v = (WORK_VOICE[w.from] || {})[w.kind];
+  const v = fill((WORK_VOICE[w.from] || {})[w.kind] || '');
   return w.kind === 'sort' ? `${nm} gửi bạn ${w.order.length} ghi chú và nhờ: “${v || 'Em xếp mỗi ghi chú vào đúng nhóm giúp.'}” Xếp xong hết là hoàn thành.`
     : `${nm} nhờ bạn: “${v || `Em xem hạn chót rồi xếp ${w.order.length} việc này theo thứ tự làm trước – làm sau giúp nhé.`}” Chạm từng việc, việc gấp nhất chạm trước.`;
 }
@@ -2220,7 +2281,7 @@ function workNag(next) {
   if (!n) { next(); return; }
   const line = fill(pick(cfg.lines)); changeAff(n.id, -cfg.aff); addMood(-cfg.mood); D.talked.add(n.id); Sfx.wrong(); D.stats.nagged = (D.stats.nagged || 0) + 1;
   addMoment(`Chưa xong việc ${n.p.name} giao, bị ${n.p.name} nhắc.`); sayNpc(n, line); if (cfg.punch) n.animOverride = { name: 'punch', until: Bubbles.now() + 2.4 };
-  Card.show({ who: whoOf(n), meta: hearts(AFF[n.id]), text: `Sắp về mà việc ${n.p.name} giao vẫn chưa xong, ${n.p.name} ghé qua bàn bạn.\n\n“${line}”`, choices: [{ label: 'Dạ, em xin lỗi, mai em làm', main: true, run: () => { changeAff(n.id, 1); next(); } }] });
+  Card.show({ who: whoOf(n), meta: hearts(AFF[n.id]), text: `Sắp về mà việc ${n.p.name} giao vẫn chưa xong, ${n.state === 'hidden' ? `${n.p.name} nhắn tin hỏi bạn` : `${n.p.name} ghé qua bàn bạn`}.\n\n“${line}”`, choices: [{ label: 'Dạ, em xin lỗi, mai em làm', main: true, run: () => { changeAff(n.id, 1); next(); } }] });
 }
 function awardWork() {                                  // cộng dồn đầu việc qua các ngày, mở khóa đồ mới trên bàn
   const st = Store.get(), total = (st.tasksTotal || 0) + 1, have = st.unlocked || [], fresh = UNLOCKS.filter((u) => total >= u.need && !have.includes(u.id));
@@ -2568,12 +2629,12 @@ function processTimeEvents(prev, now) {
   };
   treat(T('11:05'), 'Chủ tịt mua nước mời cả phòng.', 8); treat(T('14:10'), 'Chủ tịt mua đồ ăn vặt cho mọi người.', 8);
   D.theme.treats.forEach(([t, msg]) => treat(T(t), msg, 8));
-  if (cross(T('17:00'))) toast('🌇 Hết giờ làm rồi. Ra cửa chính để về nhé!');
+  if (cross(T('17:30'))) toast('🌇 Còn nửa tiếng nữa là tan ca. Đến 6 giờ cả văn phòng sẽ ra về!');
   const ms = currentMilestone(now); if (ms.id !== D.lastMs) { if (D.lastMs) toast(`🕘 ${fmtTime(now)} · ${ms.name}`); D.lastMs = ms.id; }
 }
 function tickClock(dt) {
   const prev = D.minute, rate = CFG.SPEED * (G.fast ? CFG.FAST : 1);
-  D.minute = Math.min(CFG.END, D.minute + dt * rate); addEnergy(-(D.minute - prev) * 0.04 * D.theme.decay);
+  D.minute = Math.min(G.fw ? CFG.END + CFG.FAREWELL : CFG.END, D.minute + dt * rate); addEnergy(-(D.minute - prev) * 0.04 * D.theme.decay);
   processTimeEvents(prev, D.minute); applyTimeOfDay(D.minute);
   if (G.mode === 'play' && !P.lock) {            // sự kiện bất ngờ: đến giờ vẫn chờ, chỉ bật khi bạn đứng gần người liên quan
     const near = (n) => n && n.state !== 'hidden' && Math.hypot(n.pos.x - P.pos.x, n.pos.z - P.pos.z) < CFG.SURPRISE_NEAR;
@@ -2585,9 +2646,26 @@ function tickClock(dt) {
       sp.fired = true; fireSurprise(sp.ev); break;
     }
   }
-  if (D.minute >= CFG.END && !D.ended) {
-    Card.show({ who: null, text: 'Đã 17:30, hết giờ làm. Cả văn phòng đang thu dọn. Bạn về chứ?', choices: [{ label: '🏠 Về thôi', main: true, run: () => endDay() }] });
+  if (D.minute >= CFG.END && !D.ended && !G.fw) {
+    if (!D.fwDone) startFarewell();
+    else Card.show({ who: null, text: farewellEndText(), choices: [{ label: '🏠 Về thôi', main: true, run: () => endDay() }] });
   }
+}
+/* Hoạt cảnh tan ca lúc 18:00: camera quay quanh văn phòng, mọi người lần lượt ra về, Chủ tịt về cuối cùng, Toàn ở lại tới 19:00 */
+function startFarewell() {
+  if (LITE) { D.fwDone = true; return; }
+  endTimelapse(false); Card.hide(); Modal.close(false);
+  G.fw = { yaw: CAM.yaw, dist: CAM.dist, pitch: CAM.pitch, toanSaid: false }; G.mode = 'farewell'; CAM.dist = 12; CAM.pitch = 0.9;
+  toast('🌇 Sáu giờ chiều rồi. Cả văn phòng lần lượt tan ca…', 4200); Sfx.chime();
+}
+function farewellEndText() {
+  const toan = npcById('toan'), stays = toan && toan.state !== 'hidden';
+  return stays ? 'Cả văn phòng đã ra về, chỉ còn Toàn ngồi lại làm tới 7 giờ tối. Bạn cũng về chứ?' : 'Cả văn phòng đã ra về. Bạn về chứ?';
+}
+function endFarewell() {
+  const f = G.fw; if (!f) return;
+  G.fw = null; CAM.yaw = f.yaw; CAM.dist = f.dist; CAM.pitch = f.pitch; D.fwDone = true; if (!LITE) updateCamera(0, true); G.mode = 'play';
+  Card.show({ who: null, text: farewellEndText(), choices: [{ label: '🏠 Về thôi', main: true, run: () => endDay() }] });
 }
 function endDay() {
   if (D.ended) return; D.ended = true; Card.hide(); endTimelapse(false);
@@ -2652,6 +2730,11 @@ function update(dt) {
   else if (G.mode === 'timelapse') {                              // ngồi làm việc: thời gian trôi nhanh, camera quay nhẹ; dừng khi sang mốc mới của ngày
     tickClock(dt); CAM.yaw += dt * 0.2; const tc = $('#tl-clock'); if (tc) tc.textContent = fmtTime(D.minute);
     if (G.mode === 'timelapse') { const ms = currentMilestone(D.minute); if (ms.id !== G.tl.ms) endTimelapse(true, `🕘 ${fmtTime(D.minute)} · ${ms.name}`); }
+  } else if (G.mode === 'farewell') {
+    tickClock(dt); CAM.yaw += dt * 0.12;
+    for (const n of NPCS) if (!n.saidBye && n.state !== 'hidden' && n.goal && n.goal.id === 'leave') { n.saidBye = true; tryNpcSay(n, fill(FAREWELL_LINES[n.id] || 'Mai gặp nha!'), 1); }
+    const toan = npcById('toan'); if (!G.fw.toanSaid && toan && toan.state === 'seated' && D.minute >= CFG.END + 3) { G.fw.toanSaid = true; tryNpcSay(toan, FAREWELL_LINES.toan, 1); }
+    if (!NPCS.some((n) => n.id !== 'toan' && n.state !== 'hidden') || D.minute >= CFG.END + CFG.FAREWELL) endFarewell();
   } else if (G.tl) endTimelapse(false);
   updatePantryTable(D.minute);
   G.saveT = (G.saveT || 0) + dt; if (G.saveT > 5) { G.saveT = 0; saveSession(); }

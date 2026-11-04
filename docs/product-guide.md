@@ -39,7 +39,7 @@ When you get near something you can use, the big button shows what it does. Some
 
 ## Your day
 
-Time runs from **08:30** to **17:30**. One full day takes about 7 minutes at normal speed. The clock is shown at the top of the screen, and the box below it shows your current goal. Tap that box to pause and see the full list for the day (see "The mission board" below).
+Time runs from **08:30** to **18:00**. One full day takes about 7 and a half minutes at normal speed. The clock is shown at the top of the screen, and the box below it shows your current goal. Tap that box to pause and see the full list for the day (see "The mission board" below).
 
 | Time | Milestone | What to do |
 |---|---|---|
@@ -49,10 +49,14 @@ Time runs from **08:30** to **17:30**. One full day takes about 7 minutes at nor
 | 11:00 | **Giải lao** (Break) | Visit the pantry (top left). Pick a drink and chat with someone. You can invite a coworker to join you. Around 11:05, Chủ tịt buys drinks for everyone, which gives you a little energy and mood. The drink is chosen at random: milk tea, rau má (a green herbal drink), or sugarcane juice. Chủ tịt asks people to come to the pantry. Up to eight coworkers gather there with him, and everyone else finds a takeaway cup on their desk. Around 14:10 he buys snacks instead. On milk-tea days he also treats the team around 09:55 and 16:00. |
 | 12:00 | **Ăn trưa** (Lunch) | Eat at the pantry. Lunch is available until about 13:40. |
 | 13:30 | **Buổi chiều** (Afternoon) | Help out. A coworker may ask you to fetch a document from the filing cabinet (bottom right). Listen to what they ask for, because the game will not remind you of the name later (see "The document request" below). Other events can happen: a printer jam, or a small birthday cake party in the pantry. Around 14:10, Chủ tịt brings snacks for everyone. |
-| 17:00 | **Kết thúc ngày** (Wrap-up) | Leave through the front door (on the right-hand wall, in the middle). You can leave a sticky note for a coworker first. |
-| 17:30 | End of the workday | The office closes. You are asked if you are ready to go home. |
+| 17:30 | **Kết thúc ngày** (Wrap-up) | Time to wrap up. You can leave a sticky note for a coworker, then leave through the front door (on the right-hand wall, in the middle). |
+| 18:00 | **Tan ca** (End of the workday) | The farewell scene starts. See "The farewell scene at 6 pm" below. |
 
-You can also leave early from the front door after 16:00. If you leave before 17:10, the game asks you to confirm.
+You can also leave early from the front door after 16:00. If you leave before 17:40, the game asks you to confirm.
+
+### Who can ask you for a job
+
+Every coworker who is in the office that day can ask you for a small job. That includes Anh Bảo, Chị Ba, Yến, Thảo, Chủ tịt, Nam, Phú, Trung, Toàn, Hiện, Tùng, Chú 7, Thông, and Nguyên. Each one has their own way of asking. Some jobs sort notes into projects, and some put tasks in deadline order. Nguyên works from home on some days, so he does not ask on those days. Each coworker asks for a different kind of work, so the job you get depends on who is in the office and on chance.
 
 ### Other places in the office
 
@@ -116,7 +120,7 @@ When you sit down at your desk, the first choice is **🪑 Ngồi làm việc (t
 - Tap or click anywhere, or press Space, Enter, or Esc, to stop. You return to the job menu.
 - The clock also stops by itself when the next milestone starts. A notice shows the time and the milestone, and the job menu opens again.
 - Time-lapse does not count as a finished job. If you want the job to count, choose **▶ Bắt đầu làm** (Start) instead.
-- At 17:30 the end-of-day steps start, as usual.
+- At 18:00 the farewell scene starts, as usual (see "The farewell scene at 6 pm").
 
 ### The document request
 
@@ -173,7 +177,17 @@ The day type is picked at random and usually does not repeat from one day to the
 
 ## Ending the day
 
-If you finished fewer than 2 jobs today, the coworker who gave you a job comes to your desk before you leave. Each coworker reacts in their own way. Chị Ba scolds you and gives you a light punch, Yến asks what happened, Thảo says it is fine and promises a treat, and Anh Bảo asks why. You lose a little of their friendliness and a little mood. If you say sorry, they forgive you and your friendliness goes up a little. The same reminder comes if you leave early.
+### The farewell scene at 6 pm
+
+At 18:00 the office starts to go home. The camera turns slowly around the room, and the clock keeps running for a little while.
+
+- Your coworkers say goodbye and leave one by one. Chủ tịt (Thạnh) is the last to go, apart from Toàn.
+- Toàn stays behind to keep working until 7 pm.
+- Once everyone except Toàn has gone, or after about 40 game minutes, the scene ends.
+- You are then told who is still in the office. Choose **"🏠 Về thôi"** (Let's go home) to finish the day and go on to the steps below.
+- If you leave through the front door before 6 pm, the scene is skipped.
+
+If you finished fewer than 2 jobs today, the coworker who gave you a job comes to your desk before you leave. Each coworker reacts in their own way. Chị Ba scolds you and gives you a light punch, Yến asks what happened, Thảo says it is fine and promises a treat, and Anh Bảo asks why. Every other coworker who can ask you for a job has a reaction of their own too. If the coworker who gave you the job has already left the office, they send you a message instead of coming by. You lose a little of their friendliness and a little mood. If you say sorry, they forgive you and your friendliness goes up a little. The same reminder comes if you leave early.
 
 At the end of the day you can:
 
@@ -237,6 +251,9 @@ Yes. Sit at your desk and choose **🪑 Ngồi làm việc (thời gian trôi qu
 
 **A coworker came to my desk at the end of the day because I did not finish their job. Why?**
 You finished fewer than 2 jobs that day. The coworker who gave you a job reminds you. Say sorry to get some friendliness back. The day still ends as usual, and you can still write a sticky note and read the summary.
+
+**Who can ask me for a job?**
+Any coworker who is in the office that day, from Anh Bảo to Nguyên. Nguyên works from home on some days, so he does not ask then. See "Who can ask you for a job" under "Your day".
 
 **How do I unlock the items on my desk?**
 Finish desk jobs. Each finished job counts toward the next item. Open **🎁 Đồ trên bàn làm việc** from the pause menu to see what is left.
@@ -310,6 +327,9 @@ On the right-hand wall, in the middle of the office. You start the day right nex
 
 **Can I skip ahead?**
 Yes. Open the pause menu (P or ⏸) and choose "Bỏ qua tới …" to jump to the next milestone. You can also use ⏩ to speed up time.
+
+**What happens at 6 pm?**
+The workday ends. Your coworkers say goodbye and go home one by one while the camera turns slowly around the office. Toàn stays late. When the scene ends, you choose when to go home. Your day is then written to the diary, as usual.
 
 **Does the game end?**
 No. There is no ending. Keep playing day after day for as long as you like. The title screen shows how many days you have worked.

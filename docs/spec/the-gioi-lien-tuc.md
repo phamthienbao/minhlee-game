@@ -19,7 +19,7 @@ The game has no ending. Each day is one work day. Days run Monday to Friday, the
 | Other days | The summary button reads "☀ Sang ngày tiếp theo" and starts the next day | `showSummary()` |
 | Title button | "Bắt đầu ngày mới" when `days` is 0. Otherwise "▶ Tiếp tục: <weekday>, tuần N". With a valid mid-day session, "🔄 Bắt đầu lại ngày này" (§11) | `refreshTitle()` |
 | Title info | "Bạn đã làm ở MinhLee N ngày. Game không có hồi kết…" | `refreshTitle()` |
-| Ending | None. No end screen, no game-over, no day cap. The 17:30 prompt ends only the current day | `processTimeEvents()` |
+| Ending | None. No end screen, no game-over, no day cap. The 18:00 farewell scene ends only the current day (v1.16.0; was the 17:30 prompt) | `tickClock()`, `startFarewell()`, `endFarewell()` (`docs/spec/tan-ca-18-gio.md`) |
 
 ## 3. Weekend vignette
 

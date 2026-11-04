@@ -1,6 +1,6 @@
 # Spec: Thẻ mục tiêu và bảng nhiệm vụ (goal card, mission board)
 
-Status: v1.13.0 (2026-11-04). The document-quest row and the afternoon hint no longer name the document (§3.3, §3.5; `docs/spec/nhiem-vu-tai-lieu.md`). Earlier: v1.9.0 (2026-11-04). Pause menu gets a "🎁 Đồ trên bàn làm việc" button (§2). Desk items unlocked by finished tasks are in §9 (AC-78 to AC-80). The goal card and board layout are as shipped in v1.8.0. v1.8.6 changes the morning hint (§3.1, §3.4), adds the desk world label (§2), and notes that the desk-task pause button is separate from the pause menu (§4).
+Status: v1.16.0 (2026-11-04). The `wrap` milestone starts at 17:30 (was 17:00), with the new hint (§3.2). Earlier: v1.13.0 (2026-11-04). The document-quest row and the afternoon hint no longer name the document (§3.3, §3.5; `docs/spec/nhiem-vu-tai-lieu.md`). Earlier: v1.9.0 (2026-11-04). Pause menu gets a "🎁 Đồ trên bàn làm việc" button (§2). Desk items unlocked by finished tasks are in §9 (AC-78 to AC-80). The goal card and board layout are as shipped in v1.8.0. v1.8.6 changes the morning hint (§3.1, §3.4), adds the desk world label (§2), and notes that the desk-task pause button is separate from the pause menu (§4).
 
 Source of truth: `index.html`, section 10 (HUD, pause menu) and the `.obj` / `.qb` CSS in `<style>`. Parent spec: `docs/spec/mot-ngay-o-cong-ty.md` (§4.2 milestones and pause).
 
@@ -46,7 +46,7 @@ One row per entry of `MS`: icon, start time (`fmtTime(from)`), name. Icons are c
 | 3 | ⏭ | Not done, and the clock has passed the next milestone's `from` | `.row.skip` (50% opacity). Underneath: "Đã qua, không sao cả, ngày vẫn tiếp tục" |
 | 4 | ⏳ | Anything else (upcoming) | `.row` |
 
-"Next milestone's `from`" for the last entry (`wrap`, 17:00) is `CFG.END + 1` (17:31), which the day never reaches. So the 17:00 milestone is never ⏭. Its `done()` is always false, so it shows ▶️ from 17:00 until the day ends.
+"Next milestone's `from`" for the last entry (`wrap`, 17:30 since v1.16.0; was 17:00) is `CFG.END + 1` (18:01). The clock reaches 18:01 only during the farewell scene (`docs/spec/tan-ca-18-gio.md`), when the board cannot be opened. So the `wrap` milestone is never ⏭ in play. Its `done()` is always false, so it shows ▶️ from 17:30 until the day ends.
 
 ### 3.3 "Việc nhỏ hôm nay": side tasks (`extraTasks()`)
 
@@ -117,7 +117,7 @@ The "Buổi sáng" (09:00) milestone's `hint()` reads: "Đến bàn của bạn 
 ## 7. Open items
 
 - Not keyboard reachable. Options: `role="button"`, `tabindex="0"`, and an Enter / Space handler. Not decided. Tracked in `docs/tasks.md`.
-- The 17:00 milestone never shows ⏭ and stays ▶️ until the player leaves (§3.2). Decide whether it should show ✅ when the day ends.
+- The `wrap` milestone (17:30 since v1.16.0) never shows ⏭ and stays ▶️ until the player leaves (§3.2). Decide whether it should show ✅ when the day ends.
 - No real-phone test (MB-6). Wording review (MB-7).
 
 ## 8. Related docs
