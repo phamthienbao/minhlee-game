@@ -2,6 +2,27 @@
 
 All notable changes to "Một Ngày Ở MinhLee" (formerly "Một Ngày Ở Công Ty", renamed in v1.0.3). Newest first. Entries are appended, never rewritten.
 
+## v1.9.1 — 2026-11-04
+
+Text-only release. Chị Ba (An, `an3`) is now grumpier and visibly annoyed, while staying funny. No logic, ids, save fields, or layout changed.
+
+### Changed
+
+- `index.html`, Chị Ba's lines (`an3`) rewritten in a gruffer, mock-annoyed tone (short, "cọc"). Still never mean; the "đấm nhẹ" (light punch) joke stays:
+  - `say.greet`, `say.idle`, `say.chat`, `say.pantry`.
+  - `reply`, `request` (ask), `meeting` (positive and negative lines).
+  - `quirks` (including the note line).
+  - The `DOC_QUESTS` ask line for the afternoon document quest.
+  - Two `DUOS` lines: the duo with Chú 7 and the duo with Nam.
+  - The `dammhaam` surprise result line.
+- Unchanged on purpose: the stand-up catchphrase "Bực bội quá… thằng bánh tét đâu rồi!" (`say.stand`), the `say.standReply` line from Chú 7, and the trait labels, which are still not shown in the game.
+- `docs/spec/dong-nghiep.md` §7.6: new Chị Ba voice note with tone guidance for future edits.
+
+### Verification
+
+- JavaScript syntax check and a headless smoke run only.
+- Wording not reviewed by a native speaker.
+
 ## v1.9.0 — 2026-11-04
 
 Six new day themes, each opening with a short story at 08:50 that the player answers with one of three choices. Finished desk tasks now add up across days and unlock eight items that appear on the player's desk in 3D. A collection screen in the pause menu lists them. No change to schedule, attendance, layout, save key, or the save format's existing fields.

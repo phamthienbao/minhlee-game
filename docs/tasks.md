@@ -8,6 +8,12 @@ Legend: `[x]` done, `[ ]` todo, `[~]` in progress, `[!]` blocked.
 
 Items for v1.0.0 to v1.8.1 are archived in `docs/archive/tasks-done-2026-11.md`.
 
+- [x] v1.9.1 (2026-11-04): text-only. Chị Ba's (`an3`) lines made grumpier and visibly annoyed, still funny and never mean. Signature stand line unchanged. No logic or ids changed. Details: `docs/changelog.md` v1.9.1, `docs/spec/dong-nghiep.md` §7.6
+  - [x] Lines rewritten in `index.html`: `say.greet`, `say.idle`, `say.chat`, `say.pantry`, `reply`, `request`, `meeting`, `quirks`, `DOC_QUESTS` ask, two `DUOS` lines (Chú 7, Nam), `dammhaam` result
+  - [x] JavaScript syntax check and headless smoke run
+  - [ ] Native-speaker review of the new Chị Ba wording (not reviewed)
+  - [ ] Hand-check Chị Ba's lines in a real browser (tone and bubble fit, not recorded)
+
 - [x] v1.9.0 (2026-11-04): six new day themes (demo, power, cat, hack, sick, award), each opening with a story intro at 08:50 that fires when the player is near a coworker. Desk items: finished desk tasks add up across days and unlock 8 items on the 3D desk, with a collection screen in the pause menu. Details: `docs/changelog.md` v1.9.0, `docs/spec/noi-dung-bat-ngo.md` §3.2 and AC-75 to AC-77, `docs/spec/bang-nhiem-vu.md` §9 and AC-78 to AC-80, `docs/product-guide.md`
   - [x] `DAY_THEMES` (six themes with `intro`), `UNLOCKS`, `awardWork()`, `showUnlocks()`, `nextUnlockLine()`, `showCollection()`, `buildDeskItems()` in `index.html`
   - [x] Headless Chrome: intro fires near a coworker; unlock thresholds; 8 desk items built

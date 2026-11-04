@@ -1,6 +1,6 @@
 # Spec: Đồng nghiệp (coworkers, address terms, remote worker)
 
-Status: v1.8.5 (2026-11-04). Nguyên's look is updated; the lying-coworker name tag, bubble, and ambient gate all use the lying anchor (v1.8.4, §7.1).
+Status: v1.9.1 (2026-11-04). Chị Ba's lines are grumpier (text only), tone guidance in §7.6. Nguyên's look (v1.8.5); the lying-coworker name tag, bubble, and ambient gate use the lying anchor (v1.8.4, §7.1).
 
 ## 1. Roster
 
@@ -176,3 +176,14 @@ Absent (`say.absent`):
 - Display: `tryNpcSay()` at prio 0, so the same gates as above apply.
 - Ends: when `who` arrives, or the speaker stops sitting at the desk.
 - Nam's lines keep his "khìn khìn" habit and are peer-level (mình / bạn).
+
+### 7.6 Chị Ba's voice (v1.9.1)
+
+Chị Ba (`an3`) is grumpier than before, and visibly annoyed, but still funny. Tone guidance for any new or edited line:
+
+- Short sentences. Gruff and mock-annoyed ("cọc", "bực bội").
+- Never mean. She teases, she does not insult. Teasing is aimed at Chú 7 (the "bánh tét" nickname) and in the duo with Nam, and the joke is always light.
+- The playful "đấm nhẹ" (light punch) stays as a running joke. The punch animation is `visitAnim: 'punch'` (roster row 11, quirk 09:12).
+- Keep her address terms (§2): "anh" for Chủ tịt, peer "tui / ông" banter with Nam.
+- Lines updated in v1.9.1: `say.greet`, `say.idle`, `say.chat`, `say.pantry`, `reply`, `request` (ask), `meeting` (pos/neg), `quirks`, `note`, the `DOC_QUESTS` ask line, duo lines with Chú 7 and Nam, and the `dammhaam` result. Unchanged: `say.stand`, `say.standReply`.
+- Wording is not native-reviewed (see `docs/tasks.md`).
