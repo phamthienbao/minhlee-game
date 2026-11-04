@@ -1,6 +1,6 @@
 # Chế độ nhiều người chơi (Supabase)
 
-Trạng thái: Giai đoạn 1 đã triển khai (v2.0.0-alpha, 2026-11-04; sửa v2.0.1-alpha). Chủ dự án đã thử đăng nhập thật và lưu lên máy chủ thành công (2026-11-04, sau khi cấp quyền bảng, §6.1). Đăng nhập bằng email và mật khẩu thay cho link email: v2.1.0-alpha (`docs/spec/dang-nhap-cong-ty.md`, tóm tắt §10). Từ v2.1.0-alpha, màn đăng nhập chỉ hiện khi cờ `loginEnabled` bật. Giai đoạn 2 đến 6 chưa bắt đầu. Chi tiết triển khai giai đoạn 1: §9. Tài liệu này ghi các quyết định của chủ dự án để các phiên làm việc sau không phải hỏi lại.
+Trạng thái: Giai đoạn 1 đã triển khai (v2.0.0-alpha, 2026-11-04; sửa v2.0.1-alpha). Chủ dự án đã thử đăng nhập thật và lưu lên máy chủ thành công (2026-11-04, sau khi cấp quyền bảng, §6.1). Đăng nhập bằng email và mật khẩu thay cho link email: v2.1.0-alpha (`docs/spec/dang-nhap-cong-ty.md`, tóm tắt §10). Từ v2.1.0-alpha, màn đăng nhập chỉ hiện khi cờ `loginEnabled` bật. Giai đoạn 2 (thấy nhau) có phiên bản đầu từ v2.2.0-alpha, chưa commit (`docs/spec/thay-nhau.md`, tóm tắt §12). Giai đoạn 3 đến 6 chưa bắt đầu. Chi tiết triển khai giai đoạn 1: §9. Tài liệu này ghi các quyết định của chủ dự án để các phiên làm việc sau không phải hỏi lại.
 
 ## 1. Mục tiêu
 
@@ -39,13 +39,14 @@ Nhân viên MinhLee (tối đa 14 người, đúng 14 nhân vật hiện có) đ
 
 ### Realtime
 
-- Kênh theo ngày game. Presence: ai đang online. Broadcast: vị trí và trạng thái người chơi (khoảng 5–10 lần mỗi giây), vị trí NPC do máy chủ NPC phát, chat, giao việc.
+- Kế hoạch ban đầu: kênh theo ngày game. Presence: ai đang online. Broadcast: vị trí và trạng thái người chơi (khoảng 5–10 lần mỗi giây), vị trí NPC do máy chủ NPC phát, chat, giao việc.
 - Kênh riêng (private) chỉ cho người đã đăng nhập.
+- Thực tế giai đoạn 2 (v2.2.0-alpha): một kênh chung `office` (không theo ngày, vì chưa có đồng hồ chung), Presence khóa theo id nhân vật, Broadcast `pos` khoảng 3 lần mỗi giây khi đi, nhịp 10 s khi đứng yên, không gửi khi đứng một mình. Kênh chưa phải riêng (private). Hạn mức Realtime, công thức tin nhắn và quyết định còn mở: `docs/spec/thay-nhau.md` §2, §6.
 
 ## 5. Các giai đoạn
 
 1. **Đăng nhập và lưu trên server** — *Đã triển khai. Đăng nhập thật và lưu lên server đã được chủ dự án xác nhận (2026-11-04).* Đăng nhập, gắn nhân vật theo email, lưu tiến độ lên `progress`, chế độ Guest. Game đơn lẻ vẫn chạy. Thành viên ngồi đúng bàn của nhân vật mình, và được gọi theo cách riêng (v2.0.1-alpha). Chi tiết: §9.
-2. **Thấy nhau**: Presence và vị trí người chơi thật; NPC của người đang online bị ẩn, người chơi hiển thị bằng nhân vật tương ứng.
+2. **Thấy nhau** — *Phiên bản đầu đã triển khai (v2.2.0-alpha, 2026-11-04, chưa commit). Chưa kiểm tra với Realtime thật hoặc hai trình duyệt thật.* Presence và vị trí người chơi thật; NPC của người đang online bị ẩn, người chơi hiển thị bằng nhân vật tương ứng. Chi tiết: `docs/spec/thay-nhau.md`, §12.
 3. **Đồng hồ và NPC dùng chung**: giờ chung, máy chủ NPC, sự kiện cùng lúc (mời nước, họp, tan ca).
 4. **Việc theo bộ phận và chỉ số công ty**: kho việc riêng theo bộ phận, chỉ số chung tăng khi hoàn thành.
 5. **Chat, giao việc giữa người, khen và càm ràm**: chọn nhanh hoặc tự gõ; máy tự chọn khi không gõ.
@@ -83,7 +84,8 @@ Từ v2.0.1-alpha, khi gặp lỗi 42501 hoặc thông báo chứa "permission d
 - Nhân vật người chơi hiện tách riêng với 14 NPC. Cần cho phép người chơi dùng ngoại hình và vai của một nhân vật có sẵn.
 - Một số cơ chế hiện có dựa vào một người chơi duy nhất (thẻ nhiệm vụ, sự kiện bất ngờ gần người chơi, lời nhắc cuối ngày) cần định nghĩa lại cho nhiều người.
 - NPC có thể hơi giật hoặc lệch giữa các máy khi dùng máy chủ NPC.
-- Dự án Supabase miễn phí bị tạm dừng nếu 1 tuần không ai dùng.
+- Dự án Supabase miễn phí bị tạm dừng nếu 1 tuần không hoạt động. Khi tạm dừng, đăng nhập và lưu tiến độ không hoạt động cho đến khi dự án được khôi phục trên bảng điều khiển Supabase. Chơi Guest không bị ảnh hưởng (lưu trên máy).
+- Gói Free giới hạn 2 000 000 tin nhắn Realtime mỗi tháng và 200 kết nối đồng thời (bảng điều khiển, 2026-11-04). Từ v2.2.0-alpha, tần suất gửi vị trí được giảm để nằm trong hạn mức (công thức và bảng số: `docs/spec/thay-nhau.md` §6). Chưa đo bằng Supabase thật.
 - Nhiệm vụ cá nhân, việc theo bộ phận và hậu quả của việc quên cần cân bằng sau khi chơi thử với người thật.
 
 ## 8. Câu hỏi còn mở
@@ -177,3 +179,9 @@ Lý do: chủ dự án mở hai tab cùng một tài khoản (một link cũ, m�
 - Khôi phục: nếu `resumeSession()` lỗi, `G.resumeFailed` được đặt và nút tiếp tục hiện "⚠ Không khôi phục được ngày đang dở nên đã bắt đầu một ngày mới."
 - Chẩn đoán (tạm thời): popup chào của thành viên thêm dòng "☁ Đã tải từ máy chủ: …" và dòng "(chẩn đoán: …)" đọc từ `CLOUD.loaded` (đặt trong `cloudApply()`). Gỡ khi chủ dự án xác nhận.
 - Đã sửa (2026-11-04, cùng bản v2.1.0-alpha): `cloudEnter()` chạy `rebuildPlayer()` và `refreshTitle()` sau đăng nhập bằng mật khẩu; xung đột lúc tab ẩn mở popup; `CLOUD.version` chỉ đổi theo máy chủ xác nhận; giới hạn 60 000 đếm theo byte; `cloudFlushNow()` khi đang bận giữ `CLOUD.dirty`. Chi tiết: `docs/changelog.md` v2.1.0-alpha, `docs/tasks.md` (Known defects). Chưa kiểm tra trên máy chủ thật (AC-M33 đến AC-M36).
+
+## 12. Giai đoạn 2: thấy nhau (v2.2.0-alpha, 2026-11-04)
+
+Chi tiết (kênh, Presence, gói `pos`, hiển thị, NPC ẩn, tiêu chí AC-M40 đến AC-M53): `docs/spec/thay-nhau.md`.
+
+Tóm tắt: thành viên đã đăng nhập vào kênh Realtime chung `office` (bắt đầu trong `cloudEnter()`, dừng trong `memberLogout()` và `cloudConflict()`). Vị trí gửi khoảng 3 lần mỗi giây khi đổi, cộng nhịp 10 s khi đứng yên, và không gửi khi đứng một mình. Số tin và hạn mức: `docs/spec/thay-nhau.md` §6. Người thật hiện bằng nhân vật của họ, NPC của họ bị ẩn đến hết ngày. Guest không tham gia. Chưa có chat, đồng hồ chung hay NPC dùng chung.

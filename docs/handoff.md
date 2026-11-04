@@ -4,7 +4,7 @@ Written 2026-11-04 at the end of a very long session. Read this first, then `doc
 
 ## 1. What this project is
 
-"Một Ngày Ở MinhLee": a Vietnamese 3D office-day simulation in one HTML file (`index.html`, Three.js 0.160.0 from the jsDelivr CDN). 14 coworker NPCs, endless Mon–Fri days (08:30–18:00 game time, about 7.6 real minutes per day), no ending. The project owner is also coworker "Anh Bảo" (Product). Everything user-facing is in Vietnamese. Release history: `docs/changelog.md` (latest entries v2.0.x–v2.1.0-alpha, 2026-11-04).
+"Một Ngày Ở MinhLee": a Vietnamese 3D office-day simulation in one HTML file (`index.html`, Three.js 0.160.0 from the jsDelivr CDN). 14 coworker NPCs, endless Mon–Fri days (08:30–18:00 game time, about 7.6 real minutes per day), no ending. The project owner is also coworker "Anh Bảo" (Product). Everything user-facing is in Vietnamese. Release history: `docs/changelog.md` (latest entries v2.0.x–v2.2.0-alpha, 2026-11-04).
 
 Live copies: GitHub Pages of the repo `minhlee-game` (branch `main`, root) and a Cloudflare Pages site on the owner's own domain (auto-deploys from the same repo; the address is in the owner's Cloudflare account, ask them). A push to `main` updates both within about a minute.
 
@@ -34,19 +34,35 @@ Multiplayer **stage 1** (login + cloud save), see `docs/spec/nhieu-nguoi-choi.md
 - A member plays as their own character: their NPC is hidden (`times.arrive = 99999`), they sit at that character's desk, others address them via `MEMBER_CALL` (e.g. "anh Bảo"; for Bảo "bạn" becomes "anh" in `fill()`).
 - Saving: Store → `cloudPush()` (2 s debounce) → `cloudFlush()` with an optimistic-concurrency check on `updated_at`; `cloudFlushNow()` uses `fetch keepalive` on page close. **One open tab/device per account**: the last login takes ownership and any other place gets the "đang được mở ở nơi khác" window. (Two tabs overwriting each other caused a reported "progress reset" bug on 2026-11-04.)
 - A temporary diagnostic line in the members' welcome popup ("☁ Đã tải từ máy chủ… chẩn đoán…") is still there; remove it once the owner confirms saving is stable.
+- Supabase Free plan (owner's dashboard, 2026-11-04): the project **pauses after 1 week without activity**, which stops sign-in and cloud save until it is restored in the dashboard (Guest is unaffected). Realtime quota: 2 000 000 messages a month, 200 concurrent connections. Details: `docs/spec/nhieu-nguoi-choi.md` §7.
+
+Multiplayer **stage 2** (v2.2.0-alpha, **not committed**), `docs/spec/thay-nhau.md`:
+- Members who are signed in join one Realtime channel `office` (`rtStart()` in `cloudEnter()`, `rtStop()` on sign-out and on conflict). Presence key = character id. Broadcast `pos` `{c,x,z,y,a,s}` about 3 Hz (timer 330 ms), only on change, heartbeat every 10 s. Nothing is sent when alone (`RT.others`, from Presence). A joining person gets our position at once (last-sent state reset).
+- Remote people are drawn with their character's look and name tag. Their NPC is hidden on this machine until the next day. Silent for 25 s = hidden. Guest does not join.
+- Message budget (estimate, not measured): 5 people moving non-stop about 76 msg/s (about 7.3 h of the 2M monthly quota); 14 moving about 594 msg/s. Formula and assumptions: `docs/spec/thay-nhau.md` §6.
+- Block `RT` in `index.html`, before `newDayState()`. No chat, no shared clock, no shared NPC simulation.
+- Verified only in headless Chrome with a mocked channel. Not verified with the real Supabase Realtime service or two real browsers.
+
+Company mailbox, **phase A** (v2.2.0-alpha, **not committed**), `docs/spec/hop-thu-cong-ty.md`:
+- Tables `online(char_id, last_seen)` and `messages` (kinds `chat`, `task`, `note`), function `my_char()`, RLS and grants: SQL in `docs/sql/hop-thu.sql`. **The owner has not run it yet**, so the mailbox does nothing on the server until then.
+- No Realtime. Each member's tab writes `online` about every 75 s (designed 55 s, see the spec §7) and reads `online` and the latest 100 `messages` every 25 s, only while the tab is visible. Error backoff 50 s, 100 s, 200 s, then 300 s. Errors go to `dlog` only.
+- Block `MSG` in `index.html`, before `newDayState()`. Started in `cloudEnter()`, stopped in `memberLogout()` and `cloudConflict()`. HUD ✉ button with unread badge, toast, read-only inbox, 🟢 on online members' name tags.
+- Verified only with a mocked Supabase client (AC-M60 to AC-M64). Not verified: real server, RLS between two accounts, two real accounts, request counts (AC-M59, AC-M65, AC-M68, AC-M69).
+- No compose, tasks, or notes yet. Those are phases B to C (§8 of the spec).
 
 ## 5. Decisions already made for multiplayer (do not ask again)
 
-Login with company email, mapped to the real character; characters without a logged-in person run as NPCs, a logged-in person replaces their NPC; max 14. Guest account (new employee) kept for fun, playing alone. Game time (not wall-clock time) but one shared clock when several people play. Per-department job content (Backend: servers, QC: bugs, ...); shared rewards are company metrics (revenue, users, version), personal rewards are desk items. Simple chat; assigning/confirming jobs by choices; nagging kept; praise/nag can be typed or auto-chosen. Offline build not needed for now. Owner wants it simple: internal fun and realtime testing; the owner's spouse may test with a non-company email mapped to a spare character (update `roster`).
+Login with company email, mapped to the real character; characters without a logged-in person run as NPCs, a logged-in person replaces their NPC; max 14. Guest account (new employee) kept for fun, playing alone. Game time (not wall-clock time) but one shared clock when several people play. Per-department job content (Backend: servers, QC: bugs, ...); shared rewards are company metrics (revenue, users, version), personal rewards are desk items. Simple chat; assigning/confirming jobs by choices; nagging kept; praise/nag can be typed or auto-chosen. Offline build not needed for now. Owner wants it simple: internal fun and realtime testing; the owner's spouse may test with a non-company email mapped to a spare character (update `roster`). Company mailbox (decided 2026-11-04): asynchronous, through tables and polling, not Realtime, to save the Free-plan Realtime quota. The owner can read every message in the dashboard, so members must be told. Phases B to F: `docs/spec/hop-thu-cong-ty.md` §8.
 
 ## 6. Next steps (in this order)
 
-1. Commit/push state is current as of the last push; check `git log` and `git status` first.
-2. Owner real-world checks pending: two-tab conflict window, keepalive save on close, accounts for the other 13 people, spouse test account.
-3. **Stage 2: see each other** (Supabase Realtime): channel per game day; Presence for who is online; Broadcast player position/pose about 5–10 Hz; remote humans drawn as that character, their NPC hidden on every client; first version without chat and without shared NPC simulation (NPCs may differ between machines). Then stage 3 (shared clock from server time, a "NPC host" client chosen among online players broadcasting NPC positions and events), stage 4 (department jobs and company metrics), stage 5 (chat, assign/confirm, praise/nag), stage 6 (polish, test with real people). Keep Guest working solo throughout.
+1. Stage 2 and the mailbox phase A (both v2.2.0-alpha) are **not committed**. Commit and push only when the owner says "commit và push". Check `git log` and `git status` first. The owner runs `docs/sql/hop-thu.sql` once in the Supabase SQL Editor, then checks the mailbox with two real accounts (AC-M59, AC-M60, AC-M65, AC-M68; `docs/spec/hop-thu-cong-ty.md` §7, §9).
+2. Owner real-world checks pending: two-tab conflict window, keepalive save on close, accounts for the other 13 people, spouse test account, and **two real browsers seeing each other** (AC-M50, `docs/spec/thay-nhau.md`). Also decide whether the channel should be private (`docs/spec/thay-nhau.md` §6).
+3. **Stage 2 first version: done** (see §4). Changed from the plan: one shared channel `office`, not one per game day, because each player still has their own game day. Open for stage 2: the public channel, the real message count with 3 or more players (AC-M58), and an NPC that stays hidden for the rest of the day after its player goes offline.
+   **Stage 3 is next**: shared clock from server time, an "NPC host" client chosen among online players that broadcasts NPC positions and events. Then stage 4 (department jobs and company metrics), stage 5 (chat, assign/confirm, praise/nag), stage 6 (polish, test with real people). Keep Guest working solo throughout. The order of mailbox phases B to F (`docs/spec/hop-thu-cong-ty.md` §8) against stage 3 is not decided: ask the owner before starting either.
 4. Possible small items: a "move Guest progress into my account" button; address terms per speaker (NPC "mình" toward Anh Bảo should be "em"); native-speaker review of Vietnamese lines; real-device tests; `CLAUDE.md` stays local.
 
 ## 7. Where to look
 
 - Open work and known defects: `docs/tasks.md`; terms: `docs/glossary.md`; player guide: `docs/product-guide.md`.
-- Specs: `mot-ngay-o-cong-ty.md` (core), `dong-nghiep.md` (people, address terms), `ngoai-hinh-dong-nghiep.md` (looks), `van-phong-layout.md`, `noi-dung-bat-ngo.md`, `the-gioi-lien-tuc.md`, `bang-nhiem-vu.md`, `nhiem-vu-tai-lieu.md`, `ngoi-lam-viec.md`, `tan-ca-18-gio.md`, `nhieu-nguoi-choi.md`, `dang-nhap-cong-ty.md`.
+- Specs: `mot-ngay-o-cong-ty.md` (core), `dong-nghiep.md` (people, address terms), `ngoai-hinh-dong-nghiep.md` (looks), `van-phong-layout.md`, `noi-dung-bat-ngo.md`, `the-gioi-lien-tuc.md`, `bang-nhiem-vu.md`, `nhiem-vu-tai-lieu.md`, `ngoi-lam-viec.md`, `tan-ca-18-gio.md`, `nhieu-nguoi-choi.md`, `dang-nhap-cong-ty.md`, `thay-nhau.md`.

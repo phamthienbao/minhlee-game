@@ -28,6 +28,8 @@ button{cursor:pointer;border:0}
 .spacer{flex:1}
 .ibtn{width:44px;height:44px;border-radius:14px;background:rgba(255,250,242,.92);font-size:20px;box-shadow:0 2px 8px rgba(80,50,20,.15)}
 .ibtn.on{background:var(--accent2);color:#fff}
+.ibtn{position:relative}.ibtn .dot{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:#d62828;color:#fff;font:700 11px/18px system-ui,sans-serif;text-align:center;font-style:normal}
+.mrow{padding:8px 10px;border-radius:10px;background:rgba(255,250,242,.7);margin:6px 0;text-align:left;font-size:14px}.mrow.new{outline:2px solid var(--accent2)}.mrow small{opacity:.65;display:block}
 .hud-obj{position:absolute;top:calc(max(8px,env(safe-area-inset-top)) + 54px);left:8px;right:8px;pointer-events:none!important;display:flex;flex-direction:column;gap:5px;align-items:flex-start}
 .obj{background:#fffaf2;border:2px solid var(--accent);border-left-width:7px;border-radius:14px;padding:8px 12px;font-size:16px;font-weight:600;line-height:1.35;max-width:min(94vw,540px);box-shadow:0 4px 14px rgba(120,60,30,.28);pointer-events:auto;cursor:pointer}
 .obj b{color:var(--accent)}
@@ -161,6 +163,7 @@ window.__bootTimer=setTimeout(function(){
     <div class="chip" id="hud-who">Bạn</div>
     <div class="chip clock" id="hud-clock">08:30</div>
     <div class="spacer"></div>
+    <button class="ibtn hidden" id="b-mail" aria-label="Hộp thư">✉<i class="dot hidden" id="mail-dot">0</i></button>
     <button class="ibtn" id="b-cam" aria-label="Đổi góc nhìn">🎥</button>
     <button class="ibtn" id="b-fast" aria-label="Tua nhanh">⏩</button>
     <button class="ibtn" id="b-mute" aria-label="Bật/tắt tiếng">🔊</button>
@@ -2643,7 +2646,7 @@ function cloudPayload() {
   return { days: d.days, tasks_total: d.tasksTotal || 0, unlocked: d.unlocked || [], affinity: d.affinity || {}, diary: d.diary || [], session: d.session || null, data: { world: d.world, recentEv: d.recentEv, lastTheme: d.lastTheme, settings: d.settings }, updated_at: new Date().toISOString() };
 }
 function cloudConflict() {                                         // một tab/thiết bị khác đã ghi tiến độ: dừng lưu để không ghi đè
-  if (CLOUD.conflict) return; CLOUD.conflict = true; CLOUD.dirty = false; clearTimeout(CLOUD.timer);
+  if (CLOUD.conflict) return; CLOUD.conflict = true; CLOUD.dirty = false; clearTimeout(CLOUD.timer); rtStop(); msgStop();
   Modal.open(h('h2', {}, '⚠ Tài khoản đang được mở ở nơi khác'), h('p', { class: 'sub' }, 'Tiến độ của bạn vừa được cập nhật từ một tab hoặc thiết bị khác. Để không ghi đè mất dữ liệu, hãy tải lại trang để tiếp tục với dữ liệu mới nhất. (Chỉ nên mở một nơi cho mỗi tài khoản.)'),
     h('button', { class: 'btn', onclick: () => location.reload() }, '🔄 Tải lại trang'));
 }
@@ -2702,7 +2705,7 @@ function showLogin(msg) {
     h('button', { class: 'btn alt', onclick: () => { back(); setGuestPref(true); $('#title').classList.remove('hidden'); refreshTitle(); showWelcomeBack(); } }, '🎮 Chơi Guest (nhân viên mới)'));
 }
 async function memberLogout() {
-  clearTimeout(CLOUD.timer); await cloudFlush();
+  rtStop(); msgStop(); clearTimeout(CLOUD.timer); await cloudFlush();
   try { await CLOUD.client.auth.signOut(); } catch (e) { dlog('[memberLogout] signOut lỗi:', e, e && e.stack); }
   MEMBER = null; MEMBER_CALL = ''; applyPlayerDesk(null); CLOUD.user = null; Store.useLocal(); Object.keys(AFF).forEach((k) => delete AFF[k]); Object.entries(Store.get().affinity || {}).forEach(([k, v]) => { AFF[k] = v; });
   refreshTitle(); showLogin();
@@ -2711,7 +2714,7 @@ async function cloudEnter(sess) {                                   // vào game
   try {
     CLOUD.user = sess.user; CLOUD.token = sess.access_token || CLOUD.token; const row = await cloudClaim(); cloudApply(row);
     // đăng nhập sau cùng giữ quyền: ghi ngay để nơi đang mở cũ bị khóa, tránh hai nơi ghi đè nhau
-    CLOUD.dirty = true; cloudFlush();
+    CLOUD.dirty = true; cloudFlush(); rtStart(); msgStart();
     if (location.hash) history.replaceState(null, '', location.pathname + location.search); rebuildPlayer(); refreshTitle();
     showWelcomeBack();
   } catch (e) {
@@ -2726,6 +2729,125 @@ async function cloudBoot() {
   const sess = await cloudInit();
   if (sess) { await cloudEnter(sess); return; }
   if (CLOUD.client && !guestPref()) showLogin(); else showWelcomeBack();
+}
+// ===== Nhiều người chơi, giai đoạn 2: thấy nhau (Supabase Realtime) =====
+// Một kênh chung "office" (mỗi người có ngày game riêng nên không tách kênh theo ngày). Presence (khóa = id nhân vật) cho biết ai đang online,
+// Broadcast "pos" gửi vị trí/tư thế ~5 Hz khi có thay đổi. Người thật được vẽ bằng ngoại hình nhân vật của họ, NPC tương ứng bị ẩn trên máy này (hiện lại từ ngày sau).
+const RT = { ch: null, peers: new Map(), timer: 0, last: '', lastSent: 0, others: 0 };          // others: số người khác đang online (Presence); 0 thì không gửi gì để tiết kiệm hạn mức tin của Supabase
+function rtHideNpc(id) {
+  const n = npcById(id); if (!n || !n.times) return;
+  n.times.arrive = 99999; releaseSpots(n); Object.assign(n, { state: 'hidden', goal: null, path: [], override: null, visit: null }); n.ch.root.visible = false; n.tag.on = false;
+}
+function rtPeer(id) {
+  let r = RT.peers.get(id); if (r) return r;
+  const p = NPC_PROFILES.find((x) => x.id === id); if (!p || (MEMBER && id === MEMBER.char)) return null;
+  const ch = buildCharacter(p.look); scene.add(ch.root); ch.root.visible = false;
+  r = { id, ch, tag: Bubbles.makeTag(p.name, (o) => { o.x = r.pos.x; o.z = r.pos.z; o.y = ch.root.position.y + 1.95; }), pos: { x: 0, z: 0 }, tgt: { x: 0, z: 0, y: 0, a: 'idle' }, yaw: 0, animT: 0, seen: 0, got: false };
+  RT.peers.set(id, r); rtHideNpc(id); return r;
+}
+function rtDrop(id) { const r = RT.peers.get(id); if (!r) return; scene.remove(r.ch.root); r.tag.on = false; r.tag.el.remove(); RT.peers.delete(id); }
+function rtStart() {
+  try {
+    if (!CLOUD.client || !MEMBER || RT.ch) return;
+    const ch = CLOUD.client.channel('office', { config: { presence: { key: MEMBER.char }, broadcast: { self: false, ack: false } } }); RT.ch = ch;
+    ch.on('broadcast', { event: 'pos' }, ({ payload: q }) => {
+      if (!q || typeof q.c !== 'string' || !Number.isFinite(q.x) || !Number.isFinite(q.z)) return;
+      const r = rtPeer(q.c); if (!r) return;
+      r.tgt = { x: q.x, z: q.z, y: Number.isFinite(q.y) ? q.y : 0, a: typeof q.a === 'string' ? q.a.slice(0, 8) : 'idle', s: !!q.s };
+      if (!r.got) { r.got = true; r.pos = { x: q.x, z: q.z }; r.yaw = r.tgt.y; } r.seen = performance.now();
+    });
+    const countOthers = () => { try { RT.others = Object.keys(ch.presenceState()).filter((k) => k !== MEMBER.char).length; } catch (e) { dlog('[rtStart] đọc presence lỗi:', e); RT.others = 1; } };
+    ch.on('presence', { event: 'sync' }, countOthers);
+    ch.on('presence', { event: 'join' }, ({ key }) => { if (MEMBER && key !== MEMBER.char) { RT.last = ''; RT.lastSent = 0; countOthers(); } });      // có người mới vào: gửi ngay vị trí của mình
+    ch.on('presence', { event: 'leave' }, ({ key }) => { rtDrop(key); countOthers(); });
+    ch.subscribe((status, err) => {
+      if (status === 'SUBSCRIBED') { ch.track({ c: MEMBER.char }).catch((e) => dlog('[rtStart] track lỗi:', e)); RT.last = ''; }
+      else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') dlog('[rtStart] kênh realtime lỗi:', status, err);
+    });
+    RT.timer = setInterval(rtSend, 330);
+  } catch (e) { dlog('[rtStart] Không bật được chế độ thấy nhau (vẫn chơi một mình được):', e, e && e.stack); }
+}
+function rtStop() {
+  clearInterval(RT.timer); RT.timer = 0; RT.others = 0; [...RT.peers.keys()].forEach(rtDrop);
+  if (RT.ch && CLOUD.client) { const ch = RT.ch; RT.ch = null; CLOUD.client.removeChannel(ch).catch((e) => dlog('[rtStop] removeChannel lỗi:', e)); } RT.ch = null;
+}
+function rtSend() {
+  try {
+    if (!RT.ch || !MEMBER || !G.started || document.hidden || RT.others < 1) return;          // chơi một mình: không gửi
+    const L = P.lock, seated = !!L && L.type !== 'in' && L.type !== 'out', a = seated ? (L.anim || 'type') : P.moving ? 'walk' : 'idle';
+    const x = Math.round(P.pos.x * 100) / 100, z = Math.round(P.pos.z * 100) / 100, y = Math.round(P.yaw * 100) / 100, key = `${x},${z},${y},${a}`, now = performance.now();
+    if (key === RT.last && now - RT.lastSent < 10000) return;                 // đứng yên: chỉ gửi nhịp báo sống mỗi 10 s
+    RT.last = key; RT.lastSent = now; RT.ch.send({ type: 'broadcast', event: 'pos', payload: { c: MEMBER.char, x, z, y, a, s: seated } });
+  } catch (e) { dlog('[rtSend] gửi vị trí lỗi:', e, e && e.stack); }
+}
+function rtUpdate(dt) {
+  if (!RT.peers.size) return; const now = performance.now();
+  for (const [id, r] of [...RT.peers]) {
+    if (!r.got) continue;
+    if (now - r.seen > 25000) { r.ch.root.visible = false; r.tag.on = false; continue; }                  // lâu không nghe tin: ẩn tạm (Presence rời kênh thì xóa hẳn)
+    const k = 1 - Math.exp(-dt * 10), dx = r.tgt.x - r.pos.x, dz = r.tgt.z - r.pos.z; r.pos.x += dx * k; r.pos.z += dz * k; r.yaw = angleLerp(r.yaw, r.tgt.y, k); r.animT += dt;
+    const moving = Math.hypot(dx, dz) > 0.05 || r.tgt.a === 'walk', seated = r.tgt.s;
+    poseCharacter(r.ch, seated ? r.tgt.a : moving ? 'walk' : 'idle', seated, r.animT, dt, 1); syncChar(r.ch, r.pos, r.yaw, seated ? 0.1 : 0);
+    r.ch.root.visible = !LITE; r.tag.on = !LITE && G.mode === 'play';
+    if (NPCS.length) { const n = npcById(id); if (n && n.state !== 'hidden') rtHideNpc(id); }
+  }
+}
+// ===== Hộp thư công ty, giai đoạn A: dòng "đang online" + hỏi tin mới theo chu kỳ (không dùng Realtime) =====
+// Bảng `online` và `messages`: SQL ở docs/sql/hop-thu.sql. Máy ghi last_seen mỗi 60 s và hỏi tin mỗi 25 s khi tab đang mở (API không giới hạn trên gói Free).
+const MSG = { timer: 0, beatT: 0, items: [], online: new Set(), unread: 0, seen: new Set(), primed: false, busy: false, failedAt: 0, fails: 0 };
+const charName = (id) => (NPC_PROFILES.find((p) => p.id === id) || { name: id }).name;
+function msgSetBadge() {
+  const b = $('#b-mail'), d = $('#mail-dot'); if (!b) return;
+  b.classList.toggle('hidden', !MEMBER || !MSG.timer); d.classList.toggle('hidden', !MSG.unread); d.textContent = MSG.unread > 9 ? '9+' : String(MSG.unread);
+}
+function msgApplyOnline() {                                          // chấm xanh trên bảng tên NPC của người đang online
+  for (const n of NPCS) { const on = MSG.online.has(n.id) && !(MEMBER && n.id === MEMBER.char); const t = on ? n.p.name + ' 🟢' : n.p.name; if (n.tag.el.textContent !== t) n.tag.el.textContent = t; }
+}
+async function msgTick() {
+  if (!CLOUD.client || !MEMBER || CLOUD.conflict || MSG.busy || document.hidden) return;
+  if (Date.now() - MSG.failedAt < Math.min(300000, 25000 * 2 ** MSG.fails)) return;                    // lỗi liên tiếp: giãn dần tới 5 phút
+  MSG.busy = true;
+  try {
+    const now = Date.now();
+    if (now - MSG.beatT > 55000) {
+      MSG.beatT = now; const { error: e0 } = await CLOUD.client.from('online').upsert({ char_id: MEMBER.char, last_seen: new Date(now).toISOString() }); if (e0) throw e0;
+    }
+    const since = new Date(now - 3 * 60000).toISOString();
+    const [o, m] = await Promise.all([CLOUD.client.from('online').select('char_id').gt('last_seen', since),
+      CLOUD.client.from('messages').select('id,thread_id,from_char,to_char,kind,body,due,done,done_at,read_at,ref,created_at').order('created_at', { ascending: false }).limit(100)]);
+    if (o.error) throw o.error; if (m.error) throw m.error;
+    MSG.online = new Set((o.data || []).map((r) => r.char_id)); MSG.items = m.data || [];
+    const mine = MSG.items.filter((x) => x.to_char === MEMBER.char && !x.read_at); MSG.unread = mine.length;
+    const fresh = mine.filter((x) => !MSG.seen.has(x.id)); mine.forEach((x) => MSG.seen.add(x.id));
+    if (MSG.primed && fresh.length && G.mode === 'play') toast(`✉ ${charName(fresh[0].from_char)}: ${fresh[0].body.slice(0, 40)}${fresh[0].body.length > 40 ? '…' : ''}`, 3500);
+    MSG.primed = true; MSG.fails = 0; msgSetBadge(); msgApplyOnline();
+  } catch (e) {
+    MSG.fails = Math.min(MSG.fails + 1, 4); MSG.failedAt = Date.now();
+    dlog('[msgTick] Không lấy được hộp thư (đã chạy docs/sql/hop-thu.sql chưa?):', e, e && e.stack, e && e.code);
+  } finally { MSG.busy = false; }
+}
+function msgStart() {
+  if (MSG.timer || !CLOUD.client || !MEMBER) return;
+  MSG.primed = false; MSG.fails = 0; MSG.failedAt = 0; MSG.beatT = 0; msgSetBadge(); msgTick();
+  MSG.timer = setInterval(msgTick, 25000); document.addEventListener('visibilitychange', msgOnVisible);
+}
+function msgOnVisible() { if (!document.hidden) msgTick(); }
+function msgStop() {
+  clearInterval(MSG.timer); MSG.timer = 0; document.removeEventListener('visibilitychange', msgOnVisible);
+  Object.assign(MSG, { items: [], online: new Set(), unread: 0, seen: new Set(), primed: false }); msgSetBadge(); if (NPCS.length) msgApplyOnline();
+}
+async function msgOpenInbox() {
+  const mine = MSG.items.filter((x) => x.to_char === MEMBER.char), unread = mine.filter((x) => !x.read_at);
+  const rows = MSG.items.slice(0, 30).map((x) => {
+    const inc = x.to_char === MEMBER.char, who = inc ? `${charName(x.from_char)} → bạn` : `bạn → ${charName(x.to_char)}`, tag = x.kind === 'task' ? '📌 Việc: ' : x.kind === 'note' ? '📝 Giấy nhớ: ' : '';
+    return h('div', { class: 'mrow' + (inc && !x.read_at ? ' new' : '') }, h('small', {}, `${who} · ${new Date(x.created_at).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' })}`), tag + x.body);
+  });
+  Modal.open(h('h2', {}, '✉ Hộp thư'), rows.length ? h('div', {}, ...rows) : h('p', { class: 'sub' }, 'Chưa có tin nào. (Soạn tin và giao việc sẽ có ở bản sau.)'), h('button', { class: 'btn', onclick: () => Modal.close() }, 'Đóng'));
+  if (!unread.length) return;
+  try {
+    const { error } = await CLOUD.client.from('messages').update({ read_at: new Date().toISOString() }).in('id', unread.map((x) => x.id)).is('read_at', null); if (error) throw error;
+    unread.forEach((x) => { x.read_at = new Date().toISOString(); }); MSG.unread = 0; msgSetBadge();
+  } catch (e) { dlog('[msgOpenInbox] đánh dấu đã đọc lỗi:', e, e && e.stack); }
 }
 function newDayState() {
   const dn = Store.get().days + 1, bonus = G.bonus || { mood: 0, energy: 0 }; G.bonus = null;
@@ -2742,6 +2864,7 @@ function startDay() {
   newDayState();
   NPCS.forEach((n) => { resetNpcDay(n); n.tag.on = false; });
   if (MEMBER) { const me = npcById(MEMBER.char); if (me) me.times.arrive = 99999; }          // người chơi thay thế NPC của chính mình
+  RT.peers.forEach((r, id) => rtHideNpc(id));                                                // người thật đang online thay NPC của họ
   spotOwner.fill(null); sofaOwner.fill(null);
   const host = npcById(HOST_ID); [host, ...shuffle(NPCS.filter((n) => n !== host && n.p.habits.joinsMeeting))].slice(0, 8).forEach((n, i) => { n.attends = true; n.meetSeat = i; });
   EVENT.cake = null; EVENT.printer = null; EVENT.printerNpc = null; EVENT.treat = null;
@@ -2900,7 +3023,7 @@ function update(dt) {
   } else if (G.tl) endTimelapse(false);
   updatePantryTable(D.minute);
   G.saveT = (G.saveT || 0) + dt; if (G.saveT > 5) { G.saveT = 0; saveSession(); }
-  updatePlayer(dt);
+  updatePlayer(dt); rtUpdate(dt);
   for (const n of NPCS) {
     updateNpc(n, dt, D.minute);
     if (n.override && n.override.kind === 'invite' && !n.inviteReady && n.state === 'standing' && n.goal && n.goal.id === 'ovr:invite') { n.inviteReady = true; tryNpcSay(n, 'Mình ra tới pantry rồi nè!', 1); toast(`☕ ${n.p.name} đã ra pantry, ghé uống cùng nhé`); }
@@ -2983,6 +3106,7 @@ function init() {
   // nút HUD
   $('#act').addEventListener('click', () => { if (INPUT.onAct) INPUT.onAct(); });
   $('#hud-obj').addEventListener('click', () => { Sfx.click(); if (G.mode === 'play') pauseGame(); });
+  $('#b-mail').addEventListener('click', () => { Sfx.click(); if (G.mode === 'play') msgOpenInbox(); });
   $('#b-pause').addEventListener('click', () => { Sfx.click(); if (G.mode === 'play') pauseGame(); });
   $('#tl').addEventListener('click', () => endTimelapse(true));
   listen(document, 'keydown', (e) => { if (G.mode === 'timelapse' && (e.key === ' ' || e.key === 'Enter' || e.key === 'Escape')) { e.preventDefault(); endTimelapse(true); } });

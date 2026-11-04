@@ -618,3 +618,31 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 **Tài khoản đang được mở ở nơi khác (account open elsewhere)** — *(needs definition)* The modal shown by `cloudConflict()` when another tab or device has saved newer progress for the same account. Its button "🔄 Tải lại trang" reloads the page. The rule for players: one open window per account. Added v2.1.0-alpha. See `docs/spec/nhieu-nguoi-choi.md` §11.
 
 **Cách gọi anh Bảo (address canon)** — Everyone calls Bảo "anh" in dialogue (`docs/spec/dong-nghiep.md` §2). When the player is the member Bảo (`MEMBER_CALL === 'anh Bảo'`), `fill()` changes "bạn" / "Bạn" in NPC lines to "anh" / "Anh", except in "các bạn", "những bạn", "bạn bè", and "bạn thân". Added v2.1.0-alpha. *(Definition is factual; curation pending.)*
+
+**Thấy nhau (see each other)** — *(needs definition)* Multiplayer stage 2: signed-in members see each other's characters on their own screens. Added v2.2.0-alpha. See `docs/spec/thay-nhau.md`.
+
+**Kênh office (office channel)** — *(needs definition)* The one Supabase Realtime channel named `office` that every signed-in member joins in stage 2. Added v2.2.0-alpha. See `docs/spec/thay-nhau.md` §2.
+
+**Realtime (Supabase Realtime)** — *(needs definition)* Supabase's live messaging service. Used for presence and position broadcast from v2.2.0-alpha. See `docs/spec/thay-nhau.md`.
+
+**Presence** — *(needs definition)* The Realtime feature that tracks who is on a channel. Keyed here by character id. A `leave` event removes that person's character on other screens. Added v2.2.0-alpha. See `docs/spec/thay-nhau.md` §2.
+
+**Broadcast (pos)** — *(needs definition)* A Realtime message sent to the other members of a channel. Event `pos` carries a member's position, yaw, pose, and seated flag, about 3 a second while moving (timer 330 ms, was 5 a second). Not sent when the member is alone. Added v2.2.0-alpha. See `docs/spec/thay-nhau.md` §3.
+
+**Người thật (remote person, peer)** — *(needs definition)* Another signed-in member's character, drawn on this screen from their `pos` messages. Their NPC is hidden here. Added v2.2.0-alpha. See `docs/spec/thay-nhau.md` §4 to §5.
+
+**Nhịp báo sống (heartbeat)** — *(needs definition)* The `pos` message sent every 10 s while a member stands still (was 2.5 s), so others know they are still online. Added v2.2.0-alpha. See `docs/spec/thay-nhau.md` §3.
+
+**Im lặng (silence timeout)** — *(needs definition)* After 25 s with no `pos` from a remote person (was 8 s), their character and name tag are hidden. A new message shows them again. Added v2.2.0-alpha. See `docs/spec/thay-nhau.md` §4.
+
+**Khối RT (RT block)** — *(needs definition)* The realtime code in `index.html`, before `newDayState()`: the `RT` state object and `rtStart()`, `rtStop()`, `rtSend()`, `rtUpdate()`, `rtPeer()`, `rtDrop()`, `rtHideNpc()`. Added v2.2.0-alpha. See `docs/spec/thay-nhau.md` §1.
+
+**RT.others (số người khác online)** — *(needs definition)* The count of other members online, taken from Presence. Sending is skipped while it is 0, so a member alone sends nothing. Added v2.2.0-alpha (amended before commit). See `docs/spec/thay-nhau.md` §2, §3.
+
+**Hạn mức tin Realtime (Realtime message quota)** — *(needs definition)* The Supabase Free plan allowance: 2 000 000 Realtime messages a month. Each broadcast counts 1 when sent plus 1 per receiver. Added v2.2.0-alpha (amended before commit). See `docs/spec/thay-nhau.md` §6.
+
+**Tạm dừng dự án (project pause)** — *(needs definition)* The Supabase Free plan pauses a project after 1 week without activity. Sign-in and cloud save stop until it is restored. Guest is not affected. Added v2.2.0-alpha (amended before commit). See `docs/spec/nhieu-nguoi-choi.md` §7.
+
+**Chia phòng (room sharding)** — *(needs definition)* A possible future change: split members into rooms of about 10 to 20 people, one channel each. Not built. See `docs/spec/thay-nhau.md` §6.
+
+**Durable Objects** — *(needs definition)* Cloudflare's per-object state service. A possible future host for the position relay (with Cloudflare Workers). Not built. See `docs/spec/thay-nhau.md` §6.

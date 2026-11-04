@@ -2,6 +2,106 @@
 
 All notable changes to "Một Ngày Ở MinhLee" (formerly "Một Ngày Ở Công Ty", renamed in v1.0.3). Newest first. Entries are appended, never rewritten.
 
+## v2.2.0-alpha — 2026-11-04
+
+Multiplayer stage 2, first version: members see each other. A logged-in member's character is drawn for the other members who are online, and that character's NPC is hidden on the viewing machine. Spec: `docs/spec/thay-nhau.md` (channel, payloads, rules, acceptance rows AC-M40 to AC-M53); summary in `docs/spec/nhieu-nguoi-choi.md` §12. Not committed yet. Verified only in headless Chrome with a mocked channel; not tested against the real Supabase Realtime service or with two real browsers.
+
+Amended before the commit (same v2.2.0-alpha entry, not a new release): the send rate was lowered after the owner checked the Supabase Free-plan Realtime quota (2 000 000 messages a month, each broadcast counts 1 when sent plus 1 per receiver). Changes: nothing is sent when alone, a joining person gets our position at once, send timer 200 ms to 330 ms, heartbeat 2.5 s to 10 s, silence timeout 8 s to 25 s. Numbers: `docs/spec/thay-nhau.md` §6.
+
+Also in this unreleased entry (not a new release): company mailbox, phase A. Members see who is online, see an unread badge, and read an inbox. It polls tables and does not use Realtime, to save the Free-plan Realtime quota. Spec: `docs/spec/hop-thu-cong-ty.md` (acceptance rows AC-M59 to AC-M69); summary in `docs/spec/nhieu-nguoi-choi.md` §13. It needs `docs/sql/hop-thu.sql`, which the owner has not run yet. Not committed. Verified only with a mocked Supabase client.
+
+### Added
+
+- Realtime block `RT` in `index.html`, placed before `newDayState()` (sign-in block after section 14):
+  - `rtStart()`: opens one shared channel `office` (not per game day, because each player still has their own game day and there is no shared clock yet). Presence key is the character id (`MEMBER.char`). Broadcast `self: false`. On `SUBSCRIBED` it tracks `{ c: MEMBER.char }`. `CHANNEL_ERROR` and `TIMED_OUT` are logged with `dlog`.
+  - `rtSend()`: broadcasts event `pos` with payload `{ c, x, z, y, a, s }` (character id, position and yaw rounded to 0.01, pose `type` / `walk` / `idle` or the seated animation, seated flag). Runs on a 330 ms timer, so at most about 3 messages a second. Sends only when the key changes, plus a heartbeat every 10 s while standing still. Skipped when the tab is hidden, the game has not started, or no other member is online (`RT.others < 1`).
+  - `rtPeer(id)`: builds a remote character from its `NPC_PROFILES` look on the first `pos` it receives. Its name tag is a `Bubbles.makeTag()` label.
+  - `rtUpdate(dt)`, called from `update()` after `updatePlayer(dt)`: eases position and yaw toward the last received target (rate 10 per second). Seated peers use the sent pose and seat height. Walking is inferred from movement or the `walk` pose. Hidden in list mode, and the name tag only in play mode. After 25 s without a message the peer is hidden (kept in the map). The 25 s is more than two heartbeats, so a member standing still is not hidden. The next message shows it again.
+  - `rtHideNpc(id)`: hides the NPC of a remote person (`times.arrive = 99999`, state `hidden`, spots released). Called on first contact, every frame if the NPC is not hidden, and again in `startDay()` for every online peer.
+  - `rtDrop(id)`: removes the remote character and its name tag when Presence reports `leave`.
+  - `rtStop()`: stops the timer, removes all remote characters, sets the count to 0, and removes the channel.
+  - `RT.others`: the number of other members online, counted from Presence on `sync` and on `leave` (own key ignored). If reading the presence state fails, it is logged with `dlog` and set to 1. `rtSend()` sends nothing while it is 0.
+- The `pos` handler validates the payload (string id, finite x and z) and drops bad packets. The Presence `leave` handler takes the key as given.
+- Mailbox: `docs/sql/hop-thu.sql` (new, run once in the Supabase SQL Editor, safe to re-run). It adds `public.my_char()` (security definer, returns the signed-in member's `char_id` from `progress`), tables `public.online(char_id, last_seen)` and `public.messages` (kinds `chat`, `task`, `note`; `body` 1 to 300 characters; `due`; `done` and `done_at`; `read_at`; `ref`; at most one note per task through a partial unique index), indexes, RLS policies, and explicit grants to `authenticated`.
+- Mailbox: block `MSG` in `index.html`, before `newDayState()` and after `RT`: `msgStart()`, `msgStop()`, `msgTick()`, `msgOnVisible()`, `msgSetBadge()`, `msgApplyOnline()`, `msgOpenInbox()`, and the constants `MSG` and `charName()`.
+- Mailbox polling: every 25 s, only while the tab is visible, plus a poll when the tab becomes visible again. Each poll reads `online` (rows from the last 3 minutes) and `messages` (latest 100, newest first). A heartbeat upsert to `online` is due when more than 55 s have passed since the last one (in practice about every 75 s, see Known limits). No Realtime is used.
+- Mailbox error handling: after each failure the next poll waits 25 s × 2^n, with n capped at 4 (50 s, 100 s, 200 s, then 300 s). Success resets the count. Errors are logged with `dlog` only, with no player-facing message.
+- Mailbox HUD: a ✉ button `#b-mail` before the camera button, with a red unread badge `#mail-dot` (shows "9+" above 9). Shown to signed-in members only, and clickable in play mode only.
+- Mailbox toast: "✉ <name>: <first 40 characters>…" for new unread incoming messages, 3.5 s, play mode only. The first poll after sign-in shows no toast.
+- Mailbox inbox "✉ Hộp thư": the latest 30 messages, unread incoming ones outlined, with the prefixes "📌 Việc: " for tasks and "📝 Giấy nhớ: " for notes. Read-only. Opening it sets `read_at` on all unread incoming messages.
+- Mailbox online dot: " 🟢" after the name on the NPC label of each online member (`msgApplyOnline()`).
+
+### Changed
+
+- `cloudEnter()` calls `msgStart()` right after `rtStart()`. `memberLogout()` and `cloudConflict()` call `msgStop()` right after `rtStop()`.
+- Mailbox text is always shown as text: the `h()` helper creates text nodes (no innerHTML) and `toast()` uses `textContent`. Checked with an HTML payload.
+- `cloudEnter()` calls `rtStart()` right after it starts the sign-in write (`cloudFlush()`), without waiting for the write to finish. Only logged-in members join.
+- `memberLogout()` and `cloudConflict()` call `rtStop()`, so a member who signs out or loses ownership to another tab leaves the channel.
+- `startDay()` calls `rtHideNpc()` for every remote person in `RT.peers`. A remote person's NPC stays hidden until the next day.
+- `update()` calls `rtUpdate(dt)` once per frame.
+- Presence `join` of another member resets `RT.last` and `RT.lastSent`, so the next send carries our position at once (the newcomer does not wait for the 10 s heartbeat). The join handler does not recount; the count comes from the `sync` event.
+- Send and quota tuning (before commit): timer 200 ms to 330 ms (about 3 Hz, was about 5 Hz), heartbeat 2.5 s to 10 s, peer silence timeout 8 s to 25 s, nothing sent when alone.
+
+### Known limits
+
+- The channel is public (`private` is not set). The spec in `docs/spec/nhieu-nguoi-choi.md` §4 asked for a private channel. Decision open, see `docs/spec/thay-nhau.md` §6.
+- A remote person's NPC is hidden from the first message and stays hidden until the next day, even after that person goes offline. Their character is absent for the rest of the day.
+- No chat, no shared clock, no shared NPC simulation. Each machine runs the NPCs itself, so NPC positions can differ between players.
+- Remote positions are copied, not pathfinded. A peer may briefly pass through furniture if the sender's route differs.
+- Message volume (estimate, not measured): 5 members moving non-stop is about 76 messages a second (about 7.3 hours of the 2 000 000 monthly quota). 14 moving is about 594 a second. Formula and the idle figures: `docs/spec/thay-nhau.md` §6. The owner's own estimate of about 20 hours for 5 members matches roughly one-third moving time; the owner is asked to confirm the assumption.
+- Free-plan pause: a Supabase Free project pauses after 1 week without activity. Sign-in and cloud save stop until it is restored. Guest is not affected. Recorded in `docs/spec/nhieu-nguoi-choi.md` §7.
+- Two tabs of one account share the same Presence key. Not tested.
+- Mailbox, not run against the real server. Until the owner runs `docs/sql/hop-thu.sql`, the ✉ button still shows, the inbox stays empty, and the errors appear only in the debug log.
+- Mailbox heartbeat: the code writes `online` about every 75 s, not the designed 55 s, because the check runs on the 25 s poll and needs more than 55 s to have passed. The 3-minute window still covers it. Open: change the threshold or accept (`docs/spec/hop-thu-cong-ty.md` §7).
+- Mailbox: a hidden tab or a sleeping machine writes no heartbeat, so the member shows as offline after about 3 minutes.
+- Mailbox: unread count and toasts use the latest 100 messages only.
+- Mailbox: the 🟢 dot is not shown on the labels of remote people (`rtPeer()`, stage 2).
+- Mailbox RLS does not limit which columns each party may change: the sender can also set `done` and `read_at`. Phase B must tighten this.
+- Mailbox: `my_char()` may be callable by the `anon` role through default project grants. It returns null for anon. Not checked by query.
+- Mailbox privacy: the owner can read every message in the Supabase dashboard. Members must be told before use.
+
+### Internal
+
+- Spec: new `docs/spec/thay-nhau.md`. `docs/spec/nhieu-nguoi-choi.md` status, §4 Realtime (plan and what was built), §5 stage 2, and new §12 summary.
+- `docs/handoff.md` §1, §4, §6 (stage 2 first version done, stage 3 next, stage 2 not committed).
+- `docs/tasks.md`: v2.2.0-alpha entries and follow-ups. Closed items moved to `docs/archive/tasks-done-2026-11.md`.
+- `docs/glossary.md`: realtime terms (presence, broadcast, peer, heartbeat, `RT` block, `rtStart()` and related functions). Amended: new terms `RT.others`, realtime message quota, project pause, room sharding, Durable Objects. Numbers in the broadcast, heartbeat and silence entries corrected in place.
+- `docs/handoff.md` and `docs/spec/nhieu-nguoi-choi.md` §4, §7, §12: rates and timeouts updated; Supabase Free-plan facts added.
+- Local `CLAUDE.md` (gitignored) status and docs pointer.
+- No secrets, keys, project URL, emails, or passwords were written to the docs.
+- Mailbox: new `docs/spec/hop-thu-cong-ty.md` (Vietnamese): components, tables, RLS and grants, polling flow, interface, limits, acceptance rows AC-M59 to AC-M69, and planned phases B to F.
+- Mailbox: new `docs/sql/hop-thu.sql` (not run yet). It is the only SQL file in `docs/sql/`.
+- `docs/spec/nhieu-nguoi-choi.md`: status line, §5 stage 5 pointer to the mailbox phases, §7 risk line on REST request volume, new §13 summary.
+- `docs/tasks.md` (Done line, follow-ups, Blocked heading), `docs/handoff.md` §4, §5, §6, `docs/glossary.md` (mailbox terms, placeholders for definition).
+- Local `CLAUDE.md` (gitignored): layout tree and status.
+
+### Verification
+
+Verified (headless Chrome, mocked channel, 2026-11-04):
+
+- A remote person appears when a `pos` arrives (AC-M40).
+- Their NPC is hidden on the receiving machine (AC-M41).
+- Payload shape `{c, x, z, y, a, s}` (AC-M42).
+- Seated remote character at seat height (AC-M43).
+- Presence `leave` removes the remote character and its name tag (AC-M44).
+
+Also verified with the mocked channel (AC-M54, AC-M55, AC-M57): a member alone sends nothing; with another member online, sends happen and an idle member does not send duplicates (heartbeat only); a leave removes the remote character and the count.
+
+Code read only: send rate and 10 s heartbeat (AC-M45), 25 s silence (AC-M46), the join reset (AC-M56), the next-day NPC re-hide, cleanup on sign-out and conflict, Guest not joining (AC-M47 to AC-M49).
+
+Not verified: two real browsers, real Supabase Realtime, 14 players, phones (AC-M50 to AC-M53), and the real message count against the dashboard formula (AC-M58).
+
+Mailbox phase A (headless Chrome, mocked Supabase client, 2026-11-04):
+
+- Unread badge and count, online dot, inbox marks messages read (AC-M60, AC-M61).
+- Error backoff counter (AC-M62).
+- Stop cleanup on sign-out and on conflict (AC-M63).
+- An HTML payload shows as text (AC-M64).
+
+Code read only: polling only while the tab is visible, and toasts only in play mode (AC-M66, AC-M67).
+
+Not verified: the real server and the SQL run (AC-M59), RLS between two accounts (AC-M65), two real accounts (AC-M68), real request counts (AC-M69).
+
 ## v2.1.0-alpha — 2026-11-04
 
 Multiplayer stage 1, password sign-in. Members sign in with a company email and a password that the administrator creates in the Supabase dashboard and gives them in private. The email sign-in link is gone. There are no sign-in emails and no SMTP setup. The sign-in screen is hidden from regular visitors behind the `loginEnabled` flag. Spec: `docs/spec/dang-nhap-cong-ty.md` (login, flag, accounts); summary in `docs/spec/nhieu-nguoi-choi.md` §10. Cloud-save hardening, added the same day after the owner's real tests on 2026-11-04 (one open place per account, save on close, row check): see Added, Changed, and Fixed below, and `docs/spec/nhieu-nguoi-choi.md` §11.

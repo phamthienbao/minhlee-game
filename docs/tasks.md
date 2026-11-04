@@ -1,16 +1,14 @@
 # Tasks
 
-Last updated: 2026-11-04 (v2.1.0-alpha, password sign-in for admin-created accounts behind the `loginEnabled` flag, multiplayer stage 1, cloud-save hardening). **Read first:** `docs/handoff.md` (next-conversation handoff: state, how to work, decisions made, next steps), then this file.
+Last updated: 2026-11-04 (v2.2.0-alpha, multiplayer stage 2 first version, members see each other, and company mailbox phase A, not committed; before it v2.1.0-alpha, password sign-in for admin-created accounts behind the `loginEnabled` flag, multiplayer stage 1, cloud-save hardening). **Read first:** `docs/handoff.md` (next-conversation handoff: state, how to work, decisions made, next steps), then this file.
 
 Legend: `[x]` done, `[ ]` todo, `[~]` in progress, `[!]` blocked.
 
 ## Done
 
-Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`. Done entries v1.8.2 to v1.8.6 were moved there in the v1.9.3 pass. Done entries v1.9.1 to v1.9.4 were moved there in the v1.10.0 pass. Done entries v1.9.0 and v1.9.5 were moved there in the v1.11.0 pass. Done entries v1.11.0 and v1.12.0 were moved there in the v1.14.0 pass. Done entries v1.10.0 and v1.10.1 were moved there in the v1.13.0 pass. Done entries v1.13.0 and v1.14.0 were moved there in the v1.15.0 pass. The v1.15.0 Done entry and the closed `[x]` items of the other sections were moved there in the v1.16.0 pass. The v1.16.0 Done entry was moved there in the v2.0.0-alpha pass. The v2.0.0-alpha Done entry and the closed member-reset defect were moved there in the v2.0.1-alpha pass. The v2.0.1-alpha Done entry, a closed follow-up, and a closed known defect were moved there in the v2.1.0-alpha pass.
+Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`. Done entries v1.8.2 to v1.8.6 were moved there in the v1.9.3 pass. Done entries v1.9.1 to v1.9.4 were moved there in the v1.10.0 pass. Done entries v1.9.0 and v1.9.5 were moved there in the v1.11.0 pass. Done entries v1.11.0 and v1.12.0 were moved there in the v1.14.0 pass. Done entries v1.10.0 and v1.10.1 were moved there in the v1.13.0 pass. Done entries v1.13.0 and v1.14.0 were moved there in the v1.15.0 pass. The v1.15.0 Done entry and the closed `[x]` items of the other sections were moved there in the v1.16.0 pass. The v1.16.0 Done entry was moved there in the v2.0.0-alpha pass. The v2.0.0-alpha Done entry and the closed member-reset defect were moved there in the v2.0.1-alpha pass. The v2.0.1-alpha Done entry, a closed follow-up, and a closed known defect were moved there in the v2.1.0-alpha pass. The v2.1.0-alpha Done entry, two closed known defects, a closed stage 2 follow-up, and a stale repository item were moved there in the v2.2.0-alpha pass.
 
-- [x] v2.1.0-alpha (2026-11-04): password sign-in for admin-created accounts, hidden behind the `loginEnabled` flag (`?login`). Email link, recovery and create-password flows added and removed the same day. Details: `docs/changelog.md` v2.1.0-alpha. Spec: `docs/spec/dang-nhap-cong-ty.md`
-  - [x] Code (`index.html`): `showLogin`, `cloudEnter`, `cloudBoot`, `friendlyAuthError`, `loginEnabled`. Docs: changelog, both spec files, product guide, glossary. Checks and open items: Follow-ups, v2.1.0-alpha
-  - [x] Cloud-save hardening (2026-11-04, same release, after the owner's two-tab test): one open place per account (`CLOUD.version`, conditional write, `cloudConflict()`), save on close (`cloudFlushNow()`, keepalive), debounce 2 s, diagnostic note, resume-failure warning. Code in `index.html`; docs: `docs/spec/nhieu-nguoi-choi.md` §11, changelog, product guide, glossary. Open items: Known defects and Follow-ups, v2.1.0-alpha
+- [x] v2.2.0-alpha (2026-11-04): multiplayer stage 2, first version: members see each other (one channel `office`, Presence, `pos` broadcast about 3 Hz while moving, 10 s heartbeat, nothing sent when alone, remote character drawn, its NPC hidden, peer hidden after 25 s silence). Not committed. Send rate amended before commit after the Supabase Free-plan quota check. Details: `docs/changelog.md` v2.2.0-alpha, spec `docs/spec/thay-nhau.md` (checks: AC-M40 to AC-M44, AC-M54, AC-M55, AC-M57 verified with a mocked channel; AC-M45, AC-M46, AC-M56 and AC-M47 to AC-M49 code read; open rows in Follow-ups, v2.2.0-alpha). Same release: company mailbox phase A (`docs/spec/hop-thu-cong-ty.md`, rows AC-M59 to AC-M69), built, needs `docs/sql/hop-thu.sql` run once; verified only with a mocked Supabase client
 
 ## In progress
 
@@ -30,8 +28,6 @@ Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`.
 - [ ] Docs: `docs/spec/mot-ngay-o-cong-ty.md` section 4.4 labels the Thạnh gingham look "v1.1.1", but this release is v1.1.0. Confirm which release shipped the look and fix the label. The changelog entry for v1.1.0 mentions it with this open question.
 - [ ] (v1.2.0) `index.html` section 2 header comment (around line 240) does not describe `desk: null`, `habits.lounge`, or `habits.attendance`. Update when `index.html` is next edited. Not changed in v1.2.0 (docs-only pass).
 - [ ] (v1.2.0) Chị Ba's line in surprise `dammhaam` uses the real name: "Chị xin lỗi anh Thạnh!". Confirm it is intended, or change it to the in-game name convention (`docs/spec/dong-nghiep.md` §2).
-- [x] (v2.1.0-alpha, fixed 2026-11-04) Sign-in path skips the UI refresh. In `cloudEnter()` (`index.html` ~line 2715), `CLOUD.dirty = true; cloudFlush();` ended in a `//` comment that also held `history.replaceState(...)`, `rebuildPlayer()`, and `refreshTitle()`. Fixed: those statements now sit on their own line and run after sign-in. Checked with headless Chrome and mocks; not yet on the real server
-- [x] (v2.1.0-alpha, fixed 2026-11-04) Save-path gaps in cloud save (`docs/spec/nhieu-nguoi-choi.md` §11). Fixed in `index.html`: (a) `cloudFlushNow()` calls `cloudConflict()` when the server confirms zero rows, so the modal opens while the tab is hidden; (b) `CLOUD.version` changes only from the `updated_at` the server returns (`Prefer: return=representation`); (c) the 60 000 limit counts bytes (`TextEncoder`); (d) `cloudFlushNow()` while `CLOUD.busy` returns early and keeps `CLOUD.dirty`, and `CLOUD.busy` is set while a keepalive is in flight. Checked with headless Chrome and mocks; not yet on the real server. Zero-row path in `cloudFlush()` (conflict modal, no retry) is unchanged
 
 ## Open questions
 
@@ -45,6 +41,13 @@ Items for v1.0.0 to v1.8.8 are archived in `docs/archive/tasks-done-2026-11.md`.
 - [ ] (v1.4.3) Confirm the younger-coworker list used for Chủ tịt's address style. Hiện is stated as the youngest. Chú 7, Trung, and Nguyên are assumed younger. Nam (same age as Chủ tịt) gets the humble style. Confirm or correct (`docs/spec/dong-nghiep.md` §2)
 
 ## Follow-ups
+
+v2.2.0-alpha (multiplayer stage 2, see each other). Acceptance rows are in `docs/spec/thay-nhau.md` §7:
+
+- [ ] (v2.2.0-alpha) Two real browsers, two accounts (AC-M50): each sees the other, both NPCs hidden. Sign one out and check the other (the NPC stays hidden until the next day). Phones and Safari (AC-M53)
+- [ ] (v2.2.0-alpha) Real Supabase Realtime (AC-M51, AC-M52, AC-M58): presence and broadcast work, `RT.others` is right after a join, and the real message count with 3 or more members matches the dashboard formula (1 sent + 1 per receiver). Estimates, not measured: 5 members moving non-stop about 76 msg/s; 14 moving about 594 msg/s. The owner's "about 20 h" for 5 members needs its assumption confirmed (`docs/spec/thay-nhau.md` §6)
+- [ ] (v2.2.0-alpha) Decide: the channel is public, not private (`docs/spec/thay-nhau.md` §6), whether a remote person's NPC should come back when they go offline, and how to stop the Free project pausing after 1 week without activity (sign-in and cloud save stop while paused; `docs/spec/nhieu-nguoi-choi.md` §7). Check two tabs of one account (shared Presence key)
+- [ ] (v2.2.0-alpha) Company mailbox phase A (not committed; AC-M59 to AC-M69, `docs/spec/hop-thu-cong-ty.md` §9): the owner runs `docs/sql/hop-thu.sql` once in the Supabase SQL Editor, then checks two real accounts (dot, badge, inbox, RLS). Open before phase B (§7): heartbeat about 75 s, not 55 s; RLS does not restrict `done` by party; `my_char()` callable by anon; no dot on remote-person labels; tell members the owner can read all messages. Phases B to F: §8
 
 v2.1.0-alpha (password sign-in, login flag). Acceptance rows are in `docs/spec/dang-nhap-cong-ty.md` §5:
 
@@ -67,7 +70,6 @@ v2.0.1-alpha (multiplayer stage 1 fixes). Acceptance rows are in spec §9.3:
 - [~] (v2.0.0-alpha) Save and restore (AC-M11): saving works (owner, 2026-11-04). Open: reload after closing the browser, a dropped connection mid-day for the retry toast and the 15 s retry, and the new 42501 toast text. Save on close and the two-tab conflict: see the v2.1.0-alpha follow-ups
 - [ ] (v2.0.0-alpha) Popup visuals on desktop and phone (AC-M12). Dynamic import over the CDN in a real browser (AC-M13), and the Guest fallback when the Supabase script cannot load (AC-M8)
 - [ ] (v2.0.0-alpha) Offline builds are out of date (AC-M14). Decide when to rebuild `index-offline.html` and `dist/`. Check whether `tools/build-offline.py` fails on the two-entry importmap. `CLAUDE.md` asks for a rebuild after every edit, which this release does not follow
-- [ ] (v2.0.0-alpha) Stage 2 (see the spec §5). Before it starts, settle the open questions in `docs/spec/nhieu-nguoi-choi.md` §8, especially whether Guest plays alone (§8 Q1)
 
 v1.16.0 (workday ends at 18:00, farewell scene):
 
@@ -207,7 +209,6 @@ Naming decision (open):
 
 Repository:
 
-- [ ] Project is not a git repository; decide whether to initialize one (affects future changelog and pre-commit doc checks)
 - [ ] No root `CHANGELOG.md` exists. Release notes live in `docs/changelog.md`. Decide whether a root file is wanted
 
 Distribution (v1.5.0):
@@ -294,6 +295,4 @@ Detailed looks (v1.9.2), `docs/spec/dong-nghiep.md` §8:
 - [ ] (v1.9.4) Look-check all nine on a real device at the default camera distance (Vừa). Headless Chrome lineup only. Check Chị Ba's glasses and Hiện's round glasses, which are the most visible changes
 - [ ] (v1.9.4) Confirm Chị Ba's gruff, flat mouth (no smile) against her reference photo. It was set from the description, not re-checked
 
-## Blocked
-
-- [!] None
+## Blocked (none)
