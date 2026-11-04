@@ -245,3 +245,64 @@ Moved from `docs/tasks.md` on 2026-11-04 to keep that file under 300 lines. Entr
   - [x] Real Safari 27.0.1 on macOS 27: 3D scene rendered (226 draw calls, 6128 triangles, no errors). Temporary on-page diagnostic only
   - [x] `index-offline.html`, `dist/MinhLee.app`, `dist/MinhLee-mac.zip` rebuilt. `--selftest` passed again
   - [x] Docs: `CLAUDE.md`, `docs/spec/tuong-thich-trinh-duyet.md` (new), `docs/spec/phan-phoi-offline.md`, `docs/spec/mot-ngay-o-cong-ty.md`, `docs/deploy.md`, `docs/product-guide.md`, `docs/glossary.md`, `docs/changelog.md`, `docs/tasks.md`
+
+## Done (v1.8.7 and v1.8.8, moved from tasks.md in v1.9.2)
+
+- [x] v1.8.8 (2026-11-04): the north-wall clock shows the in-game time. The face is redrawn by `drawWallClock()` from `applyTimeOfDay()` when the minute changes. Details: `docs/changelog.md` v1.8.8, `docs/spec/van-phong-layout.md` §2, §6 and AC-74
+  - [x] `WALL_CLOCK` canvas texture redrawn with hour hand, minute hand, and 12 tick marks (`drawWallClock()`, `applyTimeOfDay()` in `index.html`)
+  - [x] Headless-Chrome check: face exported at 08:30, 10:10, 14:20 (three different images; 14:20 hands correct)
+  - [x] Offline copies and netlify and app resources contain the v1.8.8 code (grep check in the doc pass)
+  - [ ] Look at the wall clock on a real device and in Safari or Firefox (not run)
+  - [ ] Rebuild `dist/MinhLee-mac.zip` and `dist/MinhLee.app` (not rebuilt in the doc pass)
+  - [ ] Set `CFBundleShortVersionString` in `tools/macapp/Info.plist` and `dist/MinhLee.app/Contents/Info.plist` (still 1.8.5)
+  - [x] Docs: `docs/changelog.md`, `docs/spec/van-phong-layout.md`, `docs/tasks.md`, `docs/glossary.md`. `docs/product-guide.md` not changed (it mentions only the HUD clock). `CLAUDE.md` not touched (user choice)
+
+- [x] v1.8.7 (2026-11-04): surprise events wait for the player to stand within 4.2 m of the related coworker after their scheduled time, and are skipped after 150 game-minutes or at 17:10. Three narration strings call Chủ tịt "anh" instead of "ông". Details: `docs/changelog.md` v1.8.7, `docs/spec/noi-dung-bat-ngo.md` §1 and AC-40, `docs/product-guide.md` (Surprises)
+  - [x] `tickClock()` proximity gate and skip rule (`CFG.SURPRISE_NEAR`, `sp.t + 150`, `CFG.END - 20`), `near()` check for `ev.npc` or any visible coworker
+  - [x] Headless-Chrome check: far from the coworker, not fired; near, fired (reported by the requester; not re-run in the doc pass)
+  - [x] Offline copies and netlify and app resources contain the v1.8.7 code (grep check in the doc pass; byte-identity not checked)
+  - [x] Docs: `CLAUDE.md` not touched (user choice), `docs/changelog.md`, `docs/spec/noi-dung-bat-ngo.md`, `docs/product-guide.md`, `docs/glossary.md`, `docs/tasks.md`
+
+## Moved from docs/tasks.md (v1.8.2 to v1.8.6, moved 2026-11-04)
+
+- [x] v1.8.6 (2026-11-04): desk task reworked around a requester (work card, progress kept on pause, mini-game help and hints, requester reaction), "💻 Bàn của bạn" desk label, photo-based looks for Thông, Thảo, Toàn. Details: `docs/changelog.md` v1.8.6, `docs/spec/mot-ngay-o-cong-ty.md` AC-71 to AC-73 and §4.4, `docs/spec/bang-nhiem-vu.md` §2, §3.4
+  - [x] Work card (`workActivity()`): requester, briefing (`workBrief()`), "about 30–60 seconds", "no score, no penalty"; "▶ Bắt đầu làm" / "▶ Làm tiếp"; "Để lát nữa (không mất gì)"
+  - [x] `D.work` kept on "Để lát nữa" and "⏸ Tạm dừng (giữ nguyên tiến độ)"; cleared on finish or at a new day (`newDayState()`)
+  - [x] Mini-games: "Cách làm" box, progress bar, `SORT_SETS.descs`, hint glow after 2 wrong taps, `from` on `SORT_SETS` and `ORDER_SETS`
+  - [x] Requester reaction card on completion (+3 affinity for the requester)
+  - [x] Desk label `deskTag` (horizontal clamp, hidden after 3 tasks, while sitting, in list mode, or away); morning milestone hint updated
+  - [x] Photo-based looks: Thông (white tee), Thảo (long hair, orange blouse), Toàn (navy shirt, mustache). This was the v1.8.6 item skipped earlier
+  - [x] Offline copies (`index-offline.html`, `dist/netlify/index.html`, `dist/MinhLee.app`) contain the v1.8.6 strings and are byte-identical (checked in the doc pass)
+  - [x] Docs: `CLAUDE.md`, `docs/changelog.md`, `docs/spec/mot-ngay-o-cong-ty.md`, `docs/spec/bang-nhiem-vu.md`, `docs/product-guide.md`, `docs/glossary.md`, `docs/tasks.md`, `docs/archive/tasks-done-2026-11.md` (v1.6.0 and v1.6.1 moved here)
+
+- [x] v1.8.5 (2026-11-04): Nguyên's look changed to a stylized look based on a user photo (black side-fringe hair, fair skin, black top, no glasses, relaxed expression). Details: `docs/changelog.md` v1.8.5, `docs/spec/mot-ngay-o-cong-ty.md` §4.4
+  - [x] `NPC_PROFILES` `nguyen` `look` in `index.html`: `hair: 0x15110f`, `style: 'fringe'`, `skin: 0xf3d3bb`, `shirt: 0x1b1b1d`, `glasses: false`, no `smile`
+  - [x] Built from Three.js primitives only; no photo, model, or Blender asset embedded
+  - [x] Headless-Chrome screenshot of Nguyên lying on the daybed (reported by requester; not re-taken in the doc pass)
+  - [x] `index-offline.html`, `dist/netlify/index.html`, `dist/MinhLee.app` rebuilt (reported). The three are byte-identical and contain the new look (checked in the doc pass)
+  - [x] Docs: `docs/changelog.md`, `docs/spec/mot-ngay-o-cong-ty.md` §4.4, `docs/glossary.md`, `docs/tasks.md`, `CLAUDE.md` (status). `docs/product-guide.md` has no look text and was not changed
+  - [x] `tools/macapp/Info.plist` and `dist/MinhLee.app/Contents/Info.plist`: `CFBundleShortVersionString` is 1.8.5 (checked in the reconciliation pass). Closes the macOS app version follow-up. `CFBundleVersion` stays 1
+
+- [x] v1.8.4 (2026-11-04): name tag and speech bubble of a lying coworker (Nguyên on the pantry daybed) anchored to the body and head instead of the feet (user bug report with a screenshot). Details: `docs/changelog.md` v1.8.4, `docs/spec/dong-nghiep.md` §7.1 and AC-70
+  - [x] `isLying()` and `npcAnchor()` in `index.html` (next to `createNpcs()`): lying tag 0.6 m toward the head at 0.75 m high, lying bubble 1.05 m toward the head at 0.85 m high, head direction `-(sin yaw, cos yaw)`. Standing and seated values unchanged
+  - [x] Headless-Chrome screenshot of Nguyên on the daybed, tag and bubble placed correctly (reported by the requester; not re-run in the doc pass)
+  - [x] Headless-Chrome full-day run: no JS errors, no collision violations (reported by the requester; not re-run in the doc pass)
+  - [x] Ambient on-screen gate in `tryNpcSay()` now tests `npcAnchor(n, …, false)`, the same lying-aware point as the bubble (was the standing point). Closes the v1.8.4 known defect (found by reading the code; closed in the 2026-11-04 reconciliation pass)
+  - [x] `index-offline.html`, `dist/MinhLee.app`, `dist/netlify/index.html` rebuilt. The three are byte-identical, match the current `index.html` apart from the importmap and comment lines, and contain the new code (checked in the doc pass)
+  - [x] Docs: `CLAUDE.md`, `docs/spec/dong-nghiep.md`, `docs/glossary.md`, `docs/changelog.md`, `docs/tasks.md`
+
+- [x] v1.8.3 (2026-11-04): on-screen help suggests Safari or an updated Chrome whenever 3D cannot show. Details: `docs/changelog.md` v1.8.3, `docs/spec/tuong-thich-trinh-duyet.md` §3
+  - [x] Too-old message, in-app banner, boot-error text (first tip), title WebGL note (adds "Tăng tốc phần cứng" for Chrome), mid-game toast (9 s), list-mode panel note (automatic switch only; manual simple mode unchanged) (`index.html` `<head>` script, `init()`, `fallbackToLite()`, `refreshLite()`, `#boot-error`)
+  - [x] Headless Chrome check with WebGL creation forced to fail: title note, toast, list-mode note, boot-error text contain the suggestion (reported by requester; not re-run in the doc pass)
+  - [x] `index-offline.html`, `dist/netlify/index.html`, `dist/MinhLee.app` rebuilt; the three are byte-identical and contain the new strings (checked in the doc pass). `dist/MinhLee-mac.zip` rebuilt (contents not opened)
+  - [x] Docs: `CLAUDE.md`, `docs/spec/tuong-thich-trinh-duyet.md` (§3 texts, toast 6 s corrected to 9 s, CP-12 to CP-14), `docs/product-guide.md` (FAQ), `docs/deploy.md` (recipient advice), `docs/changelog.md`, `docs/tasks.md`
+  - [x] Boot-error tip placement accepted as-is: tip ① (Safari, or updated Chrome) comes first after the lead-in. See `docs/tasks.md` Help text (v1.8.3)
+  - [x] Option 2 deploy doc: `tools/prepare-netlify.sh` is now described in `docs/deploy.md` (closes the v1.7.0 item below)
+
+- [x] v1.8.2 (2026-11-04): serious Nam–Thạnh duo, Nam's 09:42 work quirk, random duo script per visit. Details: `docs/changelog.md` v1.8.2, `docs/spec/dong-nghiep.md` §1–2, `docs/spec/noi-dung-bat-ngo.md` §2
+  - [x] Second `nam` / `thanh` script in `DUOS` (serious, 4 lines). `DUOS` now has 17 scripts for 16 pairs
+  - [x] Nam's 09:42 quirk ("Thạnh ơi, 10 giờ họp nhé…", `anim: 'talk'`) in `index.html` `NPC_PROFILES`
+  - [x] `runVisit()` picks randomly among all scripts for a pair, once per visit (was the first match)
+  - [x] Headless-Chrome full-day run (reported by requester; not re-run in the doc pass): no JS errors, no collision violations, content ids valid
+  - [x] `index-offline.html`, `dist/MinhLee.app`, `dist/netlify/index.html` rebuilt. The three are byte-identical and contain the new strings (checked in the doc pass)
+  - [x] Docs: `CLAUDE.md`, `docs/spec/dong-nghiep.md`, `docs/spec/noi-dung-bat-ngo.md`, `docs/product-guide.md`, `docs/glossary.md`, `docs/changelog.md`, `docs/tasks.md`

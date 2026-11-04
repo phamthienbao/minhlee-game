@@ -1,6 +1,6 @@
 # Spec: Một Ngày Ở MinhLee
 
-Status: v1.9.0 (2026-11-04). Six new day themes with story intros, and desk items unlocked by finished desk tasks (`tasksTotal`, `unlocked`; see `docs/spec/noi-dung-bat-ngo.md` §3.2 and `docs/spec/bang-nhiem-vu.md` §9). Earlier: v1.8.6. Desk task reworked around a requester, with progress kept on pause (AC-71 to AC-73); Thông, Thảo, and Toàn looks updated from photos (§4.4). Nguyên's look is from the user's reference photo (v1.8.5). Earlier releases are in `docs/changelog.md`.
+Status: v1.9.2 (2026-11-04). Detailed looks for five coworkers (`look.detail`, `docs/spec/dong-nghiep.md` §8). Earlier: v1.9.0. Six new day themes with story intros, and desk items unlocked by finished desk tasks (`tasksTotal`, `unlocked`; see `docs/spec/noi-dung-bat-ngo.md` §3.2 and `docs/spec/bang-nhiem-vu.md` §9). Earlier: v1.8.6. Desk task reworked around a requester, with progress kept on pause (AC-71 to AC-73); Thông, Thảo, and Toàn looks updated from photos (§4.4). Nguyên's look is from the user's reference photo (v1.8.5). Earlier releases are in `docs/changelog.md`.
 
 ## 1. Goal
 
@@ -139,7 +139,7 @@ No other libraries, frameworks, or assets are used.
   - Nguyên (`id: 'nguyen'`, v1.8.5): black hair with side fringe (`style: 'fringe'`, voluminous per the target look), fair skin (`0xf3d3bb`), black top (`0x1b1b1d`, replaces the earlier green top), no glasses, no `smile` (relaxed, neutral mouth). Based on a reference photo the user supplied; the photo is not embedded.
   - Yến (`id: 'yen'`, v1.3.1): long auburn-brown hair, thin round gold-rimmed glasses, black top, smile.
   - Chị Ba (`id: 'an3'`, v1.3.1): shoulder-length brown bob, thick dark round glasses (`glassThick`), round face, black top.
-  - Thảo (`id: 'thao'`, v1.3.1; updated v1.8.6 from the user's photo): long hair (`style: 'long'`, a flat box; no separate wavy style exists), orange blouse (`0xe8923a`), smile, no glasses. Open: the photo's "wavy" hair is not modelled.
+  - Thảo (`id: 'thao'`, v1.3.1; updated v1.8.6 from the user's photo; v1.9.2 detailed look): wavy long hair (`hairStyle: 'wavy'`), orange V-neck blouse (`0xe8923a`), lashes, gold earrings, pink lips, smile, no glasses. Detail fields in `docs/spec/dong-nghiep.md` §8.
   - Phú (`id: 'phu'`, v1.4.1): short black hair, thin rectangular glasses (`glassColor`), black shirt, smile.
   - Nam (`id: 'nam'`, v1.4.1): black fringe (`style: 'fringe'`), red-and-blue plaid shirt (`pattern: 'plaid'`), neutral expression.
   - Anh Bảo (`id: 'bao'`, v1.4.1): short neat black hair, thin dark rectangular glasses (`glassColor`), mustard shirt, smile. Approximation: built from a written brief, no photo.

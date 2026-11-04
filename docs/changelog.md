@@ -2,6 +2,113 @@
 
 All notable changes to "Một Ngày Ở MinhLee" (formerly "Một Ngày Ở Công Ty", renamed in v1.0.3). Newest first. Entries are appended, never rewritten.
 
+## v1.9.4 — 2026-11-04
+
+`look.detail` (detailed eyes, brows, smile, neck ring or collar, and hair style) is now enabled for the remaining nine coworkers. All 14 coworkers use it. Look data only. No change to logic, schedule, text, save format, or save key.
+
+### Changed
+
+- `NPC_PROFILES` looks (`index.html`, section 2), `look.detail: true` added to nine coworkers, with the existing look data and colours kept where they were set:
+  - Trung: reverted to his original face (no `look.detail`) at the user's request, since it looked closer to him; original look kept: striped shirt, rect glasses, mustache.
+  - Toàn: `hairStyle: 'side'`, `neck: 'collar'`, navy collar (`collar: 0x1f2a5c`). This closes the "no polo collar" gap in `docs/tasks.md`. Mustache, no glasses, `round` face.
+  - Hiện: `hairStyle: 'quiff'`, round glasses (`glasses: true`), `neck: 'crew'` with purple `neckColor: 0x654a8c`, smile.
+  - Tùng: `neck: 'crew'` with pale lilac `neckColor: 0xd9d4e6`, fringe (`style: 'fringe'`), smile.
+  - Nam: `neck: 'collar'`, `collar: 'pat:plaid'`, smile, `teeth: true`.
+  - Chú 7: `hairStyle: 'tousled'`, `neck: 'crew'` with cream `neckColor: 0xdedbd0`, smile.
+  - Chị Ba: bob kept (`style: 'bob'`), `lashes`, `lip: 0xb8525a` (muted), `earring: 0xd0d0d0` (silver), `neck: 'crew'` with dark grey `neckColor: 0x2c2c30`, thick round glasses, `browUp` set, no smile.
+  - Anh Bảo: `hairStyle: 'side'`, `neck: 'collar'`, yellow `collar: 0xd4ac4d`, smile.
+  - Nguyên: `neck: 'crew'` with black `neckColor: 0x2a2a2d`, detailed eyes and brows, no glasses.
+- Thảo, Yến, Thông, Chủ tịt, and Phú were already on `look.detail` and are unchanged in this release.
+
+### Verification
+
+- Headless Chrome: a lineup render was taken and viewed by eye.
+- Not checked against the reference photos in this pass. Likeness is unverified for the nine coworkers above.
+- Not run on a real device or in any other browser.
+
+### Build and artifacts
+
+- `index-offline.html`, `dist/netlify/index.html`, and `dist/MinhLee.app/Contents/Resources/index.html` are byte-identical to each other, and each holds the same 14 `look: {` lines as `index.html` (grep and diff check). `index.html` differs from them only by the importmap line and the offline comment line.
+- `dist/MinhLee-mac.zip` was not rebuilt in this pass. `CFBundleShortVersionString` still reads 1.8.5 (see `docs/tasks.md`).
+
+### Docs
+
+- `docs/spec/dong-nghiep.md` (status, §8 table now lists all 14 coworkers, §6 resolved items collapsed to one line, §3 and §2 rows merged, Toàn's duplicate row removed), `docs/tasks.md` (Done entry, polo-collar gap closed, follow-ups for the likeness and real-device checks).
+- `CLAUDE.md` and `docs/glossary.md` not changed in this pass.
+
+## v1.9.3 — 2026-11-04
+
+Looks for Yến, Thạnh, and Phú re-matched to the user's reference photos. Look data only, plus two small rendering options in `buildCharacter()`. No change to logic, schedule, text, save format, or save key.
+
+### Added
+
+- `index.html`, `detailFace(look, mk, head)`: `look.teeth` adds a white tooth strip under the smile (opt-in, used with `look.detail`).
+- `index.html`, `detailHair(look, mk, head)`:
+  - `look.part: 'center'` (used with `hairStyle: 'sleek'`) draws a centre parting with two side panels instead of the side fringe.
+  - `hairStyle: 'quiff'`: short hair, a slight lift at the front, short sides.
+- `index.html`, `buildCharacter()`: `look.shortSleeve: true` adds skin-coloured forearms below the shirt sleeves (short-sleeve shirts).
+
+### Changed
+
+- `NPC_PROFILES` looks (`index.html`, section 2):
+  - Yến: long copper-brown hair (`hair: 0x8b4526`), `hairStyle: 'sleek'` with `part: 'center'`, no hair clip, no side fringe. Thin rose-gold round glasses (`glassColor: 0xd9a98f`), coral lips (`lip: 0xe8704f`), small gold earrings (`earring: 0xe0b45a`), black top (`shirt: 0x1d1d1f`, `neckColor: 0x2a2a2d`), `teeth: true`.
+  - Thạnh (Chủ tịt): `hairStyle: 'quiff'` (was `side`), thin light-silver rectangular glasses (`glassColor: 0xc9c5ba`), slimmer face (the `round` option removed), black-and-white gingham short-sleeve shirt (`shortSleeve: true`, collar kept), `teeth: true`.
+  - Phú: neat short side-parted hair (`hairStyle: 'side'`, was `tousled`), rectangular dark glasses (`glassColor: 0x2a2a2e`), wider face (`round: true`), black collared shirt (`neck: 'collar'`, `collar: 0x141416`, was `crew`), `teeth: true`.
+- Tooth and sleeve options are opt-in. Coworkers without them (Thảo, Thông, Nguyên, and the rest) render as before.
+
+### Verification
+
+- Headless Chrome: a lineup render was taken and viewed by eye. Compared with the reference photos by eye only.
+- Not run on a real device or in any other browser. No side-by-side likeness score was recorded.
+
+### Build and artifacts
+
+- `index-offline.html`, `dist/netlify/index.html`, and `dist/MinhLee.app/Contents/Resources/index.html` contain `shortSleeve`, `quiff`, and the `part === 'center'` branch (grep check). `index-offline.html` differs from `index.html` only by the importmap line and the offline comment line. The three copies are byte-identical.
+- `dist/MinhLee-mac.zip` was not rebuilt in this pass. `CFBundleShortVersionString` still reads 1.8.5 (see `docs/tasks.md`).
+
+### Docs
+
+- `docs/spec/dong-nghiep.md` (status, §8 table for Thạnh, Phú, and Yến, v1.9.3 fields), `docs/glossary.md` (`look.teeth`, `look.part`, `look.shortSleeve`, `look.hairStyle` value `quiff`), `docs/tasks.md` (Done entry, look-check follow-ups).
+- `CLAUDE.md` not touched (user choice). `docs/product-guide.md` not changed (it has no look text).
+
+## v1.9.2 — 2026-11-04
+
+Detailed character looks for five coworkers. `buildCharacter()` gains an opt-in `look.detail` flag that adds a more detailed face, hair, and neck. Still Three.js primitives in one file. No change to logic, schedule, save format, or save key. Other coworkers are unchanged.
+
+### Added
+
+- `index.html`, `buildCharacter(look)` (section 6), opt-in `look.detail: true`:
+  - `detailFace(look, mk, head)`: eyes with white sclera (`_D.eyeW`), iris (`look.eye`), and a highlight; eyebrows (`look.brow`, `look.browUp`); optional lashes (`look.lashes`); curved smile as a `TorusGeometry` half-ring in `look.lip`. Replaces the plain eye and mouth meshes when `detail` is set.
+  - `detailHair(look, mk, head)`, selected by `look.hairStyle`: `wavy` (long, over the shoulders), `sleek` (long straight, side-swept fringe, hair clip in `look.clip`), `side` (neat side part), `tousled` (thick short hair with tufts). Optional `look.earring` adds two small spheres.
+  - `detailClothes(look, mk, shirtC)`, selected by `look.neck`: `crew` (neck ring in `look.neckColor`), `collar` (small collar in `look.collar`, which can take a pattern such as `pat:gingham`), `vneck` (V-neckline in `look.neckColor`).
+- `NPC_PROFILES` `look.detail: true` on five coworkers:
+  - Chủ tịt (Thạnh): `hairStyle: 'side'`, `neck: 'collar'`, `collar: 'pat:gingham'`.
+  - Phú: `hairStyle: 'tousled'`, `neck: 'crew'`.
+  - Thảo: `hairStyle: 'wavy'`, `neck: 'vneck'`, `lashes`, `earring` (gold), `lip` (pink).
+  - Yến: `hairStyle: 'sleek'`, `clip` (pink), `neck: 'crew'`, `lashes`, `lip` (pink), gold round glasses (`glassColor`, torus rims).
+  - Thông: `hairStyle: 'side'`, `neck: 'crew'` (light grey ring on the white tee).
+
+### Changed
+
+- Thảo's wavy hair is now modelled. Before, `style: 'long'` was a flat box and the photo's wavy hair had no match (see `docs/tasks.md`, v1.8.6 photo-gap item). Closed in this release.
+- `look.style` values `'wavy'` and `'sleek'` on Thảo and Yến have no branch in `buildCharacter()`. Their hair comes from `look.hairStyle`. Their `style` field is left as-is.
+
+### Verification
+
+- Headless Chrome: a lineup render of the five coworkers was checked by eye (screenshot viewed).
+- Not run on a real device or in any other browser.
+- Likeness against the reference photos was judged from earlier notes only, not side by side.
+
+### Build and artifacts
+
+- `index-offline.html`, `dist/netlify/index.html`, and `dist/MinhLee.app/Contents/Resources/index.html` contain `detailFace` (grep check). `index-offline.html` differs from `index.html` only by the importmap line and the offline comment line.
+- `dist/MinhLee-mac.zip` was not rebuilt in this pass. `CFBundleShortVersionString` still reads 1.8.5 (see `docs/tasks.md`).
+
+### Docs
+
+- `docs/spec/dong-nghiep.md` (status, §8 per-person table), `docs/spec/mot-ngay-o-cong-ty.md` §4.4 (Thảo's entry), `docs/glossary.md` (`look.detail`, `look.hairStyle`, `look.neck`), `docs/tasks.md` (Done entry, Thảo gap closed, follow-ups).
+- `CLAUDE.md` not touched (user choice). `docs/product-guide.md` not changed (it has no look text).
+
 ## v1.9.1 — 2026-11-04
 
 Text-only release. Chị Ba (An, `an3`) is now grumpier and visibly annoyed, while staying funny. No logic, ids, save fields, or layout changed.

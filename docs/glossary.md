@@ -449,3 +449,16 @@ Format: **Term** — Definition. New terms are added at the end. Existing defini
 **Tổng đầu việc (tasksTotal)** — *(needs definition)* The save field counting every finished desk task across all days. Drives desk item unlocks. Added v1.9.0.
 
 **Mở khóa (unlock)** — *(needs definition)* Adding a desk item to `unlocked` when `tasksTotal` reaches its `need`. Shows a reward card. Added v1.9.0.
+
+**look.detail** — *(needs definition)* Opt-in flag in a coworker's `look` (`NPC_PROFILES`). When `true`, `buildCharacter()` adds detailed eyes (white sclera, iris in `look.eye`, highlight), brows (`look.brow`, `look.browUp`), a curved smile in `look.lip`, and the hair and neck rules below. Optional: `look.lashes`, `look.clip` (hair clip colour), `look.earring` (earring colour). Used by five coworkers. Added v1.9.2. See `docs/spec/dong-nghiep.md` §8.
+
+**look.hairStyle** — *(needs definition)* Used with `look.detail`. Values: `wavy` (long, over the shoulders), `sleek` (long straight, side fringe, clip), `side` (neat side part), `tousled` (thick short hair with tufts). Added v1.9.2. v1.9.3 adds `quiff` (short hair, slight front lift, short sides).
+
+**look.neck** — *(needs definition)* Used with `look.detail`. Values: `crew` (neck ring in `look.neckColor`), `collar` (small collar in `look.collar`, which may be a pattern such as `pat:gingham`), `vneck` (V-neck in `look.neckColor`). Added v1.9.2.
+
+
+**look.teeth** — Opt-in flag in a coworker's `look` (`NPC_PROFILES`), used with `look.detail`. When `true`, `detailFace()` adds a white tooth strip under the smile. Used by Thạnh, Phú, and Yến. Added v1.9.3. See `docs/spec/dong-nghiep.md` §8.
+
+**look.part** — Used with `look.detail` and `hairStyle: 'sleek'`. Value `'center'` draws a centre parting with two side panels instead of the side fringe. Used by Yến. Added v1.9.3. See `docs/spec/dong-nghiep.md` §8.
+
+**look.shortSleeve** — Opt-in flag in a coworker's `look` (`NPC_PROFILES`). When `true`, `buildCharacter()` adds skin-coloured forearms below the shirt sleeves, for short-sleeve shirts. Used by Thạnh. Added v1.9.3. See `docs/spec/dong-nghiep.md` §8.

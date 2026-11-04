@@ -1,6 +1,6 @@
 # Spec: Đồng nghiệp (coworkers, address terms, remote worker)
 
-Status: v1.9.1 (2026-11-04). Chị Ba's lines are grumpier (text only), tone guidance in §7.6. Nguyên's look (v1.8.5); the lying-coworker name tag, bubble, and ambient gate use the lying anchor (v1.8.4, §7.1).
+Status: v1.9.4 (2026-11-04). All 14 coworkers have detailed looks (`look.detail`, §8). Yến, Thạnh, and Phú re-matched to reference photos in v1.9.3 (by eye). The nine added in v1.9.4 are not re-matched to photos. Earlier history: `docs/changelog.md`.
 
 ## 1. Roster
 
@@ -41,11 +41,9 @@ Coworkers mostly address each other by first name. These are the special cases:
 | Chú 7 (An, male) | Called "Chú 7". "Chú" is a nickname, not an age term. Chú 7 is young (confirmed 2026-11-04). Teases Chị Ba in surprise `khiatra` and in the 09:46 quirk | Profile name, surprise `khiatra` |
 | Chị Ba → Chú 7 (v1.7.1) | Chị Ba's teasing nickname for Chú 7 is "bánh tét" (in her stand-up line and his chat line). Chú 7 answers her call with "Dạ có em đây chị Ba!" ("em", respectful to her) | `say.stand` and `say.standReply` on `an3`, chat line on `an7` |
 | Ages | Anh Bảo is the oldest. Chủ tịt, Nam, and Chị Ba are the same age (confirmed 2026-11-04). Chú 7 is young (confirmed 2026-11-04). Toàn's age tier is not specified. Other ages are not recorded | — |
-| Yến, Thông, Thảo, Tùng, Phú | Peers. Use first names | Duos |
-| Thảo → Yến | Thảo calls Yến "chị Yến" | Duo `thao-yen` |
+| Yến, Thông, Thảo, Tùng, Phú | Peers. Use first names. Thảo calls Yến "chị Yến" (duo `thao-yen`) | Duos |
 | Hiện | Youngest. Refers to self as "em" and to others as anh / chị. Lines rewritten in v1.2.0 | Greet, pantry, chat, request, note lines |
 | Nam | Peer-level lines (mình / bạn). No deferential "em" or "ạ". Keeps "khìn khìn". Same-age banter with Chị Ba (tui / ông) in duo `an3`–`nam`. Toward Chủ tịt (Thạnh): "Thạnh" in serious work lines (v1.8.2), "bé Hạnh" when teasing (v1.8.1) | Greet, pantry, chat, request, duo lines |
-| Toàn | Age tier not specified (open). Lines unchanged | — |
 
 The player is addressed with `{anh}` / `{Anh}` by gender (`fill()`, see `mot-ngay-o-cong-ty.md` §4.2). That rule is unchanged.
 
@@ -54,11 +52,9 @@ The player is addressed with `{anh}` / `{Anh}` by gender (`fill()`, see `mot-nga
 - Profile: `id: 'nguyen'`, `role: 'Designer'`, `desk: null`. No gender is recorded: the profile has no gender field, no gender was stated, and Nguyên's lines contain no `{anh}` / `{Anh}`.
 - Habits: `arrive: '10:15'`, `leave: '17:00'`, `coffee: 'morning'`, `lunch: 'pantry'`, `joinsMeeting: false`, `lounge: true`, `attendance: 0.5`.
 - Attendance: `resetNpcDay()` rolls `Math.random() > attendance` each day. On a remote day `times.arrive` is 99999, so Nguyên stays hidden all day. On about 50% of days he comes in (raised from 0.3 on 2026-11-04).
-- In office: the default goal (`decideGoal()`, after meeting, events, lunch, coffee, and visits) is `goalLounge()`. He walks to `LOUNGE_SEAT` (cx −4.0, cz −6.9, `lie: true`) and plays pose `lie`. He is not a desk worker, so he is never a visit candidate. Lunch and coffee still use pantry spots.
+- In office: the default goal (`decideGoal()`, after meeting, events, lunch, coffee, and visits) is `goalLounge()`. He walks to `LOUNGE_SEAT` (cx −4.0, cz −6.9, `lie: true`) and plays pose `lie`. He is not a desk worker, so he is never a visit candidate. Lunch and coffee still use pantry spots. `LOUNGE_SEAT` is one seat, and `goalLounge()` does not check occupancy, so only one coworker may use `habits.lounge` at a time (only Nguyên does).
 - Daybed (moved in v1.3.0 to the north wall, east of the pantry): obstacle at (−4.6, −6.9), 1.8 × 1.0 m (`addObst`). Scene parts: teal frame, cream mattress, orange pillow. Built in section 5, `buildOffice()`.
-- Arrival toast: `processTimeEvents()` shows "😴 Nguyên hiếm hoi lên công ty hôm nay, đang nằm ở pantry!" at arrival + 8 min. Not shown on remote days.
-- Quirk: 11:20, "(nằm dài ở pantry, mắt lim dim)", no animation.
-- `LOUNGE_SEAT` is one seat. `goalLounge()` does not check occupancy, so only one coworker may use `habits.lounge` at a time. Only Nguyên does.
+- Arrival toast: `processTimeEvents()` shows "😴 Nguyên hiếm hoi lên công ty hôm nay, đang nằm ở pantry!" at arrival + 8 min. Not shown on remote days. Quirk: 11:20, "(nằm dài ở pantry, mắt lim dim)", no animation.
 - Pantry: `PANTRY_SPOTS` still has 8 standing spots. Two were moved in v1.2.0. Their previous coordinates are not recorded.
 
 ## 4. Profile fields added in v1.2.0
@@ -95,11 +91,7 @@ Status legend as in `docs/spec/mot-ngay-o-cong-ty.md` section 3.
 
 ## 6. Known issues
 
-- ~~Birthday offset for Nguyên (index 13) equals Chủ tịt's (index 0). Nguyên never gets a birthday.~~ *Resolved in v1.3.0: offset is `(index × 4 + 3) % 65`, unique per coworker. Nguyên's offset is 55. See `docs/spec/the-gioi-lien-tuc.md` §7.*
-- ~~The random cake-party pick in `startDay()` excludes Thảo only. It can pick Nguyên on a remote day.~~ *Resolved in v1.3.0: the pick also excludes coworkers who are working remotely that day.*
-- ~~(v1.4.0) Duo `an7`–`thong` (Chú 7 and Thông, `DUOS` in `index.html`) still has backup and worry lines ("nhớ sao lưu hợp đồng đất nhé, chú lo lắm", "chú sao lưu bốn bản"). They come from the persona removed in v1.4.0 (worrying, backups). Open: rewrite these lines or keep them. See `docs/tasks.md`.~~ *Resolved in v1.4.3: both lines rewritten to the tea persona. See `docs/spec/noi-dung-bat-ngo.md` §2.*
-- ~~(v1.4.3) Surprise `dating100k`, option 1: Chủ tịt says "Anh mời trà sữa!" in group talk. Under the humble rule it should be "Em mời…".~~ *Resolved in source (checked 2026-11-04, v1.4.4): option 1 now reads "Em mời trà sữa!". See `docs/changelog.md`.*
-- ~~(v1.4.4) Yến's greeting `say.greet[1]` ("Trời ơi cái mặt này! Mới sáng ra đã… là sao?") has no `@am` tag, so it can show after 11:00.~~ *Resolved in v1.6.0: tagged `@am`, and a `@pm` greeting was added as `greet[3]`. Source check only. See `docs/tasks.md`.*
+- All earlier items are resolved (v1.3.0 to v1.6.0): Nguyên's birthday offset and the cake-pick exclusion, Chú 7–Thông backup lines (v1.4.3), `dating100k` option 1 wording (v1.4.4), Yến's untagged `@am` greeting (v1.6.0). Details: `docs/changelog.md`, `docs/tasks.md`.
 
 ## 7. Lines and speech bubbles (v1.4.4)
 
@@ -187,3 +179,22 @@ Chị Ba (`an3`) is grumpier than before, and visibly annoyed, but still funny. 
 - Keep her address terms (§2): "anh" for Chủ tịt, peer "tui / ông" banter with Nam.
 - Lines updated in v1.9.1: `say.greet`, `say.idle`, `say.chat`, `say.pantry`, `reply`, `request` (ask), `meeting` (pos/neg), `quirks`, `note`, the `DOC_QUESTS` ask line, duo lines with Chú 7 and Nam, and the `dammhaam` result. Unchanged: `say.stand`, `say.standReply`.
 - Wording is not native-reviewed (see `docs/tasks.md`).
+
+## 8. Detailed looks (v1.9.2 to v1.9.4, `look.detail` on 13 of 14, Trung keeps his original face; hair is `hairStyle` unless noted; fields in `docs/glossary.md`)
+
+| Coworker | Hair | Neck (`neck`) | Other |
+|---|---|---|---|
+| Chủ tịt (Thạnh) | `quiff` (v1.9.3) | `collar`, gingham (`pat:gingham`), short sleeves (`shortSleeve`) | thin light-silver rect glasses, slimmer face, teeth |
+| Phú | `side` (v1.9.3) | `collar`, dark (`0x141416`) | rect dark glasses, wider face (`round`), teeth |
+| Trung | original face (no `look.detail`, kept at the user's request: closer to him) | striped shirt | rect glasses, mustache |
+| Toàn | `side` | `collar`, navy (`0x1f2a5c`), closes the polo-collar gap | mustache, wider face (`round`), no glasses |
+| Hiện | `quiff` | `crew`, purple (`0x654a8c`) | round glasses, smile |
+| Tùng | `style: 'fringe'` (no `hairStyle`) | `crew`, pale lilac (`0xd9d4e6`) | smile |
+| Nam | `style: 'fringe'` (no `hairStyle`) | `collar`, plaid (`pat:plaid`) | smile, teeth, no glasses |
+| Thảo | `wavy`, long over the shoulders | `vneck`, orange | lashes, gold earrings, pink lips |
+| Yến | `sleek`, centre part (`part: 'center'`) | `crew`, dark | lashes, coral lips, gold earrings, thin rose-gold glasses, teeth |
+| Chú 7 | `tousled` | `crew`, cream | smile |
+| Chị Ba | `style: 'bob'` (no `hairStyle`) | `crew`, dark grey | lashes, muted lips, silver earrings, dark thick round glasses, flat mouth (no smile) |
+| Anh Bảo | `side` | `collar`, yellow (`0xd4ac4d`) | smile |
+| Thông | `side`, neat side part | `crew`, light grey ring on white tee | — |
+| Nguyên | `style: 'fringe'` (no `hairStyle`) | `crew`, black | detailed eyes and brows, no glasses |

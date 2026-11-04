@@ -293,7 +293,7 @@ const CFG = { SURPRISE_NEAR: 4.2,
 /* Trong lời thoại có thể dùng: {ten} = tên người chơi, {anh} = anh/chị theo giới tính người chơi ({Anh} viết hoa). */
 const NPC_PROFILES = [
   { id: 'thanh', name: 'Chủ tịt', real: 'Thạnh', role: 'Chủ tịt', desk: 1,
-    look: { skin: 0xf0cdae, hair: 0x15130f, shirt: 0x2b2b2b, style: 'short', glasses: 'rect', pattern: 'gingham', round: true, smile: true },
+    look: { skin: 0xf0cdae, hair: 0x15130f, shirt: 0x2b2b2b, style: 'short', glasses: 'rect', glassColor: 0xc9c5ba, pattern: 'gingham', smile: true, detail: true, teeth: true, hairStyle: 'quiff', neck: 'collar', collar: 'pat:gingham', shortSleeve: true, lip: 0xc4705f },
     traits: ['tốt bụng', 'hay giúp đỡ', 'hay đi trễ', 'hay mời nước, mua đồ ăn', 'mê nhân quả, thiền, tu hành', 'rất thích mèo'], stats: { outgoing: 0.55, focus: 0.55, team: 0.9 },
     habits: { arrive: '09:20', coffee: 'morning', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 50,
     taste: { warm: 2, joke: 1, work: 1 },
@@ -309,7 +309,7 @@ const NPC_PROFILES = [
     quirks: [{ at: '09:36', say: 'Xin lỗi cả nhà, em lại trễ! Nhân quả mà, chút em mua nước chuộc lỗi!', anim: 'wave' }, { at: '13:20', say: '(nhắm mắt thiền năm phút, miệng lẩm bẩm “tâm an, vạn sự an”)', anim: null }, { at: '12:50', say: '(mở điện thoại xem ảnh mèo, cười tủm tỉm)', anim: null, ctx: 'any' }],
     note: { high: 'Cảm ơn {anh} hôm nay nhé. Gieo nhân lành thì mai gặp quả ngọt. Mai em mua đồ ăn cho {anh}!', low: 'Hôm nay {anh} làm tốt rồi. Mai em mời {anh} ly nước, tùy duyên nhé.' } },
   { id: 'phu', name: 'Phú', nick: 'Siêu nhân may mắn', role: 'Backend Dev', desk: 0,
-    look: { skin: 0xe9c39d, hair: 0x15130f, shirt: 0x1c1c1e, style: 'short', glasses: 'rect', glassColor: 0x2a2a2e, smile: true },
+    look: { skin: 0xe9c39d, hair: 0x15130f, shirt: 0x1c1c1e, style: 'short', glasses: 'rect', glassColor: 0x2a2a2e, round: true, smile: true, detail: true, teeth: true, hairStyle: 'side', neck: 'collar', collar: 0x141416, lip: 0xc0705a },
     traits: ['hay xui xẻo', 'mê đầu tư (toàn lỗ)', 'mê massage'], stats: { outgoing: 0.85, focus: 0.5, team: 0.8 },
     habits: { arrive: '08:45', coffee: 'both', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 45,
     taste: { warm: 1, joke: 2, work: 0 },
@@ -342,7 +342,7 @@ const NPC_PROFILES = [
     quirks: [{ at: '09:30', say: 'Em nói thiệt, cái bug này là tính năng! Để em giải thích!', anim: 'talk' }],
     note: { high: 'Em nói thiệt, cảm ơn {anh} nghe em giải thích! Mai em nói ít thôi… chắc vậy.', low: 'Em nói thiệt, mai em sẽ giải thích ngắn gọn hơn, hứa!' } },
   { id: 'toan', name: 'Toàn', role: 'Backend Dev', desk: 3,
-    look: { skin: 0xe6c09a, hair: 0x1c1612, shirt: 0x1f2a5c, style: 'short', glasses: false, round: true, mustache: true },
+    look: { skin: 0xe6c09a, hair: 0x1c1612, shirt: 0x1f2a5c, style: 'short', glasses: false, round: true, mustache: true, detail: true, hairStyle: 'side', neck: 'collar', collar: 0x1f2a5c },
     traits: ['trầm tính', 'ít nói'], stats: { outgoing: 0.1, focus: 0.9, team: 0.4 },
     habits: { arrive: '08:50', coffee: 'morning', lunch: 'desk', leave: '17:30', joinsMeeting: true }, relation: 40,
     taste: { warm: 2, joke: 1, work: 1 },
@@ -359,7 +359,7 @@ const NPC_PROFILES = [
     note: { high: 'Cảm ơn bạn. Mai gặp.', low: 'Mai gặp.' } },
 
   { id: 'hien', name: 'Hiện', role: 'Mobile Dev', desk: 5,
-    look: { skin: 0xe3b78f, hair: 0x6b4a2b, shirt: 0x7b5ea7, style: 'short', glasses: true },
+    look: { skin: 0xe3b78f, hair: 0x6b4a2b, shirt: 0x7b5ea7, style: 'short', glasses: true, smile: true, detail: true, hairStyle: 'quiff', neck: 'crew', neckColor: 0x654a8c },
     traits: ['nhỏ tuổi nhất', 'thích đùa', 'mê game'], stats: { outgoing: 0.7, focus: 0.55, team: 0.5 },
     habits: { arrive: '09:00', coffee: 'both', lunch: 'desk', leave: '17:30', joinsMeeting: true }, relation: 40,
     taste: { warm: 1, joke: 2, work: 0 },
@@ -376,7 +376,7 @@ const NPC_PROFILES = [
     note: { high: 'Mai rủ nhau chơi game giờ nghỉ trưa nha {anh}! 🎮', low: 'Mai em sẽ đỡ buồn ngủ hơn, chắc vậy ạ.' } },
 
   { id: 'tung', name: 'Tùng', role: 'Mobile Dev', desk: 8,
-    look: { skin: 0xf0d2b4, hair: 0x15130f, shirt: 0xece8f6, style: 'fringe', glasses: false, smile: true },
+    look: { skin: 0xf0d2b4, hair: 0x15130f, shirt: 0xece8f6, style: 'fringe', glasses: false, smile: true, detail: true, neck: 'crew', neckColor: 0xd9d4e6 },
     traits: ['hay rủ nhậu', 'thích thách thức, trò chơi thử thách vui', 'hòa đồng'], stats: { outgoing: 0.8, focus: 0.55, team: 0.9 },
     habits: { arrive: '08:20', coffee: 'morning', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 50,
     taste: { warm: 1, joke: 2, work: 0 },
@@ -392,7 +392,7 @@ const NPC_PROFILES = [
     quirks: [{ at: '09:25', say: 'Ai thách mình nín thở 20 giây không? Mình chấp!', anim: 'wave' }, { at: '16:50', say: 'Sắp tan làm rồi! Ai đi nhậu giơ tay!', anim: 'wave', ctx: 'any' }],
     note: { high: 'Tối nay nhậu một chút không? Mình bao! (nhẹ nhàng thôi nha)', low: 'Mai mình thách bạn trò mới nhé. Chuẩn bị tinh thần!' } },
   { id: 'nam', name: 'Nam', role: 'Mobile Dev', desk: 6,
-    look: { skin: 0xe8c7a0, hair: 0x15130f, shirt: 0xb02a32, pattern: 'plaid', style: 'fringe', glasses: false },
+    look: { skin: 0xe8c7a0, hair: 0x15130f, shirt: 0xb02a32, pattern: 'plaid', style: 'fringe', glasses: false, smile: true, teeth: true, detail: true, neck: 'collar', collar: 'pat:plaid' },
     traits: ['vui vẻ', 'hay khìn khìn', 'bằng tuổi Chủ tịt'], stats: { outgoing: 0.8, focus: 0.55, team: 0.85 },
     habits: { arrive: '08:15', coffee: 'none', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 40,
     taste: { warm: 1, joke: 2, work: 0 },
@@ -410,7 +410,7 @@ const NPC_PROFILES = [
     note: { high: 'Cảm ơn bạn hôm nay nha! Khìn khìn cả buổi tối luôn!', low: 'Mai mình khìn khìn ít hơn… chắc vậy!' } },
 
   { id: 'thao', name: 'Thảo', nick: 'Bella', role: 'HR', desk: 11,
-    look: { skin: 0xf3d2b6, hair: 0x15110f, shirt: 0xe8923a, style: 'long', glasses: false, smile: true },
+    look: { skin: 0xf3d2b6, hair: 0x15110f, shirt: 0xe8923a, style: 'wavy', glasses: false, smile: true, detail: true, hairStyle: 'wavy', lashes: true, neck: 'vneck', neckColor: 0xb85f1c, lip: 0xd9657a, earring: 0xf2c14e },
     traits: ['chu đáo', 'hay mang bánh', 'rành quán ăn, quán nước, đồ ngon'], stats: { outgoing: 0.75, focus: 0.6, team: 1 },
     habits: { arrive: '08:05', coffee: 'both', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 50,
     taste: { warm: 2, joke: 1, work: 1 },
@@ -426,7 +426,7 @@ const NPC_PROFILES = [
     quirks: [{ at: '11:40', say: 'Trưa nay ai ăn cơm gà không? Mình biết quán ngon lắm!', anim: 'wave' }, { at: '15:15', say: 'Mọi người ơi, có bánh bông lan trong pantry nè!', anim: 'wave', ctx: 'any' }],
     note: { high: 'Bạn dễ thương quá! Mai mình dắt bạn đi ăn quán ngon nhất khu này nhé!', low: 'Chúc bạn buổi tối vui. Nếu đói thì nhớ ăn món gì nóng nóng nha.' } },
   { id: 'yen', name: 'Yến', nick: 'Én Pink', role: 'QC', desk: 12,
-    look: { skin: 0xf2cfb0, hair: 0x7a3a22, shirt: 0x1d1d1f, style: 'long', glasses: true, glassColor: 0xc9a24a, smile: true },
+    look: { skin: 0xf2cfb0, hair: 0x8b4526, shirt: 0x1d1d1f, style: 'sleek', glasses: true, glassColor: 0xd9a98f, smile: true, detail: true, teeth: true, hairStyle: 'sleek', part: 'center', lashes: true, lip: 0xe8704f, earring: 0xe0b45a, neck: 'crew', neckColor: 0x2a2a2d },
     traits: ['hơi cọc (kiểu vui)', 'thích khịa', 'cái gì cũng hỏi “Là sao?”'], stats: { outgoing: 0.95, focus: 0.55, team: 0.75 },
     habits: { arrive: '08:35', coffee: 'both', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 45,
     taste: { warm: 1, joke: 2, work: 0 },
@@ -443,7 +443,7 @@ const NPC_PROFILES = [
     note: { high: 'Hôm nay bạn cũng được đó. Mai khịa tiếp nha! Là sao? Là cảm ơn đó!', low: 'Mai mình khịa nhẹ thôi… mà không hứa. Là sao? Ờ thì ờ.' } },
 
   { id: 'an7', name: 'Chú 7', real: 'An', role: 'QC', desk: 7,
-    look: { skin: 0xdcb48e, hair: 0x241a12, shirt: 0xf3f0e8, style: 'short', glasses: false },
+    look: { skin: 0xdcb48e, hair: 0x241a12, shirt: 0xf3f0e8, style: 'short', glasses: false, smile: true, detail: true, hairStyle: 'tousled', neck: 'crew', neckColor: 0xdedbd0 },
     traits: ['trẻ tuổi', 'mê uống trà', 'hay khịa Chị Ba'], stats: { outgoing: 0.6, focus: 0.7, team: 0.6 },
     habits: { arrive: '08:25', coffee: 'afternoon', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 45,
     taste: { warm: 1, joke: 2, work: 1 },
@@ -459,7 +459,7 @@ const NPC_PROFILES = [
     quirks: [{ at: '09:46', say: 'Trà xong rồi, giờ đi họp. Chị Ba nhớ đừng đấm em giữa buổi họp nha!', anim: 'drink' }],
     note: { high: 'Mai mình mang trà mới cho bạn thử. Còn Chị Ba thì… mai mình khịa tiếp!', low: 'Mai mình pha trà mời bạn. Hẹn gặp nhé.' } },
   { id: 'an3', name: 'Chị Ba', real: 'An', role: 'Business Support', desk: 10, visitAnim: 'punch',
-    look: { skin: 0xf0cdb0, hair: 0x8a5a3c, shirt: 0x202022, style: 'bob', glasses: true, glassColor: 0x1c1c1c, glassThick: true, round: true },
+    look: { skin: 0xf0cdb0, hair: 0x8a5a3c, shirt: 0x202022, style: 'bob', glasses: true, glassColor: 0x1c1c1c, glassThick: true, round: true, detail: true, lashes: true, lip: 0xb8525a, earring: 0xd0d0d0, neck: 'crew', neckColor: 0x2c2c30, browUp: -0.01 },
     traits: ['kỹ tính', 'hỗ trợ nghiên cứu sản phẩm, làm báo cáo', 'thích “đấm” đồng nghiệp (đùa)'], stats: { outgoing: 0.6, focus: 0.85, team: 0.6 },
     habits: { arrive: '08:00', coffee: 'none', lunch: 'desk', leave: '17:15', joinsMeeting: true }, relation: 40,
     taste: { warm: 1, joke: 2, work: 1 },
@@ -477,7 +477,7 @@ const NPC_PROFILES = [
     quirks: [{ at: '09:12', say: '*đấm vai ai đó* Tỉnh chưa? Chị chạy xong số liệu từ sớm rồi nha!', anim: 'punch' }, { at: '09:48', say: 'Để chị rà biểu đồ lần cuối trước khi họp. Ai nhìn chị cũng không rà nhanh hơn đâu.', anim: 'check' }],
     note: { high: 'Em làm gọn lắm, chị khen một lần thôi nha. Mai chị không đấm đâu… chắc vậy.', low: 'Mai gặp em. Nhớ ghi nguồn số liệu, chị nhắc rồi đó!' } },
   { id: 'bao', name: 'Anh Bảo', real: 'Bảo', role: 'Product', desk: 2,
-    look: { skin: 0xf0d0b0, hair: 0x1a1410, shirt: 0xe9c46a, style: 'short', glasses: 'rect', glassColor: 0x30343a, smile: true },
+    look: { skin: 0xf0d0b0, hair: 0x1a1410, shirt: 0xe9c46a, style: 'short', glasses: 'rect', glassColor: 0x30343a, smile: true, detail: true, hairStyle: 'side', neck: 'collar', collar: 0xd4ac4d },
     traits: ['hay hỏi “vì sao”', 'kết nối mọi người'], stats: { outgoing: 0.65, focus: 0.65, team: 0.85 },
     habits: { arrive: '08:40', coffee: 'both', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 45,
     taste: { warm: 1, joke: 1, work: 2 },
@@ -493,7 +493,7 @@ const NPC_PROFILES = [
     quirks: [{ at: '09:42', say: 'Chốt nhanh backlog trước giờ họp…', anim: 'check' }],
     note: { high: 'Cảm ơn bạn góp ý hôm nay, mình ghi hết vào backlog rồi. Mai gặp nhé!', low: 'Mai mình sẽ hỏi bạn nhiều hơn về góc nhìn người dùng nhé.' } },
   { id: 'thong', name: 'Thông', nick: 'Bamboo', role: 'R&D (Research & Development)', desk: 9,
-    look: { skin: 0xe8c39e, hair: 0x15130f, shirt: 0xf4f4f2, style: 'short', glasses: false, smile: true },
+    look: { skin: 0xe8c39e, hair: 0x15130f, shirt: 0xf4f4f2, style: 'short', glasses: false, smile: true, detail: true, hairStyle: 'side', neck: 'crew', neckColor: 0xdcdcda },
     traits: ['vui vẻ', 'nhiệt huyết', 'hay lo xa', 'mê bất động sản, nhà đất, đầu tư'], stats: { outgoing: 0.8, focus: 0.7, team: 0.85 },
     habits: { arrive: '08:35', coffee: 'both', lunch: 'pantry', leave: '17:30', joinsMeeting: true }, relation: 45,
     taste: { warm: 2, joke: 1, work: 1 },
@@ -510,7 +510,7 @@ const NPC_PROFILES = [
     note: { high: 'Cảm ơn bạn đã ủng hộ hôm nay! Cuối tuần mình rủ bạn đi xem đất, có phương án B luôn!', low: 'Mai mình sẽ chuẩn bị kỹ hơn… bàn thêm chuyện nhà đất với bạn nhé!' } },
 
   { id: 'nguyen', name: 'Nguyên', role: 'Designer', desk: null,
-    look: { skin: 0xf3d3bb, hair: 0x15110f, shirt: 0x1b1b1d, style: 'fringe', glasses: false },
+    look: { skin: 0xf3d3bb, hair: 0x15110f, shirt: 0x1b1b1d, style: 'fringe', glasses: false, detail: true, neck: 'crew', neckColor: 0x2a2a2d },
     traits: ['rất ít lên công ty', 'lên là nằm ở pantry', 'chill'], stats: { outgoing: 0.3, focus: 0.3, team: 0.4 },
     habits: { arrive: '10:15', coffee: 'morning', lunch: 'pantry', leave: '17:00', joinsMeeting: false, lounge: true, attendance: 0.5 }, relation: 35,
     taste: { warm: 2, joke: 2, work: 0 },
@@ -1153,6 +1153,47 @@ function patternMat(kind) {                              // họa tiết áo v�
   _patMats[kind] = new THREE.MeshLambertMaterial({ map: t }); return _patMats[kind];
 }
 const matOf = (c) => (typeof c === 'string' ? patternMat(c.slice(4)) : lam(c));
+// ----- chi tiết nâng cao (look.detail): mắt có tròng trắng + highlight, lông mày, môi cong, tóc/áo theo từng người -----
+const _D = { eyeW: new THREE.SphereGeometry(0.05, 8, 6), iris: new THREE.SphereGeometry(0.033, 8, 6), spark: new THREE.SphereGeometry(0.011, 5, 4), hairBall: new THREE.SphereGeometry(0.15, 8, 6), smile: new THREE.TorusGeometry(0.05, 0.011, 4, 10, Math.PI), torus: new THREE.TorusGeometry(0.195, 0.02, 5, 14), ear: new THREE.SphereGeometry(0.02, 5, 4) };
+function detailFace(look, mk, head) {
+  [-1, 1].forEach((sx) => {
+    const w = mk(_D.eyeW, 0xffffff, sx * 0.11, 0.025, 0.28, head); w.scale.set(1, 1.15, 0.45); w.castShadow = false;
+    const ir = mk(_D.iris, look.eye || 0x2b2220, sx * 0.11, 0.022, 0.296, head); ir.scale.set(1, 1.15, 0.5); ir.castShadow = false;
+    const sp = mk(_D.spark, 0xffffff, sx * 0.11 + 0.012, 0.04, 0.316, head); sp.castShadow = false;
+    const br = mk(boxGeo(look.lashes ? 0.085 : 0.1, look.lashes ? 0.014 : 0.02, 0.016), look.brow || look.hair, sx * 0.115, 0.1 + (look.browUp || 0), 0.3, head); br.rotation.z = -sx * 0.12; br.castShadow = false;
+    if (look.lashes) { const ls = mk(boxGeo(0.07, 0.01, 0.012), 0x1c1512, sx * 0.115, 0.07, 0.305, head); ls.castShadow = false; }
+  });
+  if (look.teeth) mk(boxGeo(0.085, 0.028, 0.012), 0xfaf6ee, 0, -0.098, 0.3, head).castShadow = false;
+  const m = mk(_D.smile, look.lip || 0xc4574a, 0, -0.07, 0.305, head); m.rotation.z = Math.PI; m.scale.set(look.smile ? 1.1 : 0.7, look.smile ? 1 : 0.6, 1); m.castShadow = false;
+}
+function detailHair(look, mk, head) {
+  const c = look.hair, st = look.hairStyle;
+  if (st === 'wavy') {                                          // tóc dài gợn sóng, rơi qua hai vai
+    for (let i = 0; i < 6; i++) { const x = Math.sin(i * 1.5) * 0.05; mk(_D.hairBall, c, x, 0.06 - i * 0.12, -0.22, head).scale.set(1.7, 0.95, 0.75); }
+    [-1, 1].forEach((sx) => { for (let i = 0; i < 5; i++) { const w = Math.sin(i * 1.7 + (sx > 0 ? 1 : 0)) * 0.04; mk(_D.hairBall, c, sx * (0.28 + w), -0.02 - i * 0.1, -0.03 - i * 0.015, head).scale.set(0.5, 0.75, 0.8); } });
+    const f = mk(boxGeo(0.4, 0.1, 0.08), c, 0.1, 0.2, 0.25, head); f.rotation.z = -0.3; mk(boxGeo(0.14, 0.1, 0.08), c, -0.2, 0.17, 0.25, head).rotation.z = 0.35;
+  } else if (st === 'sleek') {                                  // tóc dài thẳng, rẽ ngôi, mái hất sang một bên, kẹp hồng
+    mk(boxGeo(0.64, 0.74, 0.14), c, 0, -0.14, -0.21, head);
+    [-1, 1].forEach((sx) => { mk(boxGeo(0.1, 0.6, 0.24), c, sx * 0.31, -0.12, -0.02, head); });
+    if (look.part === 'center') { [-1, 1].forEach((sx) => { mk(boxGeo(0.22, 0.09, 0.08), c, sx * 0.13, 0.2, 0.25, head).rotation.z = sx * 0.35; mk(boxGeo(0.1, 0.3, 0.1), c, sx * 0.29, 0.02, 0.2, head); }); }
+    else { const f = mk(boxGeo(0.46, 0.1, 0.08), c, 0.06, 0.2, 0.25, head); f.rotation.z = -0.25; mk(boxGeo(0.1, 0.22, 0.1), c, -0.29, 0.1, 0.2, head); }
+    if (look.clip) mk(boxGeo(0.07, 0.03, 0.03), look.clip, -0.27, 0.2, 0.28, head);
+  } else if (st === 'side') {                                   // tóc ngắn rẽ ngôi gọn gàng
+    mk(boxGeo(0.5, 0.09, 0.12), c, -0.05, 0.22, 0.2, head).rotation.z = 0.12; mk(boxGeo(0.09, 0.2, 0.34), c, 0.31, 0.04, -0.02, head); mk(boxGeo(0.09, 0.2, 0.34), c, -0.31, 0.04, -0.02, head);
+  } else if (st === 'quiff') {                                  // tóc ngắn, mái dựng nhẹ phía trước, hai bên ngắn
+    mk(boxGeo(0.36, 0.13, 0.12), c, -0.04, 0.27, 0.16, head).rotation.z = 0.12; mk(boxGeo(0.5, 0.08, 0.1), c, 0, 0.2, 0.22, head);
+    mk(boxGeo(0.08, 0.18, 0.32), c, 0.31, 0.03, -0.02, head); mk(boxGeo(0.08, 0.18, 0.32), c, -0.31, 0.03, -0.02, head);
+  } else if (st === 'tousled') {                                // tóc ngắn dày, vài lọn dựng nhẹ
+    [[-0.15, 0.3, 0.05, 0.35], [0.02, 0.33, 0.08, -0.1], [0.16, 0.3, 0.04, -0.4]].forEach(([x, y, z, r]) => { mk(boxGeo(0.14, 0.12, 0.14), c, x, y, z, head).rotation.z = r; });
+    mk(boxGeo(0.52, 0.1, 0.12), c, 0, 0.21, 0.21, head); mk(boxGeo(0.09, 0.2, 0.34), c, 0.31, 0.04, -0.02, head); mk(boxGeo(0.09, 0.2, 0.34), c, -0.31, 0.04, -0.02, head);
+  }
+  if (look.earring) [-1, 1].forEach((sx) => mk(_D.ear, look.earring, sx * 0.325, -0.1, 0.02, head).castShadow = false);
+}
+function detailClothes(look, mk, shirtC) {
+  if (look.neck === 'crew') { const r = mk(_D.torus, look.neckColor || look.shirt, 0, 0.79, 0); r.rotation.x = Math.PI / 2; r.scale.set(1, 1, 0.9); }
+  if (look.neck === 'collar') [-1, 1].forEach((sx) => { const k = mk(boxGeo(0.11, 0.06, 0.02), look.collar || shirtC, sx * 0.07, 0.775, 0.205); k.rotation.z = -sx * 0.3; });
+  if (look.neck === 'vneck') [-1, 1].forEach((sx) => { const k = mk(boxGeo(0.16, 0.035, 0.03), look.neckColor || 0xb85f1c, sx * 0.055, 0.73, 0.215); k.rotation.z = sx * 0.9; });
+}
 function buildCharacter(look, isPlayer = false) {
   const root = new THREE.Group(), body = new THREE.Group(); root.add(body);
   const mk = (geo, color, x, y, z, parent = body) => { const m = new THREE.Mesh(geo, matOf(color)); m.position.set(x, y, z); m.castShadow = true; parent.add(m); return m; };
@@ -1162,23 +1203,27 @@ function buildCharacter(look, isPlayer = false) {
   const hd = mk(CH_GEO.head, look.skin, 0, 0, 0, head); if (look.round) hd.scale.set(1.08, 1, 1.03);
   const cap = mk(CH_GEO.cap, look.hair, 0, 0.02, -0.02, head); cap.rotation.x = -0.4;
   if (look.style === 'long') { mk(boxGeo(0.66, 0.6, 0.16), look.hair, 0, -0.08, -0.2, head); }
+  if (look.detail) detailHair(look, mk, head);
   if (look.style === 'bob') { mk(boxGeo(0.7, 0.34, 0.2), look.hair, 0, -0.05, -0.2, head); mk(boxGeo(0.1, 0.3, 0.4), look.hair, -0.32, -0.05, -0.05, head); mk(boxGeo(0.1, 0.3, 0.4), look.hair, 0.32, -0.05, -0.05, head); }
   if (look.style === 'bun') mk(CH_GEO.bun, look.hair, 0, 0.38, -0.08, head);
   if (look.style === 'fringe') { const f = mk(boxGeo(0.62, 0.15, 0.1), look.hair, 0, 0.19, 0.23, head); f.rotation.z = 0.12; mk(boxGeo(0.1, 0.2, 0.3), look.hair, -0.31, 0.02, 0.03, head); }
   if (look.style === 'short') mk(boxGeo(0.56, 0.1, 0.1), look.hair, 0, 0.2, 0.22, head);
-  mk(CH_GEO.eye, 0x2b2220, -0.11, 0.02, 0.29, head); mk(CH_GEO.eye, 0x2b2220, 0.11, 0.02, 0.29, head);
+  if (!look.detail) { mk(CH_GEO.eye, 0x2b2220, -0.11, 0.02, 0.29, head); mk(CH_GEO.eye, 0x2b2220, 0.11, 0.02, 0.29, head); }
   if (look.mustache) mk(boxGeo(0.15, 0.022, 0.02), look.hair, 0, -0.058, 0.315, head);
-  if (look.smile) { mk(boxGeo(0.15, 0.025, 0.02), 0xc4574a, 0, -0.1, 0.31, head); mk(boxGeo(0.03, 0.03, 0.02), 0xc4574a, -0.085, -0.082, 0.31, head); mk(boxGeo(0.03, 0.03, 0.02), 0xc4574a, 0.085, -0.082, 0.31, head); }
+  if (look.detail) detailFace(look, mk, head);
+  else if (look.smile) { mk(boxGeo(0.15, 0.025, 0.02), 0xc4574a, 0, -0.1, 0.31, head); mk(boxGeo(0.03, 0.03, 0.02), 0xc4574a, -0.085, -0.082, 0.31, head); mk(boxGeo(0.03, 0.03, 0.02), 0xc4574a, 0.085, -0.082, 0.31, head); }
   else mk(boxGeo(0.07, 0.02, 0.02), 0xc4574a, 0, -0.1, 0.31, head);
   mk(new THREE.CircleGeometry(0.045, 8), 0xf4a3a0, -0.2, -0.06, 0.28, head).castShadow = false; mk(new THREE.CircleGeometry(0.045, 8), 0xf4a3a0, 0.2, -0.06, 0.28, head).castShadow = false;
   if (look.glasses === 'rect') {                              // kính gọng chữ nhật mảnh
     [-0.115, 0.115].forEach((x) => { [[0.15, 0.012, 0.012, 0, 0.065], [0.15, 0.012, 0.012, 0, -0.025], [0.012, 0.09, 0.012, -0.075, 0.02], [0.012, 0.09, 0.012, 0.075, 0.02]].forEach(([w, hh, d, dx, dy]) => { mk(boxGeo(w, hh, d), look.glassColor || 0x1c1c1c, x + dx, dy, 0.325, head).castShadow = false; }); });
     mk(boxGeo(0.05, 0.012, 0.012), look.glassColor || 0x1c1c1c, 0, 0.04, 0.325, head).castShadow = false;
   } else if (look.glasses) { [-0.11, 0.11].forEach((x) => { const g = mk(CH_GEO.glass, look.glassColor || 0x2b2220, x, 0.02, 0.31, head); g.castShadow = false; if (look.glassThick) g.scale.set(1.15, 1.15, 2.2); }); mk(boxGeo(0.08, 0.012, 0.012), look.glassColor || 0x2b2220, 0, 0.03, 0.315, head).castShadow = false; }
+  if (look.detail) detailClothes(look, mk, shirtC);
   const mkLimb = (geo, color, x, y, off) => { const p = new THREE.Group(); p.position.set(x, y, 0); body.add(p); const m = new THREE.Mesh(geo, matOf(color)); m.position.y = off; m.castShadow = true; p.add(m); return p; };
   const armL = mkLimb(CH_GEO.arm, shirtC, -0.28, 0.76, -0.16), armR = mkLimb(CH_GEO.arm, shirtC, 0.28, 0.76, -0.16);
   const legL = mkLimb(CH_GEO.leg, 0x44495a, -0.1, 0.3, -0.15), legR = mkLimb(CH_GEO.leg, 0x44495a, 0.1, 0.3, -0.15);
   [legL, legR].forEach((l) => { const s = new THREE.Mesh(CH_GEO.shoe, lam(0x3b2f2a)); s.position.set(0, -0.3, 0.03); l.add(s); });
+  if (look.shortSleeve) [armL, armR].forEach((a) => { const f = new THREE.Mesh(boxGeo(0.112, 0.17, 0.112), lam(look.skin)); f.position.y = -0.26; f.castShadow = true; a.add(f); });
   [armL, armR].forEach((a) => { const s = new THREE.Mesh(new THREE.SphereGeometry(0.06, 6, 5), lam(look.skin)); s.position.y = -0.36; a.add(s); });
   const cup = new THREE.Mesh(CH_GEO.cup, lam(0xffffff)); cup.position.set(0, -0.4, 0.07); cup.visible = false; armR.add(cup);
   if (isPlayer) { const r = new THREE.Mesh(CH_GEO.ring, new THREE.MeshBasicMaterial({ color: 0xffd166, side: THREE.DoubleSide })); r.rotation.x = -Math.PI / 2; r.position.y = 0.03; root.add(r); }
