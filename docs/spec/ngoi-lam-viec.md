@@ -1,6 +1,6 @@
 # Spec: Ngồi làm việc và nhắc việc cuối ngày (sit-and-work, end-of-day nag)
 
-Status: v1.16.0 (2026-11-04). The workday ends at 18:00 (was 17:30). The time-lapse stops at 18:00 and the farewell scene starts (§2.4, `docs/spec/tan-ca-18-gio.md`). The early-leave confirm is before 17:40 (was 17:10, §3.2). Earlier: v1.15.0 (2026-11-04). Sit-and-work time-lapse at the player's desk (§2). Unfinished-work reaction from the assigner at day end (§3). Every coworker assigns desk work (§3.4). Parent spec: `docs/spec/mot-ngay-o-cong-ty.md` (§4.2, AC-100 to AC-116 listed there). Desk task rules: `docs/spec/bang-nhiem-vu.md` §9 and `docs/spec/mot-ngay-o-cong-ty.md` AC-71 to AC-73.
+Status: v1.16.0 (2026-11-04). Mailbox phase C (uncommitted, 2026-11-05): a human nag from the assigner runs before the NPC nag (§3.2a). The workday ends at 18:00 (was 17:30). The time-lapse stops at 18:00 and the farewell scene starts (§2.4, `docs/spec/tan-ca-18-gio.md`). The early-leave confirm is before 17:40 (was 17:10, §3.2). Earlier: v1.15.0 (2026-11-04). Sit-and-work time-lapse at the player's desk (§2). Unfinished-work reaction from the assigner at day end (§3). Every coworker assigns desk work (§3.4). Parent spec: `docs/spec/mot-ngay-o-cong-ty.md` (§4.2, AC-100 to AC-116 listed there). Desk task rules: `docs/spec/bang-nhiem-vu.md` §9 and `docs/spec/mot-ngay-o-cong-ty.md` AC-71 to AC-73.
 
 Source of truth: `index.html`. Section 11: `workActivity()`, `startTimelapse()`, `endTimelapse()`, `workNag()`, `workBrief()`. Section 14: `update()`, `endDay()`. Variety block (between sections 2 and 3): `SORT_SETS`, `ORDER_SETS`, `WORK_VOICE`, `WORK_QUOTA`, `WORK_NAG`. DOM: the `#tl` overlay (`#tl-clock`).
 
@@ -76,7 +76,7 @@ The overlay is a full-screen tap target. Not tested on touch devices (§5).
 `endDay()` (section 14), in order:
 
 1. `D.ended = true`, `Card.hide()`, `endTimelapse(false)`, and all coworkers are unfrozen.
-2. If `D.tasks < WORK_QUOTA`, it calls `workNag(showNote)`. Otherwise it calls `showNote()` directly.
+2. `msgNagFlow(next)` runs first (§3.2a). If it nagged, the NPC nag is skipped. Otherwise, if `D.tasks < WORK_QUOTA`, it calls `workNag(showNote)`; if not, it calls `showNote()` directly.
 3. `workNag(next)`:
    - Uses `D.work`, or creates one with `newWork()` (`sort` when `D.tasks` is even, `order` when odd). The assigner is `D.work.from`.
    - Picks one line at random from `WORK_NAG[from].lines`, filled with `fill()`.
@@ -89,6 +89,15 @@ The overlay is a full-screen tap target. Not tested on touch devices (§5).
 Early leave: the confirm card "Bạn muốn kết thúc ngày làm sớm chứ?" (shown before 17:40, `CFG.END - 20`; was 17:10 before v1.16.0) calls `endDay()`, so the same check runs. From 17:40 the door calls `endDay()` with no confirm card.
 
 At 18:00 the day ends through the farewell scene instead (`docs/spec/tan-ca-18-gio.md`). Its end card has "🏠 Về thôi", which calls `endDay()`, so the same check runs there too.
+
+### 3.2a Human nag (mailbox phase C, uncommitted)
+
+The company mailbox adds a nag from the person who gave the task. Mailbox rules and limits: `docs/spec/hop-thu-cong-ty.md` §8.1.
+
+- Picks the oldest task given to the member that is not done, has no desk note yet, and is overdue (`taskOverdue`). `none` never; `tomorrow` from the next calendar day; `today` at every end of day until it is done. At most one per day.
+- Same effects as `workNag` (affinity and mood from `WORK_NAG[assigner]`, one diary moment, bubble, card). The task title is quoted on the card. The apology button does not give affinity back.
+- Leaves a desk note (`kind = note`, written by the member's own client) that shows on the member's desk. A task that already has a note is not nagged again.
+- Needs a mailbox poll before the day end (`MSG.primed`), a signed-in member, and a known assigner. Otherwise it does nothing and the NPC nag runs.
 
 ### 3.3 Reaction by assigner
 

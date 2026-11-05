@@ -1071,6 +1071,7 @@ function buildDeskItems() {
   if (have.includes('frame')) { const [x, z] = at('frame'); const f = box(g, 0.2, 0.15, 0.02, 0x8a5a3a, x, 0.08, z); f.rotation.y = -0.5; const p = box(g, 0.17, 0.12, 0.022, 0x9ed0e6, x, 0.08, z); p.rotation.y = -0.5; }
   if (have.includes('phones')) { const [x, z] = at('phones'); box(g, 0.16, 0.02, 0.03, 0x222222, x, 0.07, z); box(g, 0.04, 0.09, 0.07, 0x3b3b4f, x - 0.08, 0.04, z); box(g, 0.04, 0.09, 0.07, 0x3b3b4f, x + 0.08, 0.04, z); }
   if (have.includes('trophy')) { const [x, z] = at('trophy'); box(g, 0.1, 0.03, 0.1, 0x6b4a2b, x, 0.015, z); cyl(g, 0.012, 0.012, 0.08, 0xf2c14e, x, 0.07, z, 8); cyl(g, 0.06, 0.03, 0.09, 0xf2c14e, x, 0.15, z, 10); }
+  msgDeskNotes().forEach((x, k) => { const m = box(g, 0.17, 0.006, 0.17, 0xfff176, -0.62 + k * 0.05, 0.004 + k * 0.006, 0.12 - k * 0.04); m.rotation.y = 0.35 - k * 0.5; });          // giấy nhớ chưa đọc (tối đa 3)
 }
 let WALL_CLOCK = null;                                      // đồng hồ treo tường chạy theo giờ trong game
 function drawWallClock(g, m) {
@@ -2353,7 +2354,9 @@ function workActivity() {
   const w = D.work, started = workCount(w) > 0, n = npcById(w.from);
   const text = started ? `Bạn có một việc đang làm dở: ${workTitle(w.kind)} (${workProgress(w)}). Tiến độ vẫn được giữ nguyên.\nLàm tiếp nhé?`
     : `Bạn ngồi xuống bàn. Đầu việc nhỏ số ${D.tasks + 1}/${CFG.MAX_TASKS}:\n${workBrief(w)}\n\nChỉ mất khoảng 30–60 giây. Hôm nay nên xong ít nhất ${WORK_QUOTA} việc, không thì cuối ngày sẽ bị nhắc đó.${nextUnlockLine()}`;
+  const deskNotes = msgDeskNotes();
   Card.show({ who: n ? { ...whoOf(n), role: 'Đang nhờ bạn' } : { name: 'Bàn làm việc', role: 'Của bạn', color: 0xffd166, emoji: '💻' }, text, choices: [
+    ...(deskNotes.length ? [{ label: `📝 Đọc giấy nhớ trên bàn (${deskNotes.length})`, run: () => msgReadDeskNotes() }] : []),
     { label: '🪑 Ngồi làm việc (thời gian trôi qua)', run: () => { Card.hide(); startTimelapse(); } },
     { label: started ? '▶ Làm tiếp' : '▶ Bắt đầu làm', main: true, run: () => { Card.hide(); playerSit(PLAYER_DESK.seat, () => { P.lock.anim = 'type'; startMiniGame(); }); } },
     { label: 'Để lát nữa', run: () => { closeCard(); if (P.lock) playerStand(() => { G.mode = 'play'; }); } }] });
@@ -2807,7 +2810,7 @@ function rtUpdate(dt) {
 }
 // ===== Hộp thư công ty, giai đoạn A: dòng "đang online" + hỏi tin mới theo chu kỳ (không dùng Realtime) =====
 // Bảng `online` và `messages`: SQL ở docs/sql/hop-thu.sql. Máy ghi last_seen mỗi 60 s và hỏi tin mỗi 25 s khi tab đang mở (API không giới hạn trên gói Free).
-const MSG = { timer: 0, beatT: 0, items: [], online: new Set(), unread: 0, seen: new Set(), primed: false, busy: false, failedAt: 0, fails: 0 };
+const MSG = { deskSig: '', noteSeen: new Set(), timer: 0, beatT: 0, items: [], online: new Set(), unread: 0, seen: new Set(), primed: false, busy: false, failedAt: 0, fails: 0 };
 const charName = (id) => (NPC_PROFILES.find((p) => p.id === id) || { name: id }).name;
 function msgSetBadge() {
   const b = $('#b-mail'), d = $('#mail-dot'); if (!b) return;
@@ -2829,11 +2832,17 @@ async function msgTick() {
     const [o, m] = await Promise.all([CLOUD.client.from('online').select('char_id').gt('last_seen', since),
       CLOUD.client.from('messages').select('id,thread_id,from_char,to_char,kind,body,due,done,done_at,read_at,ref,created_at').order('created_at', { ascending: false }).limit(100)]);
     if (o.error) throw o.error; if (m.error) throw m.error;
-    MSG.online = new Set((o.data || []).map((r) => r.char_id)); MSG.items = m.data || [];
+    MSG.online = new Set((o.data || []).map((r) => r.char_id)); const wasDone = new Set(MSG.items.filter((x) => x.kind === 'task' && x.done).map((x) => x.id)); MSG.items = m.data || [];
+    const nowDone = MSG.items.filter((x) => x.kind === 'task' && x.done && x.from_char === MEMBER.char && !wasDone.has(x.id) && MSG.primed);
+    if (nowDone.length && G.mode === 'play') toast(`✅ ${charName(nowDone[0].to_char)} đã xong: ${nowDone[0].body.slice(0, 40)}`, 3500);
     const mine = MSG.items.filter((x) => x.to_char === MEMBER.char && !x.read_at); MSG.unread = mine.length;
     const fresh = mine.filter((x) => !MSG.seen.has(x.id)); mine.forEach((x) => MSG.seen.add(x.id));
     if (MSG.primed && fresh.length && G.mode === 'play') toast(`📬 ${charName(fresh[0].from_char)}: ${fresh[0].body.slice(0, 40)}${fresh[0].body.length > 40 ? '…' : ''}`, 3500);
+    const dn = msgDeskNotes().map((x) => x.id).join(','); if (dn !== MSG.deskSig) { MSG.deskSig = dn; if (scene) buildDeskItems(); }
+    const newNotes = MSG.items.filter((x) => x.kind === 'note' && x.from_char === MEMBER.char && !MSG.noteSeen.has(x.id)); newNotes.forEach((x) => MSG.noteSeen.add(x.id));
+    if (MSG.primed && newNotes.length && G.mode === 'play') toast(`📝 ${charName(newNotes[0].to_char)} chưa kịp xong việc bạn giao, giấy nhớ đã để trên bàn`, 4000);
     MSG.primed = true; MSG.fails = 0; msgSetBadge(); msgApplyOnline();
+    if (G.mode === 'modal' && Modal.el.querySelector('.panel[data-mail]') && MEMBER && MV.mode !== 'pick' && !MV.draft && !document.activeElement?.matches?.('textarea')) msgRender();          // làm mới hộp thư đang mở nếu người dùng chưa gõ gì
   } catch (e) {
     MSG.fails = Math.min(MSG.fails + 1, 4); MSG.failedAt = Date.now();
     dlog('[msgTick] Không lấy được hộp thư (đã chạy docs/sql/hop-thu.sql chưa?):', e, e && e.stack, e && e.code);
@@ -2848,20 +2857,118 @@ function msgStart() {
 function msgOnVisible() { if (!document.hidden) msgTick(); }
 function msgStop() {
   clearInterval(MSG.timer); MSG.timer = 0; document.removeEventListener('visibilitychange', msgOnVisible);
-  Object.assign(MSG, { items: [], online: new Set(), unread: 0, seen: new Set(), primed: false }); msgSetBadge(); if (NPCS.length) msgApplyOnline();
+  Object.assign(MSG, { items: [], online: new Set(), unread: 0, seen: new Set(), noteSeen: new Set(), deskSig: '', primed: false }); if (scene) buildDeskItems(); msgSetBadge(); if (NPCS.length) msgApplyOnline();
 }
-async function msgOpenInbox() {
-  const mine = MSG.items.filter((x) => x.to_char === MEMBER.char), unread = mine.filter((x) => !x.read_at);
-  const rows = MSG.items.slice(0, 30).map((x) => {
-    const inc = x.to_char === MEMBER.char, who = inc ? `${charName(x.from_char)} → bạn` : `bạn → ${charName(x.to_char)}`, tag = x.kind === 'task' ? '📌 Việc: ' : x.kind === 'note' ? '📝 Giấy nhớ: ' : '';
-    return h('div', { class: 'mrow' + (inc && !x.read_at ? ' new' : '') }, h('small', {}, `${who} · ${new Date(x.created_at).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' })}`), tag + x.body);
+// --- Hộp thư: danh sách hội thoại, khung chat, giao việc có ô tick "Xong" ---
+const DUE_LABEL = { today: 'hôm nay', tomorrow: 'ngày mai', none: 'không hạn' };
+const MV = { mode: 'list', who: null, draft: '', task: false, due: 'today', sending: false };
+const msgFmt = (iso) => new Date(iso).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
+function msgFriendly(e) {
+  const m = String((e && e.message) || e || '');
+  if (m.includes('rate_limit')) return 'Bạn gửi hơi nhanh. Hãy đợi một chút rồi gửi tiếp.';
+  if (m.includes('task_limit')) return 'Hôm nay bạn đã giao đủ 5 việc. Mai giao tiếp nhé.';
+  if (m.includes('fetch') || m.includes('network') || m.includes('Failed')) return 'Không kết nối được. Hãy kiểm tra mạng rồi thử lại.';
+  return 'Chưa gửi được. Hãy thử lại sau một chút.';
+}
+const msgPair = (who) => MSG.items.filter((x) => (x.from_char === MEMBER.char && x.to_char === who) || (x.to_char === MEMBER.char && x.from_char === who));
+function msgModal(...nodes) { Modal.open(...nodes); Modal.el.firstChild.dataset.mail = '1'; }                // đánh dấu khung hộp thư để lần hỏi tin không ghi đè cửa sổ khác
+function msgOpenInbox() { MV.mode = 'list'; MV.who = null; msgRender(); }
+function msgRender() {
+  if (!MEMBER) return;
+  const close = h('button', { class: 'btn alt', onclick: () => { MV.mode = 'list'; Modal.close(); } }, 'Đóng');
+  if (MV.mode === 'pick') {
+    const chips = NPC_PROFILES.filter((p) => p.id !== MEMBER.char).map((p) => h('button', { class: 'nchip', style: 'margin:4px', onclick: () => { MV.who = p.id; MV.mode = 'thread'; msgRender(); } }, p.name + (MSG.online.has(p.id) ? ' 🟢' : '')));
+    msgModal(h('h2', {}, '✏ Gửi cho ai?'), h('p', { class: 'sub' }, '🟢 là đang online. Người không online sẽ thấy tin khi họ vào game.'), h('div', {}, ...chips), h('button', { class: 'btn alt', onclick: () => { MV.mode = 'list'; msgRender(); } }, '← Quay lại'));
+    return;
+  }
+  if (MV.mode === 'thread') { msgRenderThread(); return; }
+  const people = new Map();
+  for (const x of MSG.items) { const o = x.from_char === MEMBER.char ? x.to_char : x.from_char; if (!people.has(o)) people.set(o, { id: o, last: x, unread: 0, open: 0 }); const r = people.get(o); if (x.to_char === MEMBER.char && !x.read_at) r.unread++; if (x.kind === 'task' && !x.done) r.open++; }
+  const rows = [...people.values()].map((r) => h('button', { class: 'mrow' + (r.unread ? ' new' : ''), style: 'width:100%;display:block', onclick: () => { MV.who = r.id; MV.mode = 'thread'; msgRender(); } },
+    h('small', {}, `${charName(r.id)}${MSG.online.has(r.id) ? ' 🟢' : ''} · ${msgFmt(r.last.created_at)}${r.unread ? ` · ${r.unread} tin mới` : ''}${r.open ? ` · ${r.open} việc chưa xong` : ''}`),
+    (r.last.from_char === MEMBER.char ? 'Bạn: ' : '') + r.last.body.slice(0, 80)));
+  msgModal(h('h2', {}, '📬 Hộp thư'), rows.length ? h('div', {}, ...rows) : h('p', { class: 'sub' }, 'Chưa có tin nào. Bấm “Tin mới” để nhắn hoặc giao việc cho đồng nghiệp.'),
+    h('button', { class: 'btn', onclick: () => { MV.mode = 'pick'; msgRender(); } }, '✏ Tin mới'), close);
+}
+function msgRenderThread() {
+  const who = MV.who, msgs = msgPair(who).slice().sort((a, b) => a.created_at < b.created_at ? -1 : 1);
+  const bubbles = msgs.map((x) => {
+    const mine = x.from_char === MEMBER.char;
+    const head = h('small', {}, `${mine ? 'Bạn' : charName(x.from_char)} · ${msgFmt(x.created_at)}`);
+    if (x.kind === 'task') {
+      const toMe = x.to_char === MEMBER.char, box = h('input', { type: 'checkbox', style: 'width:22px;height:22px;vertical-align:middle;margin-right:8px' }); box.checked = !!x.done;
+      box.addEventListener('change', () => msgSetDone(x, box.checked));
+      return h('div', { class: 'mrow', style: 'border-left:5px solid var(--accent)' }, head, h('div', {}, `📌 Việc (hạn: ${DUE_LABEL[x.due] || 'hôm nay'})`), h('div', { style: x.done ? 'text-decoration:line-through;opacity:.6' : '' }, x.body),
+        h('label', { style: 'display:block;margin-top:6px' }, toMe ? box : null, x.done ? '✅ Đã xong' + (x.done_at ? ' · ' + msgFmt(x.done_at) : '') : (toMe ? 'Xong' : '⏳ Chờ làm')),
+        x.done && mine ? h('button', { class: 'nchip', style: 'margin-top:6px;min-height:36px;padding:6px 10px', onclick: () => msgSetDone(x, false) }, '↩ Mở lại') : null);
+    }
+    return h('div', { class: 'mrow', style: x.kind === 'note' ? 'background:#fff3b0' : (mine ? 'background:#ffe9dc' : '') }, head, (x.kind === 'note' ? '📝 ' : '') + x.body);
   });
-  Modal.open(h('h2', {}, '📬 Hộp thư'), rows.length ? h('div', {}, ...rows) : h('p', { class: 'sub' }, 'Chưa có tin nào. (Soạn tin và giao việc sẽ có ở bản sau.)'), h('button', { class: 'btn', onclick: () => Modal.close() }, 'Đóng'));
-  if (!unread.length) return;
+  const ta = h('textarea', { maxlength: '300', rows: '3', placeholder: `Nhắn cho ${charName(who)}…`, style: 'width:100%;border-radius:12px;border:2px solid var(--line);padding:10px;font-size:16px;font-family:inherit;box-sizing:border-box' }); ta.value = MV.draft;
+  ta.addEventListener('input', () => { MV.draft = ta.value; });
+  const tk = h('input', { type: 'checkbox', style: 'width:20px;height:20px;vertical-align:middle;margin-right:6px' }); tk.checked = MV.task;
+  const due = h('select', { style: 'margin-left:8px;font-size:15px;padding:4px' }, ...['today', 'tomorrow', 'none'].map((k) => h('option', { value: k }, DUE_LABEL[k]))); due.value = MV.due; due.disabled = !MV.task;
+  const send = h('button', { class: 'btn', onclick: () => msgSend(who, ta.value, tk.checked, due.value) }, MV.task ? '📌 Giao việc' : 'Gửi');
+  tk.addEventListener('change', () => { MV.task = tk.checked; due.disabled = !tk.checked; send.textContent = tk.checked ? '📌 Giao việc' : 'Gửi'; }); due.addEventListener('change', () => { MV.due = due.value; });
+  const list = h('div', { style: 'max-height:42vh;overflow:auto' }, ...(bubbles.length ? bubbles : [h('p', { class: 'sub' }, 'Chưa có tin nào. Hãy nhắn câu đầu tiên.')]));
+  msgModal(h('h2', {}, `${charName(who)}${MSG.online.has(who) ? ' 🟢' : ''}`), list, ta, h('label', { style: 'display:block;margin:8px 0' }, tk, 'Đây là việc cần làm, hạn', due), send, h('button', { class: 'btn alt', onclick: () => { MV.mode = 'list'; msgRender(); } }, '← Danh sách'));
+  list.scrollTop = list.scrollHeight; msgMarkRead(who);
+}
+async function msgMarkRead(who) {
+  const un = msgPair(who).filter((x) => x.to_char === MEMBER.char && !x.read_at); if (!un.length) return;
   try {
-    const { error } = await CLOUD.client.from('messages').update({ read_at: new Date().toISOString() }).in('id', unread.map((x) => x.id)).is('read_at', null); if (error) throw error;
-    unread.forEach((x) => { x.read_at = new Date().toISOString(); }); MSG.unread = 0; msgSetBadge();
-  } catch (e) { dlog('[msgOpenInbox] đánh dấu đã đọc lỗi:', e, e && e.stack); }
+    const at = new Date().toISOString(), { error } = await CLOUD.client.from('messages').update({ read_at: at }).in('id', un.map((x) => x.id)).is('read_at', null); if (error) throw error;
+    un.forEach((x) => { x.read_at = at; }); MSG.unread = MSG.items.filter((x) => x.to_char === MEMBER.char && !x.read_at).length; msgSetBadge();
+  } catch (e) { dlog('[msgMarkRead] đánh dấu đã đọc lỗi:', e, e && e.stack); }
+}
+async function msgSend(to, text, task, due) {
+  const body = String(text || '').trim().slice(0, 300); if (!body || MV.sending) return;
+  MV.sending = true;
+  try {
+    const row = { from_char: MEMBER.char, to_char: to, kind: task ? 'task' : 'chat', body }; if (task) row.due = due;
+    const { data, error } = await CLOUD.client.from('messages').insert(row).select().single(); if (error) throw error;
+    MSG.items.unshift(data); MV.draft = ''; MV.task = false; Sfx.click(); msgRender();          // gửi xong: tắt chế độ giao việc để khỏi giao nhầm lần sau
+  } catch (e) { dlog('[msgSend] gửi tin lỗi:', e, e && e.stack, e && e.code); toast(msgFriendly(e), 4000); }
+  finally { MV.sending = false; }
+}
+async function msgSetDone(x, done) {
+  try {
+    const at = done ? new Date().toISOString() : null, { error } = await CLOUD.client.from('messages').update({ done, done_at: at }).eq('id', x.id); if (error) throw error;
+    x.done = done; x.done_at = at; if (done) { Sfx.chime(); toast('✅ Đã báo xong việc', 2200); } msgRender();
+  } catch (e) { dlog('[msgSetDone] cập nhật việc lỗi:', e, e && e.stack, e && e.code); toast(msgFriendly(e), 4000); msgRender(); }
+}
+// --- Giai đoạn C: việc được giao mà chưa xong khi tan ca -> người giao càm ràm, nội dung ghi thành giấy nhớ trên bàn người nhận ---
+const DAY_MS = 86400000, dayStart = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+function taskOverdue(x) {                                             // đến hạn khi: "hôm nay" = tới cuối ngày giao; "ngày mai" = từ ngày kế tiếp; "không hạn" = không bao giờ
+  if (x.due === 'none') return false;
+  const gone = Math.round((dayStart(new Date()) - dayStart(new Date(x.created_at))) / DAY_MS);
+  return x.due === 'tomorrow' ? gone >= 1 : true;
+}
+const msgDeskNotes = () => (MEMBER ? MSG.items.filter((x) => x.kind === 'note' && x.to_char === MEMBER.char && !x.read_at).slice(0, 3) : []);
+function msgNagFlow(next) {                                           // gọi khi kết thúc ngày: chỉ nhắc 1 việc mỗi ngày (việc cũ nhất đã đến hạn mà chưa có giấy nhớ)
+  if (!MEMBER || !CLOUD.client || !MSG.primed || CLOUD.conflict) { next(false); return; }
+  const has = new Set(MSG.items.filter((x) => x.kind === 'note' && x.ref).map((x) => x.ref));
+  const t = MSG.items.filter((x) => x.kind === 'task' && x.to_char === MEMBER.char && !x.done && taskOverdue(x) && !has.has(x.id)).sort((a, b) => (a.created_at < b.created_at ? -1 : 1))[0];
+  const n = t && npcById(t.from_char); if (!t || !n) { next(false); return; }
+  const cfg = WORK_NAG[t.from_char] || WORK_NAG.thanh, title = t.body.length > 70 ? t.body.slice(0, 67) + '…' : t.body, line = fill(pick(cfg.lines));
+  const body = `${line} (Việc: “${title}”)`.slice(0, 300);
+  changeAff(n.id, -cfg.aff); addMood(-cfg.mood); D.talked.add(n.id); Sfx.wrong(); D.stats.nagged = (D.stats.nagged || 0) + 1;
+  addMoment(`Chưa xong việc “${title}” ${n.p.name} giao, ${n.p.name} để lại giấy nhớ trên bàn.`);
+  CLOUD.client.from('messages').insert({ from_char: t.from_char, to_char: MEMBER.char, kind: 'note', body, ref: t.id }).select().single().then(({ data, error }) => {
+    if (error) { if (error.code !== '23505') dlog('[msgNagFlow] ghi giấy nhớ lỗi:', error); return; }
+    MSG.items.unshift(data);
+  }, (e) => dlog('[msgNagFlow] ghi giấy nhớ lỗi (mạng):', e, e && e.stack));
+  sayNpc(n, line);
+  Card.show({ who: whoOf(n), meta: hearts(AFF[n.id]), text: `Việc “${title}” ${n.p.name} giao đã đến hạn mà vẫn chưa xong. ${n.p.name} để lại giấy nhớ trên bàn bạn.\n\n“${line}”`, choices: [{ label: 'Dạ, em xin lỗi, mai em làm', main: true, run: () => { Card.hide(); next(true); } }] });
+}
+function msgReadDeskNotes() {                                         // đọc giấy nhớ trên bàn (hiện ở thẻ bàn làm việc)
+  const notes = msgDeskNotes(); if (!notes.length) return;
+  const text = notes.map((x) => `📝 ${charName(x.from_char)}: “${x.body}”`).join('\n\n');
+  Card.show({ who: { name: 'Giấy nhớ trên bàn', role: 'Còn đây', color: 0xfff3a8, emoji: '📝' }, text, choices: [{ label: 'Mình nhớ rồi', main: true, run: async () => {
+    Card.hide(); const at = new Date().toISOString(); notes.forEach((x) => { x.read_at = at; }); MSG.unread = MSG.items.filter((x) => x.to_char === MEMBER.char && !x.read_at).length; msgSetBadge(); buildDeskItems();
+    try { const { error } = await CLOUD.client.from('messages').update({ read_at: at }).in('id', notes.map((x) => x.id)).is('read_at', null); if (error) throw error; }
+    catch (e) { dlog('[msgReadDeskNotes] đánh dấu đã đọc lỗi:', e, e && e.stack); }
+  } }] });
 }
 function newDayState() {
   const dn = Store.get().days + 1, bonus = G.bonus || { mood: 0, energy: 0 }; G.bonus = null;
@@ -2971,7 +3078,7 @@ function endDay() {
   NPCS.forEach((n) => { n.frozen = false; });
   const showNote = () => Card.show({ who: { name: 'Trước khi về…', color: 0xfff3a8, emoji: '📝' }, text: 'Bạn có muốn để lại một mảnh giấy nhớ cho đồng nghiệp không?', choices: [
     { label: '📝 Có, viết một dòng', main: true, run: () => noteFlow(showSummary) }, { label: 'Hôm nay thôi', run: () => { Card.hide(); showSummary(); } }] });
-  if (D.tasks < WORK_QUOTA) workNag(showNote); else showNote();          // chưa xong việc được giao: người giao việc nhắc theo tính cách
+  msgNagFlow((nagged) => { if (!nagged && D.tasks < WORK_QUOTA) workNag(showNote); else showNote(); });          // chưa xong việc được giao: người giao việc nhắc theo tính cách
 }
 function showSummary() {
   const date = new Date().toLocaleDateString('vi-VN'), day = Store.get().days + 1, cal = calInfo(day), isFri = cal.wd === 4;

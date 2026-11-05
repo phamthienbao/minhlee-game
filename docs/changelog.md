@@ -8,8 +8,9 @@ Multiplayer stage 2, first version: members see each other. A logged-in member's
 
 Amended before the commit (same v2.2.0-alpha entry, not a new release): the send rate was lowered after the owner checked the Supabase Free-plan Realtime quota (2 000 000 messages a month, each broadcast counts 1 when sent plus 1 per receiver). Changes: nothing is sent when alone, a joining person gets our position at once, send timer 200 ms to 330 ms, heartbeat 2.5 s to 10 s, silence timeout 8 s to 25 s. Numbers: `docs/spec/thay-nhau.md` §6.
 
-Also in this unreleased entry (not a new release): company mailbox, phase A. Members see who is online, see an unread badge, and read an inbox. It polls tables and does not use Realtime, to save the Free-plan Realtime quota. Spec: `docs/spec/hop-thu-cong-ty.md` (acceptance rows AC-M59 to AC-M69); summary in `docs/spec/nhieu-nguoi-choi.md` §13. It needs `docs/sql/hop-thu.sql`, which the owner has not run yet. Committed and pushed as `fa7ebf7`. Verified only with a mocked Supabase client.
+Also in this unreleased entry (not a new release): company mailbox, phase A. Members see who is online, see an unread badge, and read an inbox. It polls tables and does not use Realtime, to save the Free-plan Realtime quota. Spec: `docs/spec/hop-thu-cong-ty.md` (acceptance rows AC-M59 to AC-M69); summary in `docs/spec/nhieu-nguoi-choi.md` §13. The owner ran `docs/sql/hop-thu.sql` on 2026-11-04 and checked the basic flow on the real server. Committed and pushed as `fa7ebf7`. Verified only with a mocked Supabase client.
 
+Also in this unreleased entry (not a new release): company mailbox, phases B1 and C (not committed yet). B1: members write to a coworker in a conversation view, give tasks with a due day, tick a task as done, and reopen it. C: at the end of the assignee's day, an overdue unfinished task makes its giver nag once and leaves a desk note (sticky paper) for the assignee. The server rules for B1 are in `docs/sql/hop-thu-b.sql`, which the owner ran on 2026-11-04 with no error (rules not yet tested with two accounts). Phase C adds no SQL. Spec: `docs/spec/hop-thu-cong-ty.md` (rows AC-M70 to AC-M89, §4.4, §8, §8.1) and `docs/spec/ngoi-lam-viec.md` §3.2a. Verified only with a mocked Supabase client in headless Chrome. The 📬 button, the `online` grant fix, and the floating Talk button were committed as `537fd04` (pushed to `origin/main`).
 ### Added
 
 - Realtime block `RT` in `index.html`, placed before `newDayState()` (sign-in block after section 14):
@@ -30,6 +31,20 @@ Also in this unreleased entry (not a new release): company mailbox, phase A. Mem
 - Mailbox toast: "📬 <name>: <first 40 characters>…" for new unread incoming messages, 3.5 s, play mode only. The first poll after sign-in shows no toast.
 - Mailbox inbox "📬 Hộp thư": the latest 30 messages, unread incoming ones outlined, with the prefixes "📌 Việc: " for tasks and "📝 Giấy nhớ: " for notes. Read-only. Opening it sets `read_at` on all unread incoming messages.
 - Mailbox online dot: " 🟢" after the name on the NPC label of each online member (`msgApplyOnline()`).
+- Mailbox B1, compose and tasks, in `index.html` block `MSG` and state `MV` (mode `list`, `pick`, `thread`; `who`, `draft`, `task`, `due`, `sending`):
+  - `msgRender()`: conversation list (one row per person: name, 🟢, last time, new count, open task count, last message), "✏ Tin mới" picker of all coworkers except the member, with 🟢 for online ones.
+  - `msgRenderThread()`: bubbles for one pair, a 300-character textarea, the toggle "Đây là việc cần làm, hạn" with `today` / `tomorrow` / `none` (default `today`), and a send button that reads "📌 Giao việc" while the toggle is on.
+  - `msgSend(to, text, task, due)`: inserts a `chat` or a `task` row. Text is trimmed and cut to 300 characters. After success the draft and the toggle are cleared; the chosen due stays.
+  - `msgSetDone(x, done)`: updates `done` and `done_at`. The "Xong" checkbox is shown only to the assignee; the sender of a finished task gets "↩ Mở lại".
+  - `msgMarkRead(who)`: sets `read_at` on unread messages from one person, when that conversation is opened.
+  - `msgModal()`: marks the popup with `data-mail` so the poll refresh touches only this popup. `msgFriendly()`: maps `rate_limit`, `task_limit`, and network errors to Vietnamese text.
+- Mailbox B1 toast: "✅ <name> đã xong: <40 characters>" when a task you assigned becomes done (`msgTick()`, play mode only, not on the first poll after sign-in).
+- Mailbox B1 poll refresh: `msgTick()` redraws the open mailbox popup only if no "Tin mới" screen is open, the draft is empty, and the textarea does not have focus.
+- Mailbox C, block `MSG` in `index.html` (after `msgFriendly()`, under a "Giai đoạn C" comment): `taskOverdue(x)` (due rules: `none` never, `tomorrow` from the next calendar day by local date, `today` at every day end until done), `msgDeskNotes()` (unread notes to me, at most 3), `msgNagFlow(next)` (the human nag: oldest overdue unfinished task with no note, at most one per day; applies the `WORK_NAG[assigner]` line with the task title, affinity and mood losses, `D.stats.nagged`, one diary moment, bubble and card; inserts the note), `msgReadDeskNotes()` (the desk card action: shows the notes, sets `read_at`, rebuilds the desk).
+- Note rows (`kind = 'note'`): `from_char` = the assigner, `to_char` = the member, `ref` = the task id, `body` = the nag line (300 characters at most). Inserted by the recipient's client, because the assigner may be offline. The unique index on `ref` blocks a second note for the same task (error 23505 is ignored). No server change: `docs/sql/hop-thu-b.sql` does not check `note` rows.
+- Desk: unread notes appear as up to 3 yellow sticky papers on the member's desk (`buildDeskItems()`), and as a first choice "📝 Đọc giấy nhớ trên bàn (n)" in the desk work card (`workActivity()`).
+- Poll (`msgTick()`): rebuilds the desk when the set of unread notes changes; shows the assigner a toast "📝 <name> chưa kịp xong việc bạn giao, giấy nhớ đã để trên bàn" when a note for a task they gave appears; the assigner's thread shows the note in yellow.
+- `docs/sql/hop-thu-b.sql` (new, run once after `hop-thu.sql`, safe to re-run): function `messages_guard()` (security definer, `search_path = public`) and trigger `messages_guard` before insert or update on `messages`. Insert: `chat` and `task` only as the member's own character; at most 10 rows sent by the member per minute (checked on `chat` and `task` inserts); at most 5 `task` rows per rolling 24 hours (errors `rate_limit`, `task_limit`); `task` without a due gets `today`, `chat` gets none; `done`, `done_at`, `read_at` are reset on insert. Update: only the recipient may set `read_at`; `done` may be set to true only on a `task` and only by the recipient; either party may set `done` back to false.
 
 ### Changed
 
@@ -42,6 +57,8 @@ Also in this unreleased entry (not a new release): company mailbox, phase A. Mem
 - Presence `join` of another member resets `RT.last` and `RT.lastSent`, so the next send carries our position at once (the newcomer does not wait for the 10 s heartbeat). The join handler does not recount; the count comes from the `sync` event.
 - Send and quota tuning (before commit): timer 200 ms to 330 ms (about 3 Hz, was about 5 Hz), heartbeat 2.5 s to 10 s, peer silence timeout 8 s to 25 s, nothing sent when alone.
 
+- `endDay()` calls `msgNagFlow()` before the NPC nag. If the human nag happened, `workNag` is skipped (the note card still follows). Otherwise the NPC nag runs as before (`D.tasks < WORK_QUOTA`).
+- `workActivity()`: the "📝 Đọc giấy nhớ trên bàn (n)" choice comes first when unread notes exist.
 - Mailbox button icon: ✉ (text glyph) to 📬 (emoji, 28 px). The toast and the inbox title use 📬 too. 💬 was rejected because it matches the Talk button.
 - Mailbox button visibility: `msgStart()` now sets the poll timer before the first `msgSetBadge()` and `msgTick()` call, so the button shows at once after sign-in, even if the first poll fails.
 - Talk action button: when the nearest target is a coworker, `#act` floats above that coworker's head instead of the bottom-right corner. New function `placeActButton()` (next to `computeNearest()` / `updateActButton()`, called from `update()` after `updateActButton(false)`), new CSS class `#act.float`. The button sits above the name tag (2.55 m above the root, 1.6 m for a lying coworker), is clamped to the screen with 8 px margins, is at least 120 px from the top, and stays 90 px above the bottom (above the joystick area). If the head is behind the camera (`z > 1`), the button goes back to the corner. Spot actions (desk, pantry, and others) keep the corner. Lite mode keeps the fixed button. Spec: `docs/spec/mot-ngay-o-cong-ty.md` §4.2, AC-125.
@@ -49,6 +66,7 @@ Also in this unreleased entry (not a new release): company mailbox, phase A. Mem
 ### Fixed
 
 - `docs/sql/hop-thu.sql`: `grant update (last_seen) on public.online` changed to `grant update on public.online to authenticated` (whole table). The upsert also writes `char_id`, so the column-only grant failed on the real server with 403 / 42501 "permission denied for table online" on every online write. Found in the owner's browser console; the mocked-client test had missed it. RLS still limits each member to rows with their own `char_id`. The owner ran the fixed file on 2026-11-04.
+- `docs/sql/hop-thu.sql` and phase B1 (`docs/sql/hop-thu-b.sql`): either party could set `done` and `read_at` on any message (the phase A gap: RLS did not tell the columns or the parties apart, so the sender could mark a task done). B1 adds the `messages_guard` trigger: only the recipient sets `read_at` and ticks `done`, and only on `task` rows. The owner ran `hop-thu-b.sql` on 2026-11-04 with no error (AC-M70). The rules are not yet tested with two accounts (AC-M75).
 
 ### Known limits
 
@@ -64,12 +82,23 @@ Also in this unreleased entry (not a new release): company mailbox, phase A. Mem
 - Mailbox: a hidden tab or a sleeping machine writes no heartbeat, so the member shows as offline after about 3 minutes.
 - Mailbox: unread count and toasts use the latest 100 messages only.
 - Mailbox: the 🟢 dot is not shown on the labels of remote people (`rtPeer()`, stage 2).
-- Mailbox RLS does not limit which columns each party may change: the sender can also set `done` and `read_at`. Phase B must tighten this.
+- Mailbox: in phase A the sender could also set `done` and `read_at`. B1's trigger stops this, since the owner ran `hop-thu-b.sql` on 2026-11-04. Not yet tested with two accounts (AC-M75).
 - Mailbox: `my_char()` may be callable by the `anon` role through default project grants. It returns null for anon. Not checked by query.
 - Mailbox privacy: the owner can read every message in the Supabase dashboard. Members must be told before use.
+- Mailbox B1: the server rules (10 messages a minute, 5 tasks a rolling 24 hours, the `done` and `read_at` rules) are in place since the owner's run on 2026-11-04. Their effect is not yet tested with two accounts.
+- Mailbox B1: the conversation view and the unread count use the latest 100 messages. Older messages are not shown, and an older open task cannot be ticked or reopened from the app.
+- Mailbox B1: `due` is a label (`today`, `tomorrow`, `none`), not a date. An old task still reads "hôm nay". `done_at` is written by the client, not by the server.
+- Mailbox B1: the 5-task limit is a rolling 24 hours, not a calendar day.
+- Mailbox C: the trigger still does not check `note` rows (sender, `ref`, rate). Notes are written by the recipient's client, so any text can appear under the assigner's name. Acceptable for an internal group, to review (AC-M88).
+- Mailbox C: the nag fires only at the assignee's own day end. A member who never ends the day gets no nag. The 48-hour "lỡ" rule is not built (AC-M89).
+- Mailbox C: `today` tasks are nagged at every day end until done, because the code does not compare dates for `today`. The plan said "end of the assignment day". Decide (`docs/spec/hop-thu-cong-ty.md` §8.1).
+- Mailbox C: the assigner also sees the desk note in the thread. The old plan said the recipient only. Decide.
+- Mailbox C: the desk papers' positions were not checked by eye (no screenshot), and they may overlap other desk items (AC-M85).
+- Mailbox B1: the open mailbox does not refresh while the draft has text. The phone keyboard may cover the compose box (not tested on a phone).
 
 ### Internal
 
+- Docs pass 2026-11-05 (mailbox B1 and C): `docs/spec/hop-thu-cong-ty.md` (status, §2 and §4.4 SQL-run facts, §7 limits, §8 C row, new §8.1, AC-M70 and AC-M75 updated, AC-M81 to AC-M89 added), `docs/spec/ngoi-lam-viec.md` (status, §3.2 step 2, new §3.2a), `docs/spec/nhieu-nguoi-choi.md` §13, `docs/tasks.md`, `docs/handoff.md`, `docs/glossary.md`, `docs/archive/tasks-done-2026-11.md`. Stale statements that said the owner had not run `hop-thu-b.sql` were corrected. `docs/product-guide.md` not changed: the mailbox is hidden behind `?login`.
 - Spec: new `docs/spec/thay-nhau.md`. `docs/spec/nhieu-nguoi-choi.md` status, §4 Realtime (plan and what was built), §5 stage 2, and new §12 summary.
 - `docs/handoff.md` §1, §4, §6 (stage 2 first version done, stage 3 next; stage 2 and mailbox phase A committed as `fa7ebf7`).
 - `docs/tasks.md`: v2.2.0-alpha entries and follow-ups. Closed items moved to `docs/archive/tasks-done-2026-11.md`.
@@ -77,6 +106,8 @@ Also in this unreleased entry (not a new release): company mailbox, phase A. Mem
 - `docs/handoff.md` and `docs/spec/nhieu-nguoi-choi.md` §4, §7, §12: rates and timeouts updated; Supabase Free-plan facts added.
 - `docs/spec/mot-ngay-o-cong-ty.md` §4.2 (talk button placement) and AC-125. `docs/spec/hop-thu-cong-ty.md` §4.4 (grant fix), §6 (📬), AC-M59 and AC-M61 status. `docs/glossary.md`: new term for the floating talk button.
 - Local `CLAUDE.md` (gitignored) status and docs pointer.
+- Mailbox B1 docs: `docs/spec/hop-thu-cong-ty.md` (status, §2 install step, §3 components, §4.2 and §4.4 with the trigger rules, §5 flow, §6 interface, §7 limits, §8 phases with B1 done and the C and D notes, rows AC-M70 to AC-M80), `docs/spec/nhieu-nguoi-choi.md` §5 and §13, `docs/handoff.md`, `docs/tasks.md`, `docs/glossary.md`, local `CLAUDE.md`.
+- Commit state corrected: the 📬 button, the `online` grant fix, and the floating Talk button are in `537fd04` (pushed). Earlier docs called them uncommitted.
 - No secrets, keys, project URL, emails, or passwords were written to the docs.
 - Mailbox: new `docs/spec/hop-thu-cong-ty.md` (Vietnamese): components, tables, RLS and grants, polling flow, interface, limits, acceptance rows AC-M59 to AC-M69, and planned phases B to F.
 - Mailbox: new `docs/sql/hop-thu.sql`, run by the owner on 2026-11-04 (with the corrected grant). It is the only SQL file in `docs/sql/`.
@@ -114,6 +145,8 @@ Real server (owner, 2026-11-04): SQL run (AC-M59) and the basic flow (AC-M61: un
 Not verified: the online dot and RLS between two accounts (AC-M60, AC-M65, AC-M68), real request counts (AC-M69).
 
 Floating Talk button: headless Chrome, button rect read only (no screenshot). Not checked on a phone or touch input (AC-125, AC-17).
+
+Mailbox phase B1 (headless Chrome, mocked Supabase client, 2026-11-04): empty list text, the "Gửi cho ai?" picker with 🟢, an HTML payload shown as text, a task insert with `due`, the rate-limit toast, the tick and its done text (AC-M71 to AC-M74, AC-M76, AC-M77 in part). Code read only: the reopen button, the sender's done toast, the toggle reset, the poll refresh guard, and per-conversation read marking (AC-M77 to AC-M79). Not verified: the server rules (AC-M70, AC-M75), two real accounts (AC-M65, AC-M77), and phones (AC-M80).
 
 ## v2.1.0-alpha — 2026-11-04
 

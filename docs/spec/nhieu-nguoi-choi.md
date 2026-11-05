@@ -49,7 +49,7 @@ Nhân viên MinhLee (tối đa 14 người, đúng 14 nhân vật hiện có) đ
 2. **Thấy nhau** — *Phiên bản đầu đã triển khai (v2.2.0-alpha, 2026-11-04, commit `fa7ebf7`). Chưa kiểm tra với Realtime thật hoặc hai trình duyệt thật.* Presence và vị trí người chơi thật; NPC của người đang online bị ẩn, người chơi hiển thị bằng nhân vật tương ứng. Chi tiết: `docs/spec/thay-nhau.md`, §12.
 3. **Đồng hồ và NPC dùng chung**: giờ chung, máy chủ NPC, sự kiện cùng lúc (mời nước, họp, tan ca).
 4. **Việc theo bộ phận và chỉ số công ty**: kho việc riêng theo bộ phận, chỉ số chung tăng khi hoàn thành.
-5. **Chat, giao việc giữa người, khen và càm ràm**: chọn nhanh hoặc tự gõ; máy tự chọn khi không gõ. Giai đoạn A của hộp thư đã có (§13). Phần còn lại chia thành giai đoạn B đến F: `docs/spec/hop-thu-cong-ty.md` §8.
+5. **Chat, giao việc giữa người, khen và càm ràm**: chọn nhanh hoặc tự gõ; máy tự chọn khi không gõ. Giai đoạn A của hộp thư đã có (§13), và B1 (soạn tin, giao việc, tick Xong) đã viết, chưa commit. Phần còn lại chia thành giai đoạn B đến F: `docs/spec/hop-thu-cong-ty.md` §8.
 6. **Hoàn thiện và thử với người thật**: mất kết nối, vào giữa ngày, lỗi mạng.
 
 ## 6. Việc cần chuẩn bị (chủ dự án)
@@ -187,8 +187,10 @@ Chi tiết (kênh, Presence, gói `pos`, hiển thị, NPC ẩn, tiêu chí AC-M
 
 Tóm tắt: thành viên đã đăng nhập vào kênh Realtime chung `office` (bắt đầu trong `cloudEnter()`, dừng trong `memberLogout()` và `cloudConflict()`). Vị trí gửi khoảng 3 lần mỗi giây khi đổi, cộng nhịp 10 s khi đứng yên, và không gửi khi đứng một mình. Số tin và hạn mức: `docs/spec/thay-nhau.md` §6. Người thật hiện bằng nhân vật của họ, NPC của họ bị ẩn đến hết ngày. Guest không tham gia. Chưa có chat, đồng hồ chung hay NPC dùng chung.
 
-## 13. Hộp thư công ty, giai đoạn A (v2.2.0-alpha, 2026-11-04, commit `fa7ebf7`)
+## 13. Hộp thư công ty, giai đoạn A và B1 (v2.2.0-alpha, 2026-11-04; A commit `fa7ebf7`, B1 chưa commit)
 
 Chi tiết (bảng, luồng, giới hạn, tiêu chí AC-M59 đến AC-M69): `docs/spec/hop-thu-cong-ty.md`.
 
 Tóm tắt: thành viên đã đăng nhập thấy ai đang online (chấm 🟢 trên nhãn NPC), có nút 📬 với huy hiệu tin chưa đọc, và đọc hộp thư (chỉ đọc). Dữ liệu nằm trong hai bảng `online` và `messages`, không dùng Realtime, để giữ trong hạn mức. SQL: `docs/sql/hop-thu.sql`, chủ dự án đã chạy (2026-11-04, bản đã sửa quyền `update` trên `online`). Luồng cơ bản (huy hiệu, toast, hộp thư) đã kiểm tra trên máy chủ thật. Chấm 🟢 với hai tài khoản thật chưa kiểm tra.
+
+Giai đoạn B1 (2026-11-05 viết tài liệu, chưa commit): soạn tin theo cuộc trò chuyện, giao việc có hạn, tick Xong và mở lại. Luật máy chủ trong `docs/sql/hop-thu-b.sql` đã chạy trên máy chủ thật (2026-11-04, không lỗi), chưa thử bằng hai tài khoản. Giai đoạn C (chưa commit): càm ràm cuối ngày từ người giao khi việc quá hạn, kèm giấy nhớ trên bàn người nhận; chi tiết `docs/spec/hop-thu-cong-ty.md` §8.1 và `docs/spec/ngoi-lam-viec.md` §3.2a. Chi tiết và tiêu chí AC-M70 đến AC-M89: `docs/spec/hop-thu-cong-ty.md` §4.4, §8, §9. NPC đưa tin (B2) chưa làm.
